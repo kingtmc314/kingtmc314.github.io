@@ -229,22 +229,12 @@ function gcd(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){[
 function numToTex(n){
   if(typeof n!=='number'||!isFinite(n)) return '\\text{undefined}';
   if(Math.abs(n)<1e-9) return '0';
-  // Try to express as p/q
-  for(let d=1;d<=1000;d++){
-    const p=Math.round(n*d);
-    if(Math.abs(p/d-n)<1e-9){
-      const g=gcd(Math.abs(p),d);
-      const pn=p/g, dn=d/g;
-      if(dn===1) return String(pn);
-      return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}}{${dn}}`;
-    }
-  }
-  // Try common irrationals
+  // 1. Try common irrationals FIRST (π, √2, √3) with loose tolerance 1e-4
   const pi=Math.PI, sq2=Math.sqrt(2), sq3=Math.sqrt(3);
   for(let d=1;d<=12;d++){
-    for(let p=-12;p<=12;p++){
+    for(let p=-24;p<=24;p++){
       if(p===0) continue;
-      if(Math.abs(n-p*pi/d)<1e-9){
+      if(Math.abs(n-p*pi/d)<1e-4){
         const g=gcd(Math.abs(p),d);
         const pn=p/g,dn=d/g;
         if(dn===1) return (pn===1?'':(pn===-1?'-':String(pn)))+'\\pi';
@@ -260,6 +250,16 @@ function numToTex(n){
         const pn=p/g,dn=d/g;
         return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{3}}{${dn}}`;
       }
+    }
+  }
+  // 2. Try rational p/q
+  for(let d=1;d<=1000;d++){
+    const p=Math.round(n*d);
+    if(Math.abs(p/d-n)<1e-9){
+      const g=gcd(Math.abs(p),d);
+      const pn=p/g, dn=d/g;
+      if(dn===1) return String(pn);
+      return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}}{${dn}}`;
     }
   }
   return n.toPrecision(5).replace(/\.?0+$/,'');
