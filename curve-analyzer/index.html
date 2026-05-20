@@ -326,11 +326,13 @@ function analyzeCurve(fx,xMin,xMax,tanX){
     // Inflection points (f''=0 sign change)
     result.inflectionPoints=fppStr?findInflectionPoints(fx,fppStr,xMin,xMax):[];
 
-    // Monotonicity
-    result.monotonicity=fpStr?findMonotonicity(fpStr,xMin,xMax):[];
+    // Monotonicity — split at critical point x-values for exact boundaries
+    const critXs=result.criticalPoints.map(p=>p.x);
+    result.monotonicity=fpStr?findMonotonicity(fpStr,xMin,xMax,critXs):[];
 
-    // Concavity
-    result.concavity=fppStr?findConcavity(fppStr,xMin,xMax):[];
+    // Concavity — split at inflection point x-values for exact boundaries
+    const inflXs=result.inflectionPoints.map(p=>p.x);
+    result.concavity=fppStr?findConcavity(fppStr,xMin,xMax,inflXs):[];
 
     // Asymptotes
     result.asymptotes=findAsymptotes(fx,xMin,xMax);
@@ -446,36 +448,38 @@ function findInflectionPoints(fx,fppStr,xMin,xMax){
   return pts.filter((p,i)=>!pts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.1));
 }
 
-function findMonotonicity(fpStr,xMin,xMax){
+function findMonotonicity(fpStr,xMin,xMax,splitXs=[]){
+  // Use exact split points (critical point x-values) as interval boundaries
+  const pts=[xMin,...splitXs.filter(x=>x>xMin&&x<xMax).sort((a,b)=>a-b),xMax];
   const intervals=[];
-  const step=0.05;
-  let sign=null,start=xMin;
-  for(let x=xMin;x<=xMax+step;x+=step){
-    const v=evalAt(fpStr,x);
-    const s=isFinite(v)?(v>1e-9?'+':v<-1e-9?'-':'0'):null;
-    if(s!==sign){
-      if(sign!==null&&sign!=='0'){
-        intervals.push({from:start,to:x-step,increasing:sign==='+'});
-      }
-      sign=s;start=x;
-    }
+  for(let i=0;i<pts.length-1;i++){
+    const mid=(pts[i]+pts[i+1])/2;
+    const v=evalAt(fpStr,mid);
+    if(!isFinite(v)) continue;
+    if(Math.abs(v)<1e-9) continue;
+    intervals.push({
+      from:pts[i],to:pts[i+1],
+      fromTex:numToTex(pts[i]),toTex:numToTex(pts[i+1]),
+      increasing:v>0
+    });
   }
   return intervals;
 }
 
-function findConcavity(fppStr,xMin,xMax){
+function findConcavity(fppStr,xMin,xMax,splitXs=[]){
+  // Use exact split points (inflection point x-values) as interval boundaries
+  const pts=[xMin,...splitXs.filter(x=>x>xMin&&x<xMax).sort((a,b)=>a-b),xMax];
   const intervals=[];
-  const step=0.05;
-  let sign=null,start=xMin;
-  for(let x=xMin;x<=xMax+step;x+=step){
-    const v=evalAt(fppStr,x);
-    const s=isFinite(v)?(v>1e-9?'+':v<-1e-9?'-':'0'):null;
-    if(s!==sign){
-      if(sign!==null&&sign!=='0'){
-        intervals.push({from:start,to:x-step,up:sign==='+'});
-      }
-      sign=s;start=x;
-    }
+  for(let i=0;i<pts.length-1;i++){
+    const mid=(pts[i]+pts[i+1])/2;
+    const v=evalAt(fppStr,mid);
+    if(!isFinite(v)) continue;
+    if(Math.abs(v)<1e-9) continue;
+    intervals.push({
+      from:pts[i],to:pts[i+1],
+      fromTex:numToTex(pts[i]),toTex:numToTex(pts[i+1]),
+      up:v>0
+    });
   }
   return intervals;
 }
@@ -877,7 +881,7 @@ function buildAnalytics(result){
       const cls=iv.increasing?'badge-green':'badge-red';
       const label=iv.increasing?'↑ Increasing':'↓ Decreasing';
       row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
-      const tex=`f'(x)${iv.increasing?'>':'<'}0 \\text{ on } (${numToTex(iv.from)},\\,${numToTex(iv.to)})`;
+      const tex=`f'(x)${iv.increasing?'>':'<'}0 \\text{ on } (${iv.fromTex||numToTex(iv.from)},\\,${iv.toTex||numToTex(iv.to)})`;
       row.appendChild(renderK(tex));
       body.appendChild(row);
     }
@@ -894,7 +898,7 @@ function buildAnalytics(result){
       const cls=iv.up?'badge-teal':'badge-red';
       const label=iv.up?'∪ Concave Up':'∩ Concave Down';
       row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
-      const tex=`f''(x)${iv.up?'>':'<'}0 \\text{ on } (${numToTex(iv.from)},\\,${numToTex(iv.to)})`;
+      const tex=`f''(x)${iv.up?'>':'<'}0 \\text{ on } (${iv.fromTex||numToTex(iv.from)},\\,${iv.toTex||numToTex(iv.to)})`;
       row.appendChild(renderK(tex));
       body.appendChild(row);
     }
