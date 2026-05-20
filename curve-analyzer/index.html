@@ -1,484 +1,1092 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📈 Curve Analyzer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curve Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f8f9fc;
+  --card:#ffffff;
+  --border:#e2e6ef;
+  --fg:#1a1d2e;
+  --fg2:#4a5068;
+  --fg3:#8891a8;
+  --primary:#3b5bdb;
+  --primary-light:#4c6ef5;
+  --primary-bg:#eef2ff;
+  --green:#2f9e44;
+  --green-bg:#ebfbee;
+  --red:#c92a2a;
+  --red-bg:#fff5f5;
+  --orange:#e67700;
+  --orange-bg:#fff9db;
+  --purple:#7048e8;
+  --purple-bg:#f3f0ff;
+  --teal:#0c8599;
+  --teal-bg:#e3fafc;
+  --radius:10px;
+  --shadow:0 1px 4px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:600}
+code,input[type=text]{font-family:'JetBrains Mono',monospace}
 
-        :root {
-            --primary: oklch(0.55 0.2 259);
-            --primary-light: oklch(0.65 0.18 259);
-            --background: oklch(0.98 0.001 0);
-            --card: oklch(1 0 0);
-            --border: oklch(0.90 0.005 280);
-            --foreground: oklch(0.15 0.02 280);
-            --secondary: oklch(0.95 0.005 280);
-            --muted: oklch(0.92 0.004 280);
-            --accent: oklch(0.55 0.2 259);
-        }
+/* HEADER */
+header{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+.header-inner{max-width:1600px;margin:0 auto;padding:0 1.25rem;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:.6rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--primary)}
+.logo svg{width:28px;height:28px}
+.header-links{display:flex;align-items:center;gap:.5rem}
+.icon-btn{padding:.4rem;border-radius:8px;color:var(--fg2);transition:background .2s,color .2s;cursor:pointer;display:flex;align-items:center}
+.icon-btn:hover{background:var(--primary-bg);color:var(--primary)}
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--background);
-            color: var(--foreground);
-            line-height: 1.6;
-        }
+/* NAV TABS */
+.nav-tabs{background:var(--card);border-bottom:1px solid var(--border);display:flex;gap:0;overflow-x:auto}
+.nav-tab{padding:.75rem 1.25rem;font-size:.9rem;font-weight:500;color:var(--fg2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;user-select:none}
+.nav-tab:hover{color:var(--primary);background:var(--primary-bg)}
+.nav-tab.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--primary-bg)}
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-        }
+/* MAIN LAYOUT */
+.app-body{max-width:1600px;margin:0 auto;padding:1.25rem}
+.tab-content{display:none}
+.tab-content.active{display:block}
 
-        h1 { font-size: 2rem; }
-        h2 { font-size: 1.5rem; }
-        h3 { font-size: 1.25rem; }
+/* ANALYZER TAB */
+.analyzer-layout{display:grid;grid-template-columns:1fr 400px;gap:1.25rem;align-items:start}
+@media(max-width:1024px){.analyzer-layout{grid-template-columns:1fr}}
 
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            border-bottom: 1px solid var(--border);
-            background: var(--background);
-            backdrop-filter: blur(10px);
-        }
+/* INPUT BAR */
+.input-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;box-shadow:var(--shadow)}
+.input-field{flex:1;min-width:200px}
+.input-field label{display:block;font-size:.8rem;font-weight:600;color:var(--fg2);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.04em}
+.input-field input{width:100%;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;background:var(--bg);color:var(--fg);transition:border .2s}
+.input-field input:focus{outline:none;border-color:var(--primary)}
+.btn{padding:.6rem 1.2rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-light)}
 
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 4rem;
-        }
+/* GRAPH */
+.graph-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.graph-card-header{padding:.75rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:600;color:var(--fg2)}
+.graph-wrap{padding:.75rem;background:#fff}
+#graph{width:100%;height:420px;display:block}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+/* ANALYTICS PANEL */
+.analytics-panel{display:flex;flex-direction:column;gap:.75rem}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.section-head{padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background .2s}
+.section-head:hover{background:var(--bg)}
+.section-head-left{display:flex;align-items:center;gap:.5rem;font-size:.9rem;font-weight:600}
+.section-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.chevron-icon{color:var(--fg3);transition:transform .25s;font-size:.75rem}
+.section-body{padding:.75rem 1rem;border-top:1px solid var(--border);display:none}
+.section-body.open{display:block}
 
-        .github-link {
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            transition: background 0.3s;
-        }
+/* SECTION COLORS */
+.sec-deriv .section-icon{background:var(--primary-bg);color:var(--primary)}
+.sec-domain .section-icon{background:var(--teal-bg);color:var(--teal)}
+.sec-cont .section-icon{background:var(--purple-bg);color:var(--purple)}
+.sec-crit .section-icon{background:var(--orange-bg);color:var(--orange)}
+.sec-mono .section-icon{background:var(--green-bg);color:var(--green)}
+.sec-conc .section-icon{background:var(--red-bg);color:var(--red)}
+.sec-asym .section-icon{background:#fff0f6;color:#c2255c}
+.sec-tan .section-icon{background:#e8f4fd;color:#1971c2}
 
-        .github-link:hover {
-            background: var(--secondary);
-        }
+/* ROWS */
+.row{display:flex;align-items:baseline;gap:.5rem;padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.875rem}
+.row:last-child{border-bottom:none}
+.row-label{font-weight:600;min-width:90px;color:var(--fg2);font-size:.8rem}
+.row-val{flex:1}
+.badge{display:inline-block;padding:.15rem .55rem;border-radius:20px;font-size:.75rem;font-weight:600}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-orange{background:var(--orange-bg);color:var(--orange)}
+.badge-blue{background:var(--primary-bg);color:var(--primary)}
+.badge-purple{background:var(--purple-bg);color:var(--purple)}
+.badge-teal{background:var(--teal-bg);color:var(--teal)}
 
-        .main-container {
-            display: flex;
-            height: calc(100vh - 4rem);
-        }
+/* MATH */
+.math-block{margin:.4rem 0;padding:.5rem .75rem;background:var(--bg);border-radius:6px;border-left:3px solid var(--primary);overflow-x:auto}
+.math-inline{display:inline}
 
-        .graph-panel {
-            flex: 1;
-            border-right: 1px solid var(--border);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
+/* TANGENT INPUT */
+.tan-input-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.75rem}
+.tan-input-row input{flex:1;padding:.5rem .75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;background:var(--bg);color:var(--fg)}
+.tan-input-row input:focus{outline:none;border-color:var(--primary)}
+.tan-input-row .btn{padding:.5rem .9rem;font-size:.85rem}
 
-        .analyzer-panel {
-            width: 24rem;
-            border-left: 1px solid var(--border);
-            padding: 1.5rem;
-            overflow-y: auto;
-            background: var(--card);
-        }
+/* REFERENCE TAB */
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem}
+.ref-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.ref-card-head{padding:.75rem 1rem;font-size:.9rem;font-weight:700;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
+.ref-card-body{padding:.75rem 1rem}
+.ref-row{padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.85rem;display:flex;flex-direction:column;gap:.25rem}
+.ref-row:last-child{border-bottom:none}
+.ref-name{font-weight:600;font-size:.8rem;color:var(--fg2);text-transform:uppercase;letter-spacing:.04em}
+.ref-formula{overflow-x:auto;padding:.2rem 0}
 
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
+/* EMPTY / ERROR */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--fg3)}
+.empty-state .big{font-size:2.5rem;margin-bottom:.5rem}
+.error-box{background:var(--red-bg);border:1px solid #fcc;border-radius:8px;padding:.75rem 1rem;color:var(--red);font-size:.875rem}
 
-        .input-group label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            background: var(--card);
-            color: var(--foreground);
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            ring: 2px var(--primary);
-            border-color: var(--primary);
-        }
-
-        .graph-container {
-            flex: 1;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            background: var(--card);
-            padding: 1rem;
-            overflow: hidden;
-        }
-
-        svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .section {
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .section-header {
-            padding: 1rem;
-            background: var(--secondary);
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        .section-header:hover {
-            background: var(--muted);
-        }
-
-        .section-header.expanded {
-            background: var(--muted);
-        }
-
-        .chevron {
-            transition: transform 0.3s;
-            display: inline-block;
-        }
-
-        .section-header.expanded .chevron {
-            transform: rotate(180deg);
-        }
-
-        .section-content {
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.02);
-            display: none;
-        }
-
-        .section-content.visible {
-            display: block;
-        }
-
-        .math-expr {
-            font-family: 'KaTeX_Main', serif;
-            margin: 0.5rem 0;
-        }
-
-        .critical-point {
-            padding: 0.75rem;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 0.375rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        .error-message {
-            padding: 1rem;
-            background: #fee;
-            border: 1px solid #fcc;
-            border-radius: 0.5rem;
-            color: #c33;
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
-            }
-
-            .analyzer-panel {
-                width: 100%;
-                border-left: none;
-                border-top: 1px solid var(--border);
-                max-height: 50vh;
-            }
-
-            .graph-panel {
-                border-right: none;
-            }
-        }
-
-        .dark-mode {
-            --background: oklch(0.12 0.02 280);
-            --card: oklch(0.18 0.025 280);
-            --border: oklch(0.25 0.03 280);
-            --foreground: oklch(0.92 0.005 280);
-            --secondary: oklch(0.22 0.03 280);
-            --muted: oklch(0.28 0.035 280);
-        }
-    </style>
+/* MOBILE */
+@media(max-width:640px){
+  .input-bar{flex-direction:column}
+  .input-field{min-width:100%}
+  .nav-tab{padding:.65rem .9rem;font-size:.82rem}
+  .app-body{padding:.75rem}
+}
+</style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="logo">📈 Curve Analyzer</div>
-            <a href="https://github.com/kingtmc314/curve-analyzer" target="_blank" rel="noopener noreferrer" class="github-link" title="View on GitHub">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                </svg>
-            </a>
-        </div>
-    </header>
 
-    <div class="main-container">
-        <!-- Graph Panel -->
-        <div class="graph-panel">
-            <div class="input-group">
-                <label for="function-input">Function f(x)</label>
-                <input type="text" id="function-input" placeholder="e.g., sin(x), x^2 - 3*x + 2" value="sin(x)">
-            </div>
-            <div class="graph-container">
-                <svg id="graph" viewBox="0 0 600 400" style="background: white; border-radius: 0.375rem;"></svg>
-            </div>
-        </div>
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="28" height="28" rx="7" fill="#3b5bdb"/>
+        <path d="M4 20 Q8 8 12 14 Q16 20 20 10 L24 6" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="4" y1="22" x2="24" y2="22" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="5" y1="24" x2="5" y2="6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Curve Analyzer
+    </div>
+    <div class="header-links">
+      <a href="https://github.com/kingtmc314/curve-analyzer" target="_blank" rel="noopener" class="icon-btn" title="GitHub">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
 
-        <!-- Analyzer Panel -->
-        <div class="analyzer-panel">
-            <div id="analyzer-content">
-                <p style="text-align: center; color: #999;">Enter a function to see analysis</p>
-            </div>
-        </div>
+<div class="nav-tabs" id="navTabs">
+  <div class="nav-tab active" data-tab="analyzer">📊 Analyzer</div>
+  <div class="nav-tab" data-tab="reference">📚 Reference</div>
+</div>
+
+<div class="app-body">
+
+  <!-- ANALYZER TAB -->
+  <div class="tab-content active" id="tab-analyzer">
+    <div class="input-bar">
+      <div class="input-field">
+        <label>Function f(x)</label>
+        <input type="text" id="fxInput" placeholder="e.g.  sin(x),  x^2 - 3*x + 2,  1/x,  ln(x)" value="sin(x)">
+      </div>
+      <div class="input-field" style="max-width:140px">
+        <label>x-range min</label>
+        <input type="number" id="xMinInput" value="-5" step="1">
+      </div>
+      <div class="input-field" style="max-width:140px">
+        <label>x-range max</label>
+        <input type="number" id="xMaxInput" value="5" step="1">
+      </div>
+      <button class="btn btn-primary" id="analyzeBtn">Analyze</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.0.0/lib/browser/math.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <div class="analyzer-layout">
+      <!-- GRAPH -->
+      <div>
+        <div class="graph-card">
+          <div class="graph-card-header">
+            <span id="graphTitle">Graph of f(x) = sin(x)</span>
+            <span style="font-size:.75rem;color:var(--fg3)">Use range inputs to zoom</span>
+          </div>
+          <div class="graph-wrap">
+            <svg id="graph" viewBox="0 0 640 440"></svg>
+          </div>
+        </div>
+      </div>
 
-    <script>
-        const functionInput = document.getElementById('function-input');
-        const graphSvg = document.getElementById('graph');
-        const analyzerContent = document.getElementById('analyzer-content');
+      <!-- ANALYTICS -->
+      <div class="analytics-panel" id="analyticsPanel">
+        <div class="empty-state"><div class="big">📈</div><div>Click <strong>Analyze</strong> to see results</div></div>
+      </div>
+    </div>
+  </div>
 
-        // Utility functions
-        function numToTex(num) {
-            if (typeof num !== 'number' || !isFinite(num)) return 'undefined';
-            if (Math.abs(num) < 1e-9) return '0';
-            
-            const tolerance = 1e-9;
-            for (let den = 1; den <= 1000; den++) {
-                for (let num_candidate = Math.round(num * den); num_candidate <= Math.round(num * den) + 1; num_candidate++) {
-                    if (Math.abs(num_candidate / den - num) < tolerance) {
-                        if (den === 1) return num_candidate.toString();
-                        const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-                        const g = gcd(Math.abs(num_candidate), den);
-                        const n = num_candidate / g;
-                        const d = den / g;
-                        return d === 1 ? n.toString() : `\\frac{${n}}{${d}}`;
-                    }
-                }
-            }
-            return num.toFixed(4);
-        }
+  <!-- REFERENCE TAB -->
+  <div class="tab-content" id="tab-reference">
+    <div class="ref-grid" id="refGrid"></div>
+  </div>
 
-        function renderMath(tex) {
-            const span = document.createElement('span');
-            span.className = 'math-expr';
-            try {
-                katex.render(tex, span, { throwOnError: false });
-            } catch (e) {
-                span.textContent = tex;
-            }
-            return span;
-        }
+</div>
 
-        function analyzeCurve(fx) {
-            try {
-                const fpx = math.derivative(fx, 'x').toString();
-                const fppx = math.derivative(fpx, 'x').toString();
+<script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.3/lib/browser/math.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script>
+// ─── UTILITIES ──────────────────────────────────────────────────────────────
 
-                // Find critical points
-                const criticalPoints = [];
-                for (let x = -5; x <= 5; x += 0.1) {
-                    const fpVal = math.evaluate(fpx, { x });
-                    if (Math.abs(fpVal) < 0.01) {
-                        const yVal = math.evaluate(fx, { x });
-                        criticalPoints.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(yVal.toFixed(2)), fpx: fpVal, fppx: math.evaluate(fppx, { x }) });
-                    }
-                }
+function gcd(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){[a,b]=[b,a%b]}return a||1}
 
-                return {
-                    fpx,
-                    fppx,
-                    criticalPoints: criticalPoints.slice(0, 10) // Limit to 10
-                };
-            } catch (e) {
-                return null;
-            }
-        }
+function numToTex(n){
+  if(typeof n!=='number'||!isFinite(n)) return '\\text{undefined}';
+  if(Math.abs(n)<1e-9) return '0';
+  // Try to express as p/q
+  for(let d=1;d<=1000;d++){
+    const p=Math.round(n*d);
+    if(Math.abs(p/d-n)<1e-9){
+      const g=gcd(Math.abs(p),d);
+      const pn=p/g, dn=d/g;
+      if(dn===1) return String(pn);
+      return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}}{${dn}}`;
+    }
+  }
+  // Try common irrationals
+  const pi=Math.PI, sq2=Math.sqrt(2), sq3=Math.sqrt(3);
+  for(let d=1;d<=12;d++){
+    for(let p=-12;p<=12;p++){
+      if(p===0) continue;
+      if(Math.abs(n-p*pi/d)<1e-9){
+        const g=gcd(Math.abs(p),d);
+        const pn=p/g,dn=d/g;
+        if(dn===1) return (pn===1?'':(pn===-1?'-':String(pn)))+'\\pi';
+        return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\pi}{${dn}}`;
+      }
+      if(Math.abs(n-p*sq2/d)<1e-9){
+        const g=gcd(Math.abs(p),d);
+        const pn=p/g,dn=d/g;
+        return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{2}}{${dn}}`;
+      }
+      if(Math.abs(n-p*sq3/d)<1e-9){
+        const g=gcd(Math.abs(p),d);
+        const pn=p/g,dn=d/g;
+        return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{3}}{${dn}}`;
+      }
+    }
+  }
+  return n.toPrecision(5).replace(/\.?0+$/,'');
+}
 
-        function drawGraph(fx) {
-            graphSvg.innerHTML = '';
-            const width = 600, height = 400;
-            const xMin = -5, xMax = 5, yMin = -5, yMax = 5;
-            const xScale = width / (xMax - xMin);
-            const yScale = height / (yMax - yMin);
+function renderK(tex,block=false){
+  const el=document.createElement(block?'div':'span');
+  el.className=block?'math-block':'math-inline';
+  try{katex.render(tex,el,{throwOnError:false,displayMode:block})}
+  catch(e){el.textContent=tex}
+  return el;
+}
 
-            // Draw grid
-            for (let x = xMin; x <= xMax; x++) {
-                const px = (x - xMin) * xScale;
-                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                line.setAttribute('x1', px);
-                line.setAttribute('y1', 0);
-                line.setAttribute('x2', px);
-                line.setAttribute('y2', height);
-                line.setAttribute('stroke', '#eee');
-                line.setAttribute('stroke-width', '1');
-                graphSvg.appendChild(line);
-            }
+function evalAt(expr,x){
+  try{const v=math.evaluate(expr,{x});return typeof v==='number'?v:NaN}
+  catch{return NaN}
+}
 
-            for (let y = yMin; y <= yMax; y++) {
-                const py = height - (y - yMin) * yScale;
-                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                line.setAttribute('x1', 0);
-                line.setAttribute('y1', py);
-                line.setAttribute('x2', width);
-                line.setAttribute('y2', py);
-                line.setAttribute('stroke', '#eee');
-                line.setAttribute('stroke-width', '1');
-                graphSvg.appendChild(line);
-            }
+function safeDerivative(expr,v='x'){
+  try{return math.derivative(expr,v).toString()}
+  catch{return null}
+}
 
-            // Draw axes
-            const xAxisY = height - (0 - yMin) * yScale;
-            const yAxisX = (0 - xMin) * xScale;
-            
-            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            xAxis.setAttribute('x1', 0);
-            xAxis.setAttribute('y1', xAxisY);
-            xAxis.setAttribute('x2', width);
-            xAxis.setAttribute('y2', xAxisY);
-            xAxis.setAttribute('stroke', '#333');
-            xAxis.setAttribute('stroke-width', '2');
-            graphSvg.appendChild(xAxis);
+function simplifyTex(expr){
+  try{
+    const node=math.parse(expr);
+    const simplified=math.simplify(node);
+    return simplified.toTex({parenthesis:'auto'});
+  }catch{
+    try{return math.parse(expr).toTex({parenthesis:'auto'})}
+    catch{return expr}
+  }
+}
 
-            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            yAxis.setAttribute('x1', yAxisX);
-            yAxis.setAttribute('y1', 0);
-            yAxis.setAttribute('x2', yAxisX);
-            yAxis.setAttribute('y2', height);
-            yAxis.setAttribute('stroke', '#333');
-            yAxis.setAttribute('stroke-width', '2');
-            graphSvg.appendChild(yAxis);
+// ─── ANALYSIS ENGINE ────────────────────────────────────────────────────────
 
-            // Draw function curve
-            let pathData = '';
-            for (let x = xMin; x <= xMax; x += 0.05) {
-                try {
-                    const y = math.evaluate(fx, { x });
-                    if (isFinite(y) && y >= yMin && y <= yMax) {
-                        const px = (x - xMin) * xScale;
-                        const py = height - (y - yMin) * yScale;
-                        pathData += (pathData ? 'L' : 'M') + px + ',' + py;
-                    }
-                } catch (e) {
-                    // Skip invalid points
-                }
-            }
+function analyzeCurve(fx,xMin,xMax,tanX){
+  const result={ok:false,error:null};
+  try{
+    // Validate parse
+    math.parse(fx);
+    result.fx=fx;
+    result.xMin=xMin;
+    result.xMax=xMax;
 
-            if (pathData) {
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', pathData);
-                path.setAttribute('stroke', 'var(--primary)');
-                path.setAttribute('stroke-width', '2');
-                path.setAttribute('fill', 'none');
-                graphSvg.appendChild(path);
-            }
-        }
+    // Derivatives
+    const fpStr=safeDerivative(fx);
+    const fppStr=fpStr?safeDerivative(fpStr):null;
+    result.fpStr=fpStr;
+    result.fppStr=fppStr;
+    result.fpTex=fpStr?simplifyTex(fpStr):'\\text{N/A}';
+    result.fppTex=fppStr?simplifyTex(fppStr):'\\text{N/A}';
 
-        function updateAnalyzer() {
-            const fx = functionInput.value.trim();
-            if (!fx) {
-                analyzerContent.innerHTML = '<p style="text-align: center; color: #999;">Enter a function to see analysis</p>';
-                graphSvg.innerHTML = '';
-                return;
-            }
+    // Domain (heuristic scan)
+    result.domain=detectDomain(fx,xMin,xMax);
 
-            const analysis = analyzeCurve(fx);
-            if (!analysis) {
-                analyzerContent.innerHTML = '<div class="error-message">Invalid function. Please check your input.</div>';
-                graphSvg.innerHTML = '';
-                return;
-            }
+    // Continuity & Differentiability
+    result.continuity=detectContinuity(fx,xMin,xMax);
+    result.differentiability=fpStr?detectDifferentiability(fpStr,xMin,xMax):'Cannot determine';
 
-            drawGraph(fx);
+    // Critical points (f'=0 sign change)
+    result.criticalPoints=fpStr?findCriticalPoints(fx,fpStr,fppStr,xMin,xMax):[];
 
-            // Build analyzer HTML
-            let html = '';
-            
-            // Derivatives
-            html += '<div class="section"><div class="section-header expanded"><span>📐 Derivatives</span><span class="chevron">▼</span></div>';
-            html += '<div class="section-content visible">';
-            html += '<div><strong>f\'(x) =</strong></div>';
-            html += '<div id="fpx-math"></div>';
-            html += '<div style="margin-top: 0.5rem;"><strong>f\'\'(x) =</strong></div>';
-            html += '<div id="fppx-math"></div>';
-            html += '</div></div>';
+    // Inflection points (f''=0 sign change)
+    result.inflectionPoints=fppStr?findInflectionPoints(fx,fppStr,xMin,xMax):[];
 
-            // Critical Points
-            if (analysis.criticalPoints.length > 0) {
-                html += '<div class="section"><div class="section-header"><span>🔍 Critical Points (' + analysis.criticalPoints.length + ')</span><span class="chevron">▼</span></div>';
-                html += '<div class="section-content">';
-                analysis.criticalPoints.forEach((pt, i) => {
-                    const kind = pt.fppx > 0 ? 'Local Min' : pt.fppx < 0 ? 'Local Max' : 'Inflection';
-                    html += '<div class="critical-point"><strong>' + kind + '</strong><br>x = ' + numToTex(pt.x) + ', y = ' + numToTex(pt.y) + '</div>';
-                });
-                html += '</div></div>';
-            }
+    // Monotonicity
+    result.monotonicity=fpStr?findMonotonicity(fpStr,xMin,xMax):[];
 
-            analyzerContent.innerHTML = html;
+    // Concavity
+    result.concavity=fppStr?findConcavity(fppStr,xMin,xMax):[];
 
-            // Render math
-            try {
-                katex.render(analysis.fpx, document.getElementById('fpx-math'), { throwOnError: false });
-                katex.render(analysis.fppx, document.getElementById('fppx-math'), { throwOnError: false });
-            } catch (e) {
-                console.error('Math rendering error:', e);
-            }
+    // Asymptotes
+    result.asymptotes=findAsymptotes(fx,xMin,xMax);
 
-            // Add section toggle listeners
-            document.querySelectorAll('.section-header').forEach(header => {
-                header.addEventListener('click', function() {
-                    this.classList.toggle('expanded');
-                    this.nextElementSibling.classList.toggle('visible');
-                });
-            });
-        }
+    // Intercepts
+    result.intercepts=findIntercepts(fx,xMin,xMax);
 
-        functionInput.addEventListener('input', updateAnalyzer);
-        updateAnalyzer();
-    </script>
+    // Tangent line
+    if(tanX!==null&&tanX!==undefined&&isFinite(tanX)){
+      result.tangent=buildTangent(fx,fpStr,tanX);
+    }
+
+    result.ok=true;
+  }catch(e){
+    result.error=e.message||'Parse error';
+  }
+  return result;
+}
+
+function detectDomain(fx,xMin,xMax){
+  // Scan for discontinuities
+  const bad=[];
+  const step=0.01;
+  for(let x=xMin;x<=xMax;x+=step){
+    const y=evalAt(fx,x);
+    if(!isFinite(y)) bad.push(x);
+  }
+  if(bad.length===0) return {tex:'\\mathbb{R}',text:'All real numbers'};
+  // Group
+  const groups=[];
+  let g=[bad[0]];
+  for(let i=1;i<bad.length;i++){
+    if(bad[i]-bad[i-1]<0.05) g.push(bad[i]);
+    else{groups.push(g);g=[bad[i]];}
+  }
+  groups.push(g);
+  const excl=groups.map(gr=>numToTex(gr[Math.floor(gr.length/2)]));
+  if(excl.length===1) return {tex:`\\mathbb{R} \\setminus \\{${excl[0]}\\}`,text:`All reals except x = ${excl[0]}`};
+  return {tex:`\\mathbb{R} \\setminus \\{${excl.join(',')}\\}`,text:`All reals except x ∈ {${excl.join(', ')}}`};
+}
+
+function detectContinuity(fx,xMin,xMax){
+  const step=0.05;
+  for(let x=xMin+step;x<=xMax-step;x+=step){
+    const y=evalAt(fx,x);
+    if(!isFinite(y)) return 'Discontinuous (has singularities in range)';
+  }
+  return 'Continuous on the given domain';
+}
+
+function detectDifferentiability(fpStr,xMin,xMax){
+  const step=0.05;
+  for(let x=xMin+step;x<=xMax-step;x+=step){
+    const v=evalAt(fpStr,x);
+    if(!isFinite(v)) return 'Not differentiable everywhere (f\'(x) undefined at some points)';
+  }
+  return 'Differentiable on the given domain';
+}
+
+function findCriticalPoints(fx,fpStr,fppStr,xMin,xMax){
+  const pts=[];
+  const step=0.01;
+  let prev=evalAt(fpStr,xMin);
+  for(let x=xMin+step;x<=xMax;x+=step){
+    const curr=evalAt(fpStr,x);
+    if(isFinite(prev)&&isFinite(curr)&&prev*curr<=0){
+      // Bisect to refine
+      let lo=x-step,hi=x,mid;
+      for(let i=0;i<30;i++){
+        mid=(lo+hi)/2;
+        const vm=evalAt(fpStr,mid);
+        if(!isFinite(vm)) break;
+        if(evalAt(fpStr,lo)*vm<=0) hi=mid; else lo=mid;
+      }
+      const cx=(lo+hi)/2;
+      const cy=evalAt(fx,cx);
+      if(!isFinite(cy)) {prev=curr;continue;}
+      // First derivative test
+      const fBefore=evalAt(fpStr,cx-0.05);
+      const fAfter=evalAt(fpStr,cx+0.05);
+      let kind='Stationary';
+      if(fBefore<0&&fAfter>0) kind='Local Minimum';
+      else if(fBefore>0&&fAfter<0) kind='Local Maximum';
+      else kind='Stationary (neither)';
+      pts.push({x:cx,y:cy,kind,xTex:numToTex(cx),yTex:numToTex(cy)});
+    }
+    prev=curr;
+  }
+  // Deduplicate
+  return pts.filter((p,i)=>!pts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.1));
+}
+
+function findInflectionPoints(fx,fppStr,xMin,xMax){
+  const pts=[];
+  const step=0.01;
+  let prev=evalAt(fppStr,xMin);
+  for(let x=xMin+step;x<=xMax;x+=step){
+    const curr=evalAt(fppStr,x);
+    if(isFinite(prev)&&isFinite(curr)&&prev*curr<0){
+      let lo=x-step,hi=x;
+      for(let i=0;i<30;i++){
+        const mid=(lo+hi)/2;
+        const vm=evalAt(fppStr,mid);
+        if(!isFinite(vm)) break;
+        if(evalAt(fppStr,lo)*vm<=0) hi=mid; else lo=mid;
+      }
+      const ix=(lo+hi)/2;
+      const iy=evalAt(fx,ix);
+      if(isFinite(iy)) pts.push({x:ix,y:iy,xTex:numToTex(ix),yTex:numToTex(iy)});
+    }
+    prev=curr;
+  }
+  return pts.filter((p,i)=>!pts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.1));
+}
+
+function findMonotonicity(fpStr,xMin,xMax){
+  const intervals=[];
+  const step=0.05;
+  let sign=null,start=xMin;
+  for(let x=xMin;x<=xMax+step;x+=step){
+    const v=evalAt(fpStr,x);
+    const s=isFinite(v)?(v>1e-9?'+':v<-1e-9?'-':'0'):null;
+    if(s!==sign){
+      if(sign!==null&&sign!=='0'){
+        intervals.push({from:start,to:x-step,increasing:sign==='+'});
+      }
+      sign=s;start=x;
+    }
+  }
+  return intervals;
+}
+
+function findConcavity(fppStr,xMin,xMax){
+  const intervals=[];
+  const step=0.05;
+  let sign=null,start=xMin;
+  for(let x=xMin;x<=xMax+step;x+=step){
+    const v=evalAt(fppStr,x);
+    const s=isFinite(v)?(v>1e-9?'+':v<-1e-9?'-':'0'):null;
+    if(s!==sign){
+      if(sign!==null&&sign!=='0'){
+        intervals.push({from:start,to:x-step,up:sign==='+'});
+      }
+      sign=s;start=x;
+    }
+  }
+  return intervals;
+}
+
+function findAsymptotes(fx,xMin,xMax){
+  const asymptotes=[];
+  // Vertical: look for poles
+  const step=0.005;
+  for(let x=xMin;x<=xMax;x+=step){
+    const y=evalAt(fx,x);
+    if(!isFinite(y)){
+      // Check neighbors
+      const yl=evalAt(fx,x-0.001);
+      const yr=evalAt(fx,x+0.001);
+      if(Math.abs(yl)>50||Math.abs(yr)>50){
+        asymptotes.push({type:'vertical',x:x,xTex:numToTex(x)});
+      }
+    }
+  }
+  // Horizontal: limits at ±∞
+  const yRight=evalAt(fx,1e6);
+  const yLeft=evalAt(fx,-1e6);
+  if(isFinite(yRight)&&Math.abs(yRight)<1e5){
+    const t=numToTex(yRight);
+    asymptotes.push({type:'horizontal',y:yRight,yTex:t,side:'right',tex:`y = ${t}`});
+  }
+  if(isFinite(yLeft)&&Math.abs(yLeft)<1e5&&(!isFinite(yRight)||Math.abs(yLeft-yRight)>1e-6)){
+    const t=numToTex(yLeft);
+    asymptotes.push({type:'horizontal',y:yLeft,yTex:t,side:'left',tex:`y = ${t}`});
+  }
+  // Oblique: check if f(x)/x → L as x→∞
+  const m=evalAt(fx,1e6)/1e6;
+  if(isFinite(m)&&Math.abs(m)>1e-9&&Math.abs(m)<1e4){
+    const b=yRight-m*1e6;
+    if(isFinite(b)){
+      const mTex=numToTex(m),bTex=numToTex(b);
+      asymptotes.push({type:'oblique',m,b,mTex,bTex,tex:`y = ${mTex}x ${b>=0?'+':'-'} ${numToTex(Math.abs(b))}`});
+    }
+  }
+  // Deduplicate vertical
+  const seen=new Set();
+  return asymptotes.filter(a=>{
+    if(a.type!=='vertical') return true;
+    const k=numToTex(a.x);
+    if(seen.has(k)) return false;
+    seen.add(k);return true;
+  });
+}
+
+function findIntercepts(fx,xMin,xMax){
+  const xInts=[];
+  const step=0.01;
+  let prev=evalAt(fx,xMin);
+  for(let x=xMin+step;x<=xMax;x+=step){
+    const curr=evalAt(fx,x);
+    if(isFinite(prev)&&isFinite(curr)&&prev*curr<=0){
+      let lo=x-step,hi=x;
+      for(let i=0;i<30;i++){
+        const mid=(lo+hi)/2;
+        const vm=evalAt(fx,mid);
+        if(!isFinite(vm)) break;
+        if(evalAt(fx,lo)*vm<=0) hi=mid; else lo=mid;
+      }
+      const xi=(lo+hi)/2;
+      xInts.push({x:xi,xTex:numToTex(xi)});
+    }
+    prev=curr;
+  }
+  const yInt=evalAt(fx,0);
+  return {
+    xInts:xInts.filter((p,i)=>!xInts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.05)),
+    yInt:isFinite(yInt)?{y:yInt,yTex:numToTex(yInt)}:null
+  };
+}
+
+function buildTangent(fx,fpStr,tanX){
+  const y0=evalAt(fx,tanX);
+  const m=fpStr?evalAt(fpStr,tanX):NaN;
+  if(!isFinite(y0)) return null;
+  const xTex=numToTex(tanX),yTex=numToTex(y0),mTex=isFinite(m)?numToTex(m):'\\text{undef}';
+  let lineTex='';
+  if(isFinite(m)){
+    const b=y0-m*tanX;
+    const bTex=numToTex(Math.abs(b));
+    lineTex=`y = ${mTex}x ${b>=0?'+':'-'} ${bTex}`;
+  }
+  return {x:tanX,y:y0,m,xTex,yTex,mTex,lineTex};
+}
+
+// ─── GRAPH RENDERER ─────────────────────────────────────────────────────────
+
+function drawGraph(result){
+  const svg=document.getElementById('graph');
+  const W=640,H=440;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML='';
+
+  const {fx,xMin,xMax,criticalPoints,inflectionPoints,asymptotes,intercepts,tangent}=result;
+
+  // Compute y range
+  let yMin=Infinity,yMax=-Infinity;
+  const step=(xMax-xMin)/800;
+  for(let x=xMin;x<=xMax;x+=step){
+    const y=evalAt(fx,x);
+    if(isFinite(y)){yMin=Math.min(yMin,y);yMax=Math.max(yMax,y);}
+  }
+  if(!isFinite(yMin)||!isFinite(yMax)){yMin=-5;yMax=5;}
+  const pad=(yMax-yMin)*0.15||1;
+  yMin-=pad;yMax+=pad;
+  // Clamp extreme ranges
+  if(yMax-yMin>200){const c=(yMax+yMin)/2;yMin=c-10;yMax=c+10;}
+
+  const ML=55,MR=20,MT=30,MB=40;
+  const gW=W-ML-MR,gH=H-MT-MB;
+
+  function px(x){return ML+(x-xMin)/(xMax-xMin)*gW;}
+  function py(y){return MT+gH-(y-yMin)/(yMax-yMin)*gH;}
+
+  function el(tag,attrs,text){
+    const e=document.createElementNS('http://www.w3.org/2000/svg',tag);
+    for(const[k,v] of Object.entries(attrs)) e.setAttribute(k,v);
+    if(text!==undefined) e.textContent=text;
+    return e;
+  }
+
+  // Background
+  svg.appendChild(el('rect',{x:ML,y:MT,width:gW,height:gH,fill:'#fff',stroke:'#e2e6ef','stroke-width':'1'}));
+
+  // Grid
+  const xTicks=Math.round(xMax-xMin);
+  const xStep=(xMax-xMin)/Math.min(xTicks,10);
+  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
+    const gx=px(x);
+    svg.appendChild(el('line',{x1:gx,y1:MT,x2:gx,y2:MT+gH,stroke:'#f0f2f8','stroke-width':'1'}));
+  }
+  const yTicks=Math.round(yMax-yMin);
+  const yStep=(yMax-yMin)/Math.min(yTicks,8);
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax;y+=yStep){
+    const gy=py(y);
+    svg.appendChild(el('line',{x1:ML,y1:gy,x2:ML+gW,y2:gy,stroke:'#f0f2f8','stroke-width':'1'}));
+  }
+
+  // Axes
+  const ax0=py(0),ay0=px(0);
+  if(ax0>=MT&&ax0<=MT+gH){
+    svg.appendChild(el('line',{x1:ML,y1:ax0,x2:ML+gW,y2:ax0,stroke:'#555','stroke-width':'1.5'}));
+    // x-axis arrow
+    svg.appendChild(el('polygon',{points:`${ML+gW},${ax0} ${ML+gW-8},${ax0-4} ${ML+gW-8},${ax0+4}`,fill:'#555'}));
+    svg.appendChild(el('text',{x:ML+gW+6,y:ax0+4,'font-size':'12','font-family':'Inter,sans-serif',fill:'#555'},'x'));
+  }
+  if(ay0>=ML&&ay0<=ML+gW){
+    svg.appendChild(el('line',{x1:ay0,y1:MT,x2:ay0,y2:MT+gH,stroke:'#555','stroke-width':'1.5'}));
+    // y-axis arrow
+    svg.appendChild(el('polygon',{points:`${ay0},${MT} ${ay0-4},${MT+8} ${ay0+4},${MT+8}`,fill:'#555'}));
+    svg.appendChild(el('text',{x:ay0+4,y:MT-6,'font-size':'12','font-family':'Inter,sans-serif',fill:'#555'},'y'));
+  }
+
+  // Origin label
+  if(ay0>=ML&&ay0<=ML+gW&&ax0>=MT&&ax0<=MT+gH){
+    svg.appendChild(el('text',{x:ay0-14,y:ax0+14,'font-size':'11','font-family':'Inter,sans-serif',fill:'#888'},'O'));
+  }
+
+  // Axis tick labels
+  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
+    if(Math.abs(x)<0.001) continue;
+    const gx=px(x);
+    svg.appendChild(el('line',{x1:gx,y1:ax0-3,x2:gx,y2:ax0+3,stroke:'#555','stroke-width':'1'}));
+    svg.appendChild(el('text',{x:gx,y:ax0+16,'font-size':'10','font-family':'Inter,sans-serif',fill:'#666','text-anchor':'middle'},String(Math.round(x*100)/100)));
+  }
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax;y+=yStep){
+    if(Math.abs(y)<0.001) continue;
+    const gy=py(y);
+    svg.appendChild(el('line',{x1:ay0-3,y1:gy,x2:ay0+3,y2:gy,stroke:'#555','stroke-width':'1'}));
+    svg.appendChild(el('text',{x:ay0-6,y:gy+4,'font-size':'10','font-family':'Inter,sans-serif',fill:'#666','text-anchor':'end'},String(Math.round(y*100)/100)));
+  }
+
+  // Asymptotes (dotted)
+  for(const a of asymptotes){
+    if(a.type==='vertical'){
+      const gx=px(a.x);
+      if(gx>=ML&&gx<=ML+gW){
+        svg.appendChild(el('line',{x1:gx,y1:MT,x2:gx,y2:MT+gH,stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
+        svg.appendChild(el('text',{x:gx+3,y:MT+14,'font-size':'10','font-family':'Inter,sans-serif',fill:'#c92a2a'},`x=${numToTex(a.x).replace(/\\frac\{([^}]+)\}\{([^}]+)\}/,'$1/$2')}`));
+      }
+    } else if(a.type==='horizontal'){
+      const gy=py(a.y);
+      if(gy>=MT&&gy<=MT+gH){
+        svg.appendChild(el('line',{x1:ML,y1:gy,x2:ML+gW,y2:gy,stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
+        svg.appendChild(el('text',{x:ML+4,y:gy-4,'font-size':'10','font-family':'Inter,sans-serif',fill:'#c92a2a'},`y=${a.yTex.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/,'$1/$2')}`));
+      }
+    } else if(a.type==='oblique'){
+      const x1=xMin,y1=a.m*x1+a.b;
+      const x2=xMax,y2=a.m*x2+a.b;
+      svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
+      svg.appendChild(el('text',{x:px(x2)-60,y:py(y2)-6,'font-size':'10','font-family':'Inter,sans-serif',fill:'#c92a2a'},`oblique`));
+    }
+  }
+
+  // Tangent line
+  if(tangent&&isFinite(tangent.m)){
+    const x1=xMin,y1=tangent.m*x1+(tangent.y-tangent.m*tangent.x);
+    const x2=xMax,y2=tangent.m*x2+(tangent.y-tangent.m*tangent.x);
+    svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#7048e8','stroke-width':'1.5','stroke-dasharray':'4,3'}));
+  }
+
+  // Function curve (split at discontinuities)
+  let path='',lastValid=false;
+  const pts=[];
+  for(let x=xMin;x<=xMax;x+=(xMax-xMin)/1200){
+    const y=evalAt(fx,x);
+    const valid=isFinite(y)&&y>=yMin&&y<=yMax;
+    if(valid){
+      const gx=px(x),gy=py(y);
+      if(!lastValid) pts.push({m:true,x:gx,y:gy});
+      else pts.push({m:false,x:gx,y:gy});
+    }
+    lastValid=valid;
+  }
+  if(pts.length){
+    let d='';
+    for(const p of pts) d+=(p.m?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1);
+    svg.appendChild(el('path',{d,stroke:'#3b5bdb','stroke-width':'2.2',fill:'none','stroke-linecap':'round','stroke-linejoin':'round'}));
+  }
+
+  // Intercepts
+  if(intercepts){
+    for(const xi of intercepts.xInts){
+      const gx=px(xi.x),gy=py(0);
+      if(gx>=ML&&gx<=ML+gW){
+        svg.appendChild(el('circle',{cx:gx,cy:gy,r:'4',fill:'#fff',stroke:'#3b5bdb','stroke-width':'2'}));
+        svg.appendChild(el('text',{x:gx,y:gy+18,'font-size':'9','font-family':'Inter,sans-serif',fill:'#3b5bdb','text-anchor':'middle'},xi.xTex.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/,'$1/$2')));
+      }
+    }
+    if(intercepts.yInt){
+      const gx=px(0),gy=py(intercepts.yInt.y);
+      if(gy>=MT&&gy<=MT+gH){
+        svg.appendChild(el('circle',{cx:gx,cy:gy,r:'4',fill:'#fff',stroke:'#3b5bdb','stroke-width':'2'}));
+        svg.appendChild(el('text',{x:gx+7,y:gy+3,'font-size':'9','font-family':'Inter,sans-serif',fill:'#3b5bdb'},intercepts.yInt.yTex.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/,'$1/$2')));
+      }
+    }
+  }
+
+  // Critical points
+  for(const cp of criticalPoints){
+    const gx=px(cp.x),gy=py(cp.y);
+    if(gx<ML||gx>ML+gW||gy<MT||gy>MT+gH) continue;
+    const color=cp.kind.includes('Max')?'#2f9e44':cp.kind.includes('Min')?'#1971c2':'#e67700';
+    svg.appendChild(el('circle',{cx:gx,cy:gy,r:'5',fill:color,stroke:'#fff','stroke-width':'1.5'}));
+    const label=cp.kind.includes('Max')?'max':cp.kind.includes('Min')?'min':'stat';
+    svg.appendChild(el('text',{x:gx,y:gy-9,'font-size':'9','font-family':'Inter,sans-serif',fill:color,'text-anchor':'middle','font-weight':'600'},label));
+  }
+
+  // Inflection points
+  for(const ip of inflectionPoints){
+    const gx=px(ip.x),gy=py(ip.y);
+    if(gx<ML||gx>ML+gW||gy<MT||gy>MT+gH) continue;
+    svg.appendChild(el('circle',{cx:gx,cy:gy,r:'4',fill:'#e67700',stroke:'#fff','stroke-width':'1.5'}));
+    svg.appendChild(el('text',{x:gx+6,y:gy-6,'font-size':'9','font-family':'Inter,sans-serif',fill:'#e67700','font-weight':'600'},'infl'));
+  }
+
+  // Tangent point
+  if(tangent){
+    const gx=px(tangent.x),gy=py(tangent.y);
+    if(gx>=ML&&gx<=ML+gW&&gy>=MT&&gy<=MT+gH){
+      svg.appendChild(el('circle',{cx:gx,cy:gy,r:'5',fill:'#7048e8',stroke:'#fff','stroke-width':'1.5'}));
+    }
+  }
+
+  // Function label
+  const labelX=ML+gW-5,labelY=MT+16;
+  svg.appendChild(el('text',{x:labelX,y:labelY,'font-size':'12','font-family':'Space Grotesk,sans-serif',fill:'#3b5bdb','text-anchor':'end','font-style':'italic'},`f(x) = ${fx}`));
+}
+
+// ─── ANALYTICS PANEL BUILDER ────────────────────────────────────────────────
+
+function buildAnalytics(result){
+  const panel=document.getElementById('analyticsPanel');
+  if(!result.ok){
+    panel.innerHTML=`<div class="error-box">⚠️ ${result.error||'Could not parse function'}</div>`;
+    return;
+  }
+  panel.innerHTML='';
+
+  function section(cls,icon,title,bodyFn,openByDefault=true){
+    const card=document.createElement('div');
+    card.className=`section-card ${cls}`;
+    const head=document.createElement('div');
+    head.className='section-head';
+    head.innerHTML=`<div class="section-head-left"><div class="section-icon">${icon}</div>${title}</div><span class="chevron-icon">${openByDefault?'▲':'▼'}</span>`;
+    const body=document.createElement('div');
+    body.className='section-body'+(openByDefault?' open':'');
+    bodyFn(body);
+    head.onclick=()=>{
+      const open=body.classList.toggle('open');
+      head.querySelector('.chevron-icon').textContent=open?'▲':'▼';
+    };
+    card.appendChild(head);
+    card.appendChild(body);
+    panel.appendChild(card);
+  }
+
+  // 1. Derivatives
+  section('sec-deriv','∂','Derivatives',body=>{
+    const r1=document.createElement('div');r1.className='row';
+    r1.innerHTML=`<span class="row-label">f'(x) =</span>`;
+    r1.appendChild(renderK(result.fpTex));
+    body.appendChild(r1);
+    const r2=document.createElement('div');r2.className='row';
+    r2.innerHTML=`<span class="row-label">f''(x) =</span>`;
+    r2.appendChild(renderK(result.fppTex));
+    body.appendChild(r2);
+  });
+
+  // 2. Domain
+  section('sec-domain','D','Domain',body=>{
+    const r=document.createElement('div');r.className='row';
+    r.innerHTML=`<span class="row-label">Domain</span>`;
+    r.appendChild(renderK(result.domain.tex));
+    body.appendChild(r);
+  });
+
+  // 3. Continuity & Differentiability
+  section('sec-cont','C','Continuity & Differentiability',body=>{
+    const r1=document.createElement('div');r1.className='row';
+    const contOk=result.continuity.startsWith('Continuous');
+    r1.innerHTML=`<span class="row-label">Continuity</span><span class="badge ${contOk?'badge-green':'badge-red'}">${contOk?'Continuous':'Discontinuous'}</span>`;
+    body.appendChild(r1);
+    const r2=document.createElement('div');r2.className='row';
+    const diffOk=result.differentiability.startsWith('Differentiable');
+    r2.innerHTML=`<span class="row-label">Differentiability</span><span class="badge ${diffOk?'badge-green':'badge-orange'}">${diffOk?'Differentiable':'Not everywhere'}</span>`;
+    body.appendChild(r2);
+    if(!contOk||!diffOk){
+      const note=document.createElement('div');
+      note.style.cssText='font-size:.8rem;color:var(--fg2);margin-top:.5rem;';
+      note.textContent=result.continuity+'. '+result.differentiability;
+      body.appendChild(note);
+    }
+  });
+
+  // 4. Critical Points
+  section('sec-crit','⊙','Critical Points',body=>{
+    const all=[...result.criticalPoints,...result.inflectionPoints.map(p=>({...p,kind:'Point of Inflection'}))];
+    all.sort((a,b)=>a.x-b.x);
+    if(all.length===0){
+      body.innerHTML='<div style="color:var(--fg3);font-size:.85rem">None found in range</div>';
+      return;
+    }
+    for(const cp of all){
+      const row=document.createElement('div');row.className='row';
+      const isInfl=cp.kind==='Point of Inflection';
+      const iMax=cp.kind.includes('Max');
+      const iMin=cp.kind.includes('Min');
+      const badgeCls=isInfl?'badge-orange':iMax?'badge-green':iMin?'badge-blue':'badge-purple';
+      const label=isInfl?'Inflection':iMax?'Local Max':iMin?'Local Min':'Stationary';
+      row.innerHTML=`<span class="badge ${badgeCls}" style="margin-right:.4rem">${label}</span>`;
+      const coord=document.createElement('span');
+      coord.appendChild(renderK(`\\left(${cp.xTex},\\,${cp.yTex}\\right)`));
+      row.appendChild(coord);
+      body.appendChild(row);
+    }
+  });
+
+  // 5. Monotonicity
+  section('sec-mono','↗','Monotonicity',body=>{
+    if(result.monotonicity.length===0){
+      body.innerHTML='<div style="color:var(--fg3);font-size:.85rem">Cannot determine in range</div>';
+      return;
+    }
+    for(const iv of result.monotonicity){
+      const row=document.createElement('div');row.className='row';
+      const cls=iv.increasing?'badge-green':'badge-red';
+      const label=iv.increasing?'↑ Increasing':'↓ Decreasing';
+      row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
+      const tex=`f'(x)${iv.increasing?'>':'<'}0 \\text{ on } (${numToTex(iv.from)},\\,${numToTex(iv.to)})`;
+      row.appendChild(renderK(tex));
+      body.appendChild(row);
+    }
+  });
+
+  // 6. Concavity
+  section('sec-conc','∩','Concavity',body=>{
+    if(result.concavity.length===0){
+      body.innerHTML='<div style="color:var(--fg3);font-size:.85rem">Cannot determine in range</div>';
+      return;
+    }
+    for(const iv of result.concavity){
+      const row=document.createElement('div');row.className='row';
+      const cls=iv.up?'badge-teal':'badge-red';
+      const label=iv.up?'∪ Concave Up':'∩ Concave Down';
+      row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
+      const tex=`f''(x)${iv.up?'>':'<'}0 \\text{ on } (${numToTex(iv.from)},\\,${numToTex(iv.to)})`;
+      row.appendChild(renderK(tex));
+      body.appendChild(row);
+    }
+  });
+
+  // 7. Asymptotes
+  section('sec-asym','⟶','Asymptotes',body=>{
+    if(result.asymptotes.length===0){
+      body.innerHTML='<div style="color:var(--fg3);font-size:.85rem">None detected in range</div>';
+      return;
+    }
+    for(const a of result.asymptotes){
+      const row=document.createElement('div');row.className='row';
+      const typeLabel=a.type==='vertical'?'Vertical':a.type==='horizontal'?'Horizontal':'Oblique';
+      const cls=a.type==='vertical'?'badge-red':a.type==='horizontal'?'badge-blue':'badge-purple';
+      row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${typeLabel}</span>`;
+      let tex='';
+      if(a.type==='vertical') tex=`x = ${a.xTex}`;
+      else if(a.type==='horizontal') tex=`y = ${a.yTex}`;
+      else tex=`y = ${a.mTex}x ${a.b>=0?'+':'-'} ${numToTex(Math.abs(a.b))}`;
+      row.appendChild(renderK(tex));
+      body.appendChild(row);
+    }
+  });
+
+  // 8. Tangent Line
+  section('sec-tan','⟂','Tangent Line',body=>{
+    const tanRow=document.createElement('div');
+    tanRow.innerHTML=`<div class="tan-input-row"><input type="number" id="tanXInput" value="${result.tangent?result.tangent.x:0}" step="0.1" placeholder="x value"><button class="btn btn-primary" id="tanBtn" style="font-size:.8rem;padding:.45rem .8rem">Compute</button></div>`;
+    body.appendChild(tanRow);
+    const tanResult=document.createElement('div');
+    tanResult.id='tanResult';
+    if(result.tangent){
+      renderTangentResult(tanResult,result.tangent);
+    }
+    body.appendChild(tanResult);
+    setTimeout(()=>{
+      const btn=document.getElementById('tanBtn');
+      if(btn) btn.onclick=()=>{
+        const xv=parseFloat(document.getElementById('tanXInput').value);
+        if(!isFinite(xv)) return;
+        const t=buildTangent(result.fx,result.fpStr,xv);
+        const tr=document.getElementById('tanResult');
+        if(tr) renderTangentResult(tr,t);
+        // Redraw graph with new tangent
+        result.tangent=t;
+        drawGraph(result);
+      };
+    },50);
+  });
+}
+
+function renderTangentResult(container,t){
+  container.innerHTML='';
+  if(!t){container.innerHTML='<div style="color:var(--fg3);font-size:.85rem">Cannot compute at this point</div>';return;}
+  const r1=document.createElement('div');r1.className='row';
+  r1.innerHTML=`<span class="row-label">Point</span>`;
+  r1.appendChild(renderK(`\\left(${t.xTex},\\,${t.yTex}\\right)`));
+  container.appendChild(r1);
+  const r2=document.createElement('div');r2.className='row';
+  r2.innerHTML=`<span class="row-label">Slope</span>`;
+  r2.appendChild(renderK(`m = f'(${t.xTex}) = ${t.mTex}`));
+  container.appendChild(r2);
+  if(t.lineTex){
+    const r3=document.createElement('div');r3.className='row';
+    r3.innerHTML=`<span class="row-label">Equation</span>`;
+    r3.appendChild(renderK(t.lineTex));
+    container.appendChild(r3);
+  }
+}
+
+// ─── REFERENCE TAB ──────────────────────────────────────────────────────────
+
+function buildReference(){
+  const grid=document.getElementById('refGrid');
+  grid.innerHTML='';
+
+  const cards=[
+    {
+      icon:'📐',title:'Differentiation Rules',color:'#3b5bdb',
+      rows:[
+        {name:'Power Rule',tex:'\\frac{d}{dx}[x^n] = nx^{n-1}'},
+        {name:'Product Rule',tex:'\\frac{d}{dx}[uv] = u\'v + uv\''},
+        {name:'Quotient Rule',tex:'\\frac{d}{dx}\\left[\\frac{u}{v}\\right] = \\frac{u\'v - uv\'}{v^2}'},
+        {name:'Chain Rule',tex:'\\frac{d}{dx}[f(g(x))] = f\'(g(x))\\cdot g\'(x)'},
+        {name:'Constant',tex:'\\frac{d}{dx}[c] = 0'},
+        {name:'Sum Rule',tex:'\\frac{d}{dx}[u+v] = u\'+v\''},
+      ]
+    },
+    {
+      icon:'📊',title:'Standard Derivatives',color:'#2f9e44',
+      rows:[
+        {name:'sin x',tex:'\\frac{d}{dx}[\\sin x] = \\cos x'},
+        {name:'cos x',tex:'\\frac{d}{dx}[\\cos x] = -\\sin x'},
+        {name:'tan x',tex:'\\frac{d}{dx}[\\tan x] = \\sec^2 x'},
+        {name:'eˣ',tex:'\\frac{d}{dx}[e^x] = e^x'},
+        {name:'ln x',tex:'\\frac{d}{dx}[\\ln x] = \\frac{1}{x}'},
+        {name:'aˣ',tex:'\\frac{d}{dx}[a^x] = a^x \\ln a'},
+        {name:'arcsin x',tex:'\\frac{d}{dx}[\\arcsin x] = \\frac{1}{\\sqrt{1-x^2}}'},
+        {name:'arctan x',tex:'\\frac{d}{dx}[\\arctan x] = \\frac{1}{1+x^2}'},
+      ]
+    },
+    {
+      icon:'🔍',title:'Critical Points & Classification',color:'#e67700',
+      rows:[
+        {name:'Critical Point',tex:'f\'(c) = 0 \\text{ or } f\'(c) \\text{ undefined}'},
+        {name:'1st Deriv Test (Max)',tex:'f\'(x): + \\to - \\Rightarrow \\text{Local Max at } x=c'},
+        {name:'1st Deriv Test (Min)',tex:'f\'(x): - \\to + \\Rightarrow \\text{Local Min at } x=c'},
+        {name:'2nd Deriv Test (Max)',tex:'f\'(c)=0,\\; f\'\'(c)<0 \\Rightarrow \\text{Local Max}'},
+        {name:'2nd Deriv Test (Min)',tex:'f\'(c)=0,\\; f\'\'(c)>0 \\Rightarrow \\text{Local Min}'},
+        {name:'Point of Inflection',tex:'f\'\'(c)=0 \\text{ and sign of } f\'\' \\text{ changes}'},
+      ]
+    },
+    {
+      icon:'↗️',title:'Monotonicity',color:'#2f9e44',
+      rows:[
+        {name:'Increasing',tex:'f\'(x) > 0 \\Rightarrow f \\text{ is increasing}'},
+        {name:'Decreasing',tex:'f\'(x) < 0 \\Rightarrow f \\text{ is decreasing}'},
+        {name:'Constant',tex:'f\'(x) = 0 \\Rightarrow f \\text{ is constant}'},
+      ]
+    },
+    {
+      icon:'∩',title:'Concavity',color:'#0c8599',
+      rows:[
+        {name:'Concave Up',tex:'f\'\'(x) > 0 \\Rightarrow \\text{concave up (cup shape)}'},
+        {name:'Concave Down',tex:'f\'\'(x) < 0 \\Rightarrow \\text{concave down (cap shape)}'},
+        {name:'Inflection',tex:'f\'\'(c) = 0 \\text{ and sign changes} \\Rightarrow \\text{inflection}'},
+      ]
+    },
+    {
+      icon:'⟶',title:'Asymptotes',color:'#c92a2a',
+      rows:[
+        {name:'Vertical',tex:'\\lim_{x \\to a} f(x) = \\pm\\infty \\Rightarrow x = a'},
+        {name:'Horizontal (right)',tex:'\\lim_{x \\to +\\infty} f(x) = L \\Rightarrow y = L'},
+        {name:'Horizontal (left)',tex:'\\lim_{x \\to -\\infty} f(x) = L \\Rightarrow y = L'},
+        {name:'Oblique',tex:'y = mx + b \\text{ where } m = \\lim_{x\\to\\infty}\\frac{f(x)}{x}'},
+        {name:'Oblique b',tex:'b = \\lim_{x\\to\\infty}[f(x) - mx]'},
+      ]
+    },
+    {
+      icon:'⟂',title:'Tangent Line',color:'#7048e8',
+      rows:[
+        {name:'Equation',tex:'y - y_0 = f\'(x_0)(x - x_0)'},
+        {name:'Slope',tex:'m = f\'(x_0)'},
+        {name:'Normal Line',tex:'y - y_0 = -\\frac{1}{f\'(x_0)}(x - x_0)'},
+      ]
+    },
+    {
+      icon:'📏',title:'Curve Sketching Checklist',color:'#1971c2',
+      rows:[
+        {name:'Step 1',tex:'\\text{Find domain and intercepts}'},
+        {name:'Step 2',tex:'\\text{Find asymptotes (V, H, O)}'},
+        {name:'Step 3',tex:'\\text{Compute } f\'(x), \\text{ find critical points}'},
+        {name:'Step 4',tex:'\\text{Apply 1st derivative test for max/min}'},
+        {name:'Step 5',tex:'\\text{Compute } f\'\'(x), \\text{ find inflection points}'},
+        {name:'Step 6',tex:'\\text{Determine concavity intervals}'},
+        {name:'Step 7',tex:'\\text{Sketch the curve using all information}'},
+      ]
+    },
+  ];
+
+  for(const card of cards){
+    const div=document.createElement('div');
+    div.className='ref-card';
+    div.innerHTML=`<div class="ref-card-head" style="color:${card.color}">${card.icon} ${card.title}</div>`;
+    const body=document.createElement('div');
+    body.className='ref-card-body';
+    for(const row of card.rows){
+      const r=document.createElement('div');
+      r.className='ref-row';
+      r.innerHTML=`<div class="ref-name">${row.name}</div>`;
+      const f=document.createElement('div');
+      f.className='ref-formula';
+      try{katex.render(row.tex,f,{throwOnError:false,displayMode:false})}
+      catch{f.textContent=row.tex}
+      r.appendChild(f);
+      body.appendChild(r);
+    }
+    div.appendChild(body);
+    grid.appendChild(div);
+  }
+}
+
+// ─── MAIN ────────────────────────────────────────────────────────────────────
+
+let lastResult=null;
+
+function runAnalysis(){
+  const fx=document.getElementById('fxInput').value.trim();
+  const xMin=parseFloat(document.getElementById('xMinInput').value)||(-5);
+  const xMax=parseFloat(document.getElementById('xMaxInput').value)||5;
+  if(!fx) return;
+  document.getElementById('graphTitle').textContent=`Graph of f(x) = ${fx}`;
+  const result=analyzeCurve(fx,xMin,xMax,0);
+  lastResult=result;
+  if(result.ok){
+    drawGraph(result);
+    buildAnalytics(result);
+  } else {
+    document.getElementById('analyticsPanel').innerHTML=`<div class="error-box">⚠️ ${result.error}</div>`;
+    document.getElementById('graph').innerHTML='';
+  }
+}
+
+// Tab navigation
+document.getElementById('navTabs').addEventListener('click',e=>{
+  const tab=e.target.closest('.nav-tab');
+  if(!tab) return;
+  const name=tab.dataset.tab;
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.toggle('active',t.id===`tab-${name}`));
+  if(name==='reference') buildReference();
+});
+
+// Analyze button
+document.getElementById('analyzeBtn').addEventListener('click',runAnalysis);
+document.getElementById('fxInput').addEventListener('keydown',e=>{if(e.key==='Enter') runAnalysis();});
+
+// Initial run
+runAnalysis();
+</script>
 </body>
 </html>
