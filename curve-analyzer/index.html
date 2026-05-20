@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📈 Curve Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: oklch(0.55 0.2 259);
+            --primary-light: oklch(0.65 0.18 259);
+            --background: oklch(0.98 0.001 0);
+            --card: oklch(1 0 0);
+            --border: oklch(0.90 0.005 280);
+            --foreground: oklch(0.15 0.02 280);
+            --secondary: oklch(0.95 0.005 280);
+            --muted: oklch(0.92 0.004 280);
+            --accent: oklch(0.55 0.2 259);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid var(--border);
+            background: var(--background);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .github-link {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .github-link:hover {
+            background: var(--secondary);
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 4rem);
+        }
+
+        .graph-panel {
+            flex: 1;
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .analyzer-panel {
+            width: 24rem;
+            border-left: 1px solid var(--border);
+            padding: 1.5rem;
+            overflow-y: auto;
+            background: var(--card);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--card);
+            color: var(--foreground);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            ring: 2px var(--primary);
+            border-color: var(--primary);
+        }
+
+        .graph-container {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--card);
+            padding: 1rem;
+            overflow: hidden;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .section {
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .section-header {
+            padding: 1rem;
+            background: var(--secondary);
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .section-header:hover {
+            background: var(--muted);
+        }
+
+        .section-header.expanded {
+            background: var(--muted);
+        }
+
+        .chevron {
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .section-header.expanded .chevron {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.02);
+            display: none;
+        }
+
+        .section-content.visible {
+            display: block;
+        }
+
+        .math-expr {
+            font-family: 'KaTeX_Main', serif;
+            margin: 0.5rem 0;
+        }
+
+        .critical-point {
+            padding: 0.75rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .error-message {
+            padding: 1rem;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 0.5rem;
+            color: #c33;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .analyzer-panel {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid var(--border);
+                max-height: 50vh;
+            }
+
+            .graph-panel {
+                border-right: none;
+            }
+        }
+
+        .dark-mode {
+            --background: oklch(0.12 0.02 280);
+            --card: oklch(0.18 0.025 280);
+            --border: oklch(0.25 0.03 280);
+            --foreground: oklch(0.92 0.005 280);
+            --secondary: oklch(0.22 0.03 280);
+            --muted: oklch(0.28 0.035 280);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">📈 Curve Analyzer</div>
+            <a href="https://github.com/kingtmc314/curve-analyzer" target="_blank" rel="noopener noreferrer" class="github-link" title="View on GitHub">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Graph Panel -->
+        <div class="graph-panel">
+            <div class="input-group">
+                <label for="function-input">Function f(x)</label>
+                <input type="text" id="function-input" placeholder="e.g., sin(x), x^2 - 3*x + 2" value="sin(x)">
+            </div>
+            <div class="graph-container">
+                <svg id="graph" viewBox="0 0 600 400" style="background: white; border-radius: 0.375rem;"></svg>
+            </div>
+        </div>
+
+        <!-- Analyzer Panel -->
+        <div class="analyzer-panel">
+            <div id="analyzer-content">
+                <p style="text-align: center; color: #999;">Enter a function to see analysis</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.0.0/lib/browser/math.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        const functionInput = document.getElementById('function-input');
+        const graphSvg = document.getElementById('graph');
+        const analyzerContent = document.getElementById('analyzer-content');
+
+        // Utility functions
+        function numToTex(num) {
+            if (typeof num !== 'number' || !isFinite(num)) return 'undefined';
+            if (Math.abs(num) < 1e-9) return '0';
+            
+            const tolerance = 1e-9;
+            for (let den = 1; den <= 1000; den++) {
+                for (let num_candidate = Math.round(num * den); num_candidate <= Math.round(num * den) + 1; num_candidate++) {
+                    if (Math.abs(num_candidate / den - num) < tolerance) {
+                        if (den === 1) return num_candidate.toString();
+                        const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                        const g = gcd(Math.abs(num_candidate), den);
+                        const n = num_candidate / g;
+                        const d = den / g;
+                        return d === 1 ? n.toString() : `\\frac{${n}}{${d}}`;
+                    }
+                }
+            }
+            return num.toFixed(4);
+        }
+
+        function renderMath(tex) {
+            const span = document.createElement('span');
+            span.className = 'math-expr';
+            try {
+                katex.render(tex, span, { throwOnError: false });
+            } catch (e) {
+                span.textContent = tex;
+            }
+            return span;
+        }
+
+        function analyzeCurve(fx) {
+            try {
+                const fpx = math.derivative(fx, 'x').toString();
+                const fppx = math.derivative(fpx, 'x').toString();
+
+                // Find critical points
+                const criticalPoints = [];
+                for (let x = -5; x <= 5; x += 0.1) {
+                    const fpVal = math.evaluate(fpx, { x });
+                    if (Math.abs(fpVal) < 0.01) {
+                        const yVal = math.evaluate(fx, { x });
+                        criticalPoints.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(yVal.toFixed(2)), fpx: fpVal, fppx: math.evaluate(fppx, { x }) });
+                    }
+                }
+
+                return {
+                    fpx,
+                    fppx,
+                    criticalPoints: criticalPoints.slice(0, 10) // Limit to 10
+                };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function drawGraph(fx) {
+            graphSvg.innerHTML = '';
+            const width = 600, height = 400;
+            const xMin = -5, xMax = 5, yMin = -5, yMax = 5;
+            const xScale = width / (xMax - xMin);
+            const yScale = height / (yMax - yMin);
+
+            // Draw grid
+            for (let x = xMin; x <= xMax; x++) {
+                const px = (x - xMin) * xScale;
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', px);
+                line.setAttribute('y1', 0);
+                line.setAttribute('x2', px);
+                line.setAttribute('y2', height);
+                line.setAttribute('stroke', '#eee');
+                line.setAttribute('stroke-width', '1');
+                graphSvg.appendChild(line);
+            }
+
+            for (let y = yMin; y <= yMax; y++) {
+                const py = height - (y - yMin) * yScale;
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', 0);
+                line.setAttribute('y1', py);
+                line.setAttribute('x2', width);
+                line.setAttribute('y2', py);
+                line.setAttribute('stroke', '#eee');
+                line.setAttribute('stroke-width', '1');
+                graphSvg.appendChild(line);
+            }
+
+            // Draw axes
+            const xAxisY = height - (0 - yMin) * yScale;
+            const yAxisX = (0 - xMin) * xScale;
+            
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', 0);
+            xAxis.setAttribute('y1', xAxisY);
+            xAxis.setAttribute('x2', width);
+            xAxis.setAttribute('y2', xAxisY);
+            xAxis.setAttribute('stroke', '#333');
+            xAxis.setAttribute('stroke-width', '2');
+            graphSvg.appendChild(xAxis);
+
+            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxis.setAttribute('x1', yAxisX);
+            yAxis.setAttribute('y1', 0);
+            yAxis.setAttribute('x2', yAxisX);
+            yAxis.setAttribute('y2', height);
+            yAxis.setAttribute('stroke', '#333');
+            yAxis.setAttribute('stroke-width', '2');
+            graphSvg.appendChild(yAxis);
+
+            // Draw function curve
+            let pathData = '';
+            for (let x = xMin; x <= xMax; x += 0.05) {
+                try {
+                    const y = math.evaluate(fx, { x });
+                    if (isFinite(y) && y >= yMin && y <= yMax) {
+                        const px = (x - xMin) * xScale;
+                        const py = height - (y - yMin) * yScale;
+                        pathData += (pathData ? 'L' : 'M') + px + ',' + py;
+                    }
+                } catch (e) {
+                    // Skip invalid points
+                }
+            }
+
+            if (pathData) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', pathData);
+                path.setAttribute('stroke', 'var(--primary)');
+                path.setAttribute('stroke-width', '2');
+                path.setAttribute('fill', 'none');
+                graphSvg.appendChild(path);
+            }
+        }
+
+        function updateAnalyzer() {
+            const fx = functionInput.value.trim();
+            if (!fx) {
+                analyzerContent.innerHTML = '<p style="text-align: center; color: #999;">Enter a function to see analysis</p>';
+                graphSvg.innerHTML = '';
+                return;
+            }
+
+            const analysis = analyzeCurve(fx);
+            if (!analysis) {
+                analyzerContent.innerHTML = '<div class="error-message">Invalid function. Please check your input.</div>';
+                graphSvg.innerHTML = '';
+                return;
+            }
+
+            drawGraph(fx);
+
+            // Build analyzer HTML
+            let html = '';
+            
+            // Derivatives
+            html += '<div class="section"><div class="section-header expanded"><span>📐 Derivatives</span><span class="chevron">▼</span></div>';
+            html += '<div class="section-content visible">';
+            html += '<div><strong>f\'(x) =</strong></div>';
+            html += '<div id="fpx-math"></div>';
+            html += '<div style="margin-top: 0.5rem;"><strong>f\'\'(x) =</strong></div>';
+            html += '<div id="fppx-math"></div>';
+            html += '</div></div>';
+
+            // Critical Points
+            if (analysis.criticalPoints.length > 0) {
+                html += '<div class="section"><div class="section-header"><span>🔍 Critical Points (' + analysis.criticalPoints.length + ')</span><span class="chevron">▼</span></div>';
+                html += '<div class="section-content">';
+                analysis.criticalPoints.forEach((pt, i) => {
+                    const kind = pt.fppx > 0 ? 'Local Min' : pt.fppx < 0 ? 'Local Max' : 'Inflection';
+                    html += '<div class="critical-point"><strong>' + kind + '</strong><br>x = ' + numToTex(pt.x) + ', y = ' + numToTex(pt.y) + '</div>';
+                });
+                html += '</div></div>';
+            }
+
+            analyzerContent.innerHTML = html;
+
+            // Render math
+            try {
+                katex.render(analysis.fpx, document.getElementById('fpx-math'), { throwOnError: false });
+                katex.render(analysis.fppx, document.getElementById('fppx-math'), { throwOnError: false });
+            } catch (e) {
+                console.error('Math rendering error:', e);
+            }
+
+            // Add section toggle listeners
+            document.querySelectorAll('.section-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                    this.nextElementSibling.classList.toggle('visible');
+                });
+            });
+        }
+
+        functionInput.addEventListener('input', updateAnalyzer);
+        updateAnalyzer();
+    </script>
+</body>
+</html>
