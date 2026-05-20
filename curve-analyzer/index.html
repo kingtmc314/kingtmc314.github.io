@@ -238,7 +238,9 @@ function numToTex(n){
         const g=gcd(Math.abs(p),d);
         const pn=p/g,dn=d/g;
         if(dn===1) return (pn===1?'':(pn===-1?'-':String(pn)))+'\\pi';
-        return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\pi}{${dn}}`;
+        // Suppress coefficient 1 in numerator: \frac{\pi}{2} not \frac{1\pi}{2}
+        const numPart=Math.abs(pn)===1?'\\pi':`${Math.abs(pn)}\\pi`;
+        return (pn<0?'-':'')+`\\frac{${numPart}}{${dn}}`;
       }
       if(Math.abs(n-p*sq2/d)<1e-9){
         const g=gcd(Math.abs(p),d);
@@ -671,12 +673,13 @@ function drawGraph(result){
   }
 
   // Axis tick labels — use exact values where possible
+  // Note: texToPlain is defined later in this function but JS hoists function declarations
   function tickLabel(v){
     const t=numToTex(v);
-    // Convert LaTeX fractions to plain text for SVG: \frac{a}{b} -> a/b, \pi -> π
-    return t.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g,'$1/$2')
+    // Simple conversion: \frac{A}{B} -> A/B, \pi -> π
+    return t.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,(_, num, den)=>num+'/'+den)
              .replace(/\\pi/g,'π').replace(/\\sqrt\{([^}]+)\}/g,'√$1')
-             .replace(/\\text\{([^}]+)\}/g,'$1');
+             .replace(/\\text\{([^}]+)\}/g,'$1').replace(/[{}\\]/g,'');
   }
   for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
     if(Math.abs(x)<0.001) continue;
@@ -694,9 +697,17 @@ function drawGraph(result){
   // Helper: convert LaTeX tex to plain SVG text (defined here for use in asymptotes + callouts)
   function texToPlain(t){
     if(!t) return '';
-    return t.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g,'($1)/($2)')
-             .replace(/\\pi/g,'π').replace(/\\sqrt\{([^}]+)\}/g,'√($1)')
-             .replace(/\\text\{([^}]+)\}/g,'$1').replace(/[{}]/g,'');
+    // Recursively simplify nested fractions, then strip remaining braces
+    let s=t;
+    // \frac{A}{B} -> A/B (no extra parens for simple atoms, parens only if compound)
+    s=s.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,(_, num, den)=>{
+      const needParenNum=/[+\-]/.test(num.replace(/^-/,''));
+      const needParenDen=/[+\-]/.test(den);
+      return (needParenNum?`(${num})`:num)+'/'+(needParenDen?`(${den})`:den);
+    });
+    s=s.replace(/\\pi/g,'π').replace(/\\sqrt\{([^}]+)\}/g,'√$1')
+       .replace(/\\text\{([^}]+)\}/g,'$1').replace(/[{}\\]/g,'');
+    return s;
   }
 
   // Asymptotes (dotted)
