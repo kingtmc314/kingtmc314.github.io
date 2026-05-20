@@ -670,18 +670,33 @@ function drawGraph(result){
     svg.appendChild(el('text',{x:ay0-14,y:ax0+14,'font-size':'11','font-family':'Inter,sans-serif',fill:'#888'},'O'));
   }
 
-  // Axis tick labels
+  // Axis tick labels — use exact values where possible
+  function tickLabel(v){
+    const t=numToTex(v);
+    // Convert LaTeX fractions to plain text for SVG: \frac{a}{b} -> a/b, \pi -> π
+    return t.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g,'$1/$2')
+             .replace(/\\pi/g,'π').replace(/\\sqrt\{([^}]+)\}/g,'√$1')
+             .replace(/\\text\{([^}]+)\}/g,'$1');
+  }
   for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
     if(Math.abs(x)<0.001) continue;
     const gx=px(x);
     svg.appendChild(el('line',{x1:gx,y1:ax0-3,x2:gx,y2:ax0+3,stroke:'#555','stroke-width':'1'}));
-    svg.appendChild(el('text',{x:gx,y:ax0+16,'font-size':'10','font-family':'Inter,sans-serif',fill:'#666','text-anchor':'middle'},String(Math.round(x*100)/100)));
+    svg.appendChild(el('text',{x:gx,y:ax0+16,'font-size':'10','font-family':'Inter,sans-serif',fill:'#666','text-anchor':'middle'},tickLabel(x)));
   }
   for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax;y+=yStep){
     if(Math.abs(y)<0.001) continue;
     const gy=py(y);
     svg.appendChild(el('line',{x1:ay0-3,y1:gy,x2:ay0+3,y2:gy,stroke:'#555','stroke-width':'1'}));
-    svg.appendChild(el('text',{x:ay0-6,y:gy+4,'font-size':'10','font-family':'Inter,sans-serif',fill:'#666','text-anchor':'end'},String(Math.round(y*100)/100)));
+    svg.appendChild(el('text',{x:ay0-6,y:gy+4,'font-size':'10','font-family':'Inter,sans-serif',fill:'#666','text-anchor':'end'},tickLabel(y)));
+  }
+
+  // Helper: convert LaTeX tex to plain SVG text (defined here for use in asymptotes + callouts)
+  function texToPlain(t){
+    if(!t) return '';
+    return t.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g,'($1)/($2)')
+             .replace(/\\pi/g,'π').replace(/\\sqrt\{([^}]+)\}/g,'√($1)')
+             .replace(/\\text\{([^}]+)\}/g,'$1').replace(/[{}]/g,'');
   }
 
   // Asymptotes (dotted)
@@ -702,7 +717,8 @@ function drawGraph(result){
       const x1=xMin,y1=a.m*x1+a.b;
       const x2=xMax,y2=a.m*x2+a.b;
       svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
-      svg.appendChild(el('text',{x:px(x2)-60,y:py(y2)-6,'font-size':'10','font-family':'Inter,sans-serif',fill:'#c92a2a'},`oblique`));
+      const obliqueLabel=`y=${texToPlain(a.mTex)}x${a.b>=0?'+':'-'}${texToPlain(a.bTex||numToTex(Math.abs(a.b)))}`;
+      svg.appendChild(el('text',{x:px(x2)-60,y:py(y2)-6,'font-size':'10','font-family':'Inter,sans-serif',fill:'#c92a2a'},obliqueLabel));
     }
   }
 
@@ -750,22 +766,45 @@ function drawGraph(result){
     }
   }
 
-  // Critical points
-  for(const cp of criticalPoints){
+  // Helper: draw GeoGebra-style callout label for a point
+  function drawCallout(gx,gy,xTex,yTex,color,labelText,above){
+    const coordStr=`(${texToPlain(xTex)}, ${texToPlain(yTex)})`;
+    const boxW=Math.max(coordStr.length*5.8+8, 60);
+    const boxH=28;
+    const boxX=Math.min(Math.max(gx-boxW/2, ML+2), ML+gW-boxW-2);
+    const boxY=above ? gy-boxH-10 : gy+10;
+    // Stem line from point to box
+    const stemY=above ? boxY+boxH : boxY;
+    svg.appendChild(el('line',{x1:gx,y1:gy,x2:gx,y2:stemY,stroke:color,'stroke-width':'1','stroke-dasharray':'2,2',opacity:'0.7'}));
+    // Box background
+    svg.appendChild(el('rect',{x:boxX,y:boxY,width:boxW,height:boxH,rx:'4',fill:'#fff',stroke:color,'stroke-width':'1.2',opacity:'0.97'}));
+    // Label text (type: max/min/infl)
+    svg.appendChild(el('text',{x:boxX+boxW/2,y:boxY+10,'font-size':'8','font-family':'Space Grotesk,sans-serif',fill:color,'text-anchor':'middle','font-weight':'700'},labelText));
+    // Coordinate text
+    svg.appendChild(el('text',{x:boxX+boxW/2,y:boxY+21,'font-size':'8.5','font-family':'JetBrains Mono,monospace',fill:'#333','text-anchor':'middle'},coordStr));
+    // Dot on curve
+    svg.appendChild(el('circle',{cx:gx,cy:gy,r:'4.5',fill:color,stroke:'#fff','stroke-width':'1.5'}));
+  }
+
+  // Critical points with GeoGebra-style callout labels
+  for(let i=0;i<criticalPoints.length;i++){
+    const cp=criticalPoints[i];
     const gx=px(cp.x),gy=py(cp.y);
     if(gx<ML||gx>ML+gW||gy<MT||gy>MT+gH) continue;
     const color=cp.kind.includes('Max')?'#2f9e44':cp.kind.includes('Min')?'#1971c2':'#e67700';
-    svg.appendChild(el('circle',{cx:gx,cy:gy,r:'5',fill:color,stroke:'#fff','stroke-width':'1.5'}));
-    const label=cp.kind.includes('Max')?'max':cp.kind.includes('Min')?'min':'stat';
-    svg.appendChild(el('text',{x:gx,y:gy-9,'font-size':'9','font-family':'Inter,sans-serif',fill:color,'text-anchor':'middle','font-weight':'600'},label));
+    const label=cp.kind.includes('Max')?'Local Max':cp.kind.includes('Min')?'Local Min':'Stationary';
+    const above=cp.kind.includes('Max');
+    drawCallout(gx,gy,cp.xTex,cp.yTex,color,label,above);
   }
 
-  // Inflection points
-  for(const ip of inflectionPoints){
+  // Inflection points with GeoGebra-style callout labels
+  for(let i=0;i<inflectionPoints.length;i++){
+    const ip=inflectionPoints[i];
     const gx=px(ip.x),gy=py(ip.y);
     if(gx<ML||gx>ML+gW||gy<MT||gy>MT+gH) continue;
-    svg.appendChild(el('circle',{cx:gx,cy:gy,r:'4',fill:'#e67700',stroke:'#fff','stroke-width':'1.5'}));
-    svg.appendChild(el('text',{x:gx+6,y:gy-6,'font-size':'9','font-family':'Inter,sans-serif',fill:'#e67700','font-weight':'600'},'infl'));
+    // Alternate above/below to avoid overlap
+    const above=i%2===0;
+    drawCallout(gx,gy,ip.xTex,ip.yTex,'#e67700','Inflection',above);
   }
 
   // Tangent point
@@ -918,7 +957,10 @@ function buildAnalytics(result){
       let tex='';
       if(a.type==='vertical') tex=`x = ${a.xTex}`;
       else if(a.type==='horizontal') tex=`y = ${a.yTex}`;
-      else tex=`y = ${a.mTex}x ${a.b>=0?'+':'-'} ${numToTex(Math.abs(a.b))}`;
+      else{
+        const bPart=a.bTex&&a.bTex!=='0'?` ${a.b>=0?'+':'-'} ${a.bTex||numToTex(Math.abs(a.b))}`:''
+        tex=`y = ${a.mTex==='1'?'':a.mTex==='-1'?'-':a.mTex}x${bPart}`;
+      }
       row.appendChild(renderK(tex));
       body.appendChild(row);
     }
