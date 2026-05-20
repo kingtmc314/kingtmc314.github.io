@@ -482,12 +482,11 @@ function findConcavity(fppStr,xMin,xMax){
 
 function findAsymptotes(fx,xMin,xMax){
   const asymptotes=[];
-  // Vertical: look for poles
+  // Vertical: look for poles (scan for sign of blow-up)
   const step=0.005;
   for(let x=xMin;x<=xMax;x+=step){
     const y=evalAt(fx,x);
     if(!isFinite(y)){
-      // Check neighbors
       const yl=evalAt(fx,x-0.001);
       const yr=evalAt(fx,x+0.001);
       if(Math.abs(yl)>50||Math.abs(yr)>50){
@@ -495,24 +494,40 @@ function findAsymptotes(fx,xMin,xMax){
       }
     }
   }
-  // Horizontal: limits at ±∞
-  const yRight=evalAt(fx,1e6);
-  const yLeft=evalAt(fx,-1e6);
-  if(isFinite(yRight)&&Math.abs(yRight)<1e5){
+  // Horizontal: compute limit robustly using average of multiple large-x samples
+  // to avoid false positives from oscillating functions like sin(x)
+  function robustLimit(sign){
+    const xs=[sign*1e4, sign*1e5, sign*1e6, sign*1e7];
+    const vals=xs.map(x=>evalAt(fx,x)).filter(v=>isFinite(v));
+    if(vals.length<3) return NaN;
+    // Check if values converge (all within 0.01 of each other)
+    const mn=Math.min(...vals),mx=Math.max(...vals);
+    if(mx-mn>0.01) return NaN; // oscillating — no horizontal asymptote
+    return vals[vals.length-1];
+  }
+  const yRight=robustLimit(1);
+  const yLeft=robustLimit(-1);
+  if(isFinite(yRight)&&Math.abs(yRight)<1e4){
     const t=numToTex(yRight);
     asymptotes.push({type:'horizontal',y:yRight,yTex:t,side:'right',tex:`y = ${t}`});
   }
-  if(isFinite(yLeft)&&Math.abs(yLeft)<1e5&&(!isFinite(yRight)||Math.abs(yLeft-yRight)>1e-6)){
+  if(isFinite(yLeft)&&Math.abs(yLeft)<1e4&&(!isFinite(yRight)||Math.abs(yLeft-yRight)>0.01)){
     const t=numToTex(yLeft);
     asymptotes.push({type:'horizontal',y:yLeft,yTex:t,side:'left',tex:`y = ${t}`});
   }
-  // Oblique: check if f(x)/x → L as x→∞
-  const m=evalAt(fx,1e6)/1e6;
-  if(isFinite(m)&&Math.abs(m)>1e-9&&Math.abs(m)<1e4){
-    const b=yRight-m*1e6;
-    if(isFinite(b)){
-      const mTex=numToTex(m),bTex=numToTex(b);
-      asymptotes.push({type:'oblique',m,b,mTex,bTex,tex:`y = ${mTex}x ${b>=0?'+':'-'} ${numToTex(Math.abs(b))}`});
+  // Oblique: check if f(x)/x → L as x→∞ (only if no horizontal asymptote)
+  if(!isFinite(yRight)){
+    const ms=[evalAt(fx,1e4)/1e4, evalAt(fx,1e5)/1e5, evalAt(fx,1e6)/1e6];
+    const mValid=ms.filter(v=>isFinite(v));
+    if(mValid.length===3&&Math.max(...mValid)-Math.min(...mValid)<1e-6){
+      const m=mValid[2];
+      if(Math.abs(m)>1e-9&&Math.abs(m)<1e4){
+        const b=evalAt(fx,1e6)-m*1e6;
+        if(isFinite(b)&&Math.abs(b)<1e4){
+          const mTex=numToTex(m),bTex=numToTex(Math.abs(b));
+          asymptotes.push({type:'oblique',m,b,mTex,bTex,tex:`y = ${mTex}x ${b>=0?'+':'-'} ${bTex}`});
+        }
+      }
     }
   }
   // Deduplicate vertical
@@ -559,8 +574,21 @@ function buildTangent(fx,fpStr,tanX){
   let lineTex='';
   if(isFinite(m)){
     const b=y0-m*tanX;
-    const bTex=numToTex(Math.abs(b));
-    lineTex=`y = ${mTex}x ${b>=0?'+':'-'} ${bTex}`;
+    const bAbs=Math.abs(b);
+    const bTex=numToTex(bAbs);
+    // Build clean equation: skip zero terms
+    if(Math.abs(m)<1e-9&&Math.abs(b)<1e-9){
+      lineTex='y = 0';
+    } else if(Math.abs(m)<1e-9){
+      lineTex=`y = ${numToTex(b)}`;
+    } else if(Math.abs(b)<1e-9){
+      // y = mx
+      const mPart=mTex==='1'?'':mTex==='-1'?'-':mTex;
+      lineTex=`y = ${mPart}x`;
+    } else {
+      const mPart=mTex==='1'?'':mTex==='-1'?'-':mTex;
+      lineTex=`y = ${mPart}x ${b>0?'+':'-'} ${bTex}`;
+    }
   }
   return {x:tanX,y:y0,m,xTex,yTex,mTex,lineTex};
 }
