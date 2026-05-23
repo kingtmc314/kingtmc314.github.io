@@ -159,6 +159,7 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
       Curve Analyzer
     </div>
     <div class="header-links">
+      <button id="langToggle" onclick="toggleLang()" style="padding:.35rem .75rem;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;border:1.5px solid var(--primary);background:var(--primary-bg);color:var(--primary);transition:all .2s;letter-spacing:.03em">中文</button>
       <a href="https://github.com/kingtmc314/curve-analyzer" target="_blank" rel="noopener" class="icon-btn" title="GitHub">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
       </a>
@@ -167,8 +168,8 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 </header>
 
 <div class="nav-tabs" id="navTabs">
-  <div class="nav-tab active" data-tab="analyzer">📊 Analyzer</div>
-  <div class="nav-tab" data-tab="reference">📚 Reference</div>
+  <div class="nav-tab active" data-tab="analyzer" data-i18n="tab_analyzer">📊 Analyzer</div>
+  <div class="nav-tab" data-tab="reference" data-i18n="tab_reference">📚 Reference</div>
 </div>
 
 <div class="app-body">
@@ -177,18 +178,18 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
   <div class="tab-content active" id="tab-analyzer">
     <div class="input-bar">
       <div class="input-field">
-        <label>Function f(x)</label>
+        <label data-i18n="label_function">Function f(x)</label>
         <input type="text" id="fxInput" placeholder="e.g.  sin(x),  x^2 - 3*x + 2,  1/x,  ln(x)" value="sin(x)">
       </div>
       <div class="input-field" style="max-width:140px">
-        <label>x-range min</label>
+        <label data-i18n="label_xmin">x-range min</label>
         <input type="number" id="xMinInput" value="-5" step="1">
       </div>
       <div class="input-field" style="max-width:140px">
-        <label>x-range max</label>
+        <label data-i18n="label_xmax">x-range max</label>
         <input type="number" id="xMaxInput" value="5" step="1">
       </div>
-      <button class="btn btn-primary" id="analyzeBtn">Analyze</button>
+      <button class="btn btn-primary" id="analyzeBtn" data-i18n="btn_analyze">Analyze</button>
     </div>
 
     <div class="analyzer-layout">
@@ -197,7 +198,7 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
         <div class="graph-card">
           <div class="graph-card-header">
             <span id="graphTitle">Graph of f(x) = sin(x)</span>
-            <span style="font-size:.75rem;color:var(--fg3)">Use range inputs to zoom</span>
+            <span style="font-size:.75rem;color:var(--fg3)" data-i18n="graph_hint">Use range inputs to zoom</span>
           </div>
           <div class="graph-wrap">
             <svg id="graph" viewBox="0 0 640 440"></svg>
@@ -207,7 +208,7 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 
       <!-- ANALYTICS -->
       <div class="analytics-panel" id="analyticsPanel">
-        <div class="empty-state"><div class="big">📈</div><div>Click <strong>Analyze</strong> to see results</div></div>
+        <div class="empty-state" id="emptyState"><div class="big">📈</div><div data-i18n="empty_state">Click <strong>Analyze</strong> to see results</div></div>
       </div>
     </div>
   </div>
@@ -222,6 +223,185 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.3/lib/browser/math.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script>
+// ─── i18n ───────────────────────────────────────────────────────────────────
+
+let LANG='en';
+
+const T={
+  en:{
+    tab_analyzer:'📊 Analyzer',
+    tab_reference:'📚 Reference',
+    label_function:'Function f(x)',
+    label_xmin:'x-range min',
+    label_xmax:'x-range max',
+    btn_analyze:'Analyze',
+    graph_hint:'Use range inputs to zoom',
+    graph_title:'Graph of',
+    empty_state:'Click <strong>Analyze</strong> to see results',
+    error_parse:'Could not parse function',
+    // Section titles
+    sec_deriv:'Derivatives',
+    sec_domain:'Domain',
+    sec_cont:'Continuity & Differentiability',
+    sec_crit:'Critical Points',
+    sec_mono:'Monotonicity',
+    sec_conc:'Concavity',
+    sec_asym:'Asymptotes',
+    sec_tan:'Tangent Line',
+    // Row labels
+    row_domain:'Domain',
+    row_continuity:'Continuity',
+    row_differentiability:'Differentiability',
+    row_point:'Point',
+    row_slope:'Slope',
+    row_equation:'Equation',
+    // Badges
+    badge_continuous:'Continuous',
+    badge_discontinuous:'Discontinuous',
+    badge_differentiable:'Differentiable',
+    badge_not_everywhere:'Not everywhere',
+    badge_local_max:'Local Max',
+    badge_local_min:'Local Min',
+    badge_inflection:'Inflection',
+    badge_stationary:'Stationary',
+    badge_vertical:'Vertical',
+    badge_horizontal:'Horizontal',
+    badge_oblique:'Oblique',
+    badge_increasing:'\u2191 Increasing',
+    badge_decreasing:'\u2193 Decreasing',
+    badge_concave_up:'\u222a Concave Up',
+    badge_concave_down:'\u2229 Concave Down',
+    // Empty messages
+    none_found:'None found in range',
+    none_detected:'None detected in range',
+    cannot_determine:'Cannot determine in range',
+    cannot_compute:'Cannot compute at this point',
+    // Tangent input
+    tan_placeholder:'x value',
+    tan_btn:'Compute',
+    // Reference tab titles
+    ref_diff_rules:'Differentiation Rules',
+    ref_std_deriv:'Standard Derivatives',
+    ref_crit_class:'Critical Points & Classification',
+    ref_mono:'Monotonicity',
+    ref_conc:'Concavity',
+    ref_asym:'Asymptotes',
+    ref_tan:'Tangent Line',
+    ref_sketch:'Curve Sketching Checklist',
+    // Reference row names
+    rn_power:'Power Rule',rn_product:'Product Rule',rn_quotient:'Quotient Rule',
+    rn_chain:'Chain Rule',rn_constant:'Constant',rn_sum:'Sum Rule',
+    rn_sinx:'sin x',rn_cosx:'cos x',rn_tanx:'tan x',rn_ex:'e\u02e3',
+    rn_lnx:'ln x',rn_ax:'a\u02e3',rn_arcsin:'arcsin x',rn_arctan:'arctan x',
+    rn_crit_pt:'Critical Point',rn_1dt_max:'1st Deriv Test (Max)',rn_1dt_min:'1st Deriv Test (Min)',
+    rn_2dt_max:'2nd Deriv Test (Max)',rn_2dt_min:'2nd Deriv Test (Min)',rn_poi:'Point of Inflection',
+    rn_inc:'Increasing',rn_dec:'Decreasing',rn_const:'Constant',
+    rn_cu:'Concave Up',rn_cd:'Concave Down',rn_infl:'Inflection',
+    rn_vert:'Vertical',rn_horiz_r:'Horizontal (right)',rn_horiz_l:'Horizontal (left)',
+    rn_obl:'Oblique',rn_obl_b:'Oblique b',
+    rn_eq:'Equation',rn_slope:'Slope',rn_normal:'Normal Line',
+    rn_s1:'Step 1',rn_s2:'Step 2',rn_s3:'Step 3',rn_s4:'Step 4',
+    rn_s5:'Step 5',rn_s6:'Step 6',rn_s7:'Step 7',
+  },
+  zh:{
+    tab_analyzer:'📊 分析器',
+    tab_reference:'📚 參考',
+    label_function:'函數 f(x)',
+    label_xmin:'x 範圍最小値',
+    label_xmax:'x 範圍最大値',
+    btn_analyze:'分析',
+    graph_hint:'調整範圍以縮放圖表',
+    graph_title:'圖象：',
+    empty_state:'點擊「<strong>分析</strong>」以查看結果',
+    error_parse:'無法解析函數',
+    // Section titles
+    sec_deriv:'導數',
+    sec_domain:'定義域',
+    sec_cont:'連續性與可微分性',
+    sec_crit:'臨界點',
+    sec_mono:'單調性',
+    sec_conc:'凹凸性',
+    sec_asym:'漸近線',
+    sec_tan:'切線方程',
+    // Row labels
+    row_domain:'定義域',
+    row_continuity:'連續性',
+    row_differentiability:'可微分性',
+    row_point:'點',
+    row_slope:'斜率',
+    row_equation:'方程',
+    // Badges
+    badge_continuous:'連續',
+    badge_discontinuous:'不連續',
+    badge_differentiable:'可微分',
+    badge_not_everywhere:'部分不可微分',
+    badge_local_max:'局部最大値',
+    badge_local_min:'局部最小値',
+    badge_inflection:'拐點',
+    badge_stationary:'駐點',
+    badge_vertical:'垂直',
+    badge_horizontal:'水平',
+    badge_oblique:'斜線',
+    badge_increasing:'\u2191 遞増',
+    badge_decreasing:'\u2193 遞減',
+    badge_concave_up:'\u222a 凹形',
+    badge_concave_down:'\u2229 凸形',
+    // Empty messages
+    none_found:'在範圍內未發現',
+    none_detected:'在範圍內未發現漸近線',
+    cannot_determine:'在範圍內無法確定',
+    cannot_compute:'無法在此點計算',
+    // Tangent input
+    tan_placeholder:'x 値',
+    tan_btn:'計算',
+    // Reference tab titles
+    ref_diff_rules:'微分法則',
+    ref_std_deriv:'標準導數',
+    ref_crit_class:'臨界點與分類',
+    ref_mono:'單調性',
+    ref_conc:'凹凸性',
+    ref_asym:'漸近線',
+    ref_tan:'切線',
+    ref_sketch:'曲線素描清單',
+    // Reference row names
+    rn_power:'冪次法則',rn_product:'乘法法則',rn_quotient:'除法法則',
+    rn_chain:'鎖鍵法則',rn_constant:'常數',rn_sum:'加法法則',
+    rn_sinx:'sin x',rn_cosx:'cos x',rn_tanx:'tan x',rn_ex:'e\u02e3',
+    rn_lnx:'ln x',rn_ax:'a\u02e3',rn_arcsin:'arcsin x',rn_arctan:'arctan x',
+    rn_crit_pt:'臨界點',rn_1dt_max:'一阶導數測試（最大）',rn_1dt_min:'一阶導數測試（最小）',
+    rn_2dt_max:'二阶導數測試（最大）',rn_2dt_min:'二阶導數測試（最小）',rn_poi:'拐點',
+    rn_inc:'遞増',rn_dec:'遞減',rn_const:'常數',
+    rn_cu:'凹形（向上）',rn_cd:'凸形（向下）',rn_infl:'拐點',
+    rn_vert:'垂直漸近線',rn_horiz_r:'水平漸近線（右）',rn_horiz_l:'水平漸近線（左）',
+    rn_obl:'斜漸近線',rn_obl_b:'斜漸近線（b）',
+    rn_eq:'方程',rn_slope:'斜率',rn_normal:'法線方程',
+    rn_s1:'第一步',rn_s2:'第二步',rn_s3:'第三步',rn_s4:'第四步',
+    rn_s5:'第五步',rn_s6:'第六步',rn_s7:'第七步',
+  }
+};
+
+function t(key){return (T[LANG]&&T[LANG][key])||T.en[key]||key;}
+
+function toggleLang(){
+  LANG=LANG==='en'?'zh':'en';
+  document.getElementById('langToggle').textContent=LANG==='en'?'\u4e2d\u6587':'English';
+  document.documentElement.lang=LANG==='zh'?'zh-TW':'en';
+  // Update all static data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.dataset.i18n;
+    el.innerHTML=t(key);
+  });
+  // Update placeholder
+  document.getElementById('fxInput').placeholder=LANG==='zh'?'例： sin(x),  x^2 - 3*x + 2,  1/x,  ln(x)':'e.g.  sin(x),  x^2 - 3*x + 2,  1/x,  ln(x)';
+  // Re-run analysis to rebuild analytics panel in new language
+  if(lastResult&&lastResult.ok){
+    buildAnalytics(lastResult);
+    buildReference();
+  } else {
+    buildReference();
+  }
+}
+
 // ─── UTILITIES ──────────────────────────────────────────────────────────────
 
 function gcd(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){[a,b]=[b,a%b]}return a||1}
@@ -871,7 +1051,7 @@ function buildAnalytics(result){
   }
 
   // 1. Derivatives
-  section('sec-deriv','∂','Derivatives',body=>{
+  section('sec-deriv','∂',t('sec_deriv'),body=>{
     const r1=document.createElement('div');r1.className='row';
     r1.innerHTML=`<span class="row-label">f'(x) =</span>`;
     r1.appendChild(renderK(result.fpTex));
@@ -883,22 +1063,22 @@ function buildAnalytics(result){
   });
 
   // 2. Domain
-  section('sec-domain','D','Domain',body=>{
+  section('sec-domain','D',t('sec_domain'),body=>{
     const r=document.createElement('div');r.className='row';
-    r.innerHTML=`<span class="row-label">Domain</span>`;
+    r.innerHTML=`<span class="row-label">${t('row_domain')}</span>`;
     r.appendChild(renderK(result.domain.tex));
     body.appendChild(r);
   });
 
   // 3. Continuity & Differentiability
-  section('sec-cont','C','Continuity & Differentiability',body=>{
+  section('sec-cont','C',t('sec_cont'),body=>{
     const r1=document.createElement('div');r1.className='row';
     const contOk=result.continuity.startsWith('Continuous');
-    r1.innerHTML=`<span class="row-label">Continuity</span><span class="badge ${contOk?'badge-green':'badge-red'}">${contOk?'Continuous':'Discontinuous'}</span>`;
+    r1.innerHTML=`<span class="row-label">${t('row_continuity')}</span><span class="badge ${contOk?'badge-green':'badge-red'}">${contOk?t('badge_continuous'):t('badge_discontinuous')}</span>`;
     body.appendChild(r1);
     const r2=document.createElement('div');r2.className='row';
     const diffOk=result.differentiability.startsWith('Differentiable');
-    r2.innerHTML=`<span class="row-label">Differentiability</span><span class="badge ${diffOk?'badge-green':'badge-orange'}">${diffOk?'Differentiable':'Not everywhere'}</span>`;
+    r2.innerHTML=`<span class="row-label">${t('row_differentiability')}</span><span class="badge ${diffOk?'badge-green':'badge-orange'}">${diffOk?t('badge_differentiable'):t('badge_not_everywhere')}</span>`;
     body.appendChild(r2);
     if(!contOk||!diffOk){
       const note=document.createElement('div');
@@ -909,11 +1089,11 @@ function buildAnalytics(result){
   });
 
   // 4. Critical Points
-  section('sec-crit','⊙','Critical Points',body=>{
+  section('sec-crit','⊙',t('sec_crit'),body=>{
     const all=[...result.criticalPoints,...result.inflectionPoints.map(p=>({...p,kind:'Point of Inflection'}))];
     all.sort((a,b)=>a.x-b.x);
     if(all.length===0){
-      body.innerHTML='<div style="color:var(--fg3);font-size:.85rem">None found in range</div>';
+      body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('none_found')}</div>`;
       return;
     }
     for(const cp of all){
@@ -922,7 +1102,7 @@ function buildAnalytics(result){
       const iMax=cp.kind.includes('Max');
       const iMin=cp.kind.includes('Min');
       const badgeCls=isInfl?'badge-orange':iMax?'badge-green':iMin?'badge-blue':'badge-purple';
-      const label=isInfl?'Inflection':iMax?'Local Max':iMin?'Local Min':'Stationary';
+      const label=isInfl?t('badge_inflection'):iMax?t('badge_local_max'):iMin?t('badge_local_min'):t('badge_stationary');
       row.innerHTML=`<span class="badge ${badgeCls}" style="margin-right:.4rem">${label}</span>`;
       const coord=document.createElement('span');
       coord.appendChild(renderK(`\\left(${cp.xTex},\\,${cp.yTex}\\right)`));
@@ -932,15 +1112,15 @@ function buildAnalytics(result){
   });
 
   // 5. Monotonicity
-  section('sec-mono','↗','Monotonicity',body=>{
+  section('sec-mono','↗',t('sec_mono'),body=>{
     if(result.monotonicity.length===0){
-      body.innerHTML='<div style="color:var(--fg3);font-size:.85rem">Cannot determine in range</div>';
+      body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('cannot_determine')}</div>`;
       return;
     }
     for(const iv of result.monotonicity){
       const row=document.createElement('div');row.className='row';
       const cls=iv.increasing?'badge-green':'badge-red';
-      const label=iv.increasing?'↑ Increasing':'↓ Decreasing';
+      const label=iv.increasing?t('badge_increasing'):t('badge_decreasing');
       row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
       const tex=`f'(x)${iv.increasing?'>':'<'}0 \\text{ on } (${iv.fromTex||numToTex(iv.from)},\\,${iv.toTex||numToTex(iv.to)})`;
       row.appendChild(renderK(tex));
@@ -949,15 +1129,15 @@ function buildAnalytics(result){
   });
 
   // 6. Concavity
-  section('sec-conc','∩','Concavity',body=>{
+  section('sec-conc','∩',t('sec_conc'),body=>{
     if(result.concavity.length===0){
-      body.innerHTML='<div style="color:var(--fg3);font-size:.85rem">Cannot determine in range</div>';
+      body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('cannot_determine')}</div>`;
       return;
     }
     for(const iv of result.concavity){
       const row=document.createElement('div');row.className='row';
       const cls=iv.up?'badge-teal':'badge-red';
-      const label=iv.up?'∪ Concave Up':'∩ Concave Down';
+      const label=iv.up?t('badge_concave_up'):t('badge_concave_down');
       row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
       const tex=`f''(x)${iv.up?'>':'<'}0 \\text{ on } (${iv.fromTex||numToTex(iv.from)},\\,${iv.toTex||numToTex(iv.to)})`;
       row.appendChild(renderK(tex));
@@ -966,14 +1146,14 @@ function buildAnalytics(result){
   });
 
   // 7. Asymptotes
-  section('sec-asym','⟶','Asymptotes',body=>{
+  section('sec-asym','⟶',t('sec_asym'),body=>{
     if(result.asymptotes.length===0){
-      body.innerHTML='<div style="color:var(--fg3);font-size:.85rem">None detected in range</div>';
+      body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('none_detected')}</div>`;
       return;
     }
     for(const a of result.asymptotes){
       const row=document.createElement('div');row.className='row';
-      const typeLabel=a.type==='vertical'?'Vertical':a.type==='horizontal'?'Horizontal':'Oblique';
+      const typeLabel=a.type==='vertical'?t('badge_vertical'):a.type==='horizontal'?t('badge_horizontal'):t('badge_oblique');
       const cls=a.type==='vertical'?'badge-red':a.type==='horizontal'?'badge-blue':'badge-purple';
       row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${typeLabel}</span>`;
       let tex='';
@@ -989,9 +1169,9 @@ function buildAnalytics(result){
   });
 
   // 8. Tangent Line
-  section('sec-tan','⟂','Tangent Line',body=>{
+  section('sec-tan','⟂',t('sec_tan'),body=>{
     const tanRow=document.createElement('div');
-    tanRow.innerHTML=`<div class="tan-input-row"><input type="number" id="tanXInput" value="${result.tangent?result.tangent.x:0}" step="0.1" placeholder="x value"><button class="btn btn-primary" id="tanBtn" style="font-size:.8rem;padding:.45rem .8rem">Compute</button></div>`;
+    tanRow.innerHTML=`<div class="tan-input-row"><input type="number" id="tanXInput" value="${result.tangent?result.tangent.x:0}" step="0.1" placeholder="${t('tan_placeholder')}"><button class="btn btn-primary" id="tanBtn" style="font-size:.8rem;padding:.45rem .8rem">${t('tan_btn')}</button></div>`;
     body.appendChild(tanRow);
     const tanResult=document.createElement('div');
     tanResult.id='tanResult';
@@ -1017,18 +1197,18 @@ function buildAnalytics(result){
 
 function renderTangentResult(container,t){
   container.innerHTML='';
-  if(!t){container.innerHTML='<div style="color:var(--fg3);font-size:.85rem">Cannot compute at this point</div>';return;}
+  if(!t){container.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${T[LANG].cannot_compute||T.en.cannot_compute}</div>`;return;}
   const r1=document.createElement('div');r1.className='row';
-  r1.innerHTML=`<span class="row-label">Point</span>`;
+  r1.innerHTML=`<span class="row-label">${T[LANG].row_point||T.en.row_point}</span>`;
   r1.appendChild(renderK(`\\left(${t.xTex},\\,${t.yTex}\\right)`));
   container.appendChild(r1);
   const r2=document.createElement('div');r2.className='row';
-  r2.innerHTML=`<span class="row-label">Slope</span>`;
+  r2.innerHTML=`<span class="row-label">${T[LANG].row_slope||T.en.row_slope}</span>`;
   r2.appendChild(renderK(`m = f'(${t.xTex}) = ${t.mTex}`));
   container.appendChild(r2);
   if(t.lineTex){
     const r3=document.createElement('div');r3.className='row';
-    r3.innerHTML=`<span class="row-label">Equation</span>`;
+    r3.innerHTML=`<span class="row-label">${T[LANG].row_equation||T.en.row_equation}</span>`;
     r3.appendChild(renderK(t.lineTex));
     container.appendChild(r3);
   }
@@ -1042,84 +1222,84 @@ function buildReference(){
 
   const cards=[
     {
-      icon:'📐',title:'Differentiation Rules',color:'#3b5bdb',
+      icon:'\ud83d\udcd0',titleKey:'ref_diff_rules',color:'#3b5bdb',
       rows:[
-        {name:'Power Rule',tex:'\\frac{d}{dx}[x^n] = nx^{n-1}'},
-        {name:'Product Rule',tex:'\\frac{d}{dx}[uv] = u\'v + uv\''},
-        {name:'Quotient Rule',tex:'\\frac{d}{dx}\\left[\\frac{u}{v}\\right] = \\frac{u\'v - uv\'}{v^2}'},
-        {name:'Chain Rule',tex:'\\frac{d}{dx}[f(g(x))] = f\'(g(x))\\cdot g\'(x)'},
-        {name:'Constant',tex:'\\frac{d}{dx}[c] = 0'},
-        {name:'Sum Rule',tex:'\\frac{d}{dx}[u+v] = u\'+v\''},
+        {nameKey:'rn_power',tex:'\\frac{d}{dx}[x^n] = nx^{n-1}'},
+        {nameKey:'rn_product',tex:'\\frac{d}{dx}[uv] = u\'v + uv\''},
+        {nameKey:'rn_quotient',tex:'\\frac{d}{dx}\\left[\\frac{u}{v}\\right] = \\frac{u\'v - uv\'}{v^2}'},
+        {nameKey:'rn_chain',tex:'\\frac{d}{dx}[f(g(x))] = f\'(g(x))\\cdot g\'(x)'},
+        {nameKey:'rn_constant',tex:'\\frac{d}{dx}[c] = 0'},
+        {nameKey:'rn_sum',tex:'\\frac{d}{dx}[u+v] = u\'+v\''},
       ]
     },
     {
-      icon:'📊',title:'Standard Derivatives',color:'#2f9e44',
+      icon:'\ud83d\udcca',titleKey:'ref_std_deriv',color:'#2f9e44',
       rows:[
-        {name:'sin x',tex:'\\frac{d}{dx}[\\sin x] = \\cos x'},
-        {name:'cos x',tex:'\\frac{d}{dx}[\\cos x] = -\\sin x'},
-        {name:'tan x',tex:'\\frac{d}{dx}[\\tan x] = \\sec^2 x'},
-        {name:'eˣ',tex:'\\frac{d}{dx}[e^x] = e^x'},
-        {name:'ln x',tex:'\\frac{d}{dx}[\\ln x] = \\frac{1}{x}'},
-        {name:'aˣ',tex:'\\frac{d}{dx}[a^x] = a^x \\ln a'},
-        {name:'arcsin x',tex:'\\frac{d}{dx}[\\arcsin x] = \\frac{1}{\\sqrt{1-x^2}}'},
-        {name:'arctan x',tex:'\\frac{d}{dx}[\\arctan x] = \\frac{1}{1+x^2}'},
+        {nameKey:'rn_sinx',tex:'\\frac{d}{dx}[\\sin x] = \\cos x'},
+        {nameKey:'rn_cosx',tex:'\\frac{d}{dx}[\\cos x] = -\\sin x'},
+        {nameKey:'rn_tanx',tex:'\\frac{d}{dx}[\\tan x] = \\sec^2 x'},
+        {nameKey:'rn_ex',tex:'\\frac{d}{dx}[e^x] = e^x'},
+        {nameKey:'rn_lnx',tex:'\\frac{d}{dx}[\\ln x] = \\frac{1}{x}'},
+        {nameKey:'rn_ax',tex:'\\frac{d}{dx}[a^x] = a^x \\ln a'},
+        {nameKey:'rn_arcsin',tex:'\\frac{d}{dx}[\\arcsin x] = \\frac{1}{\\sqrt{1-x^2}}'},
+        {nameKey:'rn_arctan',tex:'\\frac{d}{dx}[\\arctan x] = \\frac{1}{1+x^2}'},
       ]
     },
     {
-      icon:'🔍',title:'Critical Points & Classification',color:'#e67700',
+      icon:'\ud83d\udd0d',titleKey:'ref_crit_class',color:'#e67700',
       rows:[
-        {name:'Critical Point',tex:'f\'(c) = 0 \\text{ or } f\'(c) \\text{ undefined}'},
-        {name:'1st Deriv Test (Max)',tex:'f\'(x): + \\to - \\Rightarrow \\text{Local Max at } x=c'},
-        {name:'1st Deriv Test (Min)',tex:'f\'(x): - \\to + \\Rightarrow \\text{Local Min at } x=c'},
-        {name:'2nd Deriv Test (Max)',tex:'f\'(c)=0,\\; f\'\'(c)<0 \\Rightarrow \\text{Local Max}'},
-        {name:'2nd Deriv Test (Min)',tex:'f\'(c)=0,\\; f\'\'(c)>0 \\Rightarrow \\text{Local Min}'},
-        {name:'Point of Inflection',tex:'f\'\'(c)=0 \\text{ and sign of } f\'\' \\text{ changes}'},
+        {nameKey:'rn_crit_pt',tex:'f\'(c) = 0 \\text{ or } f\'(c) \\text{ undefined}'},
+        {nameKey:'rn_1dt_max',tex:'f\'(x): + \\to - \\Rightarrow \\text{Local Max at } x=c'},
+        {nameKey:'rn_1dt_min',tex:'f\'(x): - \\to + \\Rightarrow \\text{Local Min at } x=c'},
+        {nameKey:'rn_2dt_max',tex:'f\'(c)=0,\\; f\'\' (c)<0 \\Rightarrow \\text{Local Max}'},
+        {nameKey:'rn_2dt_min',tex:'f\'(c)=0,\\; f\'\' (c)>0 \\Rightarrow \\text{Local Min}'},
+        {nameKey:'rn_poi',tex:'f\'\' (c)=0 \\text{ and sign of } f\'\' \\text{ changes}'},
       ]
     },
     {
-      icon:'↗️',title:'Monotonicity',color:'#2f9e44',
+      icon:'\u2197\ufe0f',titleKey:'ref_mono',color:'#2f9e44',
       rows:[
-        {name:'Increasing',tex:'f\'(x) > 0 \\Rightarrow f \\text{ is increasing}'},
-        {name:'Decreasing',tex:'f\'(x) < 0 \\Rightarrow f \\text{ is decreasing}'},
-        {name:'Constant',tex:'f\'(x) = 0 \\Rightarrow f \\text{ is constant}'},
+        {nameKey:'rn_inc',tex:'f\'(x) > 0 \\Rightarrow f \\text{ is increasing}'},
+        {nameKey:'rn_dec',tex:'f\'(x) < 0 \\Rightarrow f \\text{ is decreasing}'},
+        {nameKey:'rn_const',tex:'f\'(x) = 0 \\Rightarrow f \\text{ is constant}'},
       ]
     },
     {
-      icon:'∩',title:'Concavity',color:'#0c8599',
+      icon:'\u2229',titleKey:'ref_conc',color:'#0c8599',
       rows:[
-        {name:'Concave Up',tex:'f\'\'(x) > 0 \\Rightarrow \\text{concave up (cup shape)}'},
-        {name:'Concave Down',tex:'f\'\'(x) < 0 \\Rightarrow \\text{concave down (cap shape)}'},
-        {name:'Inflection',tex:'f\'\'(c) = 0 \\text{ and sign changes} \\Rightarrow \\text{inflection}'},
+        {nameKey:'rn_cu',tex:'f\'\' (x) > 0 \\Rightarrow \\text{concave up (cup shape)}'},
+        {nameKey:'rn_cd',tex:'f\'\' (x) < 0 \\Rightarrow \\text{concave down (cap shape)}'},
+        {nameKey:'rn_infl',tex:'f\'\' (c) = 0 \\text{ and sign changes} \\Rightarrow \\text{inflection}'},
       ]
     },
     {
-      icon:'⟶',title:'Asymptotes',color:'#c92a2a',
+      icon:'\u27f6',titleKey:'ref_asym',color:'#c92a2a',
       rows:[
-        {name:'Vertical',tex:'\\lim_{x \\to a} f(x) = \\pm\\infty \\Rightarrow x = a'},
-        {name:'Horizontal (right)',tex:'\\lim_{x \\to +\\infty} f(x) = L \\Rightarrow y = L'},
-        {name:'Horizontal (left)',tex:'\\lim_{x \\to -\\infty} f(x) = L \\Rightarrow y = L'},
-        {name:'Oblique',tex:'y = mx + b \\text{ where } m = \\lim_{x\\to\\infty}\\frac{f(x)}{x}'},
-        {name:'Oblique b',tex:'b = \\lim_{x\\to\\infty}[f(x) - mx]'},
+        {nameKey:'rn_vert',tex:'\\lim_{x \\to a} f(x) = \\pm\\infty \\Rightarrow x = a'},
+        {nameKey:'rn_horiz_r',tex:'\\lim_{x \\to +\\infty} f(x) = L \\Rightarrow y = L'},
+        {nameKey:'rn_horiz_l',tex:'\\lim_{x \\to -\\infty} f(x) = L \\Rightarrow y = L'},
+        {nameKey:'rn_obl',tex:'y = mx + b \\text{ where } m = \\lim_{x\\to\\infty}\\frac{f(x)}{x}'},
+        {nameKey:'rn_obl_b',tex:'b = \\lim_{x\\to\\infty}[f(x) - mx]'},
       ]
     },
     {
-      icon:'⟂',title:'Tangent Line',color:'#7048e8',
+      icon:'\u27c2',titleKey:'ref_tan',color:'#7048e8',
       rows:[
-        {name:'Equation',tex:'y - y_0 = f\'(x_0)(x - x_0)'},
-        {name:'Slope',tex:'m = f\'(x_0)'},
-        {name:'Normal Line',tex:'y - y_0 = -\\frac{1}{f\'(x_0)}(x - x_0)'},
+        {nameKey:'rn_eq',tex:'y - y_0 = f\'(x_0)(x - x_0)'},
+        {nameKey:'rn_slope',tex:'m = f\'(x_0)'},
+        {nameKey:'rn_normal',tex:'y - y_0 = -\\frac{1}{f\'(x_0)}(x - x_0)'},
       ]
     },
     {
-      icon:'📏',title:'Curve Sketching Checklist',color:'#1971c2',
+      icon:'\ud83d\udccf',titleKey:'ref_sketch',color:'#1971c2',
       rows:[
-        {name:'Step 1',tex:'\\text{Find domain and intercepts}'},
-        {name:'Step 2',tex:'\\text{Find asymptotes (V, H, O)}'},
-        {name:'Step 3',tex:'\\text{Compute } f\'(x), \\text{ find critical points}'},
-        {name:'Step 4',tex:'\\text{Apply 1st derivative test for max/min}'},
-        {name:'Step 5',tex:'\\text{Compute } f\'\'(x), \\text{ find inflection points}'},
-        {name:'Step 6',tex:'\\text{Determine concavity intervals}'},
-        {name:'Step 7',tex:'\\text{Sketch the curve using all information}'},
+        {nameKey:'rn_s1',tex:'\\text{Find domain and intercepts}'},
+        {nameKey:'rn_s2',tex:'\\text{Find asymptotes (V, H, O)}'},
+        {nameKey:'rn_s3',tex:'\\text{Compute } f\'(x), \\text{ find critical points}'},
+        {nameKey:'rn_s4',tex:'\\text{Apply 1st derivative test for max/min}'},
+        {nameKey:'rn_s5',tex:'\\text{Compute } f\'\' (x), \\text{ find inflection points}'},
+        {nameKey:'rn_s6',tex:'\\text{Determine concavity intervals}'},
+        {nameKey:'rn_s7',tex:'\\text{Sketch the curve using all information}'},
       ]
     },
   ];
@@ -1127,13 +1307,13 @@ function buildReference(){
   for(const card of cards){
     const div=document.createElement('div');
     div.className='ref-card';
-    div.innerHTML=`<div class="ref-card-head" style="color:${card.color}">${card.icon} ${card.title}</div>`;
+    div.innerHTML=`<div class="ref-card-head" style="color:${card.color}">${card.icon} ${t(card.titleKey)}</div>`;
     const body=document.createElement('div');
     body.className='ref-card-body';
     for(const row of card.rows){
       const r=document.createElement('div');
       r.className='ref-row';
-      r.innerHTML=`<div class="ref-name">${row.name}</div>`;
+      r.innerHTML=`<div class="ref-name">${t(row.nameKey)}</div>`;
       const f=document.createElement('div');
       f.className='ref-formula';
       try{katex.render(row.tex,f,{throwOnError:false,displayMode:false})}
@@ -1155,7 +1335,7 @@ function runAnalysis(){
   const xMin=parseFloat(document.getElementById('xMinInput').value)||(-5);
   const xMax=parseFloat(document.getElementById('xMaxInput').value)||5;
   if(!fx) return;
-  document.getElementById('graphTitle').textContent=`Graph of f(x) = ${fx}`;
+  document.getElementById('graphTitle').textContent=`${t('graph_title')} f(x) = ${fx}`;
   const result=analyzeCurve(fx,xMin,xMax,0);
   lastResult=result;
   if(result.ok){
