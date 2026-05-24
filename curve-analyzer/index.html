@@ -171,15 +171,15 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
   </div>
 </header>
 <div class="nav-tabs" id="navTabs">
-  <div class="nav-tab active" data-tab="analyzer" data-i18n="tab_analyzer">📊 Analyzer</div>
-  <div class="nav-tab" data-tab="firstprinciples" data-i18n="tab_fp">🔬 First Principles</div>
-  <div class="nav-tab" data-tab="ai" data-i18n="tab_ai">🤖 AI Assistant</div>
+  <div class="nav-tab active" data-tab="firstprinciples" data-i18n="tab_fp">🔬 First Principles</div>
+  <div class="nav-tab" data-tab="analyzer" data-i18n="tab_analyzer">📊 Analyzer</div>
   <div class="nav-tab" data-tab="areav" data-i18n="tab_av">∫ Area &amp; Volume</div>
+  <div class="nav-tab" data-tab="ai" data-i18n="tab_ai">🤖 AI Assistant</div>
   <div class="nav-tab" data-tab="reference" data-i18n="tab_reference">📚 Reference</div>
 </div>
 <div class="app-body">
 <!-- ═══════════════════════════════════════════════════════ ANALYZER TAB -->
-<div class="tab-content active" id="tab-analyzer">
+<div class="tab-content" id="tab-analyzer">
   <div class="input-bar">
     <div class="input-field" style="flex:3;min-width:220px">
       <label data-i18n="label_function">Function f(x)</label>
@@ -219,15 +219,15 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
   </div>
 </div>
 <!-- ═══════════════════════════════════════════════════════ FIRST PRINCIPLES TAB -->
-<div class="tab-content" id="tab-firstprinciples">
+<div class="tab-content active" id="tab-firstprinciples">
   <div class="input-bar">
     <div class="input-field" style="flex:3;min-width:220px">
       <label data-i18n="fp_label_fn">Function f(x)</label>
       <input type="text" id="fpFxInput" placeholder="e.g. x^2, sin(x), x^3+2*x" value="x^2">
     </div>
-    <div class="input-field" style="max-width:140px">
-      <label data-i18n="fp_label_at">Evaluate at x =</label>
-      <input type="number" id="fpAtInput" value="2" step="0.5">
+    <div class="input-field" style="max-width:160px">
+      <label data-i18n="fp_label_at">Evaluate at x = (optional)</label>
+      <input type="text" id="fpAtInput" value="" placeholder="e.g. 2, -1, π">
     </div>
     <button class="btn btn-primary" id="fpBtn" data-i18n="fp_btn">Derive</button>
   </div>
@@ -325,6 +325,8 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
       </div>
     </div>
     <div>
+      <!-- Analyzer results synced from Analyzer tab -->
+      <div id="avAnalyticsPanel" style="margin-bottom:1rem"></div>
       <div class="av-controls">
         <h3 data-i18n="av_options_title">Options</h3>
         <div class="av-section">
@@ -1129,11 +1131,10 @@ function buildAnalytics(result){
     sec.appendChild(head);sec.appendChild(body);panel.appendChild(sec);
   }
   // 1. Derivatives
-  section('s-deriv','∂',t('sec_deriv'),body=>{
-    const r1=document.createElement('div');r1.className='row';
-    r1.innerHTML=`<span class="row-label">f'(x) =</span>`;r1.appendChild(renderK(result.fpTex));body.appendChild(r1);
-    const r2=document.createElement('div');r2.className='row';
-    r2.innerHTML=`<span class="row-label">f''(x) =</span>`;r2.appendChild(renderK(result.fppTex));body.appendChild(r2);
+  section('s-deriv','\u2202',t('sec_deriv'),body=>{
+    const r=document.createElement('div');r.className='row';
+    const alignedTex=`\\begin{aligned}f'(x) &= ${result.fpTex} \\\\ f''(x) &= ${result.fppTex}\\end{aligned}`;
+    r.appendChild(renderK(alignedTex));body.appendChild(r);
   },'#3b5bdb');
   // 2. Domain
   section('s-domain','D',t('sec_domain'),body=>{
@@ -1241,9 +1242,14 @@ function renderTangentResult(container,tg){
 let fpLastFx='',fpLastAt=2;
 function runFirstPrinciples(){
   const fx=document.getElementById('fpFxInput').value.trim();
-  const atX=parseFloat(document.getElementById('fpAtInput').value);
+  const atXRaw=document.getElementById('fpAtInput').value.trim();
+  // Parse atX: support empty (skip numerical), numeric, or expressions like pi/2
+  let atX=NaN;
+  if(atXRaw){
+    try{const v=math.evaluate(atXRaw);atX=typeof v==='number'?v:NaN;}catch{atX=parseFloat(atXRaw);}
+  }
   if(!fx)return;
-  fpLastFx=fx;fpLastAt=atX;
+  fpLastFx=fx;fpLastAt=isFinite(atX)?atX:0;
   const stepsDiv=document.getElementById('fpSteps');stepsDiv.innerHTML='';
   function addStep(num,label,texContent,note=''){
     const item=document.createElement('div');item.className='step-item';
@@ -1256,7 +1262,7 @@ function runFirstPrinciples(){
   try{
     math.parse(fx);
     // Step 1: Definition
-    addStep(1,t('fp_step1'),'f\'(x) = \\lim_{h \\to 0} \\dfrac{f(x+h) - f(x)}{h}');
+    addStep(1,t('fp_step1'),'\\begin{aligned}f\'(x) &= \\lim_{h \\to 0} \\dfrac{f(x+h) - f(x)}{h}\\end{aligned}');
     // Step 2: Substitute
     let fxhStr='';
     try{
@@ -1265,20 +1271,20 @@ function runFirstPrinciples(){
       fxhStr=node.toString().replace(/\bx\b/g,'(x+h)');
     }catch{fxhStr=`f(x+h)`;}
     const fxTex=simplifyTex(fx);
-    addStep(2,t('fp_step2'),`\\dfrac{f(x+h)-f(x)}{h} = \\dfrac{[${fxhStr.replace(/\*/g,'\\cdot ')}] - [${fxTex}]}{h}`);
+    addStep(2,t('fp_step2'),`\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{[${fxhStr.replace(/\*/g,'\\cdot ')}] - [${fxTex}]}{h}\\end{aligned}`);
     // Step 3 & 4: Compute derivative symbolically
     const fpStr=safeDerivative(fx);
     const fpTex=fpStr?simplifyTex(fpStr):'\\text{(see result)}';
     addStep(3,t('fp_step3'),'\\text{Expand numerator, collect terms in } h \\text{, factor out } h');
     addStep(4,t('fp_step4'),`\\lim_{h \\to 0} \\dfrac{\\cdots}{h} = \\lim_{h \\to 0}(\\cdots) \\quad \\text{(cancel } h \\text{)}`);
     // Step 5: Result
-    addStep(5,t('fp_step5'),`f'(x) = ${fpTex}`,'(Computed symbolically using limit definition)');
+    addStep(5,t('fp_step5'),`\\begin{aligned}f'(x) &= ${fpTex}\\end{aligned}`,'(Computed symbolically using limit definition)');
     // Step 6: Numerical check at x=a
     if(isFinite(atX)&&fpStr){
       const fpa=evalAt(fpStr,atX);
       const faTex=numToTex(evalAt(fx,atX));
       const fpaTex=numToTex(fpa);
-      addStep(6,t('fp_step6')+atX,`f(${numToTex(atX)}) = ${faTex}, \\quad f'(${numToTex(atX)}) = ${fpaTex}`);
+      addStep(6,t('fp_step6')+atX,`\\begin{aligned}f(${numToTex(atX)}) &= ${faTex} \\\\ f'(${numToTex(atX)}) &= ${fpaTex}\\end{aligned}`);
       // Numerical verification
       const h=0.0001;const numDeriv=(evalAt(fx,atX+h)-evalAt(fx,atX-h))/(2*h);
       const numTex=numToTex(Math.round(numDeriv*1e6)/1e6);
@@ -1425,21 +1431,24 @@ function _solveAI(input,resultDiv){
       if(fnRaw){
         const fn=fnRaw.replace(/\^/g,'^');
         const fnTex=simplifyTex(fn);
-        addStep('Given',`s(${varName}) = ${fnTex}`,'Position / quantity function');
+        addStep('Given',`\\begin{aligned}s(${varName}) &= ${fnTex}\\end{aligned}`,'Position / quantity function');
         const fp=safeDerivative(fn,varName);
         if(fp){
           const fpTex=simplifyTex(fp);
-          const label=varName==='t'?`v(${varName}) = s'(${varName})`:`f'(${varName})`;
-          addStep('First Derivative (Velocity / Rate)',`${label} = ${fpTex}`);
           const fpp=safeDerivative(fp,varName);
-          if(fpp){
-            const fppTex=simplifyTex(fpp);
-            const label2=varName==='t'?`a(${varName}) = v'(${varName})`:`f''(${varName})`;
-            addStep('Second Derivative (Acceleration)',`${label2} = ${fppTex}`);
+          const fppTex=fpp?simplifyTex(fpp):null;
+          const label=varName==='t'?`v(${varName}) = s'(${varName})`:`f'(${varName})`;
+          const label2=varName==='t'?`a(${varName}) = v'(${varName})`:`f''(${varName})`;
+          if(fppTex){
+            addStep('Derivatives',`\\begin{aligned}${label} &= ${fpTex} \\\\ ${label2} &= ${fppTex}\\end{aligned}`);
+          }else{
+            addStep('First Derivative',`\\begin{aligned}${label} &= ${fpTex}\\end{aligned}`);
           }
           if(atT!==null&&isFinite(atT)){
             const vAt=evalAt(fp,atT,varName);const fppStr=safeDerivative(fp,varName)||'0';const aAt=fpp?evalAt(fppStr,atT,varName):NaN;
-            addStep(`At ${varName} = ${numToTex(atT)}`,`v(${numToTex(atT)}) = ${numToTex(vAt)}${isFinite(aAt)?`,\\quad a(${numToTex(atT)}) = ${numToTex(aAt)}`:''}`);
+            const atParts=[`v(${numToTex(atT)}) &= ${numToTex(vAt)}`];
+            if(isFinite(aAt))atParts.push(`a(${numToTex(atT)}) &= ${numToTex(aAt)}`);
+            addStep(`At ${varName} = ${numToTex(atT)}`,`\\begin{aligned}${atParts.join(' \\\\ ')}\\end{aligned}`);
           }
         }
       }else{
@@ -1471,7 +1480,7 @@ function _solveAI(input,resultDiv){
         addStep('Function',`f(x) = ${fnTex}`);
         const fp=safeDerivative(fn);
         if(fp){
-          const fpTex=simplifyTex(fp);addStep('Derivative',`f'(x) = ${fpTex}`);
+          const fpTex=simplifyTex(fp);addStep('Derivative',`\\begin{aligned}f'(x) &= ${fpTex}\\end{aligned}`);
           if(atX!==null&&isFinite(atX)){
             const y0=evalAt(fn,atX);const m=evalAt(fp,atX);
             const x0Tex=numToTex(atX),y0Tex=numToTex(y0),mTex=numToTex(m);
@@ -1492,16 +1501,19 @@ function _solveAI(input,resultDiv){
         addStep('Function',`f(x) = ${fnTex}`);
         const fp=safeDerivative(fn);const fpp=fp?safeDerivative(fp):null;
         if(fp){
-          addStep('First Derivative',`f'(x) = ${simplifyTex(fp)}`);
+          if(fpp){
+            addStep('Derivatives',`\\begin{aligned}f'(x) &= ${simplifyTex(fp)} \\\\ f''(x) &= ${simplifyTex(fpp)}\\end{aligned}`);
+          }else{
+            addStep('First Derivative',`\\begin{aligned}f'(x) &= ${simplifyTex(fp)}\\end{aligned}`);
+          }
           addStep('Set f\'(x) = 0','\\text{Solve } f\'(x) = 0 \\text{ for critical points}');
           const cps=findCriticalPoints(fn,fp,fpp,-20,20);
           if(cps.length>0){
             for(const cp of cps){
               const kind=cp.kind.includes('Max')?'Local Max':cp.kind.includes('Min')?'Local Min':'Stationary';
-              addStep(kind,`x = ${cp.xTex},\\quad f(${cp.xTex}) = ${cp.yTex}`);
+              addStep(kind,`\\begin{aligned}x &= ${cp.xTex} \\\\ f(${cp.xTex}) &= ${cp.yTex}\\end{aligned}`);
             }
           }else{addStep('Critical Points','\\text{No critical points found in } [-20, 20]');}
-          if(fpp)addStep('Second Derivative Test',`f''(x) = ${simplifyTex(fpp)}`);
         }
       }
     }else{
@@ -1520,9 +1532,12 @@ function _solveAI(input,resultDiv){
         const fp=safeDerivative(fn);
         if(fp){
           const fpTex=simplifyTex(fp);
-          addStep('Derivative',`f'(x) = ${fpTex}`);
-          const fpp=safeDerivative(fp);
-          if(fpp)addStep('Second Derivative',`f''(x) = ${simplifyTex(fpp)}`);
+          const fpp2=safeDerivative(fp);
+          if(fpp2){
+            addStep('Derivatives',`\\begin{aligned}f'(x) &= ${fpTex} \\\\ f''(x) &= ${simplifyTex(fpp2)}\\end{aligned}`);
+          }else{
+            addStep('Derivative',`\\begin{aligned}f'(x) &= ${fpTex}\\end{aligned}`);
+          }
         }else{addStep('Result','\\text{Could not compute derivative symbolically}');}
       }else{
         addStep('Hint','\\text{Please specify the function, e.g. "Differentiate f(x) = x^2 sin(x)"}');
@@ -1532,6 +1547,46 @@ function _solveAI(input,resultDiv){
       resultDiv.innerHTML+=`<div class="empty-state"><div class="big">🤔</div><div>Could not parse the problem. Try specifying the function explicitly, e.g. "f(x) = x^2".</div></div>`;
     }
   }catch(e){resultDiv.innerHTML+=`<div class="error-box">⚠️ ${e.message}</div>`;}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SYNC ANALYZER RESULTS TO AREA & VOLUME TAB
+// ═══════════════════════════════════════════════════════════════════════════
+function syncAnalyticsToAV(result){
+  const panel=document.getElementById('avAnalyticsPanel');
+  if(!panel)return;
+  if(!result||!result.ok){panel.innerHTML='';return;}
+  panel.innerHTML='';
+  const card=document.createElement('div');
+  card.className='av-controls';
+  card.style.cssText='margin-bottom:0';
+  const title=document.createElement('h3');
+  title.textContent=t('sec_deriv')+': f(x) = '+result.fx;
+  title.style.cssText='margin-bottom:.75rem;font-size:.95rem;color:var(--primary)';
+  card.appendChild(title);
+  // Derivatives aligned
+  const derivRow=document.createElement('div');derivRow.className='row';
+  const alignedTex=`\\begin{aligned}f'(x) &= ${result.fpTex} \\\\ f''(x) &= ${result.fppTex}\\end{aligned}`;
+  derivRow.appendChild(renderK(alignedTex));card.appendChild(derivRow);
+  // Critical points
+  if(result.criticalPoints.length>0||result.inflectionPoints.length>0){
+    const cpTitle=document.createElement('div');cpTitle.className='av-section-title';cpTitle.style.marginTop='.6rem';
+    cpTitle.textContent=t('sec_crit');card.appendChild(cpTitle);
+    for(const cp of result.criticalPoints){
+      const row=document.createElement('div');row.className='row';
+      const isMax=cp.kind.includes('Max'),isMin=cp.kind.includes('Min');
+      const cls=isMax?'badge-green':isMin?'badge-blue':'badge-orange';
+      const label=isMax?t('badge_local_max'):isMin?t('badge_local_min'):t('badge_stationary');
+      row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
+      row.appendChild(renderK(`\\left(${cp.xTex},\\,${cp.yTex}\\right)`));card.appendChild(row);
+    }
+    for(const ip of result.inflectionPoints){
+      const row=document.createElement('div');row.className='row';
+      row.innerHTML=`<span class="badge badge-orange" style="margin-right:.4rem">${t('badge_inflection')}</span>`;
+      row.appendChild(renderK(`\\left(${ip.xTex},\\,${ip.yTex}\\right)`));card.appendChild(row);
+    }
+  }
+  panel.appendChild(card);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1990,6 +2045,19 @@ document.addEventListener('DOMContentLoaded',()=>{
       const id='tab-'+tab.dataset.tab;
       document.getElementById(id).classList.add('active');
       if(tab.dataset.tab==='reference')buildReference();
+      // Sync analyzer function into Area & Volume when switching to that tab
+      if(tab.dataset.tab==='areav'){
+        const analyzerFx=document.getElementById('fxInput').value.trim();
+        if(analyzerFx){
+          document.getElementById('avFxInput').value=analyzerFx;
+          // Also sync the x-range for the AV graph
+          const xMin=parseFloat(document.getElementById('xMinInput').value)||(-5);
+          const xMax=parseFloat(document.getElementById('xMaxInput').value)||5;
+          avVp={xMin,xMax,yMin:-5,yMax:10};
+        }
+        // If analyzer has a result, show the analytics panel in AV tab too
+        if(lastResult&&lastResult.ok)syncAnalyticsToAV(lastResult);
+      }
     });
   });
   // Analyzer
