@@ -1283,79 +1283,202 @@ function runFirstPrinciples(){
     if(note){const n=document.createElement('div');n.style.cssText='font-size:.8rem;color:var(--fg3);margin-top:.2rem';n.textContent=note;body.appendChild(n);}
     stepsDiv.appendChild(item);
   }
+  // ── FUNCTION TYPE DETECTOR ──────────────────────────────────────────────────
+  function detectFpType(expr){
+    const e=expr.trim().replace(/\s/g,'');
+    if(/^x\^(-?\d+(\.\d+)?)$/.test(e)){const n=parseFloat(e.split('^')[1]);return {type:'power',n};}
+    if(/^x\^\((-?\d+)\/(\d+)\)$/.test(e)){const m=e.match(/^x\^\((-?\d+)\/(\d+)\)$/);return {type:'power_frac',p:parseInt(m[1]),q:parseInt(m[2])};}
+    if(/^sqrt\(x\)$/.test(e)) return {type:'sqrt'};
+    if(/^cbrt\(x\)$/.test(e)) return {type:'cbrt'};
+    if(/^1\/x$/.test(e)) return {type:'reciprocal'};
+    if(/^sin\(x\)$/.test(e)) return {type:'sin'};
+    if(/^cos\(x\)$/.test(e)) return {type:'cos'};
+    if(/^tan\(x\)$/.test(e)) return {type:'tan'};
+    if(/^exp\(x\)$/.test(e)||/^e\^x$/.test(e)) return {type:'exp'};
+    if(/^ln\(x\)$/.test(e)) return {type:'ln'};
+    if(/^log\(x\)$/.test(e)||/^log10\(x\)$/.test(e)) return {type:'log10'};
+    if(/^log2\(x\)$/.test(e)) return {type:'log2'};
+    if(/^(\d+(\.\d+)?)\^x$/.test(e)){const a=parseFloat(e.split('^')[0]);return {type:'ax',a};}
+    return {type:'polynomial'};
+  }
+
+  // ── DETAILED STEP GENERATORS ─────────────────────────────────────────────────
+  function fpDetailedSteps(fx, fxTex, fxhTex, fpTex, addStep, t){
+    const typ=detectFpType(fx.trim().replace(/\s/g,''));
+
+    if(typ.type==='polynomial'||typ.type==='power'||typ.type==='power_frac'){
+      let expandedNum='', cancelledExpr='';
+      try{
+        const fxhExpr=fx.replace(/\bx\b/g,'(x+h)');
+        const diffSimp=math.simplify(math.parse(`(${fxhExpr})-(${fx})`), [], {exactFractions:false});
+        expandedNum=simplifyTex(diffSimp.toString());
+        const quotSimp=math.simplify(math.parse(`(${diffSimp.toString()})/h`), [], {exactFractions:false});
+        cancelledExpr=simplifyTex(quotSimp.toString());
+      }catch{expandedNum=`${fxhTex}-(${fxTex})`;cancelledExpr=fpTex;}
+      addStep(3,'Expand the numerator f(x+h) − f(x)',
+        `\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{${expandedNum}}{h}\\end{aligned}`,
+        'Expand using binomial theorem / algebraic identity');
+      addStep(4,'Factor out h from every term in the numerator',
+        `\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= ${cancelledExpr} + (\\text{terms with } h)\\end{aligned}`,
+        'Cancel the common factor h — valid because h ≠ 0 in the limit');
+      addStep(5,'Let h → 0: all remaining h-terms vanish',
+        `\\begin{aligned}\\lim_{h \\to 0}\\left(${cancelledExpr}\\right) &= ${fpTex}\\end{aligned}`);
+
+    } else if(typ.type==='sqrt'){
+      addStep(3,'Rationalise the numerator by multiplying by the conjugate',
+        `\\begin{aligned}\\dfrac{\\sqrt{x+h}-\\sqrt{x}}{h} &= \\dfrac{(\\sqrt{x+h}-\\sqrt{x})(\\sqrt{x+h}+\\sqrt{x})}{h(\\sqrt{x+h}+\\sqrt{x})}\\end{aligned}`);
+      addStep(4,'Apply difference of squares: (√(x+h))² − (√x)² = h',
+        `\\begin{aligned}&= \\dfrac{(x+h)-x}{h(\\sqrt{x+h}+\\sqrt{x})} = \\dfrac{h}{h(\\sqrt{x+h}+\\sqrt{x})} = \\dfrac{1}{\\sqrt{x+h}+\\sqrt{x}}\\end{aligned}`);
+      addStep(5,'Let h → 0: √(x+h) → √x',
+        `\\begin{aligned}\\lim_{h \\to 0}\\dfrac{1}{\\sqrt{x+h}+\\sqrt{x}} &= \\dfrac{1}{2\\sqrt{x}}\\end{aligned}`);
+
+    } else if(typ.type==='cbrt'){
+      addStep(3,'Multiply by the "cube-root conjugate" using a³−b³=(a−b)(a²+ab+b²)',
+        `\\begin{aligned}\\dfrac{\\sqrt[3]{x+h}-\\sqrt[3]{x}}{h} &= \\dfrac{(x+h)-x}{h\\left[(x+h)^{2/3}+(x+h)^{1/3}x^{1/3}+x^{2/3}\\right]}\\end{aligned}`);
+      addStep(4,'Cancel h in numerator and denominator',
+        `\\begin{aligned}&= \\dfrac{1}{(x+h)^{2/3}+(x+h)^{1/3}x^{1/3}+x^{2/3}}\\end{aligned}`);
+      addStep(5,'Let h → 0',
+        `\\begin{aligned}\\lim_{h \\to 0} &= \\dfrac{1}{x^{2/3}+x^{1/3}\\cdot x^{1/3}+x^{2/3}} = \\dfrac{1}{3x^{2/3}} = \\dfrac{1}{3}x^{-2/3}\\end{aligned}`);
+
+    } else if(typ.type==='reciprocal'){
+      addStep(3,'Write out the difference quotient and combine fractions',
+        `\\begin{aligned}\\dfrac{\\frac{1}{x+h}-\\frac{1}{x}}{h} &= \\dfrac{1}{h}\\cdot\\dfrac{x-(x+h)}{x(x+h)} = \\dfrac{-h}{h\\cdot x(x+h)}\\end{aligned}`);
+      addStep(4,'Cancel the common factor h (h ≠ 0)',
+        `\\begin{aligned}&= \\dfrac{-1}{x(x+h)}\\end{aligned}`);
+      addStep(5,'Let h → 0',
+        `\\begin{aligned}\\lim_{h \\to 0}\\dfrac{-1}{x(x+h)} &= \\dfrac{-1}{x^2}\\end{aligned}`);
+
+    } else if(typ.type==='sin'){
+      addStep(3,'Expand sin(x+h) using the angle addition formula',
+        `\\begin{aligned}\\dfrac{\\sin(x+h)-\\sin x}{h} &= \\dfrac{\\sin x\\cos h+\\cos x\\sin h-\\sin x}{h}\\end{aligned}`);
+      addStep(4,'Separate into two fractions',
+        `\\begin{aligned}&= \\sin x\\cdot\\dfrac{\\cos h-1}{h}+\\cos x\\cdot\\dfrac{\\sin h}{h}\\end{aligned}`);
+      addStep(5,'Apply standard limits as h → 0',
+        `\\begin{aligned}&\\lim_{h\\to0}\\dfrac{\\sin h}{h}=1,\\quad\\lim_{h\\to0}\\dfrac{\\cos h-1}{h}=0\\\\[6pt]&= \\sin x\\cdot 0+\\cos x\\cdot 1 = \\cos x\\end{aligned}`);
+
+    } else if(typ.type==='cos'){
+      addStep(3,'Expand cos(x+h) using the angle addition formula',
+        `\\begin{aligned}\\dfrac{\\cos(x+h)-\\cos x}{h} &= \\dfrac{\\cos x\\cos h-\\sin x\\sin h-\\cos x}{h}\\end{aligned}`);
+      addStep(4,'Separate into two fractions',
+        `\\begin{aligned}&= \\cos x\\cdot\\dfrac{\\cos h-1}{h}-\\sin x\\cdot\\dfrac{\\sin h}{h}\\end{aligned}`);
+      addStep(5,'Apply standard limits as h → 0',
+        `\\begin{aligned}&\\lim_{h\\to0}\\dfrac{\\sin h}{h}=1,\\quad\\lim_{h\\to0}\\dfrac{\\cos h-1}{h}=0\\\\[6pt]&= \\cos x\\cdot 0-\\sin x\\cdot 1 = -\\sin x\\end{aligned}`);
+
+    } else if(typ.type==='tan'){
+      addStep(3,'Write tan(x+h) = sin(x+h)/cos(x+h) and form a single fraction',
+        `\\begin{aligned}\\dfrac{\\tan(x+h)-\\tan x}{h} &= \\dfrac{1}{h}\\left(\\dfrac{\\sin(x+h)}{\\cos(x+h)}-\\dfrac{\\sin x}{\\cos x}\\right)\\end{aligned}`);
+      addStep(4,'Combine over common denominator; use sin(A−B) identity',
+        `\\begin{aligned}&= \\dfrac{\\sin(x+h)\\cos x-\\cos(x+h)\\sin x}{h\\cos(x+h)\\cos x} = \\dfrac{\\sin h}{h\\cos(x+h)\\cos x}\\end{aligned}`,
+        'sin(x+h)cos x − cos(x+h)sin x = sin((x+h)−x) = sin h');
+      addStep(5,'Apply lim(h→0) sin h/h = 1 and cos(x+0) = cos x',
+        `\\begin{aligned}\\lim_{h\\to 0}\\dfrac{\\sin h}{h\\cos(x+h)\\cos x} &= \\dfrac{1}{\\cos^2 x} = \\sec^2 x\\end{aligned}`);
+
+    } else if(typ.type==='exp'){
+      addStep(3,'Use the law of exponents: e^(x+h) = eˣ · eʰ',
+        `\\begin{aligned}\\dfrac{e^{x+h}-e^x}{h} &= \\dfrac{e^x\\cdot e^h-e^x}{h} = e^x\\cdot\\dfrac{e^h-1}{h}\\end{aligned}`);
+      addStep(4,'Factor eˣ out of the limit (it does not depend on h)',
+        `\\begin{aligned}&= e^x\\cdot\\lim_{h\\to 0}\\dfrac{e^h-1}{h}\\end{aligned}`);
+      addStep(5,'Apply the fundamental limit lim(h→0)(eʰ−1)/h = 1',
+        `\\begin{aligned}&= e^x\\cdot 1 = e^x\\end{aligned}`,
+        'This limit is equivalent to the definition of e');
+
+    } else if(typ.type==='ax'){
+      const a=typ.a;
+      addStep(3,`Use the law of exponents: ${a}^(x+h) = ${a}ˣ · ${a}ʰ`,
+        `\\begin{aligned}\\dfrac{${a}^{x+h}-${a}^x}{h} &= \\dfrac{${a}^x\\cdot ${a}^h-${a}^x}{h} = ${a}^x\\cdot\\dfrac{${a}^h-1}{h}\\end{aligned}`);
+      addStep(4,`Factor ${a}ˣ out of the limit`,
+        `\\begin{aligned}&= ${a}^x\\cdot\\lim_{h\\to 0}\\dfrac{${a}^h-1}{h}\\end{aligned}`);
+      addStep(5,`Apply the standard limit lim(h→0)(aʰ−1)/h = ln a`,
+        `\\begin{aligned}&= ${a}^x\\cdot\\ln ${a}\\end{aligned}`);
+
+    } else if(typ.type==='ln'){
+      addStep(3,'Combine using log quotient rule: ln(x+h) − ln x = ln((x+h)/x)',
+        `\\begin{aligned}\\dfrac{\\ln(x+h)-\\ln x}{h} &= \\dfrac{1}{h}\\ln\\!\\left(1+\\dfrac{h}{x}\\right)\\end{aligned}`);
+      addStep(4,'Substitute u = h/x (so h = ux, and h→0 ⟺ u→0)',
+        `\\begin{aligned}&= \\dfrac{1}{ux}\\ln(1+u) = \\dfrac{1}{x}\\cdot\\dfrac{\\ln(1+u)}{u}\\end{aligned}`);
+      addStep(5,'Apply the standard limit lim(u→0) ln(1+u)/u = 1',
+        `\\begin{aligned}\\lim_{u\\to 0}\\dfrac{1}{x}\\cdot\\dfrac{\\ln(1+u)}{u} &= \\dfrac{1}{x}\\cdot 1 = \\dfrac{1}{x}\\end{aligned}`);
+
+    } else if(typ.type==='log10'){
+      addStep(3,'Use log quotient rule: log₁₀(x+h) − log₁₀ x = log₁₀((x+h)/x)',
+        `\\begin{aligned}\\dfrac{\\log_{10}(x+h)-\\log_{10}x}{h} &= \\dfrac{1}{h}\\log_{10}\\!\\left(1+\\dfrac{h}{x}\\right)\\end{aligned}`);
+      addStep(4,'Convert to natural log: log₁₀(u) = ln(u)/ln 10',
+        `\\begin{aligned}&= \\dfrac{1}{h\\ln 10}\\ln\\!\\left(1+\\dfrac{h}{x}\\right) = \\dfrac{1}{x\\ln 10}\\cdot\\dfrac{\\ln(1+h/x)}{h/x}\\end{aligned}`);
+      addStep(5,'Apply lim(h→0) ln(1+u)/u = 1',
+        `\\begin{aligned}\\lim_{h\\to 0} &= \\dfrac{1}{x\\ln 10}\\end{aligned}`);
+
+    } else if(typ.type==='log2'){
+      addStep(3,'Use log quotient rule: log₂(x+h) − log₂ x = log₂((x+h)/x)',
+        `\\begin{aligned}\\dfrac{\\log_2(x+h)-\\log_2 x}{h} &= \\dfrac{1}{h}\\log_2\\!\\left(1+\\dfrac{h}{x}\\right)\\end{aligned}`);
+      addStep(4,'Convert to natural log: log₂(u) = ln(u)/ln 2',
+        `\\begin{aligned}&= \\dfrac{1}{h\\ln 2}\\ln\\!\\left(1+\\dfrac{h}{x}\\right) = \\dfrac{1}{x\\ln 2}\\cdot\\dfrac{\\ln(1+h/x)}{h/x}\\end{aligned}`);
+      addStep(5,'Apply lim(h→0) ln(1+u)/u = 1',
+        `\\begin{aligned}\\lim_{h\\to 0} &= \\dfrac{1}{x\\ln 2}\\end{aligned}`);
+
+    } else {
+      // Generic fallback
+      let expandedNum='', cancelledExpr='';
+      try{
+        const fxhExpr=fx.replace(/\bx\b/g,'(x+h)');
+        const diffSimp=math.simplify(math.parse(`(${fxhExpr})-(${fx})`), [], {exactFractions:false});
+        expandedNum=simplifyTex(diffSimp.toString());
+        const quotSimp=math.simplify(math.parse(`(${diffSimp.toString()})/h`), [], {exactFractions:false});
+        cancelledExpr=simplifyTex(quotSimp.toString());
+      }catch{expandedNum=`${fxhTex}-(${fxTex})`;cancelledExpr=fpTex;}
+      addStep(3,'Expand and simplify f(x+h) − f(x)',
+        `\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{${expandedNum}}{h}\\end{aligned}`);
+      addStep(4,'Cancel common factor h (h ≠ 0)',
+        `\\begin{aligned}&= ${cancelledExpr}\\end{aligned}`);
+      addStep(5,'Let h → 0',
+        `\\begin{aligned}\\lim_{h\\to 0}\\left(${cancelledExpr}\\right) &= ${fpTex}\\end{aligned}`);
+    }
+  }
+
   try{
     math.parse(fx);
+    const fpStr=safeDerivative(fx);
+    const fpTex=fpStr?simplifyTex(fpStr):'\\text{(see result)}';
+
     // Step 1: Definition
-    addStep(1,t('fp_step1'),'\\begin{aligned}f\'(x) &= \\lim_{h \\to 0} \\dfrac{f(x+h) - f(x)}{h}\\end{aligned}');
-    // Step 2: Substitute - use mathjs toTex for proper LaTeX rendering
-    let fxhTex='f(x+h)';
-    let fxTex=simplifyTex(fx);
+    addStep(1,t('fp_step1'),
+      '\\begin{aligned}f\'(x) &= \\lim_{h \\to 0} \\dfrac{f(x+h) - f(x)}{h}\\end{aligned}');
+
+    // Step 2: Substitute f(x+h) and f(x) — use mathjs toTex for correct LaTeX
+    let fxhTex='f(x+h)', fxTex=simplifyTex(fx);
     try{
-      // Substitute x → (x+h) using mathjs transform
       const node=math.parse(fx);
       const fxhNode=node.transform(n=>{
         if(n.isSymbolNode&&n.name==='x')return math.parse('x+h');
         return n;
       });
       fxhTex=fxhNode.toTex({parenthesis:'auto'});
-    }catch{
-      // Fallback: string replace
-      fxhTex=simplifyTex(fx.replace(/\bx\b/g,'(x+h)'));
-    }
-    addStep(2,t('fp_step2'),`\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{\\left[${fxhTex}\\right] - \\left[${fxTex}\\right]}{h}\\end{aligned}`);
-    // Step 3 & 4: Compute derivative symbolically with full algebraic expansion
-    const fpStr=safeDerivative(fx);
-    const fpTex=fpStr?simplifyTex(fpStr):'\\text{(see result)}';
+    }catch{fxhTex=simplifyTex(fx.replace(/\bx\b/g,'(x+h)'));}
+    addStep(2,t('fp_step2'),
+      `\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{\\left[${fxhTex}\\right] - \\left[${fxTex}\\right]}{h}\\end{aligned}`);
 
-    // Helper: expand f(x+h)-f(x) symbolically and show intermediate steps
-    function fpSteps(fn){
-      const steps=[];
-      try{
-        const fxhExpr=fn.replace(/\bx\b/g,'(x+h)');
-        // Numerator: f(x+h) - f(x) simplified
-        const diffExpr=`(${fxhExpr})-(${fn})`;
-        const diffNode=math.parse(diffExpr);
-        const diffSimp=math.simplify(diffNode,[],{exactFractions:false});
-        const diffStr=diffSimp.toString();
-        const diffTex=simplifyTex(diffStr);
-        steps.push({label:'expand', tex:`\\dfrac{${diffTex}}{h}`});
-        // Factor out h: divide by h symbolically
-        const quotExpr=`(${diffStr})/h`;
-        try{
-          const quotNode=math.parse(quotExpr);
-          const quotSimp=math.simplify(quotNode,[],{exactFractions:false});
-          const quotStr=quotSimp.toString();
-          const quotTex=simplifyTex(quotStr);
-          steps.push({label:'cancel', tex:quotTex});
-        }catch{
-          steps.push({label:'cancel', tex:fpTex});
-        }
-      }catch{
-        steps.push({label:'expand', tex:`\\dfrac{f(x+h)-f(x)}{h}`});
-        steps.push({label:'cancel', tex:fpTex});
-      }
-      return steps;
-    }
-    const fpExpandSteps=fpSteps(fx);
-    const expandedTex=fpExpandSteps[0]?fpExpandSteps[0].tex:`\\dfrac{f(x+h)-f(x)}{h}`;
-    const cancelledTex=fpExpandSteps[1]?fpExpandSteps[1].tex:fpTex;
-    addStep(3,t('fp_step3'),`\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= ${expandedTex}\\end{aligned}`);
-    addStep(4,t('fp_step4'),`\\begin{aligned}\\lim_{h \\to 0}\\left(${cancelledTex}\\right) &= ${fpTex}\\end{aligned}`,'(Cancel h, then let h → 0)');
-    // Step 5: Result
-    addStep(5,t('fp_step5'),`\\begin{aligned}f'(x) &= ${fpTex}\\end{aligned}`,'(Computed symbolically using limit definition)');
-    // Step 6: Numerical check at x=a
+    // Steps 3-5: Detailed function-specific derivation (no skipped steps)
+    fpDetailedSteps(fx, fxTex, fxhTex, fpTex, addStep, t);
+
+    // Step 6: Conclusion
+    addStep(6,t('fp_step5'),
+      `\\begin{aligned}\\therefore\\quad f'(x) &= ${fpTex}\\end{aligned}`,
+      '(Derived from first principles / limit definition)');
+
+    // Step 7: Numerical evaluation at x = a
     if(isFinite(atX)&&fpStr){
       const fpa=evalAt(fpStr,atX);
       const faTex=numToTex(evalAt(fx,atX));
       const fpaTex=numToTex(fpa);
-      addStep(6,t('fp_step6')+atX,`\\begin{aligned}f(${numToTex(atX)}) &= ${faTex} \\\\ f'(${numToTex(atX)}) &= ${fpaTex}\\end{aligned}`);
-      // Numerical verification
-      const h=0.0001;const numDeriv=(evalAt(fx,atX+h)-evalAt(fx,atX-h))/(2*h);
-      const numTex=numToTex(Math.round(numDeriv*1e6)/1e6);
+      addStep(7,t('fp_step6')+numToTex(atX),
+        `\\begin{aligned}f(${numToTex(atX)}) &= ${faTex} \\\\ f'(${numToTex(atX)}) &= ${fpaTex}\\end{aligned}`);
+      // Numerical verification via central difference
+      const hv=0.0001;
+      const numDeriv=(evalAt(fx,atX+hv)-evalAt(fx,atX-hv))/(2*hv);
+      const numTex2=numToTex(Math.round(numDeriv*1e6)/1e6);
       const item=document.createElement('div');item.className='step-item';
       item.innerHTML=`<div class="step-num" style="background:#2f9e44">✓</div><div class="step-body"><div class="step-label">Numerical verification (central difference)</div></div>`;
       const body=item.querySelector('.step-body');
-      body.appendChild(renderK(`\\frac{f(${numToTex(atX)}+h)-f(${numToTex(atX)}-h)}{2h}\\bigg|_{h=0.0001} \\approx ${numTex}`));
+      body.appendChild(renderK(`\\dfrac{f(${numToTex(atX)}+h)-f(${numToTex(atX)}-h)}{2h}\\bigg|_{h=0.0001} \\approx ${numTex2}`));
       stepsDiv.appendChild(item);
     }
   }catch(e){stepsDiv.innerHTML=`<div class="error-box">⚠️ ${e.message}</div>`;}
