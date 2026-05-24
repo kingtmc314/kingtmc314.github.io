@@ -366,7 +366,88 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.3/lib/browser/math.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/controls/OrbitControls.js"></script>
+<script>
+// Minimal OrbitControls implementation for Three.js r160
+(function(){
+  THREE.OrbitControls=function(camera,domElement){
+    this.camera=camera;this.domElement=domElement||document;
+    this.enableDamping=false;this.dampingFactor=0.05;
+    this.target=new THREE.Vector3();
+    var scope=this;
+    var spherical=new THREE.Spherical();
+    var sphericalDelta=new THREE.Spherical();
+    var scale=1;
+    var panOffset=new THREE.Vector3();
+    var rotateStart=new THREE.Vector2();
+    var rotateEnd=new THREE.Vector2();
+    var rotateDelta=new THREE.Vector2();
+    var isDragging=false;
+    var STATE={NONE:-1,ROTATE:0,DOLLY:1,PAN:2};
+    var state=STATE.NONE;
+    // Init spherical from camera
+    function updateSpherical(){
+      var offset=camera.position.clone().sub(scope.target);
+      spherical.setFromVector3(offset);
+    }
+    updateSpherical();
+    function onMouseDown(e){
+      if(e.button===0){state=STATE.ROTATE;rotateStart.set(e.clientX,e.clientY);}
+      else if(e.button===2){state=STATE.PAN;rotateStart.set(e.clientX,e.clientY);}
+    }
+    function onMouseMove(e){
+      if(state===STATE.ROTATE){
+        rotateEnd.set(e.clientX,e.clientY);
+        rotateDelta.subVectors(rotateEnd,rotateStart).multiplyScalar(0.005);
+        sphericalDelta.theta-=rotateDelta.x;
+        sphericalDelta.phi-=rotateDelta.y;
+        rotateStart.copy(rotateEnd);
+      }else if(state===STATE.PAN){
+        rotateEnd.set(e.clientX,e.clientY);
+        rotateDelta.subVectors(rotateEnd,rotateStart).multiplyScalar(0.01);
+        var right=new THREE.Vector3();right.setFromMatrixColumn(camera.matrix,0);
+        var up=new THREE.Vector3();up.setFromMatrixColumn(camera.matrix,1);
+        panOffset.addScaledVector(right,-rotateDelta.x);
+        panOffset.addScaledVector(up,rotateDelta.y);
+        rotateStart.copy(rotateEnd);
+      }
+    }
+    function onMouseUp(){state=STATE.NONE;}
+    function onWheel(e){
+      e.preventDefault();
+      if(e.deltaY<0)scale*=0.9;else scale*=1.1;
+    }
+    domElement.addEventListener('mousedown',onMouseDown);
+    domElement.addEventListener('mousemove',onMouseMove);
+    domElement.addEventListener('mouseup',onMouseUp);
+    domElement.addEventListener('wheel',onWheel,{passive:false});
+    domElement.addEventListener('contextmenu',function(e){e.preventDefault();});
+    this.update=function(){
+      var offset=new THREE.Vector3();
+      var quat=new THREE.Quaternion().setFromUnitVectors(camera.up,new THREE.Vector3(0,1,0));
+      var quatInverse=quat.clone().invert();
+      spherical.theta+=sphericalDelta.theta;
+      spherical.phi+=sphericalDelta.phi;
+      spherical.phi=Math.max(0.01,Math.min(Math.PI-0.01,spherical.phi));
+      spherical.radius*=scale;
+      spherical.radius=Math.max(0.1,Math.min(100,spherical.radius));
+      scope.target.add(panOffset);
+      offset.setFromSpherical(spherical);
+      offset.applyQuaternion(quatInverse);
+      camera.position.copy(scope.target).add(offset);
+      camera.lookAt(scope.target);
+      if(scope.enableDamping){sphericalDelta.theta*=(1-scope.dampingFactor);sphericalDelta.phi*=(1-scope.dampingFactor);panOffset.multiplyScalar(1-scope.dampingFactor);}
+      else{sphericalDelta.set(0,0,0);panOffset.set(0,0,0);}
+      scale=1;
+    };
+    this.dispose=function(){
+      domElement.removeEventListener('mousedown',onMouseDown);
+      domElement.removeEventListener('mousemove',onMouseMove);
+      domElement.removeEventListener('mouseup',onMouseUp);
+      domElement.removeEventListener('wheel',onWheel);
+    };
+  };
+})();
+</script>
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
 // i18n
