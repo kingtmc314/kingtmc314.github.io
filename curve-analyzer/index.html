@@ -1696,7 +1696,7 @@ function buildRevolutionSolid(res){
       if(inner>0.001){vertices.push(x,inner*co,inner*si);normals.push(0,-co,-si);}
     }
   }
-  const stride=inner>0.001?2:1;
+  const stride=rs[0]&&rs[0].inner>0.001?2:1;
   // Build indices for outer surface
   for(let i=0;i<N;i++){
     for(let j=0;j<M;j++){
