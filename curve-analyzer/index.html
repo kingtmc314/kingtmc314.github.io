@@ -1349,20 +1349,22 @@ function runFirstPrinciples(){
         `\\begin{aligned}\\lim_{h \\to 0}\\dfrac{-1}{x(x+h)} &= \\dfrac{-1}{x^2}\\end{aligned}`);
 
     } else if(typ.type==='sin'){
-      addStep(3,'Expand sin(x+h) using the angle addition formula',
-        `\\begin{aligned}\\dfrac{\\sin(x+h)-\\sin x}{h} &= \\dfrac{\\sin x\\cos h+\\cos x\\sin h-\\sin x}{h}\\end{aligned}`);
-      addStep(4,'Separate into two fractions',
-        `\\begin{aligned}&= \\sin x\\cdot\\dfrac{\\cos h-1}{h}+\\cos x\\cdot\\dfrac{\\sin h}{h}\\end{aligned}`);
-      addStep(5,'Apply standard limits as h → 0',
-        `\\begin{aligned}&\\lim_{h\\to0}\\dfrac{\\sin h}{h}=1,\\quad\\lim_{h\\to0}\\dfrac{\\cos h-1}{h}=0\\\\[6pt]&= \\sin x\\cdot 0+\\cos x\\cdot 1 = \\cos x\\end{aligned}`);
+      addStep(3,'Apply the sum-to-product identity: sin A − sin B = 2 cos((A+B)/2) sin((A−B)/2)',
+        `\\begin{aligned}\\dfrac{\\sin(x+h)-\\sin x}{h} &= \\dfrac{2\\cos\\!\\left(x+\\dfrac{h}{2}\\right)\\sin\\!\\left(\\dfrac{h}{2}\\right)}{h}\\end{aligned}`,
+        'Here A = x+h, B = x, so (A+B)/2 = x+h/2 and (A−B)/2 = h/2');
+      addStep(4,'Rewrite h = 2·(h/2) to expose the standard limit',
+        `\\begin{aligned}&= \\cos\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2}\\end{aligned}`);
+      addStep(5,'Apply standard limit lim(u→0) sin u/u = 1 (with u = h/2 → 0)',
+        `\\begin{aligned}\\lim_{h\\to 0}\\cos\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2} &= \\cos(x)\\cdot 1 = \\cos x\\end{aligned}`);
 
     } else if(typ.type==='cos'){
-      addStep(3,'Expand cos(x+h) using the angle addition formula',
-        `\\begin{aligned}\\dfrac{\\cos(x+h)-\\cos x}{h} &= \\dfrac{\\cos x\\cos h-\\sin x\\sin h-\\cos x}{h}\\end{aligned}`);
-      addStep(4,'Separate into two fractions',
-        `\\begin{aligned}&= \\cos x\\cdot\\dfrac{\\cos h-1}{h}-\\sin x\\cdot\\dfrac{\\sin h}{h}\\end{aligned}`);
-      addStep(5,'Apply standard limits as h → 0',
-        `\\begin{aligned}&\\lim_{h\\to0}\\dfrac{\\sin h}{h}=1,\\quad\\lim_{h\\to0}\\dfrac{\\cos h-1}{h}=0\\\\[6pt]&= \\cos x\\cdot 0-\\sin x\\cdot 1 = -\\sin x\\end{aligned}`);
+      addStep(3,'Apply the sum-to-product identity: cos A − cos B = −2 sin((A+B)/2) sin((A−B)/2)',
+        `\\begin{aligned}\\dfrac{\\cos(x+h)-\\cos x}{h} &= \\dfrac{-2\\sin\\!\\left(x+\\dfrac{h}{2}\\right)\\sin\\!\\left(\\dfrac{h}{2}\\right)}{h}\\end{aligned}`,
+        'Here A = x+h, B = x, so (A+B)/2 = x+h/2 and (A−B)/2 = h/2');
+      addStep(4,'Rewrite h = 2·(h/2) to expose the standard limit',
+        `\\begin{aligned}&= -\\sin\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2}\\end{aligned}`);
+      addStep(5,'Apply standard limit lim(u→0) sin u/u = 1 (with u = h/2 → 0)',
+        `\\begin{aligned}\\lim_{h\\to 0}-\\sin\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2} &= -\\sin(x)\\cdot 1 = -\\sin x\\end{aligned}`);
 
     } else if(typ.type==='tan'){
       addStep(3,'Write tan(x+h) = sin(x+h)/cos(x+h) and form a single fraction',
