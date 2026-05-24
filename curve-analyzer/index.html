@@ -244,7 +244,10 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
         <svg id="fpGraph" viewBox="0 0 560 400" style="width:100%;height:auto"></svg>
       </div>
       <div style="margin-top:.75rem">
-        <label style="font-size:.82rem;font-weight:600;color:var(--fg2)" data-i18n="fp_h_label">h value: <span id="hValDisplay">1</span></label>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <label style="font-size:.82rem;font-weight:600;color:var(--fg2)" data-i18n="fp_h_label">h value:</label>
+          <span id="hValDisplay" style="font-size:.82rem;font-weight:700;color:var(--primary);min-width:2.5rem">1</span>
+        </div>
         <input type="range" class="h-slider" id="hSlider" min="-2" max="2" step="0.01" value="1">
       </div>
       <div id="fpSecantInfo" style="margin-top:.5rem;font-size:.85rem;color:var(--fg2)"></div>
