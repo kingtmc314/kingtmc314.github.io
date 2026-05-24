@@ -676,7 +676,7 @@ function numToTex(n){
   return n.toPrecision(6).replace(/\.?0+$/,'');
 }
 function evalAt(expr,x,varName='x'){try{const scope={};scope[varName]=x;const v=math.evaluate(expr,scope);return typeof v==='number'?v:NaN;}catch{return NaN;}}
-function safeDerivative(expr,v='x'){try{return math.derivative(expr,v).toString();}catch{return null;}}
+function safeDerivative(expr,v='x'){try{const e2=expr.replace(/\bln\s*\(/g,'log(');return math.derivative(e2,v).toString();}catch{return null;}}
 function simplifyTex(expr){
   try{return math.simplify(math.parse(expr)).toTex({parenthesis:'auto'});}
   catch{try{return math.parse(expr).toTex({parenthesis:'auto'});}catch{return expr;}}
