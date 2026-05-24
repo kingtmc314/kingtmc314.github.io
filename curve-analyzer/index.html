@@ -447,7 +447,7 @@ function numToTex(n){
   return n.toPrecision(5).replace(/\.?0+$/,'');
 }
 
-function renderK(tex,block=false){
+function renderK(tex,block=true){
   const el=document.createElement(block?'div':'span');
   el.className=block?'math-block':'math-inline';
   try{katex.render(tex,el,{throwOnError:false,displayMode:block})}
@@ -1316,7 +1316,7 @@ function buildReference(){
       r.innerHTML=`<div class="ref-name">${t(row.nameKey)}</div>`;
       const f=document.createElement('div');
       f.className='ref-formula';
-      try{katex.render(row.tex,f,{throwOnError:false,displayMode:false})}
+      try{katex.render(row.tex,f,{throwOnError:false,displayMode:true})}
       catch{f.textContent=row.tex}
       r.appendChild(f);
       body.appendChild(r);
