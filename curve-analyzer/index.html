@@ -1272,11 +1272,44 @@ function runFirstPrinciples(){
     }catch{fxhStr=`f(x+h)`;}
     const fxTex=simplifyTex(fx);
     addStep(2,t('fp_step2'),`\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{[${fxhStr.replace(/\*/g,'\\cdot ')}] - [${fxTex}]}{h}\\end{aligned}`);
-    // Step 3 & 4: Compute derivative symbolically
+    // Step 3 & 4: Compute derivative symbolically with full algebraic expansion
     const fpStr=safeDerivative(fx);
     const fpTex=fpStr?simplifyTex(fpStr):'\\text{(see result)}';
-    addStep(3,t('fp_step3'),'\\text{Expand numerator, collect terms in } h \\text{, factor out } h');
-    addStep(4,t('fp_step4'),`\\lim_{h \\to 0} \\dfrac{\\cdots}{h} = \\lim_{h \\to 0}(\\cdots) \\quad \\text{(cancel } h \\text{)}`);
+
+    // Helper: expand f(x+h)-f(x) symbolically and show intermediate steps
+    function fpSteps(fn){
+      const steps=[];
+      try{
+        const fxhExpr=fn.replace(/\bx\b/g,'(x+h)');
+        // Numerator: f(x+h) - f(x) simplified
+        const diffExpr=`(${fxhExpr})-(${fn})`;
+        const diffNode=math.parse(diffExpr);
+        const diffSimp=math.simplify(diffNode,[],{exactFractions:false});
+        const diffStr=diffSimp.toString();
+        const diffTex=simplifyTex(diffStr);
+        steps.push({label:'expand', tex:`\\dfrac{${diffTex}}{h}`});
+        // Factor out h: divide by h symbolically
+        const quotExpr=`(${diffStr})/h`;
+        try{
+          const quotNode=math.parse(quotExpr);
+          const quotSimp=math.simplify(quotNode,[],{exactFractions:false});
+          const quotStr=quotSimp.toString();
+          const quotTex=simplifyTex(quotStr);
+          steps.push({label:'cancel', tex:quotTex});
+        }catch{
+          steps.push({label:'cancel', tex:fpTex});
+        }
+      }catch{
+        steps.push({label:'expand', tex:`\\dfrac{f(x+h)-f(x)}{h}`});
+        steps.push({label:'cancel', tex:fpTex});
+      }
+      return steps;
+    }
+    const fpExpandSteps=fpSteps(fx);
+    const expandedTex=fpExpandSteps[0]?fpExpandSteps[0].tex:`\\dfrac{f(x+h)-f(x)}{h}`;
+    const cancelledTex=fpExpandSteps[1]?fpExpandSteps[1].tex:fpTex;
+    addStep(3,t('fp_step3'),`\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= ${expandedTex}\\end{aligned}`);
+    addStep(4,t('fp_step4'),`\\begin{aligned}\\lim_{h \\to 0}\\left(${cancelledTex}\\right) &= ${fpTex}\\end{aligned}`,'(Cancel h, then let h → 0)');
     // Step 5: Result
     addStep(5,t('fp_step5'),`\\begin{aligned}f'(x) &= ${fpTex}\\end{aligned}`,'(Computed symbolically using limit definition)');
     // Step 6: Numerical check at x=a
