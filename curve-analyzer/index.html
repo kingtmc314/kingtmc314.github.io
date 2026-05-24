@@ -1304,11 +1304,395 @@ function runFirstPrinciples(){
 
   // ── DETAILED STEP GENERATORS ─────────────────────────────────────────────────
   function fpDetailedSteps(fx, fxTex, fxhTex, fpTex, addStep, t){
-    const typ=detectFpType(fx.trim().replace(/\s/g,''));
+    // ── AST-based composite function detector ────────────────────────────────
+    function classifyAST(expr){
+      const e = expr.trim().replace(/\s/g,'');
+      // Pure simple forms
+      if(/^x$/.test(e)) return {outer:'power',n:1,inner:'x',innerTex:'x',isPure:true};
+      if(/^x\^(-?\d+(\.\d+)?)$/.test(e)){const n=parseFloat(e.split('^')[1]);return {outer:'power',n,inner:'x',innerTex:'x',isPure:true};}
+      if(/^x\^\((-?\d+)\/(\d+)\)$/.test(e)){const m=e.match(/^x\^\((-?\d+)\/(\d+)\)$/);return {outer:'power_frac',p:parseInt(m[1]),q:parseInt(m[2]),inner:'x',innerTex:'x',isPure:true};}
+      if(/^sqrt\(x\)$/.test(e)) return {outer:'sqrt',inner:'x',innerTex:'x',isPure:true};
+      if(/^cbrt\(x\)$/.test(e)) return {outer:'cbrt',inner:'x',innerTex:'x',isPure:true};
+      if(/^1\/x$/.test(e)) return {outer:'reciprocal',inner:'x',innerTex:'x',isPure:true};
+      if(/^sin\(x\)$/.test(e)) return {outer:'sin',inner:'x',innerTex:'x',isPure:true};
+      if(/^cos\(x\)$/.test(e)) return {outer:'cos',inner:'x',innerTex:'x',isPure:true};
+      if(/^tan\(x\)$/.test(e)) return {outer:'tan',inner:'x',innerTex:'x',isPure:true};
+      if(/^exp\(x\)$/.test(e)||/^e\^x$/.test(e)) return {outer:'exp',inner:'x',innerTex:'x',isPure:true};
+      if(/^ln\(x\)$/.test(e)) return {outer:'ln',inner:'x',innerTex:'x',isPure:true};
+      if(/^log\(x\)$/.test(e)||/^log10\(x\)$/.test(e)) return {outer:'log10',inner:'x',innerTex:'x',isPure:true};
+      if(/^log2\(x\)$/.test(e)) return {outer:'log2',inner:'x',innerTex:'x',isPure:true};
+      if(/^(\d+(\.\d+)?)\^x$/.test(e)){const a=parseFloat(e.split('^')[0]);return {outer:'ax',a,inner:'x',innerTex:'x',isPure:true};}
+      // Composite: sin(g(x)), cos(g(x)), tan(g(x)), exp(g(x)), ln(g(x)), log(g(x))
+      const funcMatch = e.match(/^(sin|cos|tan|sec|csc|cot|asin|acos|atan|sinh|cosh|tanh|exp|ln|log|log2|sqrt|cbrt)\((.+)\)$/);
+      if(funcMatch){
+        const outerName = funcMatch[1];
+        const innerExpr = funcMatch[2];
+        let innerTex = innerExpr;
+        try{ innerTex = math.parse(innerExpr).toTex({parenthesis:'auto'}); }catch{}
+        return {outer: outerName, inner: innerExpr, innerTex, isPure: false};
+      }
+      // Composite: g(x)^n  e.g. (x^2+1)^3
+      const powMatch = e.match(/^\((.+)\)\^(-?\d+(\.\d+)?)$/);
+      if(powMatch){
+        const innerExpr = powMatch[1];
+        const n = parseFloat(powMatch[2]);
+        let innerTex = innerExpr;
+        try{ innerTex = math.parse(innerExpr).toTex({parenthesis:'auto'}); }catch{}
+        return {outer:'power', n, inner: innerExpr, innerTex, isPure: false};
+      }
+      // Composite: g(x)^(p/q)
+      const powFracMatch = e.match(/^\((.+)\)\^\((-?\d+)\/(\d+)\)$/);
+      if(powFracMatch){
+        const innerExpr = powFracMatch[1];
+        const p = parseInt(powFracMatch[2]), q = parseInt(powFracMatch[3]);
+        let innerTex = innerExpr;
+        try{ innerTex = math.parse(innerExpr).toTex({parenthesis:'auto'}); }catch{}
+        return {outer:'power_frac', p, q, inner: innerExpr, innerTex, isPure: false};
+      }
+      return {outer:'polynomial', inner: expr, innerTex: fxTex, isPure: true};
+    }
 
-    if(typ.type==='polynomial'||typ.type==='power'||typ.type==='power_frac'){
+    // ── Helper: get g'(x) as LaTeX ───────────────────────────────────────────
+    function innerDerivTex(innerExpr){
+      try{
+        const gpStr = safeDerivative(innerExpr);
+        if(gpStr) return simplifyTex(gpStr);
+      }catch{}
+      return "g'(x)";
+    }
+
+    // ── Helper: compute g(x+h) LaTeX ─────────────────────────────────────────
+    function innerSubstTex(innerExpr){
+      try{
+        const node = math.parse(innerExpr);
+        const subst = node.transform(n=>{
+          if(n.isSymbolNode && n.name==='x') return math.parse('x+h');
+          return n;
+        });
+        return subst.toTex({parenthesis:'auto'});
+      }catch{
+        return innerExpr.replace(/\bx\b/g,'(x+h)');
+      }
+    }
+
+    const typ = classifyAST(fx);
+    const gx = typ.inner;
+    const gxTex = typ.innerTex;
+    const gxhTex = innerSubstTex(gx);
+    const gpTex = innerDerivTex(gx);
+    const isPure = typ.isPure;
+
+    // ── Composite preamble (steps 3a) ─────────────────────────────────────────
+    function addCompositeNote(){
+      if(!isPure){
+        addStep('3a', 'Let u = g(x) = ' + gxTex + '. Note that as h → 0, Δu = g(x+h) − g(x) → 0',
+          `\\begin{aligned}u &= ${gxTex},\\quad u+\\Delta u = ${gxhTex}\\\\
+\\Delta u &= ${gxhTex} - ${gxTex}\\end{aligned}`);
+      }
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // POWER / POLYNOMIAL
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='power' || typ.outer==='power_frac' || typ.outer==='polynomial'){
+      if(isPure && typ.outer==='power'){
+        const n = typ.n;
+        if(n===1){
+          addStep(3,'Substitute and simplify',
+            `\\begin{aligned}\\dfrac{(x+h)-x}{h} &= \\dfrac{h}{h} = 1\\end{aligned}`);
+          addStep(4,'Take the limit as h → 0',
+            `\\begin{aligned}\\lim_{h\\to 0} 1 &= 1\\end{aligned}`);
+          addStep(5,'Result',
+            `\\begin{aligned}f'(x) &= 1\\end{aligned}`);
+          return;
+        }
+        if(n===2){
+          addStep(3,'Expand (x+h)² = x² + 2xh + h²',
+            `\\begin{aligned}\\dfrac{(x+h)^2 - x^2}{h} &= \\dfrac{x^2+2xh+h^2-x^2}{h} = \\dfrac{2xh+h^2}{h}\\end{aligned}`);
+          addStep(4,'Factor out h from numerator (h ≠ 0)',
+            `\\begin{aligned}&= \\dfrac{h(2x+h)}{h} = 2x+h\\end{aligned}`);
+          addStep(5,'Let h → 0: the term h vanishes',
+            `\\begin{aligned}\\lim_{h\\to 0}(2x+h) &= 2x\\end{aligned}`);
+          return;
+        }
+        if(n===3){
+          addStep(3,'Expand (x+h)³ = x³ + 3x²h + 3xh² + h³',
+            `\\begin{aligned}\\dfrac{(x+h)^3-x^3}{h} &= \\dfrac{3x^2 h+3xh^2+h^3}{h}\\end{aligned}`);
+          addStep(4,'Factor out h',
+            `\\begin{aligned}&= \\dfrac{h(3x^2+3xh+h^2)}{h} = 3x^2+3xh+h^2\\end{aligned}`);
+          addStep(5,'Let h → 0',
+            `\\begin{aligned}\\lim_{h\\to 0}(3x^2+3xh+h^2) &= 3x^2\\end{aligned}`);
+          return;
+        }
+        // General integer power: use binomial theorem
+        addStep(3,`Expand (x+h)^{${n}} using the Binomial Theorem: (x+h)^n = xⁿ + n·xⁿ⁻¹h + … + hⁿ`,
+          `\\begin{aligned}\\dfrac{(x+h)^{${n}}-x^{${n}}}{h} &= \\dfrac{${n}x^{${n-1}}h + \\binom{${n}}{2}x^{${n-2}}h^2 + \\cdots + h^{${n}}}{h}\\end{aligned}`);
+        addStep(4,'Factor out h from every term in the numerator',
+          `\\begin{aligned}&= \\dfrac{h\\left(${n}x^{${n-1}} + \\binom{${n}}{2}x^{${n-2}}h + \\cdots + h^{${n-1}}\\right)}{h} = ${n}x^{${n-1}} + \\text{(terms with } h\\text{)}\\end{aligned}`);
+        addStep(5,'Let h → 0: all remaining h-terms vanish',
+          `\\begin{aligned}\\lim_{h\\to 0} &= ${n}x^{${n-1}} = ${fpTex}\\end{aligned}`);
+        return;
+      }
+      if(isPure && typ.outer==='power_frac'){
+        const p=typ.p, q=typ.q;
+        const pq=`${p}/${q}`;
+        addStep(3,`Use the identity aⁿ − bⁿ = (a−b)(aⁿ⁻¹ + aⁿ⁻²b + … + bⁿ⁻¹) with n = q = ${q}`,
+          `\\begin{aligned}\\dfrac{(x+h)^{${pq}}-x^{${pq}}}{h} &= \\dfrac{(x+h)^{${p}/${q}}-x^{${p}/${q}}}{h}\\end{aligned}`);
+        addStep(4,`Let u = (x+h)^{1/${q}}, v = x^{1/${q}}; then uᵖ − vᵖ = (u−v)(uᵖ⁻¹+…+vᵖ⁻¹)`,
+          `\\begin{aligned}&= \\dfrac{u^{${p}}-v^{${p}}}{h} = \\dfrac{(u-v)(u^{${p-1}}+\\cdots+v^{${p-1}})}{h}\\end{aligned}`);
+        addStep(5,`As h → 0, u → v = x^{1/${q}}, and (u−v)/h → (1/${q})x^{1/${q}−1}`,
+          `\\begin{aligned}\\lim_{h\\to 0} &= \\dfrac{${p}}{${q}}x^{${pq}-1} = ${fpTex}\\end{aligned}`);
+        return;
+      }
+      // Composite power: (g(x))^n — use chain rule via first principles
+      if(!isPure){
+        const n = typ.n || (typ.p && typ.q ? `${typ.p}/${typ.q}` : 'n');
+        addCompositeNote();
+        addStep(3,`Write the difference quotient in terms of u = g(x)`,
+          `\\begin{aligned}\\dfrac{(${gxhTex})^{${n}}-(${gxTex})^{${n}}}{h} &= \\dfrac{(u+\\Delta u)^{${n}}-u^{${n}}}{h}\\end{aligned}`);
+        addStep(4,`Expand using Binomial Theorem and factor out Δu`,
+          `\\begin{aligned}&= \\dfrac{\\Delta u \\cdot \\left(${n}u^{${typeof n==='number'?n-1:n+'-1'}} + \\text{h.o.t.}\\right)}{h} = ${n}u^{${typeof n==='number'?n-1:n+'-1'}}\\cdot\\dfrac{\\Delta u}{h}\\end{aligned}`);
+        addStep(5,`As h → 0, Δu/h → g'(x) = ${gpTex} and u → g(x) = ${gxTex}`,
+          `\\begin{aligned}\\lim_{h\\to 0} &= ${n}\\cdot(${gxTex})^{${typeof n==='number'?n-1:n+'-1'}}\\cdot ${gpTex} = ${fpTex}\\end{aligned}`,
+          'This is the Chain Rule: d/dx [g(x)]ⁿ = n·[g(x)]ⁿ⁻¹·g\'(x)');
+        return;
+      }
+      // Generic polynomial fallback
       let expandedNum='', cancelledExpr='';
       try{
+        const fxhExpr=fx.replace(/\bx\b/g,'(x+h)');
+        const diffSimp=math.simplify(math.parse(`(${fxhExpr})-(${fx})`), [], {exactFractions:false});
+        expandedNum=simplifyTex(diffSimp.toString());
+        const quotSimp=math.simplify(math.parse(`(${diffSimp.toString()})/h`), [], {exactFractions:false});
+        cancelledExpr=simplifyTex(quotSimp.toString());
+      }catch{expandedNum=`${fxhTex}-(${fxTex})`;cancelledExpr=fpTex;}
+      addStep(3,'Expand f(x+h) − f(x) and collect terms in h',
+        `\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{${expandedNum}}{h}\\end{aligned}`);
+      addStep(4,'Factor out h from every term in the numerator (valid since h ≠ 0)',
+        `\\begin{aligned}&= ${cancelledExpr} + \\text{(terms with }h\\text{)}\\end{aligned}`);
+      addStep(5,'Let h → 0: all remaining h-terms vanish',
+        `\\begin{aligned}\\lim_{h\\to 0} &= ${fpTex}\\end{aligned}`);
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // SQRT / CBRT
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='sqrt'){
+      if(isPure){
+        addStep(3,'Rationalise the numerator by multiplying by the conjugate √(x+h) + √x',
+          `\\begin{aligned}\\dfrac{\\sqrt{x+h}-\\sqrt{x}}{h} &= \\dfrac{(\\sqrt{x+h}-\\sqrt{x})(\\sqrt{x+h}+\\sqrt{x})}{h(\\sqrt{x+h}+\\sqrt{x})} = \\dfrac{(x+h)-x}{h(\\sqrt{x+h}+\\sqrt{x})}\\end{aligned}`);
+        addStep(4,'Simplify numerator: (x+h) − x = h',
+          `\\begin{aligned}&= \\dfrac{h}{h(\\sqrt{x+h}+\\sqrt{x})} = \\dfrac{1}{\\sqrt{x+h}+\\sqrt{x}}\\end{aligned}`);
+        addStep(5,'Let h → 0: √(x+h) → √x',
+          `\\begin{aligned}\\lim_{h\\to 0}\\dfrac{1}{\\sqrt{x+h}+\\sqrt{x}} &= \\dfrac{1}{2\\sqrt{x}}\\end{aligned}`);
+      } else {
+        addCompositeNote();
+        addStep(3,'Rationalise: multiply numerator and denominator by √(g(x+h)) + √(g(x))',
+          `\\begin{aligned}\\dfrac{\\sqrt{${gxhTex}}-\\sqrt{${gxTex}}}{h} &= \\dfrac{g(x+h)-g(x)}{h(\\sqrt{${gxhTex}}+\\sqrt{${gxTex}})}\\end{aligned}`);
+        addStep(4,'Separate the fraction',
+          `\\begin{aligned}&= \\dfrac{g(x+h)-g(x)}{h}\\cdot\\dfrac{1}{\\sqrt{${gxhTex}}+\\sqrt{${gxTex}}}\\end{aligned}`);
+        addStep(5,`As h → 0: [g(x+h)−g(x)]/h → g'(x) = ${gpTex}, and denominator → 2√(g(x))`,
+          `\\begin{aligned}\\lim_{h\\to 0} &= ${gpTex}\\cdot\\dfrac{1}{2\\sqrt{${gxTex}}} = ${fpTex}\\end{aligned}`,
+          'Chain Rule: d/dx √(g(x)) = g\'(x) / (2√(g(x)))');
+      }
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // RECIPROCAL 1/x
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='reciprocal'){
+      addStep(3,'Combine the two fractions over a common denominator',
+        `\\begin{aligned}\\dfrac{\\frac{1}{x+h}-\\frac{1}{x}}{h} &= \\dfrac{x-(x+h)}{h\\cdot x(x+h)} = \\dfrac{-h}{h\\cdot x(x+h)}\\end{aligned}`);
+      addStep(4,'Cancel the common factor h (h ≠ 0)',
+        `\\begin{aligned}&= \\dfrac{-1}{x(x+h)}\\end{aligned}`);
+      addStep(5,'Let h → 0',
+        `\\begin{aligned}\\lim_{h\\to 0}\\dfrac{-1}{x(x+h)} &= -\\dfrac{1}{x^2}\\end{aligned}`);
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // SIN
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='sin'){
+      if(isPure){
+        addStep(3,'Apply the sum-to-product identity: sin A − sin B = 2 cos((A+B)/2) sin((A−B)/2)',
+          `\\begin{aligned}\\dfrac{\\sin(x+h)-\\sin x}{h} &= \\dfrac{2\\cos\\!\\left(x+\\dfrac{h}{2}\\right)\\sin\\!\\left(\\dfrac{h}{2}\\right)}{h}\\end{aligned}`,
+          'Here A = x+h, B = x, so (A+B)/2 = x+h/2 and (A−B)/2 = h/2');
+        addStep(4,'Rewrite h = 2·(h/2) to expose the standard limit',
+          `\\begin{aligned}&= \\cos\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2}\\end{aligned}`);
+        addStep(5,'Apply standard limit lim(u→0) sin u/u = 1 (with u = h/2 → 0)',
+          `\\begin{aligned}\\lim_{h\\to 0}\\cos\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2} &= \\cos(x)\\cdot 1 = \\cos x\\end{aligned}`);
+      } else {
+        addCompositeNote();
+        addStep(3,'Apply sum-to-product: sin(g(x+h)) − sin(g(x)) = 2 cos((g(x+h)+g(x))/2) sin(Δu/2)',
+          `\\begin{aligned}\\dfrac{\\sin(${gxhTex})-\\sin(${gxTex})}{h} &= \\dfrac{2\\cos\\!\\left(\\dfrac{${gxhTex}+${gxTex}}{2}\\right)\\sin\\!\\left(\\dfrac{\\Delta u}{2}\\right)}{h}\\end{aligned}`);
+        addStep(4,'Multiply and divide by Δu to expose sin(Δu/2)/(Δu/2)',
+          `\\begin{aligned}&= \\cos\\!\\left(\\dfrac{${gxhTex}+${gxTex}}{2}\\right)\\cdot\\dfrac{\\sin(\\Delta u/2)}{\\Delta u/2}\\cdot\\dfrac{\\Delta u}{h}\\end{aligned}`);
+        addStep(5,`As h → 0: sin(Δu/2)/(Δu/2) → 1, Δu/h → g'(x) = ${gpTex}, and cos argument → cos(g(x))`,
+          `\\begin{aligned}\\lim_{h\\to 0} &= \\cos(${gxTex})\\cdot 1\\cdot ${gpTex} = ${fpTex}\\end{aligned}`,
+          'Chain Rule: d/dx sin(g(x)) = cos(g(x))·g\'(x)');
+      }
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // COS
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='cos'){
+      if(isPure){
+        addStep(3,'Apply sum-to-product: cos A − cos B = −2 sin((A+B)/2) sin((A−B)/2)',
+          `\\begin{aligned}\\dfrac{\\cos(x+h)-\\cos x}{h} &= \\dfrac{-2\\sin\\!\\left(x+\\dfrac{h}{2}\\right)\\sin\\!\\left(\\dfrac{h}{2}\\right)}{h}\\end{aligned}`,
+          'Here A = x+h, B = x');
+        addStep(4,'Rewrite h = 2·(h/2)',
+          `\\begin{aligned}&= -\\sin\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2}\\end{aligned}`);
+        addStep(5,'Apply lim(u→0) sin u/u = 1',
+          `\\begin{aligned}\\lim_{h\\to 0}-\\sin\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2} &= -\\sin x\\cdot 1 = -\\sin x\\end{aligned}`);
+      } else {
+        addCompositeNote();
+        addStep(3,'Apply sum-to-product: cos(g(x+h)) − cos(g(x)) = −2 sin((g(x+h)+g(x))/2) sin(Δu/2)',
+          `\\begin{aligned}\\dfrac{\\cos(${gxhTex})-\\cos(${gxTex})}{h} &= \\dfrac{-2\\sin\\!\\left(\\dfrac{${gxhTex}+${gxTex}}{2}\\right)\\sin\\!\\left(\\dfrac{\\Delta u}{2}\\right)}{h}\\end{aligned}`);
+        addStep(4,'Multiply and divide by Δu',
+          `\\begin{aligned}&= -\\sin\\!\\left(\\dfrac{${gxhTex}+${gxTex}}{2}\\right)\\cdot\\dfrac{\\sin(\\Delta u/2)}{\\Delta u/2}\\cdot\\dfrac{\\Delta u}{h}\\end{aligned}`);
+        addStep(5,`As h → 0: sin(Δu/2)/(Δu/2) → 1, Δu/h → g'(x) = ${gpTex}`,
+          `\\begin{aligned}\\lim_{h\\to 0} &= -\\sin(${gxTex})\\cdot 1\\cdot ${gpTex} = ${fpTex}\\end{aligned}`,
+          'Chain Rule: d/dx cos(g(x)) = −sin(g(x))·g\'(x)');
+      }
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // TAN
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='tan'){
+      if(isPure){
+        addStep(3,'Write tan(x+h) − tan x using sin/cos and combine over common denominator',
+          `\\begin{aligned}\\dfrac{\\tan(x+h)-\\tan x}{h} &= \\dfrac{1}{h}\\cdot\\dfrac{\\sin(x+h)\\cos x - \\cos(x+h)\\sin x}{\\cos(x+h)\\cos x}\\end{aligned}`);
+        addStep(4,'Recognise the numerator as sin((x+h)−x) = sin h',
+          `\\begin{aligned}&= \\dfrac{\\sin h}{h}\\cdot\\dfrac{1}{\\cos(x+h)\\cos x}\\end{aligned}`);
+        addStep(5,'Apply lim(h→0) sin h/h = 1 and cos(x+0) = cos x',
+          `\\begin{aligned}\\lim_{h\\to 0}\\dfrac{\\sin h}{h\\cos(x+h)\\cos x} &= \\dfrac{1}{\\cos^2 x} = \\sec^2 x\\end{aligned}`);
+      } else {
+        addCompositeNote();
+        addStep(3,'Write tan(g(x+h)) − tan(g(x)) using sin/cos',
+          `\\begin{aligned}\\dfrac{\\tan(${gxhTex})-\\tan(${gxTex})}{h} &= \\dfrac{\\sin(${gxhTex})\\cos(${gxTex})-\\cos(${gxhTex})\\sin(${gxTex})}{h\\cos(${gxhTex})\\cos(${gxTex})}\\end{aligned}`);
+        addStep(4,'Numerator = sin(g(x+h)−g(x)) = sin(Δu); rewrite as sin(Δu)/Δu · Δu/h',
+          `\\begin{aligned}&= \\dfrac{\\sin(\\Delta u)}{\\Delta u}\\cdot\\dfrac{\\Delta u}{h}\\cdot\\dfrac{1}{\\cos(${gxhTex})\\cos(${gxTex})}\\end{aligned}`);
+        addStep(5,`As h → 0: sin(Δu)/Δu → 1, Δu/h → g'(x) = ${gpTex}, denominator → cos²(g(x))`,
+          `\\begin{aligned}\\lim_{h\\to 0} &= \\sec^2(${gxTex})\\cdot ${gpTex} = ${fpTex}\\end{aligned}`,
+          'Chain Rule: d/dx tan(g(x)) = sec²(g(x))·g\'(x)');
+      }
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // EXP / e^x
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='exp'){
+      if(isPure){
+        addStep(3,'Use the law of exponents: e^(x+h) = eˣ · eʰ, then factor out eˣ',
+          `\\begin{aligned}\\dfrac{e^{x+h}-e^x}{h} &= \\dfrac{e^x\\cdot e^h-e^x}{h} = e^x\\cdot\\dfrac{e^h-1}{h}\\end{aligned}`);
+        addStep(4,'Factor eˣ out of the limit (it is independent of h)',
+          `\\begin{aligned}&= e^x\\cdot\\lim_{h\\to 0}\\dfrac{e^h-1}{h}\\end{aligned}`);
+        addStep(5,'Apply the fundamental exponential limit lim(h→0)(eʰ−1)/h = 1',
+          `\\begin{aligned}&= e^x\\cdot 1 = e^x\\end{aligned}`,
+          'This limit is the definition of e: the unique base for which this limit equals 1');
+      } else {
+        // e^g(x): factor out e^g(x), use (e^Δu - 1)/Δu limit
+        addCompositeNote();
+        addStep(3,'Factor out e^{g(x)}: e^{g(x+h)} = e^{g(x)} · e^{g(x+h)−g(x)} = e^{g(x)} · e^{Δu}',
+          `\\begin{aligned}\\dfrac{e^{${gxhTex}}-e^{${gxTex}}}{h} &= \\dfrac{e^{${gxTex}}\\cdot e^{\\Delta u}-e^{${gxTex}}}{h} = e^{${gxTex}}\\cdot\\dfrac{e^{\\Delta u}-1}{h}\\end{aligned}`);
+        addStep(4,'Multiply and divide by Δu to expose the standard limit (eᵘ−1)/u',
+          `\\begin{aligned}&= e^{${gxTex}}\\cdot\\dfrac{e^{\\Delta u}-1}{\\Delta u}\\cdot\\dfrac{\\Delta u}{h}\\end{aligned}`);
+        addStep(5,`As h → 0: (eᵘ−1)/u → 1 and Δu/h → g'(x) = ${gpTex}`,
+          `\\begin{aligned}\\lim_{h\\to 0} &= e^{${gxTex}}\\cdot 1\\cdot ${gpTex} = ${fpTex}\\end{aligned}`,
+          'Chain Rule: d/dx e^{g(x)} = e^{g(x)} · g\'(x)');
+      }
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // a^x
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='ax'){
+      const a = typ.a;
+      addStep(3,`Use the law of exponents: ${a}^(x+h) = ${a}ˣ · ${a}ʰ, then factor out ${a}ˣ`,
+        `\\begin{aligned}\\dfrac{${a}^{x+h}-${a}^x}{h} &= \\dfrac{${a}^x\\cdot ${a}^h-${a}^x}{h} = ${a}^x\\cdot\\dfrac{${a}^h-1}{h}\\end{aligned}`);
+      addStep(4,`Factor ${a}ˣ out of the limit`,
+        `\\begin{aligned}&= ${a}^x\\cdot\\lim_{h\\to 0}\\dfrac{${a}^h-1}{h}\\end{aligned}`);
+      addStep(5,`Apply the standard limit lim(h→0)(aʰ−1)/h = ln a (with a = ${a})`,
+        `\\begin{aligned}&= ${a}^x\\cdot\\ln ${a}\\end{aligned}`);
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // LN
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='ln'){
+      if(isPure){
+        addStep(3,'Combine using log quotient rule: ln(x+h) − ln x = ln((x+h)/x) = ln(1 + h/x)',
+          `\\begin{aligned}\\dfrac{\\ln(x+h)-\\ln x}{h} &= \\dfrac{1}{h}\\ln\\!\\left(1+\\dfrac{h}{x}\\right)\\end{aligned}`);
+        addStep(4,'Substitute u = h/x (so h = ux, and h→0 ⟺ u→0), rewrite as (1/x)·ln(1+u)/u',
+          `\\begin{aligned}&= \\dfrac{1}{ux}\\ln(1+u) = \\dfrac{1}{x}\\cdot\\dfrac{\\ln(1+u)}{u}\\end{aligned}`);
+        addStep(5,'Apply the standard limit lim(u→0) ln(1+u)/u = 1',
+          `\\begin{aligned}\\lim_{u\\to 0}\\dfrac{1}{x}\\cdot\\dfrac{\\ln(1+u)}{u} &= \\dfrac{1}{x}\\cdot 1 = \\dfrac{1}{x}\\end{aligned}`);
+      } else {
+        addCompositeNote();
+        addStep(3,'Use log quotient: ln(g(x+h)) − ln(g(x)) = ln(g(x+h)/g(x)) = ln(1 + Δu/g(x))',
+          `\\begin{aligned}\\dfrac{\\ln(${gxhTex})-\\ln(${gxTex})}{h} &= \\dfrac{1}{h}\\ln\\!\\left(1+\\dfrac{\\Delta u}{${gxTex}}\\right)\\end{aligned}`);
+        addStep(4,'Multiply and divide by Δu/g(x) to expose ln(1+v)/v',
+          `\\begin{aligned}&= \\dfrac{1}{${gxTex}}\\cdot\\dfrac{\\ln(1+\\Delta u/{${gxTex}})}{\\Delta u/{${gxTex}}}\\cdot\\dfrac{\\Delta u}{h}\\end{aligned}`);
+        addStep(5,`As h → 0: ln(1+v)/v → 1, Δu/h → g'(x) = ${gpTex}`,
+          `\\begin{aligned}\\lim_{h\\to 0} &= \\dfrac{1}{${gxTex}}\\cdot 1\\cdot ${gpTex} = ${fpTex}\\end{aligned}`,
+          'Chain Rule: d/dx ln(g(x)) = g\'(x)/g(x)');
+      }
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // LOG10 / LOG2
+    // ════════════════════════════════════════════════════════════════════════
+    if(typ.outer==='log10'||typ.outer==='log'){
+      const base = 10;
+      addStep(3,'Use log quotient rule: log₁₀(x+h) − log₁₀ x = log₁₀(1 + h/x)',
+        `\\begin{aligned}\\dfrac{\\log_{10}(x+h)-\\log_{10}x}{h} &= \\dfrac{1}{h}\\log_{10}\\!\\left(1+\\dfrac{h}{x}\\right)\\end{aligned}`);
+      addStep(4,'Convert to natural log: log₁₀(u) = ln(u)/ln 10, then let u = h/x',
+        `\\begin{aligned}&= \\dfrac{1}{h\\ln 10}\\ln\\!\\left(1+\\dfrac{h}{x}\\right) = \\dfrac{1}{x\\ln 10}\\cdot\\dfrac{\\ln(1+h/x)}{h/x}\\end{aligned}`);
+      addStep(5,'Apply lim(h→0) ln(1+u)/u = 1',
+        `\\begin{aligned}\\lim_{h\\to 0} &= \\dfrac{1}{x\\ln 10}\\end{aligned}`);
+      return;
+    }
+    if(typ.outer==='log2'){
+      addStep(3,'Use log quotient rule: log₂(x+h) − log₂ x = log₂(1 + h/x)',
+        `\\begin{aligned}\\dfrac{\\log_2(x+h)-\\log_2 x}{h} &= \\dfrac{1}{h}\\log_2\\!\\left(1+\\dfrac{h}{x}\\right)\\end{aligned}`);
+      addStep(4,'Convert to natural log: log₂(u) = ln(u)/ln 2, then let u = h/x',
+        `\\begin{aligned}&= \\dfrac{1}{h\\ln 2}\\ln\\!\\left(1+\\dfrac{h}{x}\\right) = \\dfrac{1}{x\\ln 2}\\cdot\\dfrac{\\ln(1+h/x)}{h/x}\\end{aligned}`);
+      addStep(5,'Apply lim(h→0) ln(1+u)/u = 1',
+        `\\begin{aligned}\\lim_{h\\to 0} &= \\dfrac{1}{x\\ln 2}\\end{aligned}`);
+      return;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // GENERIC FALLBACK (polynomial-style expansion)
+    // ════════════════════════════════════════════════════════════════════════
+    let expandedNum='', cancelledExpr='';
+    try{
+      const fxhExpr=fx.replace(/\bx\b/g,'(x+h)');
+      const diffSimp=math.simplify(math.parse(`(${fxhExpr})-(${fx})`), [], {exactFractions:false});
+      expandedNum=simplifyTex(diffSimp.toString());
+      const quotSimp=math.simplify(math.parse(`(${diffSimp.toString()})/h`), [], {exactFractions:false});
+      cancelledExpr=simplifyTex(quotSimp.toString());
+    }catch{expandedNum=`${fxhTex}-(${fxTex})`;cancelledExpr=fpTex;}
+    addStep(3,'Expand f(x+h) − f(x) and collect terms in h',
+      `\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{${expandedNum}}{h}\\end{aligned}`);
+    addStep(4,'Factor out h from every term in the numerator (valid since h ≠ 0)',
+      `\\begin{aligned}&= ${cancelledExpr} + \\text{(terms with }h\\text{)}\\end{aligned}`);
+    addStep(5,'Let h → 0: all remaining h-terms vanish',
+      `\\begin{aligned}\\lim_{h\\to 0} &= ${fpTex}\\end{aligned}`);
+  }
+
+    try{
         const fxhExpr=fx.replace(/\bx\b/g,'(x+h)');
         const diffSimp=math.simplify(math.parse(`(${fxhExpr})-(${fx})`), [], {exactFractions:false});
         expandedNum=simplifyTex(diffSimp.toString());
