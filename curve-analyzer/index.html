@@ -1630,6 +1630,15 @@ function drawAvGraph(){
 let threeScene=null,threeRenderer=null,threeCamera=null,threeControls=null;
 let threeSolid=null,threeMesh=null,threeCross=null;
 let showMesh=true,showSolid=true,showCross=false;
+let threeAnimating=false;
+
+// Global persistent animation loop
+function threeAnimLoop(){
+  requestAnimationFrame(threeAnimLoop);
+  if(threeControls)threeControls.update();
+  if(threeRenderer&&threeScene&&threeCamera)threeRenderer.render(threeScene,threeCamera);
+}
+threeAnimLoop(); // Start once, runs forever
 
 function disposeThree(){
   if(threeRenderer){threeRenderer.dispose();threeRenderer=null;}
@@ -1658,9 +1667,7 @@ function buildThreeScene(res){
   const grid=new THREE.GridHelper(8,20,0x334466,0x223355);grid.position.y=-0.01;threeScene.add(grid);
   // Build solid of revolution
   buildRevolutionSolid(res);
-  // Animation loop
-  function animate(){requestAnimationFrame(animate);threeControls.update();threeRenderer.render(threeScene,threeCamera);}
-  animate();
+  // Animation loop is global (threeAnimLoop), no need to restart
 }
 
 function buildRevolutionSolid(res){
