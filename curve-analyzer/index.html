@@ -1438,7 +1438,7 @@ function _solveAI(input,resultDiv){
             addStep('Second Derivative (Acceleration)',`${label2} = ${fppTex}`);
           }
           if(atT!==null&&isFinite(atT)){
-            const vAt=evalAt(fp,atT);const aAt=fpp?evalAt(safeDerivative(fp,varName)||'0',atT):NaN;
+            const vAt=evalAt(fp,atT,varName);const fppStr=safeDerivative(fp,varName)||'0';const aAt=fpp?evalAt(fppStr,atT,varName):NaN;
             addStep(`At ${varName} = ${numToTex(atT)}`,`v(${numToTex(atT)}) = ${numToTex(vAt)}${isFinite(aAt)?`,\\quad a(${numToTex(atT)}) = ${numToTex(aAt)}`:''}`);
           }
         }
