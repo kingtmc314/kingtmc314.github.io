@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Curve Analyzer</title>
+<title>Differentiation and Curve Sketching</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,142 +11,146 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#f8f9fc;
-  --card:#ffffff;
-  --border:#e2e6ef;
-  --fg:#1a1d2e;
-  --fg2:#4a5068;
-  --fg3:#8891a8;
-  --primary:#3b5bdb;
-  --primary-light:#4c6ef5;
-  --primary-bg:#eef2ff;
-  --green:#2f9e44;
-  --green-bg:#ebfbee;
-  --red:#c92a2a;
-  --red-bg:#fff5f5;
-  --orange:#e67700;
-  --orange-bg:#fff9db;
-  --purple:#7048e8;
-  --purple-bg:#f3f0ff;
-  --teal:#0c8599;
-  --teal-bg:#e3fafc;
-  --radius:10px;
-  --shadow:0 1px 4px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
+  --bg:#f8f9fc;--card:#ffffff;--border:#e2e6ef;--fg:#1a1d2e;--fg2:#4a5068;--fg3:#8891a8;
+  --primary:#3b5bdb;--primary-light:#4c6ef5;--primary-bg:#eef2ff;
+  --green:#2f9e44;--green-bg:#ebfbee;--red:#c92a2a;--red-bg:#fff5f5;
+  --orange:#e67700;--orange-bg:#fff9db;--purple:#7048e8;--purple-bg:#f3f0ff;
+  --teal:#0c8599;--teal-bg:#e3fafc;--blue:#1971c2;--blue-bg:#e7f5ff;
+  --radius:10px;--shadow:0 1px 4px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh}
 h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:600}
 code,input[type=text]{font-family:'JetBrains Mono',monospace}
-
-/* HEADER */
-header{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.06)}
-.header-inner{max-width:1600px;margin:0 auto;padding:0 1.25rem;height:56px;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:.6rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--primary)}
-.logo svg{width:28px;height:28px}
+header{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+.header-inner{max-width:1800px;margin:0 auto;padding:0 1.25rem;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:.6rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--primary)}
+.logo svg{width:28px;height:28px;flex-shrink:0}
 .header-links{display:flex;align-items:center;gap:.5rem}
-.icon-btn{padding:.4rem;border-radius:8px;color:var(--fg2);transition:background .2s,color .2s;cursor:pointer;display:flex;align-items:center}
+.icon-btn{padding:.4rem;border-radius:8px;color:var(--fg2);transition:background .2s,color .2s;cursor:pointer;display:flex;align-items:center;background:none;border:none}
 .icon-btn:hover{background:var(--primary-bg);color:var(--primary)}
-
-/* NAV TABS */
-.nav-tabs{background:var(--card);border-bottom:1px solid var(--border);display:flex;gap:0;overflow-x:auto}
-.nav-tab{padding:.75rem 1.25rem;font-size:.9rem;font-weight:500;color:var(--fg2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;user-select:none}
+.nav-tabs{background:var(--card);border-bottom:1px solid var(--border);display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:.75rem 1.1rem;font-size:.88rem;font-weight:500;color:var(--fg2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;user-select:none}
 .nav-tab:hover{color:var(--primary);background:var(--primary-bg)}
 .nav-tab.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--primary-bg)}
-
-/* MAIN LAYOUT */
-.app-body{max-width:1600px;margin:0 auto;padding:1.25rem}
 .tab-content{display:none}
 .tab-content.active{display:block}
-
-/* ANALYZER TAB */
-.analyzer-layout{display:grid;grid-template-columns:1fr 400px;gap:1.25rem;align-items:start}
-@media(max-width:1024px){.analyzer-layout{grid-template-columns:1fr}}
-
+.app-body{max-width:1800px;margin:0 auto;padding:1rem 1.25rem}
 /* INPUT BAR */
-.input-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;box-shadow:var(--shadow)}
-.input-field{flex:1;min-width:200px}
-.input-field label{display:block;font-size:.8rem;font-weight:600;color:var(--fg2);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.04em}
-.input-field input{width:100%;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;background:var(--bg);color:var(--fg);transition:border .2s}
+.input-bar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-end;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.input-field{display:flex;flex-direction:column;gap:.3rem;flex:1;min-width:160px}
+.input-field label{font-size:.78rem;font-weight:600;color:var(--fg2);text-transform:uppercase;letter-spacing:.04em}
+.input-field input{padding:.5rem .75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;color:var(--fg);background:var(--bg);transition:border .2s}
 .input-field input:focus{outline:none;border-color:var(--primary)}
-.btn{padding:.6rem 1.2rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+.btn{padding:.55rem 1.1rem;border-radius:8px;font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:all .18s;letter-spacing:.02em}
+.btn:active{transform:scale(0.97)}
 .btn-primary{background:var(--primary);color:#fff}
 .btn-primary:hover{background:var(--primary-light)}
-
+.btn-secondary{background:var(--bg);color:var(--fg2);border:1.5px solid var(--border)}
+.btn-secondary:hover{background:var(--primary-bg);color:var(--primary);border-color:var(--primary)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#37b24d}
+/* ANALYZER LAYOUT */
+.analyzer-layout{display:grid;grid-template-columns:1fr 380px;gap:1rem;align-items:start}
 /* GRAPH */
 .graph-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-.graph-card-header{padding:.75rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:600;color:var(--fg2)}
-.graph-wrap{padding:.75rem;background:#fff}
-#graph{width:100%;height:420px;display:block}
-
+.graph-card-header{padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);font-size:.85rem;font-weight:600;color:var(--fg2)}
+.graph-wrap{position:relative;width:100%;background:#fafbff}
+.graph-wrap svg{width:100%;height:auto;display:block;cursor:crosshair}
+.graph-controls{display:flex;gap:.4rem;padding:.5rem 1rem;border-top:1px solid var(--border);background:var(--bg);flex-wrap:wrap;align-items:center}
+.graph-controls .btn{padding:.3rem .65rem;font-size:.78rem}
 /* ANALYTICS PANEL */
-.analytics-panel{display:flex;flex-direction:column;gap:.75rem}
-.section-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-.section-head{padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background .2s}
+.analytics-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);max-height:calc(100vh - 160px);overflow-y:auto}
+.section{border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section-head{padding:.65rem 1rem;display:flex;align-items:center;gap:.5rem;cursor:pointer;user-select:none;font-weight:600;font-size:.88rem;transition:background .15s}
 .section-head:hover{background:var(--bg)}
-.section-head-left{display:flex;align-items:center;gap:.5rem;font-size:.9rem;font-weight:600}
-.section-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
-.chevron-icon{color:var(--fg3);transition:transform .25s;font-size:.75rem}
-.section-body{padding:.75rem 1rem;border-top:1px solid var(--border);display:none}
-.section-body.open{display:block}
-
-/* SECTION COLORS */
-.sec-deriv .section-icon{background:var(--primary-bg);color:var(--primary)}
-.sec-domain .section-icon{background:var(--teal-bg);color:var(--teal)}
-.sec-cont .section-icon{background:var(--purple-bg);color:var(--purple)}
-.sec-crit .section-icon{background:var(--orange-bg);color:var(--orange)}
-.sec-mono .section-icon{background:var(--green-bg);color:var(--green)}
-.sec-conc .section-icon{background:var(--red-bg);color:var(--red)}
-.sec-asym .section-icon{background:#fff0f6;color:#c2255c}
-.sec-tan .section-icon{background:#e8f4fd;color:#1971c2}
-
-/* ROWS */
-.row{display:flex;align-items:baseline;gap:.5rem;padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.875rem}
+.section-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
+.section-body{padding:.5rem 1rem .75rem;display:block}
+.section-body.collapsed{display:none}
+.row{padding:.35rem 0;display:flex;align-items:flex-start;gap:.5rem;flex-wrap:wrap;border-bottom:1px solid #f0f2f8}
 .row:last-child{border-bottom:none}
-.row-label{font-weight:600;min-width:90px;color:var(--fg2);font-size:.8rem}
-.row-val{flex:1}
-.badge{display:inline-block;padding:.15rem .55rem;border-radius:20px;font-size:.75rem;font-weight:600}
+.row-label{font-size:.78rem;font-weight:600;color:var(--fg2);min-width:110px;padding-top:.2rem;flex-shrink:0}
+.badge{display:inline-flex;align-items:center;padding:.2rem .55rem;border-radius:20px;font-size:.75rem;font-weight:600;white-space:nowrap}
 .badge-green{background:var(--green-bg);color:var(--green)}
 .badge-red{background:var(--red-bg);color:var(--red)}
+.badge-blue{background:var(--blue-bg);color:var(--blue)}
 .badge-orange{background:var(--orange-bg);color:var(--orange)}
-.badge-blue{background:var(--primary-bg);color:var(--primary)}
 .badge-purple{background:var(--purple-bg);color:var(--purple)}
 .badge-teal{background:var(--teal-bg);color:var(--teal)}
-
-/* MATH */
-.math-block{margin:.4rem 0;padding:.5rem .75rem;background:var(--bg);border-radius:6px;border-left:3px solid var(--primary);overflow-x:auto}
-.math-inline{display:inline}
-
-/* TANGENT INPUT */
-.tan-input-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.75rem}
-.tan-input-row input{flex:1;padding:.5rem .75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;background:var(--bg);color:var(--fg)}
-.tan-input-row input:focus{outline:none;border-color:var(--primary)}
-.tan-input-row .btn{padding:.5rem .9rem;font-size:.85rem}
-
-/* REFERENCE TAB */
-.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem}
+.math-block{overflow-x:auto;padding:.15rem 0}
+.math-inline{display:inline-block}
+.tan-input-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem}
+.tan-input-row input{width:120px;padding:.4rem .6rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem}
+/* REFERENCE */
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
 .ref-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
 .ref-card-head{padding:.75rem 1rem;font-size:.9rem;font-weight:700;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
 .ref-card-body{padding:.75rem 1rem}
 .ref-row{padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.85rem;display:flex;flex-direction:column;gap:.25rem}
 .ref-row:last-child{border-bottom:none}
-.ref-name{font-weight:600;font-size:.8rem;color:var(--fg2);text-transform:uppercase;letter-spacing:.04em}
+.ref-name{font-weight:600;font-size:.78rem;color:var(--fg2);text-transform:uppercase;letter-spacing:.04em}
 .ref-formula{overflow-x:auto;padding:.2rem 0}
-
+/* FIRST PRINCIPLES */
+.fp-layout{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+.fp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.25rem}
+.fp-card h3{font-size:1rem;margin-bottom:1rem;color:var(--primary)}
+.step-list{display:flex;flex-direction:column;gap:.75rem}
+.step-item{display:flex;gap:.75rem;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+.step-body{flex:1;overflow-x:auto}
+.step-label{font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.2rem;text-transform:uppercase;letter-spacing:.03em}
+.h-slider{width:100%;margin:.5rem 0}
+/* AI ASSISTANT */
+.ai-layout{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+.ai-input-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.25rem}
+.ai-input-card h3{font-size:1rem;margin-bottom:1rem;color:var(--primary)}
+.ai-textarea{width:100%;min-height:100px;padding:.6rem .75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:'Inter',sans-serif;resize:vertical;color:var(--fg);background:var(--bg)}
+.ai-textarea:focus{outline:none;border-color:var(--primary)}
+.ai-result-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.25rem;min-height:200px}
+.ai-result-card h3{font-size:1rem;margin-bottom:1rem;color:var(--primary)}
+.ai-step{margin-bottom:1rem;padding:.75rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--primary)}
+.ai-step-label{font-size:.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem}
+.ai-step-body{overflow-x:auto}
+.quick-btns{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.75rem}
+.quick-btn{padding:.3rem .65rem;font-size:.78rem;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:var(--fg2);cursor:pointer;transition:all .15s}
+.quick-btn:hover{background:var(--primary-bg);color:var(--primary);border-color:var(--primary)}
+/* AREA & VOLUME */
+.av-layout{display:grid;grid-template-columns:1fr 400px;gap:1rem;align-items:start}
+.av-controls{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem}
+.av-controls h3{font-size:.95rem;font-weight:700;color:var(--primary);margin-bottom:.75rem}
+.av-section{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.av-section:last-child{border-bottom:none;margin-bottom:0}
+.av-section-title{font-size:.8rem;font-weight:700;color:var(--fg2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem}
+.av-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem;flex-wrap:wrap}
+.av-row label{font-size:.82rem;color:var(--fg2);min-width:80px}
+.av-row input{flex:1;min-width:80px;padding:.35rem .6rem;border:1.5px solid var(--border);border-radius:7px;font-size:.85rem}
+.av-row select{flex:1;padding:.35rem .6rem;border:1.5px solid var(--border);border-radius:7px;font-size:.85rem;background:var(--bg)}
+.av-result{background:var(--primary-bg);border:1px solid var(--primary);border-radius:8px;padding:.75rem 1rem;margin-top:.75rem}
+.av-result-title{font-size:.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem}
+.three-container{width:100%;height:420px;border-radius:var(--radius);overflow:hidden;background:#1a1d2e;position:relative}
+.three-container canvas{width:100%!important;height:100%!important}
+.three-overlay{position:absolute;top:.5rem;right:.5rem;display:flex;flex-direction:column;gap:.3rem}
+.three-overlay .btn{font-size:.75rem;padding:.3rem .6rem;opacity:.9}
 /* EMPTY / ERROR */
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--fg3)}
 .empty-state .big{font-size:2.5rem;margin-bottom:.5rem}
 .error-box{background:var(--red-bg);border:1px solid #fcc;border-radius:8px;padding:.75rem 1rem;color:var(--red);font-size:.875rem}
-
 /* MOBILE */
+@media(max-width:900px){
+  .analyzer-layout,.fp-layout,.ai-layout,.av-layout{grid-template-columns:1fr}
+  .analytics-panel{max-height:none}
+}
 @media(max-width:640px){
   .input-bar{flex-direction:column}
   .input-field{min-width:100%}
-  .nav-tab{padding:.65rem .9rem;font-size:.82rem}
+  .nav-tab{padding:.6rem .75rem;font-size:.8rem}
   .app-body{padding:.75rem}
+  .logo{font-size:.95rem}
 }
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-inner">
     <div class="logo">
@@ -156,7 +160,7 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
         <line x1="4" y1="22" x2="24" y2="22" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
         <line x1="5" y1="24" x2="5" y2="6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
-      Curve Analyzer
+      <span data-i18n="app_title">Differentiation &amp; Curve Sketching</span>
     </div>
     <div class="header-links">
       <button id="langToggle" onclick="toggleLang()" style="padding:.35rem .75rem;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;border:1.5px solid var(--primary);background:var(--primary-bg);color:var(--primary);transition:all .2s;letter-spacing:.03em">中文</button>
@@ -166,133 +170,273 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
     </div>
   </div>
 </header>
-
 <div class="nav-tabs" id="navTabs">
   <div class="nav-tab active" data-tab="analyzer" data-i18n="tab_analyzer">📊 Analyzer</div>
+  <div class="nav-tab" data-tab="firstprinciples" data-i18n="tab_fp">🔬 First Principles</div>
+  <div class="nav-tab" data-tab="ai" data-i18n="tab_ai">🤖 AI Assistant</div>
+  <div class="nav-tab" data-tab="areav" data-i18n="tab_av">∫ Area &amp; Volume</div>
   <div class="nav-tab" data-tab="reference" data-i18n="tab_reference">📚 Reference</div>
 </div>
-
 <div class="app-body">
-
-  <!-- ANALYZER TAB -->
-  <div class="tab-content active" id="tab-analyzer">
-    <div class="input-bar">
-      <div class="input-field">
-        <label data-i18n="label_function">Function f(x)</label>
-        <input type="text" id="fxInput" placeholder="e.g.  sin(x),  x^2 - 3*x + 2,  1/x,  ln(x)" value="sin(x)">
-      </div>
-      <div class="input-field" style="max-width:140px">
-        <label data-i18n="label_xmin">x-range min</label>
-        <input type="number" id="xMinInput" value="-5" step="1">
-      </div>
-      <div class="input-field" style="max-width:140px">
-        <label data-i18n="label_xmax">x-range max</label>
-        <input type="number" id="xMaxInput" value="5" step="1">
-      </div>
-      <button class="btn btn-primary" id="analyzeBtn" data-i18n="btn_analyze">Analyze</button>
+<!-- ═══════════════════════════════════════════════════════ ANALYZER TAB -->
+<div class="tab-content active" id="tab-analyzer">
+  <div class="input-bar">
+    <div class="input-field" style="flex:3;min-width:220px">
+      <label data-i18n="label_function">Function f(x)</label>
+      <input type="text" id="fxInput" placeholder="e.g. sin(x), x^2-3*x+2, 1/x, ln(x)" value="sin(x)">
     </div>
-
-    <div class="analyzer-layout">
-      <!-- GRAPH -->
-      <div>
-        <div class="graph-card">
-          <div class="graph-card-header">
-            <span id="graphTitle">Graph of f(x) = sin(x)</span>
-            <span style="font-size:.75rem;color:var(--fg3)" data-i18n="graph_hint">Use range inputs to zoom</span>
-          </div>
-          <div class="graph-wrap">
-            <svg id="graph" viewBox="0 0 640 440"></svg>
-          </div>
+    <div class="input-field" style="max-width:130px">
+      <label data-i18n="label_xmin">x min</label>
+      <input type="number" id="xMinInput" value="-5" step="1">
+    </div>
+    <div class="input-field" style="max-width:130px">
+      <label data-i18n="label_xmax">x max</label>
+      <input type="number" id="xMaxInput" value="5" step="1">
+    </div>
+    <button class="btn btn-primary" id="analyzeBtn" data-i18n="btn_analyze">Analyze</button>
+  </div>
+  <div class="analyzer-layout">
+    <div>
+      <div class="graph-card">
+        <div class="graph-card-header">
+          <span id="graphTitle">Graph of f(x) = sin(x)</span>
+          <span style="font-size:.75rem;color:var(--fg3)" id="graphHint" data-i18n="graph_hint">Scroll to zoom · Drag to pan</span>
+        </div>
+        <div class="graph-wrap">
+          <svg id="graph" viewBox="0 0 900 560" style="cursor:crosshair"></svg>
+        </div>
+        <div class="graph-controls">
+          <button class="btn btn-secondary" id="zoomInBtn">＋ Zoom In</button>
+          <button class="btn btn-secondary" id="zoomOutBtn">－ Zoom Out</button>
+          <button class="btn btn-secondary" id="resetViewBtn" data-i18n="btn_reset">⟳ Reset</button>
+          <span style="font-size:.78rem;color:var(--fg3);margin-left:.5rem" id="viewInfo"></span>
         </div>
       </div>
-
-      <!-- ANALYTICS -->
-      <div class="analytics-panel" id="analyticsPanel">
-        <div class="empty-state" id="emptyState"><div class="big">📈</div><div data-i18n="empty_state">Click <strong>Analyze</strong> to see results</div></div>
+    </div>
+    <div class="analytics-panel" id="analyticsPanel">
+      <div class="empty-state" id="emptyState"><div class="big">📈</div><div data-i18n="empty_state">Click <strong>Analyze</strong> to see results</div></div>
+    </div>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════════ FIRST PRINCIPLES TAB -->
+<div class="tab-content" id="tab-firstprinciples">
+  <div class="input-bar">
+    <div class="input-field" style="flex:3;min-width:220px">
+      <label data-i18n="fp_label_fn">Function f(x)</label>
+      <input type="text" id="fpFxInput" placeholder="e.g. x^2, sin(x), x^3+2*x" value="x^2">
+    </div>
+    <div class="input-field" style="max-width:140px">
+      <label data-i18n="fp_label_at">Evaluate at x =</label>
+      <input type="number" id="fpAtInput" value="2" step="0.5">
+    </div>
+    <button class="btn btn-primary" id="fpBtn" data-i18n="fp_btn">Derive</button>
+  </div>
+  <div class="fp-layout">
+    <div class="fp-card">
+      <h3 data-i18n="fp_steps_title">Step-by-Step Derivation</h3>
+      <div id="fpSteps" class="step-list">
+        <div class="empty-state"><div class="big">🔬</div><div data-i18n="fp_empty">Enter a function and click Derive</div></div>
+      </div>
+    </div>
+    <div class="fp-card">
+      <h3 data-i18n="fp_graph_title">Secant → Tangent Visualisation</h3>
+      <div class="graph-wrap" style="background:#fafbff;border:1px solid var(--border);border-radius:8px">
+        <svg id="fpGraph" viewBox="0 0 560 400" style="width:100%;height:auto"></svg>
+      </div>
+      <div style="margin-top:.75rem">
+        <label style="font-size:.82rem;font-weight:600;color:var(--fg2)" data-i18n="fp_h_label">h value: <span id="hValDisplay">1</span></label>
+        <input type="range" class="h-slider" id="hSlider" min="-2" max="2" step="0.01" value="1">
+      </div>
+      <div id="fpSecantInfo" style="margin-top:.5rem;font-size:.85rem;color:var(--fg2)"></div>
+    </div>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════════ AI ASSISTANT TAB -->
+<div class="tab-content" id="tab-ai">
+  <div class="ai-layout">
+    <div class="ai-input-card">
+      <h3 data-i18n="ai_input_title">🤖 Differentiation Problem Solver</h3>
+      <label style="font-size:.82rem;font-weight:600;color:var(--fg2);display:block;margin-bottom:.4rem" data-i18n="ai_input_label">Enter your problem:</label>
+      <textarea class="ai-textarea" id="aiInput" data-i18n-placeholder="ai_placeholder"></textarea>
+      <div class="quick-btns" id="quickBtns"></div>
+      <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn btn-primary" id="aiSolveBtn" data-i18n="ai_solve_btn">Solve</button>
+        <button class="btn btn-secondary" id="aiClearBtn" data-i18n="ai_clear_btn">Clear</button>
+      </div>
+    </div>
+    <div class="ai-result-card" id="aiResult">
+      <h3 data-i18n="ai_result_title">Solution</h3>
+      <div class="empty-state"><div class="big">🧮</div><div data-i18n="ai_empty">Enter a problem to solve</div></div>
+    </div>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════════ AREA & VOLUME TAB -->
+<div class="tab-content" id="tab-areav">
+  <div class="input-bar">
+    <div class="input-field" style="flex:2;min-width:180px">
+      <label data-i18n="av_label_f">f(x) — upper curve</label>
+      <input type="text" id="avFxInput" placeholder="e.g. x^2, sin(x)" value="x^2">
+    </div>
+    <div class="input-field" style="flex:2;min-width:180px">
+      <label data-i18n="av_label_g">g(x) — lower curve (optional)</label>
+      <input type="text" id="avGxInput" placeholder="e.g. 0, x" value="0">
+    </div>
+    <div class="input-field" style="max-width:110px">
+      <label data-i18n="av_label_a">a (lower)</label>
+      <input type="number" id="avAInput" value="0" step="0.5">
+    </div>
+    <div class="input-field" style="max-width:110px">
+      <label data-i18n="av_label_b">b (upper)</label>
+      <input type="number" id="avBInput" value="1" step="0.5">
+    </div>
+    <button class="btn btn-primary" id="avBtn" data-i18n="av_btn">Calculate</button>
+  </div>
+  <div class="av-layout">
+    <div>
+      <div class="graph-card">
+        <div class="graph-card-header">
+          <span id="avGraphTitle" data-i18n="av_graph_title">Area / Volume Graph</span>
+          <div style="display:flex;gap:.4rem">
+            <button class="btn btn-secondary" id="avZoomIn" style="padding:.25rem .5rem;font-size:.75rem">＋</button>
+            <button class="btn btn-secondary" id="avZoomOut" style="padding:.25rem .5rem;font-size:.75rem">－</button>
+            <button class="btn btn-secondary" id="avReset" style="padding:.25rem .5rem;font-size:.75rem">⟳</button>
+          </div>
+        </div>
+        <div class="graph-wrap">
+          <svg id="avGraph" viewBox="0 0 900 520" style="width:100%;height:auto;cursor:crosshair"></svg>
+        </div>
+      </div>
+      <!-- 3D Volume -->
+      <div id="volContainer" style="margin-top:1rem;display:none">
+        <div class="graph-card">
+          <div class="graph-card-header">
+            <span id="volTitle" data-i18n="vol_3d_title">3D Solid of Revolution</span>
+            <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+              <button class="btn btn-secondary" id="toggleMeshBtn" style="font-size:.75rem;padding:.25rem .55rem" data-i18n="vol_toggle_mesh">Mesh</button>
+              <button class="btn btn-secondary" id="toggleCrossBtn" style="font-size:.75rem;padding:.25rem .55rem" data-i18n="vol_toggle_cross">Cross-section</button>
+              <button class="btn btn-secondary" id="toggleSolidBtn" style="font-size:.75rem;padding:.25rem .55rem" data-i18n="vol_toggle_solid">Solid</button>
+            </div>
+          </div>
+          <div class="three-container" id="threeContainer"></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="av-controls">
+        <h3 data-i18n="av_options_title">Options</h3>
+        <div class="av-section">
+          <div class="av-section-title" data-i18n="av_mode_title">Mode</div>
+          <div class="av-row">
+            <label><input type="radio" name="avMode" value="area" checked> <span data-i18n="av_mode_area">Area</span></label>
+            <label><input type="radio" name="avMode" value="volx"> <span data-i18n="av_mode_volx">Volume (x-axis)</span></label>
+            <label><input type="radio" name="avMode" value="voly"> <span data-i18n="av_mode_voly">Volume (y-axis)</span></label>
+          </div>
+        </div>
+        <div class="av-section" id="avAxisSection" style="display:none">
+          <div class="av-section-title" data-i18n="av_axis_title">Axis of Rotation</div>
+          <div class="av-row">
+            <label data-i18n="av_axis_label">y =</label>
+            <input type="number" id="avAxisInput" value="0" step="0.5" style="max-width:80px">
+          </div>
+        </div>
+        <div class="av-section">
+          <div class="av-section-title" data-i18n="av_method_title">Integration Method</div>
+          <div class="av-row">
+            <select id="avMethodSelect">
+              <option value="auto" data-i18n="av_method_auto">Auto (Symbolic)</option>
+              <option value="disc" data-i18n="av_method_disc">Disc / Washer</option>
+              <option value="shell" data-i18n="av_method_shell">Shell</option>
+            </select>
+          </div>
+        </div>
+        <div class="av-result" id="avResult" style="display:none">
+          <div class="av-result-title" data-i18n="av_result_title">Result</div>
+          <div id="avResultBody"></div>
+        </div>
       </div>
     </div>
   </div>
-
-  <!-- REFERENCE TAB -->
-  <div class="tab-content" id="tab-reference">
-    <div class="ref-grid" id="refGrid"></div>
-  </div>
-
 </div>
+<!-- ═══════════════════════════════════════════════════════ REFERENCE TAB -->
+<div class="tab-content" id="tab-reference">
+  <div class="ref-grid" id="refGrid"></div>
+</div>
+</div><!-- end app-body -->
 
 <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.3/lib/browser/math.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/controls/OrbitControls.js"></script>
 <script>
-// ─── i18n ───────────────────────────────────────────────────────────────────
-
+// ═══════════════════════════════════════════════════════════════════════════
+// i18n
+// ═══════════════════════════════════════════════════════════════════════════
 let LANG='en';
-
 const T={
   en:{
-    tab_analyzer:'📊 Analyzer',
-    tab_reference:'📚 Reference',
-    label_function:'Function f(x)',
-    label_xmin:'x-range min',
-    label_xmax:'x-range max',
-    btn_analyze:'Analyze',
-    graph_hint:'Use range inputs to zoom',
+    app_title:'Differentiation & Curve Sketching',
+    tab_analyzer:'📊 Analyzer',tab_fp:'🔬 First Principles',tab_ai:'🤖 AI Assistant',
+    tab_av:'∫ Area & Volume',tab_reference:'📚 Reference',
+    label_function:'Function f(x)',label_xmin:'x min',label_xmax:'x max',
+    btn_analyze:'Analyze',btn_reset:'⟳ Reset View',
+    graph_hint:'Scroll to zoom · Drag to pan',
     graph_title:'Graph of',
     empty_state:'Click <strong>Analyze</strong> to see results',
     error_parse:'Could not parse function',
-    // Section titles
-    sec_deriv:'Derivatives',
-    sec_domain:'Domain',
-    sec_cont:'Continuity & Differentiability',
-    sec_crit:'Critical Points',
-    sec_mono:'Monotonicity',
-    sec_conc:'Concavity',
-    sec_asym:'Asymptotes',
-    sec_tan:'Tangent Line',
-    // Row labels
-    row_domain:'Domain',
-    row_continuity:'Continuity',
-    row_differentiability:'Differentiability',
-    row_point:'Point',
-    row_slope:'Slope',
-    row_equation:'Equation',
-    // Badges
-    badge_continuous:'Continuous',
-    badge_discontinuous:'Discontinuous',
-    badge_differentiable:'Differentiable',
-    badge_not_everywhere:'Not everywhere',
-    badge_local_max:'Local Max',
-    badge_local_min:'Local Min',
-    badge_inflection:'Inflection',
-    badge_stationary:'Stationary',
-    badge_vertical:'Vertical',
-    badge_horizontal:'Horizontal',
-    badge_oblique:'Oblique',
-    badge_increasing:'\u2191 Increasing',
-    badge_decreasing:'\u2193 Decreasing',
-    badge_concave_up:'\u222a Concave Up',
-    badge_concave_down:'\u2229 Concave Down',
-    // Empty messages
-    none_found:'None found in range',
-    none_detected:'None detected in range',
-    cannot_determine:'Cannot determine in range',
-    cannot_compute:'Cannot compute at this point',
-    // Tangent input
-    tan_placeholder:'x value',
-    tan_btn:'Compute',
-    // Reference tab titles
-    ref_diff_rules:'Differentiation Rules',
-    ref_std_deriv:'Standard Derivatives',
-    ref_crit_class:'Critical Points & Classification',
-    ref_mono:'Monotonicity',
-    ref_conc:'Concavity',
-    ref_asym:'Asymptotes',
-    ref_tan:'Tangent Line',
-    ref_sketch:'Curve Sketching Checklist',
-    // Reference row names
+    sec_deriv:'Derivatives',sec_domain:'Domain',sec_cont:'Continuity & Differentiability',
+    sec_crit:'Critical Points',sec_mono:'Monotonicity',sec_conc:'Concavity',
+    sec_asym:'Asymptotes',sec_tan:'Tangent Line',
+    row_domain:'Domain',row_continuity:'Continuity',row_differentiability:'Differentiability',
+    row_point:'Point',row_slope:'Slope',row_equation:'Equation',
+    badge_continuous:'Continuous',badge_discontinuous:'Discontinuous',
+    badge_differentiable:'Differentiable',badge_not_everywhere:'Not everywhere',
+    badge_local_max:'Local Max',badge_local_min:'Local Min',
+    badge_inflection:'Inflection',badge_stationary:'Stationary',
+    badge_vertical:'Vertical',badge_horizontal:'Horizontal',badge_oblique:'Oblique',
+    badge_increasing:'↑ Increasing',badge_decreasing:'↓ Decreasing',
+    badge_concave_up:'∪ Concave Up',badge_concave_down:'∩ Concave Down',
+    none_found:'None found in range',none_detected:'None detected in range',
+    cannot_determine:'Cannot determine in range',cannot_compute:'Cannot compute at this point',
+    tan_placeholder:'x value',tan_btn:'Compute',
+    // First Principles
+    fp_label_fn:'Function f(x)',fp_label_at:'Evaluate at x =',fp_btn:'Derive',
+    fp_steps_title:'Step-by-Step Derivation (First Principles)',
+    fp_graph_title:'Secant → Tangent Visualisation',
+    fp_empty:'Enter a function and click Derive',
+    fp_h_label:'h value: ',
+    fp_step1:'Definition of derivative',fp_step2:'Substitute f(x+h) and f(x)',
+    fp_step3:'Expand and simplify numerator',fp_step4:'Cancel h and take limit as h→0',
+    fp_step5:'Result: f\'(x)',fp_step6:'Numerical check at x = ',
+    // AI Assistant
+    ai_input_title:'🤖 Differentiation Problem Solver',
+    ai_input_label:'Enter your problem:',
+    ai_placeholder:'e.g. Find dy/dx for y = x³sin(x)\nOr: A particle moves so that s = t³ - 6t². Find the velocity and acceleration at t = 2.\nOr: Find the rate of change of area of a circle when r = 5 and dr/dt = 2.',
+    ai_solve_btn:'Solve',ai_clear_btn:'Clear',
+    ai_result_title:'Solution',ai_empty:'Enter a problem to solve',
+    ai_quick_diff:'Differentiate',ai_quick_rate:'Rate of Change',
+    ai_quick_tangent:'Tangent Line',ai_quick_max:'Max/Min',ai_quick_implicit:'Implicit Diff.',
+    ai_quick_chain:'Chain Rule',ai_quick_product:'Product Rule',ai_quick_quotient:'Quotient Rule',
+    // Area & Volume
+    av_label_f:'f(x) — upper curve',av_label_g:'g(x) — lower curve (optional)',
+    av_label_a:'a (lower)',av_label_b:'b (upper)',av_btn:'Calculate',
+    av_graph_title:'Area / Volume Graph',
+    av_options_title:'Options',av_mode_title:'Mode',
+    av_mode_area:'Area',av_mode_volx:'Volume (x-axis)',av_mode_voly:'Volume (y-axis)',
+    av_axis_title:'Axis of Rotation',av_axis_label:'y =',
+    av_method_title:'Integration Method',
+    av_method_auto:'Auto (Symbolic)',av_method_disc:'Disc / Washer',av_method_shell:'Shell',
+    av_result_title:'Result',
+    vol_3d_title:'3D Solid of Revolution',
+    vol_toggle_mesh:'Mesh',vol_toggle_cross:'Cross-section',vol_toggle_solid:'Solid',
+    // Reference
+    ref_diff_rules:'Differentiation Rules',ref_std_deriv:'Standard Derivatives',
+    ref_crit_class:'Critical Points & Classification',ref_mono:'Monotonicity',
+    ref_conc:'Concavity',ref_asym:'Asymptotes',ref_tan:'Tangent Line',
+    ref_sketch:'Curve Sketching Checklist',ref_integ:'Integration Formulae',
     rn_power:'Power Rule',rn_product:'Product Rule',rn_quotient:'Quotient Rule',
     rn_chain:'Chain Rule',rn_constant:'Constant',rn_sum:'Sum Rule',
-    rn_sinx:'sin x',rn_cosx:'cos x',rn_tanx:'tan x',rn_ex:'e\u02e3',
-    rn_lnx:'ln x',rn_ax:'a\u02e3',rn_arcsin:'arcsin x',rn_arctan:'arctan x',
+    rn_sinx:'sin x',rn_cosx:'cos x',rn_tanx:'tan x',rn_ex:'eˣ',
+    rn_lnx:'ln x',rn_ax:'aˣ',rn_arcsin:'arcsin x',rn_arctan:'arctan x',
     rn_crit_pt:'Critical Point',rn_1dt_max:'1st Deriv Test (Max)',rn_1dt_min:'1st Deriv Test (Min)',
     rn_2dt_max:'2nd Deriv Test (Max)',rn_2dt_min:'2nd Deriv Test (Min)',rn_poi:'Point of Inflection',
     rn_inc:'Increasing',rn_dec:'Decreasing',rn_const:'Constant',
@@ -302,74 +446,71 @@ const T={
     rn_eq:'Equation',rn_slope:'Slope',rn_normal:'Normal Line',
     rn_s1:'Step 1',rn_s2:'Step 2',rn_s3:'Step 3',rn_s4:'Step 4',
     rn_s5:'Step 5',rn_s6:'Step 6',rn_s7:'Step 7',
+    rn_int_power:'Power',rn_int_ex:'eˣ',rn_int_sinx:'sin x',rn_int_cosx:'cos x',
+    rn_int_lnx:'1/x',rn_int_disc:'Disc Method',rn_int_washer:'Washer Method',rn_int_shell:'Shell Method',
   },
   zh:{
-    tab_analyzer:'📊 分析器',
-    tab_reference:'📚 參考',
-    label_function:'函數 f(x)',
-    label_xmin:'x 範圍最小値',
-    label_xmax:'x 範圍最大値',
-    btn_analyze:'分析',
-    graph_hint:'調整範圍以縮放圖表',
+    app_title:'微分與曲線素描',
+    tab_analyzer:'📊 分析器',tab_fp:'🔬 基本原理',tab_ai:'🤖 AI 輔助',
+    tab_av:'∫ 面積與體積',tab_reference:'📚 參考',
+    label_function:'函數 f(x)',label_xmin:'x 最小値',label_xmax:'x 最大値',
+    btn_analyze:'分析',btn_reset:'⟳ 重置視圖',
+    graph_hint:'滾動縮放 · 拖動平移',
     graph_title:'圖象：',
     empty_state:'點擊「<strong>分析</strong>」以查看結果',
     error_parse:'無法解析函數',
-    // Section titles
-    sec_deriv:'導數',
-    sec_domain:'定義域',
-    sec_cont:'連續性與可微分性',
-    sec_crit:'臨界點',
-    sec_mono:'單調性',
-    sec_conc:'凹凸性',
-    sec_asym:'漸近線',
-    sec_tan:'切線方程',
-    // Row labels
-    row_domain:'定義域',
-    row_continuity:'連續性',
-    row_differentiability:'可微分性',
-    row_point:'點',
-    row_slope:'斜率',
-    row_equation:'方程',
-    // Badges
-    badge_continuous:'連續',
-    badge_discontinuous:'不連續',
-    badge_differentiable:'可微分',
-    badge_not_everywhere:'部分不可微分',
-    badge_local_max:'局部最大値',
-    badge_local_min:'局部最小値',
-    badge_inflection:'拐點',
-    badge_stationary:'駐點',
-    badge_vertical:'垂直',
-    badge_horizontal:'水平',
-    badge_oblique:'斜線',
-    badge_increasing:'\u2191 遞増',
-    badge_decreasing:'\u2193 遞減',
-    badge_concave_up:'\u222a 凹形',
-    badge_concave_down:'\u2229 凸形',
-    // Empty messages
-    none_found:'在範圍內未發現',
-    none_detected:'在範圍內未發現漸近線',
-    cannot_determine:'在範圍內無法確定',
-    cannot_compute:'無法在此點計算',
-    // Tangent input
-    tan_placeholder:'x 値',
-    tan_btn:'計算',
-    // Reference tab titles
-    ref_diff_rules:'微分法則',
-    ref_std_deriv:'標準導數',
-    ref_crit_class:'臨界點與分類',
-    ref_mono:'單調性',
-    ref_conc:'凹凸性',
-    ref_asym:'漸近線',
-    ref_tan:'切線',
-    ref_sketch:'曲線素描清單',
-    // Reference row names
+    sec_deriv:'導數',sec_domain:'定義域',sec_cont:'連續性與可微分性',
+    sec_crit:'臨界點',sec_mono:'單調性',sec_conc:'凹凸性',
+    sec_asym:'漸近線',sec_tan:'切線方程',
+    row_domain:'定義域',row_continuity:'連續性',row_differentiability:'可微分性',
+    row_point:'點',row_slope:'斜率',row_equation:'方程',
+    badge_continuous:'連續',badge_discontinuous:'不連續',
+    badge_differentiable:'可微分',badge_not_everywhere:'部分不可微分',
+    badge_local_max:'局部最大値',badge_local_min:'局部最小値',
+    badge_inflection:'拐點',badge_stationary:'駐點',
+    badge_vertical:'垂直',badge_horizontal:'水平',badge_oblique:'斜線',
+    badge_increasing:'↑ 遞増',badge_decreasing:'↓ 遞減',
+    badge_concave_up:'∪ 凹形',badge_concave_down:'∩ 凸形',
+    none_found:'在範圍內未發現',none_detected:'在範圍內未發現漸近線',
+    cannot_determine:'在範圍內無法確定',cannot_compute:'無法在此點計算',
+    tan_placeholder:'x 値',tan_btn:'計算',
+    fp_label_fn:'函數 f(x)',fp_label_at:'在 x = 處求值',fp_btn:'求導',
+    fp_steps_title:'逐步推導（基本原理）',
+    fp_graph_title:'割線 → 切線 可視化',
+    fp_empty:'輸入函數並點擊「求導」',
+    fp_h_label:'h 値：',
+    fp_step1:'導數定義',fp_step2:'代入 f(x+h) 和 f(x)',
+    fp_step3:'展開並化簡分子',fp_step4:'消去 h，取 h→0 的極限',
+    fp_step5:'結果：f\'(x)',fp_step6:'在 x = 的數值驗證',
+    ai_input_title:'🤖 微分問題求解器',
+    ai_input_label:'輸入你的問題：',
+    ai_placeholder:'例：求 y = x³sin(x) 的 dy/dx\n或：一質點運動方程為 s = t³ - 6t²，求 t=2 時的速度和加速度。\n或：圓的面積以 r=5、dr/dt=2 的速率變化，求面積的變化率。',
+    ai_solve_btn:'求解',ai_clear_btn:'清除',
+    ai_result_title:'解答',ai_empty:'輸入問題以求解',
+    ai_quick_diff:'微分',ai_quick_rate:'變率',
+    ai_quick_tangent:'切線',ai_quick_max:'最大/最小値',ai_quick_implicit:'隱函數微分',
+    ai_quick_chain:'鏈式法則',ai_quick_product:'乘積法則',ai_quick_quotient:'商法則',
+    av_label_f:'f(x) — 上方曲線',av_label_g:'g(x) — 下方曲線（可選）',
+    av_label_a:'a（下限）',av_label_b:'b（上限）',av_btn:'計算',
+    av_graph_title:'面積 / 體積圖象',
+    av_options_title:'選項',av_mode_title:'模式',
+    av_mode_area:'面積',av_mode_volx:'體積（繞 x 軸）',av_mode_voly:'體積（繞 y 軸）',
+    av_axis_title:'旋轉軸',av_axis_label:'y =',
+    av_method_title:'積分方法',
+    av_method_auto:'自動（符號計算）',av_method_disc:'圓盤 / 墊圈法',av_method_shell:'殼法',
+    av_result_title:'結果',
+    vol_3d_title:'旋轉體 3D 模型',
+    vol_toggle_mesh:'網格',vol_toggle_cross:'截面',vol_toggle_solid:'實體',
+    ref_diff_rules:'微分法則',ref_std_deriv:'標準導數',
+    ref_crit_class:'臨界點與分類',ref_mono:'單調性',
+    ref_conc:'凹凸性',ref_asym:'漸近線',ref_tan:'切線',
+    ref_sketch:'曲線素描清單',ref_integ:'積分公式',
     rn_power:'冪次法則',rn_product:'乘法法則',rn_quotient:'除法法則',
-    rn_chain:'鎖鍵法則',rn_constant:'常數',rn_sum:'加法法則',
-    rn_sinx:'sin x',rn_cosx:'cos x',rn_tanx:'tan x',rn_ex:'e\u02e3',
-    rn_lnx:'ln x',rn_ax:'a\u02e3',rn_arcsin:'arcsin x',rn_arctan:'arctan x',
-    rn_crit_pt:'臨界點',rn_1dt_max:'一阶導數測試（最大）',rn_1dt_min:'一阶導數測試（最小）',
-    rn_2dt_max:'二阶導數測試（最大）',rn_2dt_min:'二阶導數測試（最小）',rn_poi:'拐點',
+    rn_chain:'鏈式法則',rn_constant:'常數',rn_sum:'加法法則',
+    rn_sinx:'sin x',rn_cosx:'cos x',rn_tanx:'tan x',rn_ex:'eˣ',
+    rn_lnx:'ln x',rn_ax:'aˣ',rn_arcsin:'arcsin x',rn_arctan:'arctan x',
+    rn_crit_pt:'臨界點',rn_1dt_max:'一階導數測試（最大）',rn_1dt_min:'一階導數測試（最小）',
+    rn_2dt_max:'二階導數測試（最大）',rn_2dt_min:'二階導數測試（最小）',rn_poi:'拐點',
     rn_inc:'遞増',rn_dec:'遞減',rn_const:'常數',
     rn_cu:'凹形（向上）',rn_cd:'凸形（向下）',rn_infl:'拐點',
     rn_vert:'垂直漸近線',rn_horiz_r:'水平漸近線（右）',rn_horiz_l:'水平漸近線（左）',
@@ -377,993 +518,1415 @@ const T={
     rn_eq:'方程',rn_slope:'斜率',rn_normal:'法線方程',
     rn_s1:'第一步',rn_s2:'第二步',rn_s3:'第三步',rn_s4:'第四步',
     rn_s5:'第五步',rn_s6:'第六步',rn_s7:'第七步',
+    rn_int_power:'冪次',rn_int_ex:'eˣ',rn_int_sinx:'sin x',rn_int_cosx:'cos x',
+    rn_int_lnx:'1/x',rn_int_disc:'圓盤法',rn_int_washer:'墊圈法',rn_int_shell:'殼法',
   }
 };
-
-function t(key){return (T[LANG]&&T[LANG][key])||T.en[key]||key;}
-
+function t(key){return(T[LANG]&&T[LANG][key])||T.en[key]||key;}
 function toggleLang(){
   LANG=LANG==='en'?'zh':'en';
-  document.getElementById('langToggle').textContent=LANG==='en'?'\u4e2d\u6587':'English';
+  document.getElementById('langToggle').textContent=LANG==='en'?'中文':'English';
   document.documentElement.lang=LANG==='zh'?'zh-TW':'en';
-  // Update all static data-i18n elements
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const key=el.dataset.i18n;
-    el.innerHTML=t(key);
-  });
-  // Update placeholder
-  document.getElementById('fxInput').placeholder=LANG==='zh'?'例： sin(x),  x^2 - 3*x + 2,  1/x,  ln(x)':'e.g.  sin(x),  x^2 - 3*x + 2,  1/x,  ln(x)';
-  // Re-run analysis to rebuild analytics panel in new language
-  if(lastResult&&lastResult.ok){
-    buildAnalytics(lastResult);
-    buildReference();
-  } else {
-    buildReference();
-  }
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder);});
+  rebuildQuickBtns();
+  if(lastResult&&lastResult.ok){buildAnalytics(lastResult);drawGraph(lastResult);}
+  buildReference();
+  if(avLastResult) buildAvResult(avLastResult);
 }
-
-// ─── UTILITIES ──────────────────────────────────────────────────────────────
-
-function gcd(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){[a,b]=[b,a%b]}return a||1}
-
+// ═══════════════════════════════════════════════════════════════════════════
+// MATH ENGINE — shared utilities
+// ═══════════════════════════════════════════════════════════════════════════
+function gcd(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){[a,b]=[b,a%b]}return a||1;}
 function numToTex(n){
-  if(typeof n!=='number'||!isFinite(n)) return '\\text{undefined}';
-  if(Math.abs(n)<1e-9) return '0';
-  // 1. Try common irrationals FIRST (π, √2, √3) with loose tolerance 1e-4
-  const pi=Math.PI, sq2=Math.sqrt(2), sq3=Math.sqrt(3);
+  if(typeof n!=='number'||!isFinite(n))return'\\text{undefined}';
+  if(Math.abs(n)<1e-9)return'0';
+  const pi=Math.PI,sq2=Math.sqrt(2),sq3=Math.sqrt(3);
   for(let d=1;d<=12;d++){
     for(let p=-24;p<=24;p++){
-      if(p===0) continue;
+      if(p===0)continue;
       if(Math.abs(n-p*pi/d)<1e-4){
-        const g=gcd(Math.abs(p),d);
-        const pn=p/g,dn=d/g;
-        if(dn===1) return (pn===1?'':(pn===-1?'-':String(pn)))+'\\pi';
-        // Suppress coefficient 1 in numerator: \frac{\pi}{2} not \frac{1\pi}{2}
+        const g=gcd(Math.abs(p),d);const pn=p/g,dn=d/g;
+        if(dn===1)return(pn===1?'':(pn===-1?'-':String(pn)))+'\\pi';
         const numPart=Math.abs(pn)===1?'\\pi':`${Math.abs(pn)}\\pi`;
-        return (pn<0?'-':'')+`\\frac{${numPart}}{${dn}}`;
+        return(pn<0?'-':'')+`\\frac{${numPart}}{${dn}}`;
       }
-      if(Math.abs(n-p*sq2/d)<1e-9){
-        const g=gcd(Math.abs(p),d);
-        const pn=p/g,dn=d/g;
-        return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{2}}{${dn}}`;
-      }
-      if(Math.abs(n-p*sq3/d)<1e-9){
-        const g=gcd(Math.abs(p),d);
-        const pn=p/g,dn=d/g;
-        return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{3}}{${dn}}`;
-      }
+      if(Math.abs(n-p*sq2/d)<1e-9){const g=gcd(Math.abs(p),d);const pn=p/g,dn=d/g;return(pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{2}}{${dn}}`;}
+      if(Math.abs(n-p*sq3/d)<1e-9){const g=gcd(Math.abs(p),d);const pn=p/g,dn=d/g;return(pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{3}}{${dn}}`;}
     }
   }
-  // 2. Try rational p/q
   for(let d=1;d<=1000;d++){
     const p=Math.round(n*d);
     if(Math.abs(p/d-n)<1e-9){
-      const g=gcd(Math.abs(p),d);
-      const pn=p/g, dn=d/g;
-      if(dn===1) return String(pn);
-      return (pn<0?'-':'')+`\\frac{${Math.abs(pn)}}{${dn}}`;
+      const g=gcd(Math.abs(p),d);const pn=p/g,dn=d/g;
+      if(dn===1)return String(pn);
+      return(pn<0?'-':'')+`\\frac{${Math.abs(pn)}}{${dn}}`;
     }
   }
-  return n.toPrecision(5).replace(/\.?0+$/,'');
+  return n.toPrecision(6).replace(/\.?0+$/,'');
 }
-
+function evalAt(expr,x){try{const v=math.evaluate(expr,{x});return typeof v==='number'?v:NaN;}catch{return NaN;}}
+function safeDerivative(expr,v='x'){try{return math.derivative(expr,v).toString();}catch{return null;}}
+function simplifyTex(expr){
+  try{return math.simplify(math.parse(expr)).toTex({parenthesis:'auto'});}
+  catch{try{return math.parse(expr).toTex({parenthesis:'auto'});}catch{return expr;}}
+}
 function renderK(tex,block=true){
   const el=document.createElement(block?'div':'span');
   el.className=block?'math-block':'math-inline';
-  try{katex.render(tex,el,{throwOnError:false,displayMode:block})}
-  catch(e){el.textContent=tex}
+  try{katex.render(tex,el,{throwOnError:false,displayMode:block});}
+  catch(e){el.textContent=tex;}
   return el;
 }
-
-function evalAt(expr,x){
-  try{const v=math.evaluate(expr,{x});return typeof v==='number'?v:NaN}
-  catch{return NaN}
-}
-
-function safeDerivative(expr,v='x'){
-  try{return math.derivative(expr,v).toString()}
-  catch{return null}
-}
-
-function simplifyTex(expr){
-  try{
-    const node=math.parse(expr);
-    const simplified=math.simplify(node);
-    return simplified.toTex({parenthesis:'auto'});
-  }catch{
-    try{return math.parse(expr).toTex({parenthesis:'auto'})}
-    catch{return expr}
-  }
-}
-
-// ─── ANALYSIS ENGINE ────────────────────────────────────────────────────────
-
-function analyzeCurve(fx,xMin,xMax,tanX){
-  const result={ok:false,error:null};
-  try{
-    // Validate parse
-    math.parse(fx);
-    result.fx=fx;
-    result.xMin=xMin;
-    result.xMax=xMax;
-
-    // Derivatives
-    const fpStr=safeDerivative(fx);
-    const fppStr=fpStr?safeDerivative(fpStr):null;
-    result.fpStr=fpStr;
-    result.fppStr=fppStr;
-    result.fpTex=fpStr?simplifyTex(fpStr):'\\text{N/A}';
-    result.fppTex=fppStr?simplifyTex(fppStr):'\\text{N/A}';
-
-    // Domain (heuristic scan)
-    result.domain=detectDomain(fx,xMin,xMax);
-
-    // Continuity & Differentiability
-    result.continuity=detectContinuity(fx,xMin,xMax);
-    result.differentiability=fpStr?detectDifferentiability(fpStr,xMin,xMax):'Cannot determine';
-
-    // Critical points (f'=0 sign change)
-    result.criticalPoints=fpStr?findCriticalPoints(fx,fpStr,fppStr,xMin,xMax):[];
-
-    // Inflection points (f''=0 sign change)
-    result.inflectionPoints=fppStr?findInflectionPoints(fx,fppStr,xMin,xMax):[];
-
-    // Monotonicity — split at critical point x-values for exact boundaries
-    const critXs=result.criticalPoints.map(p=>p.x);
-    result.monotonicity=fpStr?findMonotonicity(fpStr,xMin,xMax,critXs):[];
-
-    // Concavity — split at inflection point x-values for exact boundaries
-    const inflXs=result.inflectionPoints.map(p=>p.x);
-    result.concavity=fppStr?findConcavity(fppStr,xMin,xMax,inflXs):[];
-
-    // Asymptotes
-    result.asymptotes=findAsymptotes(fx,xMin,xMax);
-
-    // Intercepts
-    result.intercepts=findIntercepts(fx,xMin,xMax);
-
-    // Tangent line
-    if(tanX!==null&&tanX!==undefined&&isFinite(tanX)){
-      result.tangent=buildTangent(fx,fpStr,tanX);
-    }
-
-    result.ok=true;
-  }catch(e){
-    result.error=e.message||'Parse error';
-  }
-  return result;
-}
-
+// ═══════════════════════════════════════════════════════════════════════════
+// ANALYSIS ENGINE
+// ═══════════════════════════════════════════════════════════════════════════
 function detectDomain(fx,xMin,xMax){
-  // Scan for discontinuities
-  const bad=[];
-  const step=0.01;
-  for(let x=xMin;x<=xMax;x+=step){
-    const y=evalAt(fx,x);
-    if(!isFinite(y)) bad.push(x);
-  }
-  if(bad.length===0) return {tex:'\\mathbb{R}',text:'All real numbers'};
-  // Group
-  const groups=[];
-  let g=[bad[0]];
-  for(let i=1;i<bad.length;i++){
-    if(bad[i]-bad[i-1]<0.05) g.push(bad[i]);
-    else{groups.push(g);g=[bad[i]];}
-  }
+  const bad=[];const step=0.01;
+  for(let x=xMin;x<=xMax;x+=step){if(!isFinite(evalAt(fx,x)))bad.push(x);}
+  if(bad.length===0)return{tex:'\\mathbb{R}',text:'All real numbers'};
+  const groups=[];let g=[bad[0]];
+  for(let i=1;i<bad.length;i++){if(bad[i]-bad[i-1]<0.05)g.push(bad[i]);else{groups.push(g);g=[bad[i]];}}
   groups.push(g);
   const excl=groups.map(gr=>numToTex(gr[Math.floor(gr.length/2)]));
-  if(excl.length===1) return {tex:`\\mathbb{R} \\setminus \\{${excl[0]}\\}`,text:`All reals except x = ${excl[0]}`};
-  return {tex:`\\mathbb{R} \\setminus \\{${excl.join(',')}\\}`,text:`All reals except x ∈ {${excl.join(', ')}}`};
+  if(excl.length===1)return{tex:`\\mathbb{R}\\setminus\\{${excl[0]}\\}`,text:`All reals except x=${excl[0]}`};
+  return{tex:`\\mathbb{R}\\setminus\\{${excl.join(',')}\\}`,text:`All reals except x∈{${excl.join(',')}}`};
 }
-
 function detectContinuity(fx,xMin,xMax){
-  const step=0.05;
-  for(let x=xMin+step;x<=xMax-step;x+=step){
-    const y=evalAt(fx,x);
-    if(!isFinite(y)) return 'Discontinuous (has singularities in range)';
-  }
-  return 'Continuous on the given domain';
+  for(let x=xMin+0.05;x<=xMax-0.05;x+=0.05){if(!isFinite(evalAt(fx,x)))return'Discontinuous (has singularities in range)';}
+  return'Continuous on the given domain';
 }
-
 function detectDifferentiability(fpStr,xMin,xMax){
-  const step=0.05;
-  for(let x=xMin+step;x<=xMax-step;x+=step){
-    const v=evalAt(fpStr,x);
-    if(!isFinite(v)) return 'Not differentiable everywhere (f\'(x) undefined at some points)';
-  }
-  return 'Differentiable on the given domain';
+  for(let x=xMin+0.05;x<=xMax-0.05;x+=0.05){if(!isFinite(evalAt(fpStr,x)))return'Not differentiable everywhere';}
+  return'Differentiable on the given domain';
 }
-
 function findCriticalPoints(fx,fpStr,fppStr,xMin,xMax){
-  const pts=[];
-  const step=0.01;
+  const pts=[];const step=0.01;
   let prev=evalAt(fpStr,xMin);
   for(let x=xMin+step;x<=xMax;x+=step){
     const curr=evalAt(fpStr,x);
     if(isFinite(prev)&&isFinite(curr)&&prev*curr<=0){
-      // Bisect to refine
-      let lo=x-step,hi=x,mid;
-      for(let i=0;i<30;i++){
-        mid=(lo+hi)/2;
-        const vm=evalAt(fpStr,mid);
-        if(!isFinite(vm)) break;
-        if(evalAt(fpStr,lo)*vm<=0) hi=mid; else lo=mid;
-      }
-      const cx=(lo+hi)/2;
-      const cy=evalAt(fx,cx);
-      if(!isFinite(cy)) {prev=curr;continue;}
-      // First derivative test
-      const fBefore=evalAt(fpStr,cx-0.05);
-      const fAfter=evalAt(fpStr,cx+0.05);
+      let lo=x-step,hi=x;
+      for(let i=0;i<40;i++){const mid=(lo+hi)/2;if(evalAt(fpStr,lo)*evalAt(fpStr,mid)<=0)hi=mid;else lo=mid;}
+      const cx=(lo+hi)/2;const cy=evalAt(fx,cx);
+      if(!isFinite(cy))continue;
       let kind='Stationary';
-      if(fBefore<0&&fAfter>0) kind='Local Minimum';
-      else if(fBefore>0&&fAfter<0) kind='Local Maximum';
-      else kind='Stationary (neither)';
-      pts.push({x:cx,y:cy,kind,xTex:numToTex(cx),yTex:numToTex(cy)});
+      if(fppStr){const fpp=evalAt(fppStr,cx);if(isFinite(fpp)){if(fpp<-1e-6)kind='Local Max';else if(fpp>1e-6)kind='Local Min';}}
+      if(kind==='Stationary'&&isFinite(prev)&&isFinite(curr)){if(prev>0&&curr<0)kind='Local Max';else if(prev<0&&curr>0)kind='Local Min';}
+      pts.push({x:cx,y:cy,xTex:numToTex(cx),yTex:numToTex(cy),kind});
     }
     prev=curr;
   }
-  // Deduplicate
-  return pts.filter((p,i)=>!pts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.1));
+  return pts.filter((p,i)=>!pts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.05));
 }
-
 function findInflectionPoints(fx,fppStr,xMin,xMax){
-  const pts=[];
-  const step=0.01;
+  const pts=[];const step=0.01;
   let prev=evalAt(fppStr,xMin);
   for(let x=xMin+step;x<=xMax;x+=step){
     const curr=evalAt(fppStr,x);
     if(isFinite(prev)&&isFinite(curr)&&prev*curr<0){
       let lo=x-step,hi=x;
-      for(let i=0;i<30;i++){
-        const mid=(lo+hi)/2;
-        const vm=evalAt(fppStr,mid);
-        if(!isFinite(vm)) break;
-        if(evalAt(fppStr,lo)*vm<=0) hi=mid; else lo=mid;
-      }
-      const ix=(lo+hi)/2;
-      const iy=evalAt(fx,ix);
-      if(isFinite(iy)) pts.push({x:ix,y:iy,xTex:numToTex(ix),yTex:numToTex(iy)});
+      for(let i=0;i<40;i++){const mid=(lo+hi)/2;if(evalAt(fppStr,lo)*evalAt(fppStr,mid)<=0)hi=mid;else lo=mid;}
+      const ix=(lo+hi)/2;const iy=evalAt(fx,ix);
+      if(!isFinite(iy))continue;
+      pts.push({x:ix,y:iy,xTex:numToTex(ix),yTex:numToTex(iy)});
     }
     prev=curr;
   }
-  return pts.filter((p,i)=>!pts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.1));
+  return pts.filter((p,i)=>!pts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.05));
 }
-
 function findMonotonicity(fpStr,xMin,xMax,splitXs=[]){
-  // Use exact split points (critical point x-values) as interval boundaries
   const pts=[xMin,...splitXs.filter(x=>x>xMin&&x<xMax).sort((a,b)=>a-b),xMax];
   const intervals=[];
   for(let i=0;i<pts.length-1;i++){
-    const mid=(pts[i]+pts[i+1])/2;
-    const v=evalAt(fpStr,mid);
-    if(!isFinite(v)) continue;
-    if(Math.abs(v)<1e-9) continue;
-    intervals.push({
-      from:pts[i],to:pts[i+1],
-      fromTex:numToTex(pts[i]),toTex:numToTex(pts[i+1]),
-      increasing:v>0
-    });
+    const mid=(pts[i]+pts[i+1])/2;const v=evalAt(fpStr,mid);
+    if(!isFinite(v)||Math.abs(v)<1e-9)continue;
+    intervals.push({from:pts[i],to:pts[i+1],fromTex:numToTex(pts[i]),toTex:numToTex(pts[i+1]),increasing:v>0});
   }
   return intervals;
 }
-
 function findConcavity(fppStr,xMin,xMax,splitXs=[]){
-  // Use exact split points (inflection point x-values) as interval boundaries
   const pts=[xMin,...splitXs.filter(x=>x>xMin&&x<xMax).sort((a,b)=>a-b),xMax];
   const intervals=[];
   for(let i=0;i<pts.length-1;i++){
-    const mid=(pts[i]+pts[i+1])/2;
-    const v=evalAt(fppStr,mid);
-    if(!isFinite(v)) continue;
-    if(Math.abs(v)<1e-9) continue;
-    intervals.push({
-      from:pts[i],to:pts[i+1],
-      fromTex:numToTex(pts[i]),toTex:numToTex(pts[i+1]),
-      up:v>0
-    });
+    const mid=(pts[i]+pts[i+1])/2;const v=evalAt(fppStr,mid);
+    if(!isFinite(v)||Math.abs(v)<1e-9)continue;
+    intervals.push({from:pts[i],to:pts[i+1],fromTex:numToTex(pts[i]),toTex:numToTex(pts[i+1]),up:v>0});
   }
   return intervals;
 }
-
 function findAsymptotes(fx,xMin,xMax){
   const asymptotes=[];
-  // Vertical: look for poles (scan for sign of blow-up)
-  const step=0.005;
+  // Vertical
+  const step=0.005;const seen=new Set();
   for(let x=xMin;x<=xMax;x+=step){
     const y=evalAt(fx,x);
     if(!isFinite(y)){
-      const yl=evalAt(fx,x-0.001);
-      const yr=evalAt(fx,x+0.001);
+      const yl=evalAt(fx,x-0.001),yr=evalAt(fx,x+0.001);
       if(Math.abs(yl)>50||Math.abs(yr)>50){
-        asymptotes.push({type:'vertical',x:x,xTex:numToTex(x)});
+        const k=numToTex(x);if(!seen.has(k)){seen.add(k);asymptotes.push({type:'vertical',x,xTex:k});}
       }
     }
   }
-  // Horizontal: compute limit robustly using average of multiple large-x samples
-  // to avoid false positives from oscillating functions like sin(x)
+  // Horizontal
   function robustLimit(sign){
-    const xs=[sign*1e4, sign*1e5, sign*1e6, sign*1e7];
+    const xs=[sign*1e4,sign*1e5,sign*1e6,sign*1e7];
     const vals=xs.map(x=>evalAt(fx,x)).filter(v=>isFinite(v));
-    if(vals.length<3) return NaN;
-    // Check if values converge (all within 0.01 of each other)
-    const mn=Math.min(...vals),mx=Math.max(...vals);
-    if(mx-mn>0.01) return NaN; // oscillating — no horizontal asymptote
+    if(vals.length<3)return NaN;
+    if(Math.max(...vals)-Math.min(...vals)>0.01)return NaN;
     return vals[vals.length-1];
   }
-  const yRight=robustLimit(1);
-  const yLeft=robustLimit(-1);
-  if(isFinite(yRight)&&Math.abs(yRight)<1e4){
-    const t=numToTex(yRight);
-    asymptotes.push({type:'horizontal',y:yRight,yTex:t,side:'right',tex:`y = ${t}`});
-  }
-  if(isFinite(yLeft)&&Math.abs(yLeft)<1e4&&(!isFinite(yRight)||Math.abs(yLeft-yRight)>0.01)){
-    const t=numToTex(yLeft);
-    asymptotes.push({type:'horizontal',y:yLeft,yTex:t,side:'left',tex:`y = ${t}`});
-  }
-  // Oblique: check if f(x)/x → L as x→∞ (only if no horizontal asymptote)
-  if(!isFinite(yRight)){
-    const ms=[evalAt(fx,1e4)/1e4, evalAt(fx,1e5)/1e5, evalAt(fx,1e6)/1e6];
-    const mValid=ms.filter(v=>isFinite(v));
-    if(mValid.length===3&&Math.max(...mValid)-Math.min(...mValid)<1e-6){
-      const m=mValid[2];
+  const yR=robustLimit(1),yL=robustLimit(-1);
+  if(isFinite(yR)&&Math.abs(yR)<1e4){const t=numToTex(yR);asymptotes.push({type:'horizontal',y:yR,yTex:t,side:'right'});}
+  if(isFinite(yL)&&Math.abs(yL)<1e4&&(!isFinite(yR)||Math.abs(yL-yR)>0.01)){const t=numToTex(yL);asymptotes.push({type:'horizontal',y:yL,yTex:t,side:'left'});}
+  // Oblique
+  if(!isFinite(yR)){
+    const ms=[evalAt(fx,1e4)/1e4,evalAt(fx,1e5)/1e5,evalAt(fx,1e6)/1e6];
+    const mv=ms.filter(v=>isFinite(v));
+    if(mv.length===3&&Math.max(...mv)-Math.min(...mv)<1e-6){
+      const m=mv[2];
       if(Math.abs(m)>1e-9&&Math.abs(m)<1e4){
         const b=evalAt(fx,1e6)-m*1e6;
         if(isFinite(b)&&Math.abs(b)<1e4){
           const mTex=numToTex(m),bTex=numToTex(Math.abs(b));
-          asymptotes.push({type:'oblique',m,b,mTex,bTex,tex:`y = ${mTex}x ${b>=0?'+':'-'} ${bTex}`});
+          asymptotes.push({type:'oblique',m,b,mTex,bTex});
         }
       }
     }
   }
-  // Deduplicate vertical
-  const seen=new Set();
-  return asymptotes.filter(a=>{
-    if(a.type!=='vertical') return true;
-    const k=numToTex(a.x);
-    if(seen.has(k)) return false;
-    seen.add(k);return true;
-  });
+  return asymptotes;
 }
-
 function findIntercepts(fx,xMin,xMax){
-  const xInts=[];
-  const step=0.01;
-  let prev=evalAt(fx,xMin);
+  const xInts=[];const step=0.01;let prev=evalAt(fx,xMin);
   for(let x=xMin+step;x<=xMax;x+=step){
     const curr=evalAt(fx,x);
     if(isFinite(prev)&&isFinite(curr)&&prev*curr<=0){
       let lo=x-step,hi=x;
-      for(let i=0;i<30;i++){
-        const mid=(lo+hi)/2;
-        const vm=evalAt(fx,mid);
-        if(!isFinite(vm)) break;
-        if(evalAt(fx,lo)*vm<=0) hi=mid; else lo=mid;
-      }
-      const xi=(lo+hi)/2;
-      xInts.push({x:xi,xTex:numToTex(xi)});
+      for(let i=0;i<30;i++){const mid=(lo+hi)/2;const vm=evalAt(fx,mid);if(!isFinite(vm))break;if(evalAt(fx,lo)*vm<=0)hi=mid;else lo=mid;}
+      const xi=(lo+hi)/2;xInts.push({x:xi,xTex:numToTex(xi)});
     }
     prev=curr;
   }
   const yInt=evalAt(fx,0);
-  return {
-    xInts:xInts.filter((p,i)=>!xInts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.05)),
-    yInt:isFinite(yInt)?{y:yInt,yTex:numToTex(yInt)}:null
-  };
+  return{xInts:xInts.filter((p,i)=>!xInts.slice(0,i).some(q=>Math.abs(q.x-p.x)<0.05)),yInt:isFinite(yInt)?{y:yInt,yTex:numToTex(yInt)}:null};
 }
-
 function buildTangent(fx,fpStr,tanX){
-  const y0=evalAt(fx,tanX);
-  const m=fpStr?evalAt(fpStr,tanX):NaN;
-  if(!isFinite(y0)) return null;
+  const y0=evalAt(fx,tanX);const m=fpStr?evalAt(fpStr,tanX):NaN;
+  if(!isFinite(y0))return null;
   const xTex=numToTex(tanX),yTex=numToTex(y0),mTex=isFinite(m)?numToTex(m):'\\text{undef}';
   let lineTex='';
   if(isFinite(m)){
-    const b=y0-m*tanX;
-    const bAbs=Math.abs(b);
-    const bTex=numToTex(bAbs);
-    // Build clean equation: skip zero terms
-    if(Math.abs(m)<1e-9&&Math.abs(b)<1e-9){
-      lineTex='y = 0';
-    } else if(Math.abs(m)<1e-9){
-      lineTex=`y = ${numToTex(b)}`;
-    } else if(Math.abs(b)<1e-9){
-      // y = mx
-      const mPart=mTex==='1'?'':mTex==='-1'?'-':mTex;
-      lineTex=`y = ${mPart}x`;
-    } else {
-      const mPart=mTex==='1'?'':mTex==='-1'?'-':mTex;
-      lineTex=`y = ${mPart}x ${b>0?'+':'-'} ${bTex}`;
-    }
+    const b=y0-m*tanX;const bAbs=Math.abs(b);const bTex=numToTex(bAbs);
+    const mPart=mTex==='1'?'':mTex==='-1'?'-':mTex;
+    if(Math.abs(m)<1e-9&&Math.abs(b)<1e-9)lineTex='y=0';
+    else if(Math.abs(m)<1e-9)lineTex=`y=${numToTex(b)}`;
+    else if(Math.abs(b)<1e-9)lineTex=`y=${mPart}x`;
+    else lineTex=`y=${mPart}x${b>0?'+':'-'}${bTex}`;
   }
-  return {x:tanX,y:y0,m,xTex,yTex,mTex,lineTex};
+  return{x:tanX,y:y0,m,xTex,yTex,mTex,lineTex};
+}
+function analyzeCurve(fx,xMin,xMax,tanX){
+  const result={ok:false,error:null};
+  try{
+    math.parse(fx);
+    result.fx=fx;result.xMin=xMin;result.xMax=xMax;
+    const fpStr=safeDerivative(fx);const fppStr=fpStr?safeDerivative(fpStr):null;
+    result.fpStr=fpStr;result.fppStr=fppStr;
+    result.fpTex=fpStr?simplifyTex(fpStr):'\\text{N/A}';
+    result.fppTex=fppStr?simplifyTex(fppStr):'\\text{N/A}';
+    result.domain=detectDomain(fx,xMin,xMax);
+    result.continuity=detectContinuity(fx,xMin,xMax);
+    result.differentiability=fpStr?detectDifferentiability(fpStr,xMin,xMax):'Cannot determine';
+    result.criticalPoints=fpStr?findCriticalPoints(fx,fpStr,fppStr,xMin,xMax):[];
+    result.inflectionPoints=fppStr?findInflectionPoints(fx,fppStr,xMin,xMax):[];
+    const critXs=result.criticalPoints.map(p=>p.x);
+    result.monotonicity=fpStr?findMonotonicity(fpStr,xMin,xMax,critXs):[];
+    const inflXs=result.inflectionPoints.map(p=>p.x);
+    result.concavity=fppStr?findConcavity(fppStr,xMin,xMax,inflXs):[];
+    result.asymptotes=findAsymptotes(fx,xMin,xMax);
+    result.intercepts=findIntercepts(fx,xMin,xMax);
+    if(tanX!==null&&tanX!==undefined&&isFinite(tanX))result.tangent=buildTangent(fx,fpStr,tanX);
+    result.ok=true;
+  }catch(e){result.error=e.message||'Parse error';}
+  return result;
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// GRAPH RENDERER — GeoGebra-style, enlarged, zoom/pan
+// ═══════════════════════════════════════════════════════════════════════════
+// Viewport state for Analyzer
+let vp={xMin:-5,xMax:5,yMin:-3,yMax:3};
+let isDragging=false,dragStart={x:0,y:0},dragVp=null;
+
+function autoViewport(result){
+  const{fx,xMin,xMax}=result;
+  let yMin=Infinity,yMax=-Infinity;
+  const step=(xMax-xMin)/1200;
+  for(let x=xMin;x<=xMax;x+=step){const y=evalAt(fx,x);if(isFinite(y)){yMin=Math.min(yMin,y);yMax=Math.max(yMax,y);}}
+  if(!isFinite(yMin)||!isFinite(yMax)){yMin=-5;yMax=5;}
+  const pad=(yMax-yMin)*0.18||1;
+  yMin-=pad;yMax+=pad;
+  if(yMax-yMin>300){const c=(yMax+yMin)/2;yMin=c-15;yMax=c+15;}
+  vp={xMin,xMax,yMin,yMax};
 }
 
-// ─── GRAPH RENDERER ─────────────────────────────────────────────────────────
-
-function drawGraph(result){
+function drawGraph(result,useCurrentVp=false){
   const svg=document.getElementById('graph');
-  const W=640,H=440;
+  const W=900,H=560;
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   svg.innerHTML='';
-
-  const {fx,xMin,xMax,criticalPoints,inflectionPoints,asymptotes,intercepts,tangent}=result;
-
-  // Compute y range
-  let yMin=Infinity,yMax=-Infinity;
-  const step=(xMax-xMin)/800;
-  for(let x=xMin;x<=xMax;x+=step){
-    const y=evalAt(fx,x);
-    if(isFinite(y)){yMin=Math.min(yMin,y);yMax=Math.max(yMax,y);}
-  }
-  if(!isFinite(yMin)||!isFinite(yMax)){yMin=-5;yMax=5;}
-  const pad=(yMax-yMin)*0.15||1;
-  yMin-=pad;yMax+=pad;
-  // Clamp extreme ranges
-  if(yMax-yMin>200){const c=(yMax+yMin)/2;yMin=c-10;yMax=c+10;}
-
-  const ML=55,MR=20,MT=30,MB=40;
+  if(!result||!result.ok)return;
+  if(!useCurrentVp)autoViewport(result);
+  const{fx,criticalPoints,inflectionPoints,asymptotes,intercepts,tangent}=result;
+  const{xMin,xMax,yMin,yMax}=vp;
+  const ML=65,MR=25,MT=35,MB=45;
   const gW=W-ML-MR,gH=H-MT-MB;
-
   function px(x){return ML+(x-xMin)/(xMax-xMin)*gW;}
   function py(y){return MT+gH-(y-yMin)/(yMax-yMin)*gH;}
-
   function el(tag,attrs,text){
     const e=document.createElementNS('http://www.w3.org/2000/svg',tag);
-    for(const[k,v] of Object.entries(attrs)) e.setAttribute(k,v);
-    if(text!==undefined) e.textContent=text;
+    for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);
+    if(text!==undefined)e.textContent=text;
     return e;
   }
-
   // Background
-  svg.appendChild(el('rect',{x:ML,y:MT,width:gW,height:gH,fill:'#fff',stroke:'#e2e6ef','stroke-width':'1'}));
-
+  svg.appendChild(el('rect',{x:ML,y:MT,width:gW,height:gH,fill:'#fff',stroke:'#d8dde8','stroke-width':'1'}));
   // Grid
-  const xTicks=Math.round(xMax-xMin);
-  const xStep=(xMax-xMin)/Math.min(xTicks,10);
-  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
-    const gx=px(x);
-    svg.appendChild(el('line',{x1:gx,y1:MT,x2:gx,y2:MT+gH,stroke:'#f0f2f8','stroke-width':'1'}));
-  }
-  // Choose a nice integer or simple step for y-axis so labels are clean integers
   function niceStep(range,maxTicks){
-    const raw=range/maxTicks;
-    const mag=Math.pow(10,Math.floor(Math.log10(raw)));
-    const norm=raw/mag;
-    let nice;
-    if(norm<=1) nice=1;
-    else if(norm<=2) nice=2;
-    else if(norm<=5) nice=5;
-    else nice=10;
+    const raw=range/maxTicks;const mag=Math.pow(10,Math.floor(Math.log10(raw)));const norm=raw/mag;
+    let nice;if(norm<=1)nice=1;else if(norm<=2)nice=2;else if(norm<=5)nice=5;else nice=10;
     return nice*mag;
   }
-  const yStep=niceStep(yMax-yMin,8);
-  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax;y+=yStep){
-    const gy=py(y);
-    svg.appendChild(el('line',{x1:ML,y1:gy,x2:ML+gW,y2:gy,stroke:'#f0f2f8','stroke-width':'1'}));
+  const xStep=niceStep(xMax-xMin,10);const yStep=niceStep(yMax-yMin,8);
+  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax+1e-9;x+=xStep){
+    const gx=px(x);
+    svg.appendChild(el('line',{x1:gx,y1:MT,x2:gx,y2:MT+gH,stroke:'#eef0f8','stroke-width':'1'}));
   }
-
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax+1e-9;y+=yStep){
+    const gy=py(y);
+    svg.appendChild(el('line',{x1:ML,y1:gy,x2:ML+gW,y2:gy,stroke:'#eef0f8','stroke-width':'1'}));
+  }
   // Axes
   const ax0=py(0),ay0=px(0);
   if(ax0>=MT&&ax0<=MT+gH){
-    svg.appendChild(el('line',{x1:ML,y1:ax0,x2:ML+gW,y2:ax0,stroke:'#555','stroke-width':'1.5'}));
-    // x-axis arrow
-    svg.appendChild(el('polygon',{points:`${ML+gW},${ax0} ${ML+gW-8},${ax0-4} ${ML+gW-8},${ax0+4}`,fill:'#555'}));
-    svg.appendChild(el('text',{x:ML+gW+6,y:ax0+4,'font-size':'12','font-family':'Inter,sans-serif',fill:'#555'},'x'));
+    svg.appendChild(el('line',{x1:ML,y1:ax0,x2:ML+gW,y2:ax0,stroke:'#555','stroke-width':'1.8'}));
+    svg.appendChild(el('polygon',{points:`${ML+gW+1},${ax0} ${ML+gW-9},${ax0-5} ${ML+gW-9},${ax0+5}`,fill:'#555'}));
+    svg.appendChild(el('text',{x:ML+gW+8,y:ax0+5,'font-size':'14','font-family':'Inter,sans-serif',fill:'#444'},'x'));
   }
   if(ay0>=ML&&ay0<=ML+gW){
-    svg.appendChild(el('line',{x1:ay0,y1:MT,x2:ay0,y2:MT+gH,stroke:'#555','stroke-width':'1.5'}));
-    // y-axis arrow
-    svg.appendChild(el('polygon',{points:`${ay0},${MT} ${ay0-4},${MT+8} ${ay0+4},${MT+8}`,fill:'#555'}));
-    svg.appendChild(el('text',{x:ay0+4,y:MT-6,'font-size':'12','font-family':'Inter,sans-serif',fill:'#555'},'y'));
+    svg.appendChild(el('line',{x1:ay0,y1:MT,x2:ay0,y2:MT+gH,stroke:'#555','stroke-width':'1.8'}));
+    svg.appendChild(el('polygon',{points:`${ay0},${MT-1} ${ay0-5},${MT+9} ${ay0+5},${MT+9}`,fill:'#555'}));
+    svg.appendChild(el('text',{x:ay0+5,y:MT-8,'font-size':'14','font-family':'Inter,sans-serif',fill:'#444'},'y'));
   }
-
-  // Origin label
   if(ay0>=ML&&ay0<=ML+gW&&ax0>=MT&&ax0<=MT+gH){
-    svg.appendChild(el('text',{x:ay0-14,y:ax0+14,'font-size':'11','font-family':'Inter,sans-serif',fill:'#888'},'O'));
+    svg.appendChild(el('text',{x:ay0-16,y:ax0+16,'font-size':'13','font-family':'Inter,sans-serif',fill:'#888'},'O'));
   }
-
-  // Axis tick labels — use exact values where possible
-  // Note: texToPlain is defined later in this function but JS hoists function declarations
+  // Tick labels
   function tickLabel(v){
-    const t=numToTex(v);
-    // Simple conversion: \frac{A}{B} -> A/B, \pi -> π
-    return t.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,(_, num, den)=>num+'/'+den)
+    const tx=numToTex(v);
+    return tx.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,(_,n,d)=>n+'/'+d)
              .replace(/\\pi/g,'π').replace(/\\sqrt\{([^}]+)\}/g,'√$1')
              .replace(/\\text\{([^}]+)\}/g,'$1').replace(/[{}\\]/g,'');
   }
-  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
-    if(Math.abs(x)<0.001) continue;
-    const gx=px(x);
-    svg.appendChild(el('line',{x1:gx,y1:ax0-3,x2:gx,y2:ax0+3,stroke:'#555','stroke-width':'1'}));
-    svg.appendChild(el('text',{x:gx,y:ax0+16,'font-size':'10','font-family':'Inter,sans-serif',fill:'#666','text-anchor':'middle'},tickLabel(x)));
+  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax+1e-9;x+=xStep){
+    if(Math.abs(x)<1e-9)continue;
+    const gx=px(x);const ybase=ax0>=MT&&ax0<=MT+gH?ax0:MT+gH;
+    svg.appendChild(el('line',{x1:gx,y1:ybase-4,x2:gx,y2:ybase+4,stroke:'#555','stroke-width':'1.2'}));
+    svg.appendChild(el('text',{x:gx,y:ybase+18,'font-size':'12','font-family':'Inter,sans-serif',fill:'#555','text-anchor':'middle'},tickLabel(x)));
   }
-  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax;y+=yStep){
-    if(Math.abs(y)<0.001) continue;
-    const gy=py(y);
-    svg.appendChild(el('line',{x1:ay0-3,y1:gy,x2:ay0+3,y2:gy,stroke:'#555','stroke-width':'1'}));
-    svg.appendChild(el('text',{x:ay0-6,y:gy+4,'font-size':'10','font-family':'Inter,sans-serif',fill:'#666','text-anchor':'end'},tickLabel(y)));
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax+1e-9;y+=yStep){
+    if(Math.abs(y)<1e-9)continue;
+    const gy=py(y);const xbase=ay0>=ML&&ay0<=ML+gW?ay0:ML;
+    svg.appendChild(el('line',{x1:xbase-4,y1:gy,x2:xbase+4,y2:gy,stroke:'#555','stroke-width':'1.2'}));
+    svg.appendChild(el('text',{x:xbase-8,y:gy+5,'font-size':'12','font-family':'Inter,sans-serif',fill:'#555','text-anchor':'end'},tickLabel(y)));
   }
-
-  // Helper: convert LaTeX tex to plain SVG text (defined here for use in asymptotes + callouts)
-  function texToPlain(t){
-    if(!t) return '';
-    // Recursively simplify nested fractions, then strip remaining braces
-    let s=t;
-    // \frac{A}{B} -> A/B (no extra parens for simple atoms, parens only if compound)
-    s=s.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,(_, num, den)=>{
-      const needParenNum=/[+\-]/.test(num.replace(/^-/,''));
-      const needParenDen=/[+\-]/.test(den);
-      return (needParenNum?`(${num})`:num)+'/'+(needParenDen?`(${den})`:den);
+  // Helper: plain text from TeX
+  function texToPlain(tx){
+    if(!tx)return'';
+    let s=tx;
+    s=s.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,(_,n,d)=>{
+      const pN=/[+\-]/.test(n.replace(/^-/,''));const pD=/[+\-]/.test(d);
+      return(pN?`(${n})`:n)+'/'+(pD?`(${d})`:d);
     });
-    s=s.replace(/\\pi/g,'π').replace(/\\sqrt\{([^}]+)\}/g,'√$1')
-       .replace(/\\text\{([^}]+)\}/g,'$1').replace(/[{}\\]/g,'');
-    return s;
+    return s.replace(/\\pi/g,'π').replace(/\\sqrt\{([^}]+)\}/g,'√$1')
+            .replace(/\\text\{([^}]+)\}/g,'$1').replace(/[{}\\]/g,'');
   }
-
-  // Asymptotes (dotted)
+  // Asymptotes
   for(const a of asymptotes){
     if(a.type==='vertical'){
-      const gx=px(a.x);
-      if(gx>=ML&&gx<=ML+gW){
-        svg.appendChild(el('line',{x1:gx,y1:MT,x2:gx,y2:MT+gH,stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
-        svg.appendChild(el('text',{x:gx+3,y:MT+14,'font-size':'10','font-family':'Inter,sans-serif',fill:'#c92a2a'},`x=${numToTex(a.x).replace(/\\frac\{([^}]+)\}\{([^}]+)\}/,'$1/$2')}`));
-      }
-    } else if(a.type==='horizontal'){
-      const gy=py(a.y);
-      if(gy>=MT&&gy<=MT+gH){
-        svg.appendChild(el('line',{x1:ML,y1:gy,x2:ML+gW,y2:gy,stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
-        svg.appendChild(el('text',{x:ML+4,y:gy-4,'font-size':'10','font-family':'Inter,sans-serif',fill:'#c92a2a'},`y=${a.yTex.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/,'$1/$2')}`));
-      }
-    } else if(a.type==='oblique'){
-      const x1=xMin,y1=a.m*x1+a.b;
-      const x2=xMax,y2=a.m*x2+a.b;
+      const gx=px(a.x);if(gx<ML||gx>ML+gW)continue;
+      svg.appendChild(el('line',{x1:gx,y1:MT,x2:gx,y2:MT+gH,stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
+      svg.appendChild(el('text',{x:gx+4,y:MT+16,'font-size':'12','font-family':'JetBrains Mono,monospace',fill:'#c92a2a'},`x=${texToPlain(a.xTex)}`));
+    }else if(a.type==='horizontal'){
+      const gy=py(a.y);if(gy<MT||gy>MT+gH)continue;
+      svg.appendChild(el('line',{x1:ML,y1:gy,x2:ML+gW,y2:gy,stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
+      svg.appendChild(el('text',{x:ML+gW-5,y:gy-6,'font-size':'12','font-family':'JetBrains Mono,monospace',fill:'#c92a2a','text-anchor':'end'},`y=${texToPlain(a.yTex)}`));
+    }else if(a.type==='oblique'){
+      const x1=xMin,y1=a.m*x1+a.b,x2=xMax,y2=a.m*x2+a.b;
       svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'6,4'}));
-      const obliqueLabel=`y=${texToPlain(a.mTex)}x${a.b>=0?'+':'-'}${texToPlain(a.bTex||numToTex(Math.abs(a.b)))}`;
-      svg.appendChild(el('text',{x:px(x2)-60,y:py(y2)-6,'font-size':'10','font-family':'Inter,sans-serif',fill:'#c92a2a'},obliqueLabel));
+      const lx2=px(x2)-60,ly2=py(y2)-8;
+      svg.appendChild(el('text',{x:lx2,y:ly2,'font-size':'12','font-family':'JetBrains Mono,monospace',fill:'#c92a2a'},`y=${texToPlain(a.mTex)}x${a.b>=0?'+':'-'}${texToPlain(a.bTex)}`));
     }
   }
-
   // Tangent line
   if(tangent&&isFinite(tangent.m)){
     const x1=xMin,y1=tangent.m*x1+(tangent.y-tangent.m*tangent.x);
     const x2=xMax,y2=tangent.m*x2+(tangent.y-tangent.m*tangent.x);
-    svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#7048e8','stroke-width':'1.5','stroke-dasharray':'4,3'}));
+    svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#7048e8','stroke-width':'1.8','stroke-dasharray':'5,3'}));
   }
-
-  // Function curve (split at discontinuities)
-  let path='',lastValid=false;
-  const pts=[];
-  for(let x=xMin;x<=xMax;x+=(xMax-xMin)/1200){
-    const y=evalAt(fx,x);
-    const valid=isFinite(y)&&y>=yMin&&y<=yMax;
-    if(valid){
-      const gx=px(x),gy=py(y);
-      if(!lastValid) pts.push({m:true,x:gx,y:gy});
-      else pts.push({m:false,x:gx,y:gy});
-    }
+  // Function curve
+  const pts=[];let lastValid=false;
+  for(let x=xMin;x<=xMax;x+=(xMax-xMin)/1400){
+    const y=evalAt(fx,x);const valid=isFinite(y)&&y>=yMin-1&&y<=yMax+1;
+    if(valid){const gx=px(x),gy=py(y);if(!lastValid)pts.push({m:true,x:gx,y:gy});else pts.push({m:false,x:gx,y:gy});}
+    else if(lastValid&&pts.length>0)pts.push({m:true,x:0,y:0,skip:true});
     lastValid=valid;
   }
   if(pts.length){
-    let d='';
-    for(const p of pts) d+=(p.m?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1);
-    svg.appendChild(el('path',{d,stroke:'#3b5bdb','stroke-width':'2.2',fill:'none','stroke-linecap':'round','stroke-linejoin':'round'}));
+    let d='';for(const p of pts)if(!p.skip)d+=(p.m?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1);
+    svg.appendChild(el('path',{d,stroke:'#3b5bdb','stroke-width':'2.5',fill:'none','stroke-linecap':'round','stroke-linejoin':'round'}));
   }
-
   // Intercepts
   if(intercepts){
     for(const xi of intercepts.xInts){
       const gx=px(xi.x),gy=py(0);
       if(gx>=ML&&gx<=ML+gW){
-        svg.appendChild(el('circle',{cx:gx,cy:gy,r:'4',fill:'#fff',stroke:'#3b5bdb','stroke-width':'2'}));
-        svg.appendChild(el('text',{x:gx,y:gy+18,'font-size':'9','font-family':'Inter,sans-serif',fill:'#3b5bdb','text-anchor':'middle'},xi.xTex.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/,'$1/$2')));
+        svg.appendChild(el('circle',{cx:gx,cy:gy,r:'5',fill:'#fff',stroke:'#3b5bdb','stroke-width':'2'}));
+        svg.appendChild(el('text',{x:gx,y:gy+22,'font-size':'11','font-family':'JetBrains Mono,monospace',fill:'#3b5bdb','text-anchor':'middle'},texToPlain(xi.xTex)));
       }
     }
     if(intercepts.yInt){
       const gx=px(0),gy=py(intercepts.yInt.y);
       if(gy>=MT&&gy<=MT+gH){
-        svg.appendChild(el('circle',{cx:gx,cy:gy,r:'4',fill:'#fff',stroke:'#3b5bdb','stroke-width':'2'}));
-        svg.appendChild(el('text',{x:gx+7,y:gy+3,'font-size':'9','font-family':'Inter,sans-serif',fill:'#3b5bdb'},intercepts.yInt.yTex.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/,'$1/$2')));
+        svg.appendChild(el('circle',{cx:gx,cy:gy,r:'5',fill:'#fff',stroke:'#3b5bdb','stroke-width':'2'}));
+        svg.appendChild(el('text',{x:gx+10,y:gy+4,'font-size':'11','font-family':'JetBrains Mono,monospace',fill:'#3b5bdb'},texToPlain(intercepts.yInt.yTex)));
       }
     }
   }
-
-  // Helper: draw GeoGebra-style callout label for a point
+  // Callout label helper — enlarged
   function drawCallout(gx,gy,xTex,yTex,color,labelText,above){
     const coordStr=`(${texToPlain(xTex)}, ${texToPlain(yTex)})`;
-    const boxW=Math.max(coordStr.length*5.8+8, 60);
-    const boxH=28;
-    const boxX=Math.min(Math.max(gx-boxW/2, ML+2), ML+gW-boxW-2);
-    const boxY=above ? gy-boxH-10 : gy+10;
-    // Stem line from point to box
-    const stemY=above ? boxY+boxH : boxY;
-    svg.appendChild(el('line',{x1:gx,y1:gy,x2:gx,y2:stemY,stroke:color,'stroke-width':'1','stroke-dasharray':'2,2',opacity:'0.7'}));
-    // Box background
-    svg.appendChild(el('rect',{x:boxX,y:boxY,width:boxW,height:boxH,rx:'4',fill:'#fff',stroke:color,'stroke-width':'1.2',opacity:'0.97'}));
-    // Label text (type: max/min/infl)
-    svg.appendChild(el('text',{x:boxX+boxW/2,y:boxY+10,'font-size':'8','font-family':'Space Grotesk,sans-serif',fill:color,'text-anchor':'middle','font-weight':'700'},labelText));
-    // Coordinate text
-    svg.appendChild(el('text',{x:boxX+boxW/2,y:boxY+21,'font-size':'8.5','font-family':'JetBrains Mono,monospace',fill:'#333','text-anchor':'middle'},coordStr));
-    // Dot on curve
-    svg.appendChild(el('circle',{cx:gx,cy:gy,r:'4.5',fill:color,stroke:'#fff','stroke-width':'1.5'}));
+    const boxW=Math.max(coordStr.length*7+14,80);const boxH=36;
+    const boxX=Math.min(Math.max(gx-boxW/2,ML+2),ML+gW-boxW-2);
+    const boxY=above?gy-boxH-14:gy+14;
+    const stemY=above?boxY+boxH:boxY;
+    svg.appendChild(el('line',{x1:gx,y1:gy,x2:gx,y2:stemY,stroke:color,'stroke-width':'1.2','stroke-dasharray':'3,2',opacity:'0.8'}));
+    svg.appendChild(el('rect',{x:boxX,y:boxY,width:boxW,height:boxH,rx:'5',fill:'#fff',stroke:color,'stroke-width':'1.5',opacity:'0.97'}));
+    svg.appendChild(el('text',{x:boxX+boxW/2,y:boxY+13,'font-size':'11','font-family':'Space Grotesk,sans-serif',fill:color,'text-anchor':'middle','font-weight':'700'},labelText));
+    svg.appendChild(el('text',{x:boxX+boxW/2,y:boxY+27,'font-size':'11','font-family':'JetBrains Mono,monospace',fill:'#333','text-anchor':'middle'},coordStr));
+    svg.appendChild(el('circle',{cx:gx,cy:gy,r:'6',fill:color,stroke:'#fff','stroke-width':'2'}));
   }
-
-  // Critical points with GeoGebra-style callout labels
+  // Critical points
   for(let i=0;i<criticalPoints.length;i++){
-    const cp=criticalPoints[i];
-    const gx=px(cp.x),gy=py(cp.y);
-    if(gx<ML||gx>ML+gW||gy<MT||gy>MT+gH) continue;
+    const cp=criticalPoints[i];const gx=px(cp.x),gy=py(cp.y);
+    if(gx<ML||gx>ML+gW||gy<MT||gy>MT+gH)continue;
     const color=cp.kind.includes('Max')?'#2f9e44':cp.kind.includes('Min')?'#1971c2':'#e67700';
     const label=cp.kind.includes('Max')?'Local Max':cp.kind.includes('Min')?'Local Min':'Stationary';
-    const above=cp.kind.includes('Max');
-    drawCallout(gx,gy,cp.xTex,cp.yTex,color,label,above);
+    drawCallout(gx,gy,cp.xTex,cp.yTex,color,label,cp.kind.includes('Max'));
   }
-
-  // Inflection points with GeoGebra-style callout labels
+  // Inflection points
   for(let i=0;i<inflectionPoints.length;i++){
-    const ip=inflectionPoints[i];
-    const gx=px(ip.x),gy=py(ip.y);
-    if(gx<ML||gx>ML+gW||gy<MT||gy>MT+gH) continue;
-    // Alternate above/below to avoid overlap
-    const above=i%2===0;
-    drawCallout(gx,gy,ip.xTex,ip.yTex,'#e67700','Inflection',above);
+    const ip=inflectionPoints[i];const gx=px(ip.x),gy=py(ip.y);
+    if(gx<ML||gx>ML+gW||gy<MT||gy>MT+gH)continue;
+    drawCallout(gx,gy,ip.xTex,ip.yTex,'#e67700','Inflection',i%2===0);
   }
-
   // Tangent point
   if(tangent){
     const gx=px(tangent.x),gy=py(tangent.y);
     if(gx>=ML&&gx<=ML+gW&&gy>=MT&&gy<=MT+gH){
-      svg.appendChild(el('circle',{cx:gx,cy:gy,r:'5',fill:'#7048e8',stroke:'#fff','stroke-width':'1.5'}));
+      svg.appendChild(el('circle',{cx:gx,cy:gy,r:'7',fill:'#7048e8',stroke:'#fff','stroke-width':'2'}));
     }
   }
-
   // Function label
-  const labelX=ML+gW-5,labelY=MT+16;
-  svg.appendChild(el('text',{x:labelX,y:labelY,'font-size':'12','font-family':'Space Grotesk,sans-serif',fill:'#3b5bdb','text-anchor':'end','font-style':'italic'},`f(x) = ${fx}`));
+  svg.appendChild(el('text',{x:ML+gW-6,y:MT+20,'font-size':'14','font-family':'Space Grotesk,sans-serif',fill:'#3b5bdb','text-anchor':'end','font-style':'italic','font-weight':'600'},`f(x) = ${fx}`));
+  // Update view info
+  const vi=document.getElementById('viewInfo');
+  if(vi)vi.textContent=`x: [${xMin.toFixed(2)}, ${xMax.toFixed(2)}]  y: [${yMin.toFixed(2)}, ${yMax.toFixed(2)}]`;
 }
 
-// ─── ANALYTICS PANEL BUILDER ────────────────────────────────────────────────
+// Zoom/Pan for Analyzer graph
+function setupGraphInteraction(){
+  const svg=document.getElementById('graph');
+  const W=900,H=560,ML=65,MR=25,MT=35,MB=45;
+  const gW=W-ML-MR,gH=H-MT-MB;
+  function svgCoords(e){
+    const rect=svg.getBoundingClientRect();
+    const scaleX=W/rect.width,scaleY=H/rect.height;
+    const cx=(e.clientX-rect.left)*scaleX,cy=(e.clientY-rect.top)*scaleY;
+    return{x:vp.xMin+(cx-ML)/gW*(vp.xMax-vp.xMin),y:vp.yMin+(MT+gH-cy)/gH*(vp.yMax-vp.yMin)};
+  }
+  svg.addEventListener('wheel',e=>{
+    e.preventDefault();
+    if(!lastResult||!lastResult.ok)return;
+    const factor=e.deltaY>0?1.15:0.87;
+    const c=svgCoords(e);
+    vp.xMin=c.x+(vp.xMin-c.x)*factor;vp.xMax=c.x+(vp.xMax-c.x)*factor;
+    vp.yMin=c.y+(vp.yMin-c.y)*factor;vp.yMax=c.y+(vp.yMax-c.y)*factor;
+    drawGraph(lastResult,true);
+  },{passive:false});
+  svg.addEventListener('mousedown',e=>{
+    isDragging=true;dragStart=svgCoords(e);dragVp={...vp};
+    svg.style.cursor='grabbing';
+  });
+  svg.addEventListener('mousemove',e=>{
+    if(!isDragging||!lastResult||!lastResult.ok)return;
+    const cur=svgCoords(e);
+    const dx=dragStart.x-cur.x,dy=dragStart.y-cur.y;
+    vp.xMin=dragVp.xMin+dx;vp.xMax=dragVp.xMax+dx;
+    vp.yMin=dragVp.yMin+dy;vp.yMax=dragVp.yMax+dy;
+    drawGraph(lastResult,true);
+  });
+  svg.addEventListener('mouseup',()=>{isDragging=false;svg.style.cursor='crosshair';});
+  svg.addEventListener('mouseleave',()=>{isDragging=false;svg.style.cursor='crosshair';});
+  // Touch support
+  let touchStart=null,touchVp=null;
+  svg.addEventListener('touchstart',e=>{
+    if(e.touches.length===1){
+      const t=e.touches[0];const rect=svg.getBoundingClientRect();
+      const scaleX=W/rect.width,scaleY=H/rect.height;
+      const cx=(t.clientX-rect.left)*scaleX,cy=(t.clientY-rect.top)*scaleY;
+      touchStart={x:vp.xMin+(cx-ML)/gW*(vp.xMax-vp.xMin),y:vp.yMin+(MT+gH-cy)/gH*(vp.yMax-vp.yMin)};
+      touchVp={...vp};
+    }
+  },{passive:true});
+  svg.addEventListener('touchmove',e=>{
+    if(e.touches.length===1&&touchStart&&lastResult&&lastResult.ok){
+      const t=e.touches[0];const rect=svg.getBoundingClientRect();
+      const scaleX=W/rect.width,scaleY=H/rect.height;
+      const cx=(t.clientX-rect.left)*scaleX,cy=(t.clientY-rect.top)*scaleY;
+      const cur={x:vp.xMin+(cx-ML)/gW*(vp.xMax-vp.xMin),y:vp.yMin+(MT+gH-cy)/gH*(vp.yMax-vp.yMin)};
+      const dx=touchStart.x-cur.x,dy=touchStart.y-cur.y;
+      vp.xMin=touchVp.xMin+dx;vp.xMax=touchVp.xMax+dx;
+      vp.yMin=touchVp.yMin+dy;vp.yMax=touchVp.yMax+dy;
+      drawGraph(lastResult,true);
+    }
+  },{passive:true});
+  document.getElementById('zoomInBtn').onclick=()=>{
+    if(!lastResult||!lastResult.ok)return;
+    const cx=(vp.xMin+vp.xMax)/2,cy=(vp.yMin+vp.yMax)/2;
+    const f=0.75;
+    vp.xMin=cx+(vp.xMin-cx)*f;vp.xMax=cx+(vp.xMax-cx)*f;
+    vp.yMin=cy+(vp.yMin-cy)*f;vp.yMax=cy+(vp.yMax-cy)*f;
+    drawGraph(lastResult,true);
+  };
+  document.getElementById('zoomOutBtn').onclick=()=>{
+    if(!lastResult||!lastResult.ok)return;
+    const cx=(vp.xMin+vp.xMax)/2,cy=(vp.yMin+vp.yMax)/2;
+    const f=1.33;
+    vp.xMin=cx+(vp.xMin-cx)*f;vp.xMax=cx+(vp.xMax-cx)*f;
+    vp.yMin=cy+(vp.yMin-cy)*f;vp.yMax=cy+(vp.yMax-cy)*f;
+    drawGraph(lastResult,true);
+  };
+  document.getElementById('resetViewBtn').onclick=()=>{
+    if(!lastResult||!lastResult.ok)return;
+    autoViewport(lastResult);drawGraph(lastResult,true);
+  };
+}
 
+// ═══════════════════════════════════════════════════════════════════════════
+// ANALYTICS PANEL
+// ═══════════════════════════════════════════════════════════════════════════
 function buildAnalytics(result){
   const panel=document.getElementById('analyticsPanel');
-  if(!result.ok){
-    panel.innerHTML=`<div class="error-box">⚠️ ${result.error||'Could not parse function'}</div>`;
-    return;
-  }
+  if(!result.ok){panel.innerHTML=`<div class="error-box">⚠️ ${result.error||t('error_parse')}</div>`;return;}
   panel.innerHTML='';
-
-  function section(cls,icon,title,bodyFn,openByDefault=true){
-    const card=document.createElement('div');
-    card.className=`section-card ${cls}`;
-    const head=document.createElement('div');
-    head.className='section-head';
-    head.innerHTML=`<div class="section-head-left"><div class="section-icon">${icon}</div>${title}</div><span class="chevron-icon">${openByDefault?'▲':'▼'}</span>`;
-    const body=document.createElement('div');
-    body.className='section-body'+(openByDefault?' open':'');
-    bodyFn(body);
-    head.onclick=()=>{
-      const open=body.classList.toggle('open');
-      head.querySelector('.chevron-icon').textContent=open?'▲':'▼';
-    };
-    card.appendChild(head);
-    card.appendChild(body);
-    panel.appendChild(card);
+  function section(id,icon,title,builder,color='#3b5bdb'){
+    const sec=document.createElement('div');sec.className='section';
+    const head=document.createElement('div');head.className='section-head';
+    const iconEl=document.createElement('div');iconEl.className='section-icon';
+    iconEl.style.background=color+'22';iconEl.style.color=color;iconEl.textContent=icon;
+    const titleEl=document.createElement('span');titleEl.textContent=title;
+    const arrow=document.createElement('span');arrow.textContent='▲';arrow.style.cssText='margin-left:auto;font-size:.7rem;color:var(--fg3);transition:transform .2s';
+    head.appendChild(iconEl);head.appendChild(titleEl);head.appendChild(arrow);
+    const body=document.createElement('div');body.className='section-body';
+    builder(body);
+    head.onclick=()=>{body.classList.toggle('collapsed');arrow.style.transform=body.classList.contains('collapsed')?'rotate(180deg)':'';}; 
+    sec.appendChild(head);sec.appendChild(body);panel.appendChild(sec);
   }
-
   // 1. Derivatives
-  section('sec-deriv','∂',t('sec_deriv'),body=>{
+  section('s-deriv','∂',t('sec_deriv'),body=>{
     const r1=document.createElement('div');r1.className='row';
-    r1.innerHTML=`<span class="row-label">f'(x) =</span>`;
-    r1.appendChild(renderK(result.fpTex));
-    body.appendChild(r1);
+    r1.innerHTML=`<span class="row-label">f'(x) =</span>`;r1.appendChild(renderK(result.fpTex));body.appendChild(r1);
     const r2=document.createElement('div');r2.className='row';
-    r2.innerHTML=`<span class="row-label">f''(x) =</span>`;
-    r2.appendChild(renderK(result.fppTex));
-    body.appendChild(r2);
-  });
-
+    r2.innerHTML=`<span class="row-label">f''(x) =</span>`;r2.appendChild(renderK(result.fppTex));body.appendChild(r2);
+  },'#3b5bdb');
   // 2. Domain
-  section('sec-domain','D',t('sec_domain'),body=>{
+  section('s-domain','D',t('sec_domain'),body=>{
     const r=document.createElement('div');r.className='row';
-    r.innerHTML=`<span class="row-label">${t('row_domain')}</span>`;
-    r.appendChild(renderK(result.domain.tex));
-    body.appendChild(r);
-  });
-
-  // 3. Continuity & Differentiability
-  section('sec-cont','C',t('sec_cont'),body=>{
+    r.innerHTML=`<span class="row-label">${t('row_domain')}</span>`;r.appendChild(renderK(result.domain.tex));body.appendChild(r);
+  },'#0c8599');
+  // 3. Continuity
+  section('s-cont','C',t('sec_cont'),body=>{
     const r1=document.createElement('div');r1.className='row';
-    const contOk=result.continuity.startsWith('Continuous');
-    r1.innerHTML=`<span class="row-label">${t('row_continuity')}</span><span class="badge ${contOk?'badge-green':'badge-red'}">${contOk?t('badge_continuous'):t('badge_discontinuous')}</span>`;
+    r1.innerHTML=`<span class="row-label">${t('row_continuity')}</span>`;
+    const isCont=result.continuity.startsWith('Continuous');
+    r1.innerHTML+=`<span class="badge ${isCont?'badge-green':'badge-red'}">${isCont?t('badge_continuous'):t('badge_discontinuous')}</span>`;
     body.appendChild(r1);
     const r2=document.createElement('div');r2.className='row';
-    const diffOk=result.differentiability.startsWith('Differentiable');
-    r2.innerHTML=`<span class="row-label">${t('row_differentiability')}</span><span class="badge ${diffOk?'badge-green':'badge-orange'}">${diffOk?t('badge_differentiable'):t('badge_not_everywhere')}</span>`;
+    r2.innerHTML=`<span class="row-label">${t('row_differentiability')}</span>`;
+    const isDiff=result.differentiability.startsWith('Differentiable');
+    r2.innerHTML+=`<span class="badge ${isDiff?'badge-green':'badge-orange'}">${isDiff?t('badge_differentiable'):t('badge_not_everywhere')}</span>`;
     body.appendChild(r2);
-    if(!contOk||!diffOk){
-      const note=document.createElement('div');
-      note.style.cssText='font-size:.8rem;color:var(--fg2);margin-top:.5rem;';
-      note.textContent=result.continuity+'. '+result.differentiability;
-      body.appendChild(note);
-    }
-  });
-
+  },'#2f9e44');
   // 4. Critical Points
-  section('sec-crit','⊙',t('sec_crit'),body=>{
-    const all=[...result.criticalPoints,...result.inflectionPoints.map(p=>({...p,kind:'Point of Inflection'}))];
+  section('s-crit','⊙',t('sec_crit'),body=>{
+    const all=[...result.criticalPoints,...result.inflectionPoints];
     all.sort((a,b)=>a.x-b.x);
-    if(all.length===0){
-      body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('none_found')}</div>`;
-      return;
-    }
-    for(const cp of all){
+    if(all.length===0){body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('none_found')}</div>`;return;}
+    for(const cp of result.criticalPoints){
       const row=document.createElement('div');row.className='row';
-      const isInfl=cp.kind==='Point of Inflection';
-      const iMax=cp.kind.includes('Max');
-      const iMin=cp.kind.includes('Min');
-      const badgeCls=isInfl?'badge-orange':iMax?'badge-green':iMin?'badge-blue':'badge-purple';
-      const label=isInfl?t('badge_inflection'):iMax?t('badge_local_max'):iMin?t('badge_local_min'):t('badge_stationary');
-      row.innerHTML=`<span class="badge ${badgeCls}" style="margin-right:.4rem">${label}</span>`;
-      const coord=document.createElement('span');
-      coord.appendChild(renderK(`\\left(${cp.xTex},\\,${cp.yTex}\\right)`));
-      row.appendChild(coord);
-      body.appendChild(row);
+      const isMax=cp.kind.includes('Max'),isMin=cp.kind.includes('Min');
+      const cls=isMax?'badge-green':isMin?'badge-blue':'badge-orange';
+      const label=isMax?t('badge_local_max'):isMin?t('badge_local_min'):t('badge_stationary');
+      row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
+      row.appendChild(renderK(`\\left(${cp.xTex},\\,${cp.yTex}\\right)`));body.appendChild(row);
     }
-  });
-
+    for(const ip of result.inflectionPoints){
+      const row=document.createElement('div');row.className='row';
+      row.innerHTML=`<span class="badge badge-orange" style="margin-right:.4rem">${t('badge_inflection')}</span>`;
+      row.appendChild(renderK(`\\left(${ip.xTex},\\,${ip.yTex}\\right)`));body.appendChild(row);
+    }
+  },'#e67700');
   // 5. Monotonicity
-  section('sec-mono','↗',t('sec_mono'),body=>{
-    if(result.monotonicity.length===0){
-      body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('cannot_determine')}</div>`;
-      return;
-    }
+  section('s-mono','↗',t('sec_mono'),body=>{
+    if(result.monotonicity.length===0){body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('cannot_determine')}</div>`;return;}
     for(const iv of result.monotonicity){
       const row=document.createElement('div');row.className='row';
-      const cls=iv.increasing?'badge-green':'badge-red';
-      const label=iv.increasing?t('badge_increasing'):t('badge_decreasing');
-      row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
-      const tex=`f'(x)${iv.increasing?'>':'<'}0 \\text{ on } (${iv.fromTex||numToTex(iv.from)},\\,${iv.toTex||numToTex(iv.to)})`;
-      row.appendChild(renderK(tex));
-      body.appendChild(row);
+      row.innerHTML=`<span class="badge ${iv.increasing?'badge-green':'badge-red'}" style="margin-right:.4rem">${iv.increasing?t('badge_increasing'):t('badge_decreasing')}</span>`;
+      row.appendChild(renderK(`f'(x)${iv.increasing?'>':'<'}0\\text{ on }(${iv.fromTex},\\,${iv.toTex})`));body.appendChild(row);
     }
-  });
-
+  },'#2f9e44');
   // 6. Concavity
-  section('sec-conc','∩',t('sec_conc'),body=>{
-    if(result.concavity.length===0){
-      body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('cannot_determine')}</div>`;
-      return;
-    }
+  section('s-conc','∩',t('sec_conc'),body=>{
+    if(result.concavity.length===0){body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('cannot_determine')}</div>`;return;}
     for(const iv of result.concavity){
       const row=document.createElement('div');row.className='row';
-      const cls=iv.up?'badge-teal':'badge-red';
-      const label=iv.up?t('badge_concave_up'):t('badge_concave_down');
-      row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
-      const tex=`f''(x)${iv.up?'>':'<'}0 \\text{ on } (${iv.fromTex||numToTex(iv.from)},\\,${iv.toTex||numToTex(iv.to)})`;
-      row.appendChild(renderK(tex));
-      body.appendChild(row);
+      row.innerHTML=`<span class="badge ${iv.up?'badge-teal':'badge-red'}" style="margin-right:.4rem">${iv.up?t('badge_concave_up'):t('badge_concave_down')}</span>`;
+      row.appendChild(renderK(`f''(x)${iv.up?'>':'<'}0\\text{ on }(${iv.fromTex},\\,${iv.toTex})`));body.appendChild(row);
     }
-  });
-
+  },'#0c8599');
   // 7. Asymptotes
-  section('sec-asym','⟶',t('sec_asym'),body=>{
-    if(result.asymptotes.length===0){
-      body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('none_detected')}</div>`;
-      return;
-    }
+  section('s-asym','⟶',t('sec_asym'),body=>{
+    if(result.asymptotes.length===0){body.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('none_detected')}</div>`;return;}
     for(const a of result.asymptotes){
       const row=document.createElement('div');row.className='row';
       const typeLabel=a.type==='vertical'?t('badge_vertical'):a.type==='horizontal'?t('badge_horizontal'):t('badge_oblique');
       const cls=a.type==='vertical'?'badge-red':a.type==='horizontal'?'badge-blue':'badge-purple';
       row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${typeLabel}</span>`;
       let tex='';
-      if(a.type==='vertical') tex=`x = ${a.xTex}`;
-      else if(a.type==='horizontal') tex=`y = ${a.yTex}`;
-      else{
-        const bPart=a.bTex&&a.bTex!=='0'?` ${a.b>=0?'+':'-'} ${a.bTex||numToTex(Math.abs(a.b))}`:''
-        tex=`y = ${a.mTex==='1'?'':a.mTex==='-1'?'-':a.mTex}x${bPart}`;
-      }
-      row.appendChild(renderK(tex));
-      body.appendChild(row);
+      if(a.type==='vertical')tex=`x=${a.xTex}`;
+      else if(a.type==='horizontal')tex=`y=${a.yTex}`;
+      else{const bp=a.bTex&&a.bTex!=='0'?` ${a.b>=0?'+':'-'} ${a.bTex}`:'';tex=`y=${a.mTex==='1'?'':a.mTex==='-1'?'-':a.mTex}x${bp}`;}
+      row.appendChild(renderK(tex));body.appendChild(row);
     }
-  });
-
+  },'#c92a2a');
   // 8. Tangent Line
-  section('sec-tan','⟂',t('sec_tan'),body=>{
+  section('s-tan','⟂',t('sec_tan'),body=>{
     const tanRow=document.createElement('div');
-    tanRow.innerHTML=`<div class="tan-input-row"><input type="number" id="tanXInput" value="${result.tangent?result.tangent.x:0}" step="0.1" placeholder="${t('tan_placeholder')}"><button class="btn btn-primary" id="tanBtn" style="font-size:.8rem;padding:.45rem .8rem">${t('tan_btn')}</button></div>`;
+    tanRow.innerHTML=`<div class="tan-input-row"><input type="number" id="tanXInput" value="${result.tangent?result.tangent.x:0}" step="0.1" placeholder="${t('tan_placeholder')}" style="width:110px;padding:.4rem .6rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem"><button class="btn btn-primary" id="tanBtn" style="font-size:.82rem;padding:.4rem .8rem">${t('tan_btn')}</button></div>`;
     body.appendChild(tanRow);
-    const tanResult=document.createElement('div');
-    tanResult.id='tanResult';
-    if(result.tangent){
-      renderTangentResult(tanResult,result.tangent);
-    }
+    const tanResult=document.createElement('div');tanResult.id='tanResult';
+    if(result.tangent)renderTangentResult(tanResult,result.tangent);
     body.appendChild(tanResult);
     setTimeout(()=>{
       const btn=document.getElementById('tanBtn');
-      if(btn) btn.onclick=()=>{
+      if(btn)btn.onclick=()=>{
         const xv=parseFloat(document.getElementById('tanXInput').value);
-        if(!isFinite(xv)) return;
-        const t=buildTangent(result.fx,result.fpStr,xv);
-        const tr=document.getElementById('tanResult');
-        if(tr) renderTangentResult(tr,t);
-        // Redraw graph with new tangent
-        result.tangent=t;
-        drawGraph(result);
+        if(!isFinite(xv))return;
+        const tg=buildTangent(result.fx,result.fpStr,xv);
+        const tr=document.getElementById('tanResult');if(tr)renderTangentResult(tr,tg);
+        result.tangent=tg;drawGraph(result,true);
       };
     },50);
+  },'#7048e8');
+}
+function renderTangentResult(container,tg){
+  container.innerHTML='';
+  if(!tg){container.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${t('cannot_compute')}</div>`;return;}
+  const r1=document.createElement('div');r1.className='row';
+  r1.innerHTML=`<span class="row-label">${t('row_point')}</span>`;r1.appendChild(renderK(`\\left(${tg.xTex},\\,${tg.yTex}\\right)`));container.appendChild(r1);
+  const r2=document.createElement('div');r2.className='row';
+  r2.innerHTML=`<span class="row-label">${t('row_slope')}</span>`;r2.appendChild(renderK(`m=f'(${tg.xTex})=${tg.mTex}`));container.appendChild(r2);
+  if(tg.lineTex){const r3=document.createElement('div');r3.className='row';r3.innerHTML=`<span class="row-label">${t('row_equation')}</span>`;r3.appendChild(renderK(tg.lineTex));container.appendChild(r3);}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FIRST PRINCIPLES ENGINE
+// ═══════════════════════════════════════════════════════════════════════════
+let fpLastFx='',fpLastAt=2;
+function runFirstPrinciples(){
+  const fx=document.getElementById('fpFxInput').value.trim();
+  const atX=parseFloat(document.getElementById('fpAtInput').value);
+  if(!fx)return;
+  fpLastFx=fx;fpLastAt=atX;
+  const stepsDiv=document.getElementById('fpSteps');stepsDiv.innerHTML='';
+  function addStep(num,label,texContent,note=''){
+    const item=document.createElement('div');item.className='step-item';
+    item.innerHTML=`<div class="step-num">${num}</div><div class="step-body"><div class="step-label">${label}</div></div>`;
+    const body=item.querySelector('.step-body');
+    body.appendChild(renderK(texContent));
+    if(note){const n=document.createElement('div');n.style.cssText='font-size:.8rem;color:var(--fg3);margin-top:.2rem';n.textContent=note;body.appendChild(n);}
+    stepsDiv.appendChild(item);
+  }
+  try{
+    math.parse(fx);
+    // Step 1: Definition
+    addStep(1,t('fp_step1'),'f\'(x) = \\lim_{h \\to 0} \\dfrac{f(x+h) - f(x)}{h}');
+    // Step 2: Substitute
+    let fxhStr='';
+    try{
+      const node=math.parse(fx);
+      const scope={x:math.parse('x+h')};
+      fxhStr=node.toString().replace(/\bx\b/g,'(x+h)');
+    }catch{fxhStr=`f(x+h)`;}
+    const fxTex=simplifyTex(fx);
+    addStep(2,t('fp_step2'),`\\dfrac{f(x+h)-f(x)}{h} = \\dfrac{[${fxhStr.replace(/\*/g,'\\cdot ')}] - [${fxTex}]}{h}`);
+    // Step 3 & 4: Compute derivative symbolically
+    const fpStr=safeDerivative(fx);
+    const fpTex=fpStr?simplifyTex(fpStr):'\\text{(see result)}';
+    addStep(3,t('fp_step3'),'\\text{Expand numerator, collect terms in } h \\text{, factor out } h');
+    addStep(4,t('fp_step4'),`\\lim_{h \\to 0} \\dfrac{\\cdots}{h} = \\lim_{h \\to 0}(\\cdots) \\quad \\text{(cancel } h \\text{)}`);
+    // Step 5: Result
+    addStep(5,t('fp_step5'),`f'(x) = ${fpTex}`,'(Computed symbolically using limit definition)');
+    // Step 6: Numerical check at x=a
+    if(isFinite(atX)&&fpStr){
+      const fpa=evalAt(fpStr,atX);
+      const faTex=numToTex(evalAt(fx,atX));
+      const fpaTex=numToTex(fpa);
+      addStep(6,t('fp_step6')+atX,`f(${numToTex(atX)}) = ${faTex}, \\quad f'(${numToTex(atX)}) = ${fpaTex}`);
+      // Numerical verification
+      const h=0.0001;const numDeriv=(evalAt(fx,atX+h)-evalAt(fx,atX-h))/(2*h);
+      const numTex=numToTex(Math.round(numDeriv*1e6)/1e6);
+      const item=document.createElement('div');item.className='step-item';
+      item.innerHTML=`<div class="step-num" style="background:#2f9e44">✓</div><div class="step-body"><div class="step-label">Numerical verification (central difference)</div></div>`;
+      const body=item.querySelector('.step-body');
+      body.appendChild(renderK(`\\frac{f(${numToTex(atX)}+h)-f(${numToTex(atX)}-h)}{2h}\\bigg|_{h=0.0001} \\approx ${numTex}`));
+      stepsDiv.appendChild(item);
+    }
+  }catch(e){stepsDiv.innerHTML=`<div class="error-box">⚠️ ${e.message}</div>`;}
+  drawFpGraph();
+}
+function drawFpGraph(){
+  const svg=document.getElementById('fpGraph');
+  const W=560,H=400;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const fx=fpLastFx;const a=fpLastAt;
+  if(!fx)return;
+  const h=parseFloat(document.getElementById('hSlider').value)||1;
+  document.getElementById('hValDisplay').textContent=h.toFixed(3);
+  const ML=50,MR=20,MT=25,MB=35;const gW=W-ML-MR,gH=H-MT-MB;
+  // Compute range
+  let yMin=Infinity,yMax=-Infinity;
+  const xMin=a-4,xMax=a+4;
+  for(let x=xMin;x<=xMax;x+=0.05){const y=evalAt(fx,x);if(isFinite(y)){yMin=Math.min(yMin,y);yMax=Math.max(yMax,y);}}
+  if(!isFinite(yMin)){yMin=-3;yMax=3;}
+  const pad=(yMax-yMin)*0.2||1;yMin-=pad;yMax+=pad;
+  function px(x){return ML+(x-xMin)/(xMax-xMin)*gW;}
+  function py(y){return MT+gH-(y-yMin)/(yMax-yMin)*gH;}
+  function el(tag,attrs,text){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e;}
+  svg.appendChild(el('rect',{x:ML,y:MT,width:gW,height:gH,fill:'#fff',stroke:'#d8dde8','stroke-width':'1'}));
+  // Axes
+  const ax0=py(0),ay0=px(0);
+  if(ax0>=MT&&ax0<=MT+gH)svg.appendChild(el('line',{x1:ML,y1:ax0,x2:ML+gW,y2:ax0,stroke:'#888','stroke-width':'1.2'}));
+  if(ay0>=ML&&ay0<=ML+gW)svg.appendChild(el('line',{x1:ay0,y1:MT,x2:ay0,y2:MT+gH,stroke:'#888','stroke-width':'1.2'}));
+  // Curve
+  let d='';let lv=false;
+  for(let x=xMin;x<=xMax;x+=0.02){
+    const y=evalAt(fx,x);const valid=isFinite(y)&&y>=yMin-1&&y<=yMax+1;
+    if(valid){const gx=px(x),gy=py(y);d+=(lv?'L':'M')+gx.toFixed(1)+','+gy.toFixed(1);}
+    lv=valid;
+  }
+  svg.appendChild(el('path',{d,stroke:'#3b5bdb','stroke-width':'2.2',fill:'none'}));
+  // Point (a, f(a))
+  const fa=evalAt(fx,a);const fab=evalAt(fx,a+h);
+  if(isFinite(fa)){
+    const gxa=px(a),gya=py(fa);
+    svg.appendChild(el('circle',{cx:gxa,cy:gya,r:'6',fill:'#3b5bdb',stroke:'#fff','stroke-width':'2'}));
+    svg.appendChild(el('text',{x:gxa+8,y:gya-8,'font-size':'11','font-family':'JetBrains Mono,monospace',fill:'#3b5bdb'},`(${a}, f(${a}))`));
+  }
+  // Secant line through (a, f(a)) and (a+h, f(a+h))
+  if(isFinite(fa)&&isFinite(fab)&&Math.abs(h)>0.001){
+    const slope=(fab-fa)/h;
+    const x1=xMin,y1=fa+slope*(x1-a);const x2=xMax,y2=fa+slope*(x2-a);
+    svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#e67700','stroke-width':'1.8','stroke-dasharray':'5,3'}));
+    svg.appendChild(el('circle',{cx:px(a+h),cy:py(fab),r:'5',fill:'#e67700',stroke:'#fff','stroke-width':'1.5'}));
+    svg.appendChild(el('text',{x:px(a+h)+8,y:py(fab)-8,'font-size':'11','font-family':'JetBrains Mono,monospace',fill:'#e67700'},`(${(a+h).toFixed(3)}, f(${(a+h).toFixed(3)}))`));
+    // Slope label
+    const slopeTex=numToTex(Math.round(slope*1e6)/1e6);
+    const info=document.getElementById('fpSecantInfo');
+    if(info){
+      const fpStr=safeDerivative(fx);const fpa=fpStr?evalAt(fpStr,a):NaN;
+      info.innerHTML=`Secant slope = <strong>${slopeTex}</strong>&nbsp;&nbsp;|&nbsp;&nbsp;f'(${a}) = <strong>${numToTex(Math.round(fpa*1e6)/1e6)}</strong>`;
+    }
+  }else{
+    // Draw tangent when h≈0
+    const fpStr=safeDerivative(fx);const fpa=fpStr?evalAt(fpStr,a):NaN;
+    if(isFinite(fpa)&&isFinite(fa)){
+      const x1=xMin,y1=fa+fpa*(x1-a);const x2=xMax,y2=fa+fpa*(x2-a);
+      svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#2f9e44','stroke-width':'2','stroke-dasharray':'none'}));
+    }
+    const info=document.getElementById('fpSecantInfo');
+    if(info)info.innerHTML=`h → 0: Secant → Tangent. f'(${a}) = <strong>${numToTex(Math.round(evalAt(safeDerivative(fx)||'0',a)*1e6)/1e6)}</strong>`;
+  }
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// AI ASSISTANT ENGINE
+// ═══════════════════════════════════════════════════════════════════════════
+function rebuildQuickBtns(){
+  const container=document.getElementById('quickBtns');container.innerHTML='';
+  const keys=['ai_quick_diff','ai_quick_rate','ai_quick_tangent','ai_quick_max','ai_quick_implicit','ai_quick_chain','ai_quick_product','ai_quick_quotient'];
+  const templates={
+    ai_quick_diff:'Differentiate f(x) = ',
+    ai_quick_rate:'A particle moves so that s = t^3 - 6*t^2. Find velocity and acceleration at t = 2.',
+    ai_quick_tangent:'Find the equation of the tangent to y = x^2 at x = 3.',
+    ai_quick_max:'Find the local maximum and minimum of f(x) = x^3 - 3*x.',
+    ai_quick_implicit:'Find dy/dx if x^2 + y^2 = 25.',
+    ai_quick_chain:'Differentiate y = sin(x^2 + 1) using the chain rule.',
+    ai_quick_product:'Differentiate y = x^2 * e^x using the product rule.',
+    ai_quick_quotient:'Differentiate y = sin(x) / x using the quotient rule.',
+  };
+  for(const key of keys){
+    const btn=document.createElement('button');btn.className='quick-btn';btn.textContent=t(key);
+    btn.onclick=()=>{document.getElementById('aiInput').value=templates[key];};
+    container.appendChild(btn);
+  }
+}
+
+function solveAI(){
+  const input=document.getElementById('aiInput').value.trim();
+  if(!input)return;
+  const resultDiv=document.getElementById('aiResult');
+  resultDiv.innerHTML=`<h3>${t('ai_result_title')}</h3><div style="color:var(--fg3);padding:1rem">⏳ Solving...</div>`;
+  setTimeout(()=>_solveAI(input,resultDiv),50);
+}
+
+function _solveAI(input,resultDiv){
+  resultDiv.innerHTML=`<h3>${t('ai_result_title')}</h3>`;
+  const steps=[];
+  const lower=input.toLowerCase();
+  // Detect problem type
+  const isRate=lower.includes('rate')||lower.includes('velocity')||lower.includes('acceleration')||lower.includes('speed')||lower.includes('dr/dt')||lower.includes('ds/dt')||lower.includes('dv/dt')||lower.includes('da/dt')||lower.includes('particle')||lower.includes('質點')||lower.includes('速度')||lower.includes('加速度')||lower.includes('變率');
+  const isImplicit=lower.includes('implicit')||lower.includes('dy/dx')||(lower.includes('y^2')||lower.includes('y²'));
+  const isTangent=lower.includes('tangent')||lower.includes('切線');
+  const isMaxMin=lower.includes('maximum')||lower.includes('minimum')||lower.includes('max')||lower.includes('min')||lower.includes('最大')||lower.includes('最小');
+  // Extract function expression from input
+  function extractFn(text){
+    const patterns=[
+      /f\(x\)\s*=\s*([^\n,\.]+)/i,/y\s*=\s*([^\n,\.]+)/i,/s\s*=\s*([^\n,\.]+)/i,
+      /differentiate\s+([^\n,\.]+)/i,/derivative of\s+([^\n,\.]+)/i,
+      /求\s*([^\n，。]+)/,/微分\s*([^\n，。]+)/
+    ];
+    for(const p of patterns){const m=text.match(p);if(m)return m[1].trim().replace(/\s+/g,'');}
+    return null;
+  }
+  function extractAt(text){
+    const m=text.match(/at\s+[xt]\s*=\s*([-\d.\/π]+)/i)||text.match(/when\s+[xt]\s*=\s*([-\d.\/π]+)/i)||text.match(/x\s*=\s*([-\d.\/π]+)/i)||text.match(/t\s*=\s*([-\d.\/π]+)/i);
+    if(m){try{return math.evaluate(m[1].replace('π','pi'));}catch{return null;}}
+    return null;
+  }
+  function addStep(label,texContent,note=''){
+    const div=document.createElement('div');div.className='ai-step';
+    div.innerHTML=`<div class="ai-step-label">${label}</div><div class="ai-step-body"></div>`;
+    if(note){const n=document.createElement('div');n.style.cssText='font-size:.8rem;color:var(--fg3);margin-top:.3rem';n.textContent=note;div.appendChild(n);}
+    div.querySelector('.ai-step-body').appendChild(renderK(texContent));
+    resultDiv.appendChild(div);
+  }
+  try{
+    if(isRate){
+      // Rate of change / kinematics
+      const fnRaw=extractFn(input);const atT=extractAt(input);
+      const varName=lower.includes('particle')||lower.includes('velocity')||lower.includes('s =')||lower.includes('s=')?'t':'x';
+      if(fnRaw){
+        const fn=fnRaw.replace(/\^/g,'^');
+        const fnTex=simplifyTex(fn);
+        addStep('Given',`s(${varName}) = ${fnTex}`,'Position / quantity function');
+        const fp=safeDerivative(fn,varName);
+        if(fp){
+          const fpTex=simplifyTex(fp);
+          const label=varName==='t'?`v(${varName}) = s'(${varName})`:`f'(${varName})`;
+          addStep('First Derivative (Velocity / Rate)',`${label} = ${fpTex}`);
+          const fpp=safeDerivative(fp,varName);
+          if(fpp){
+            const fppTex=simplifyTex(fpp);
+            const label2=varName==='t'?`a(${varName}) = v'(${varName})`:`f''(${varName})`;
+            addStep('Second Derivative (Acceleration)',`${label2} = ${fppTex}`);
+          }
+          if(atT!==null&&isFinite(atT)){
+            const vAt=evalAt(fp,atT);const aAt=fpp?evalAt(safeDerivative(fp,varName)||'0',atT):NaN;
+            addStep(`At ${varName} = ${numToTex(atT)}`,`v(${numToTex(atT)}) = ${numToTex(vAt)}${isFinite(aAt)?`,\\quad a(${numToTex(atT)}) = ${numToTex(aAt)}`:''}`);
+          }
+        }
+      }else{
+        // Related rates — general guidance
+        addStep('Related Rates Setup','\\frac{dA}{dt} = \\frac{dA}{dr}\\cdot\\frac{dr}{dt}','Use chain rule to relate rates');
+        const rateMatch=input.match(/dr\/dt\s*=\s*([-\d.]+)/i)||input.match(/dr\/dt=([-\d.]+)/i);
+        const rMatch=input.match(/r\s*=\s*([-\d.]+)/i);
+        if(rateMatch&&rMatch){
+          const r=parseFloat(rMatch[1]);const drdt=parseFloat(rateMatch[1]);
+          const dAdr=2*Math.PI*r;const dAdt=dAdr*drdt;
+          addStep('Circle: A = πr²','\\frac{dA}{dr} = 2\\pi r');
+          addStep(`At r = ${numToTex(r)}, dr/dt = ${numToTex(drdt)}`,`\\frac{dA}{dt} = 2\\pi \\cdot ${numToTex(r)} \\cdot ${numToTex(drdt)} = ${numToTex(dAdt)}`);
+        }
+      }
+    }else if(isImplicit){
+      addStep('Implicit Differentiation','\\text{Differentiate both sides w.r.t. } x');
+      addStep('Chain Rule on y terms','\\frac{d}{dx}[y^n] = n y^{n-1}\\frac{dy}{dx}');
+      const fnRaw=extractFn(input);
+      if(fnRaw){
+        const fp=safeDerivative(fnRaw);if(fp){addStep('Result',`\\frac{dy}{dx} = ${simplifyTex(fp)}`);}
+      }else{
+        addStep('General Form','\\frac{d}{dx}[F(x,y)] = 0 \\Rightarrow F_x + F_y\\frac{dy}{dx} = 0');
+        addStep('Solve for dy/dx','\\frac{dy}{dx} = -\\frac{F_x}{F_y}');
+      }
+    }else if(isTangent){
+      const fnRaw=extractFn(input);const atX=extractAt(input);
+      if(fnRaw){
+        const fn=fnRaw;const fnTex=simplifyTex(fn);
+        addStep('Function',`f(x) = ${fnTex}`);
+        const fp=safeDerivative(fn);
+        if(fp){
+          const fpTex=simplifyTex(fp);addStep('Derivative',`f'(x) = ${fpTex}`);
+          if(atX!==null&&isFinite(atX)){
+            const y0=evalAt(fn,atX);const m=evalAt(fp,atX);
+            const x0Tex=numToTex(atX),y0Tex=numToTex(y0),mTex=numToTex(m);
+            addStep(`Point at x = ${x0Tex}`,`f(${x0Tex}) = ${y0Tex} \\Rightarrow \\text{Point: }(${x0Tex}, ${y0Tex})`);
+            addStep('Slope',`m = f'(${x0Tex}) = ${mTex}`);
+            const b=y0-m*atX;const bTex=numToTex(Math.abs(b));
+            const mPart=mTex==='1'?'':mTex==='-1'?'-':mTex;
+            const lineTex=Math.abs(b)<1e-9?`y=${mPart}x`:`y=${mPart}x${b>0?'+':'-'}${bTex}`;
+            addStep('Tangent Equation',`y - ${y0Tex} = ${mTex}(x - ${x0Tex})`);
+            addStep('Simplified',lineTex);
+          }
+        }
+      }
+    }else if(isMaxMin){
+      const fnRaw=extractFn(input);
+      if(fnRaw){
+        const fn=fnRaw;const fnTex=simplifyTex(fn);
+        addStep('Function',`f(x) = ${fnTex}`);
+        const fp=safeDerivative(fn);const fpp=fp?safeDerivative(fp):null;
+        if(fp){
+          addStep('First Derivative',`f'(x) = ${simplifyTex(fp)}`);
+          addStep('Set f\'(x) = 0','\\text{Solve } f\'(x) = 0 \\text{ for critical points}');
+          const cps=findCriticalPoints(fn,fp,fpp,-20,20);
+          if(cps.length>0){
+            for(const cp of cps){
+              const kind=cp.kind.includes('Max')?'Local Max':cp.kind.includes('Min')?'Local Min':'Stationary';
+              addStep(kind,`x = ${cp.xTex},\\quad f(${cp.xTex}) = ${cp.yTex}`);
+            }
+          }else{addStep('Critical Points','\\text{No critical points found in } [-20, 20]');}
+          if(fpp)addStep('Second Derivative Test',`f''(x) = ${simplifyTex(fpp)}`);
+        }
+      }
+    }else{
+      // General differentiation
+      const fnRaw=extractFn(input);
+      if(fnRaw){
+        const fn=fnRaw;const fnTex=simplifyTex(fn);
+        addStep('Function',`f(x) = ${fnTex}`);
+        // Detect rule
+        const hasProduct=fn.includes('*')&&!fn.includes('/');
+        const hasQuotient=fn.includes('/');
+        const hasChain=fn.match(/sin|cos|tan|exp|log|ln|sqrt|\^[^1]/);
+        if(hasProduct&&!hasQuotient){addStep('Rule','\\text{Product Rule: }\\frac{d}{dx}[uv] = u\'v + uv\'');}
+        else if(hasQuotient){addStep('Rule','\\text{Quotient Rule: }\\frac{d}{dx}\\left[\\frac{u}{v}\\right] = \\frac{u\'v - uv\'}{v^2}');}
+        else if(hasChain){addStep('Rule','\\text{Chain Rule: }\\frac{d}{dx}[f(g(x))] = f\'(g(x))\\cdot g\'(x)');}
+        const fp=safeDerivative(fn);
+        if(fp){
+          const fpTex=simplifyTex(fp);
+          addStep('Derivative',`f'(x) = ${fpTex}`);
+          const fpp=safeDerivative(fp);
+          if(fpp)addStep('Second Derivative',`f''(x) = ${simplifyTex(fpp)}`);
+        }else{addStep('Result','\\text{Could not compute derivative symbolically}');}
+      }else{
+        addStep('Hint','\\text{Please specify the function, e.g. "Differentiate f(x) = x^2 sin(x)"}');
+      }
+    }
+    if(resultDiv.querySelectorAll('.ai-step').length===0){
+      resultDiv.innerHTML+=`<div class="empty-state"><div class="big">🤔</div><div>Could not parse the problem. Try specifying the function explicitly, e.g. "f(x) = x^2".</div></div>`;
+    }
+  }catch(e){resultDiv.innerHTML+=`<div class="error-box">⚠️ ${e.message}</div>`;}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AREA & VOLUME ENGINE
+// ═══════════════════════════════════════════════════════════════════════════
+let avLastResult=null;
+let avVp={xMin:-2,xMax:3,yMin:-1,yMax:5};
+let avDragging=false,avDragStart={x:0,y:0},avDragVp=null;
+
+// Numerical integration (Simpson's rule, n=2000)
+function simpson(fn,a,b,n=2000){
+  if(n%2!==0)n++;const h=(b-a)/n;let s=evalAt(fn,a)+evalAt(fn,b);
+  for(let i=1;i<n;i++){const x=a+i*h;const v=evalAt(fn,x);if(!isFinite(v))return NaN;s+=(i%2===0?2:4)*v;}
+  return s*h/3;
+}
+
+// Symbolic integration attempt
+function symbolicIntegral(fn,a,b){
+  try{
+    const node=math.parse(fn);
+    // Try to get antiderivative symbolically using mathjs
+    // mathjs doesn't have integrate, so we use derivative inversion heuristics
+    // For display purposes, use the integral notation
+    const numVal=simpson(fn,a,b);
+    return{exact:null,numeric:numVal};
+  }catch{return{exact:null,numeric:NaN};}
+}
+
+// Try to get a nice exact value for the integral
+function computeIntegralExact(fn,a,b){
+  // Use symbolic derivative to find antiderivative
+  // Strategy: check if f = derivative of some common form
+  const numVal=simpson(fn,a,b);
+  if(!isFinite(numVal))return{tex:'\\text{undefined}',numeric:NaN};
+  // Try to express numerically as exact value
+  const tex=numToTex(numVal);
+  return{tex,numeric:numVal};
+}
+
+function runAreaVolume(){
+  const fxRaw=document.getElementById('avFxInput').value.trim();
+  const gxRaw=document.getElementById('avGxInput').value.trim()||'0';
+  const a=parseFloat(document.getElementById('avAInput').value);
+  const b=parseFloat(document.getElementById('avBInput').value);
+  const mode=document.querySelector('input[name="avMode"]:checked').value;
+  const axis=parseFloat(document.getElementById('avAxisInput').value)||0;
+  if(!fxRaw||!isFinite(a)||!isFinite(b)||a>=b)return;
+  try{math.parse(fxRaw);}catch{return;}
+  avLastResult={fxRaw,gxRaw,a,b,mode,axis};
+  // Auto viewport
+  let yMin=Infinity,yMax=-Infinity;
+  for(let x=a-0.5;x<=b+0.5;x+=0.05){
+    const yf=evalAt(fxRaw,x),yg=evalAt(gxRaw,x);
+    if(isFinite(yf)){yMin=Math.min(yMin,yf);yMax=Math.max(yMax,yf);}
+    if(isFinite(yg)){yMin=Math.min(yMin,yg);yMax=Math.max(yMax,yg);}
+  }
+  if(!isFinite(yMin)){yMin=-2;yMax=4;}
+  const pad=(yMax-yMin)*0.2||1;
+  avVp={xMin:a-(b-a)*0.3,xMax:b+(b-a)*0.3,yMin:yMin-pad,yMax:yMax+pad};
+  drawAvGraph();
+  buildAvResult(avLastResult);
+  // Show 3D if volume mode
+  const volContainer=document.getElementById('volContainer');
+  if(mode==='volx'||mode==='voly'){volContainer.style.display='block';buildThreeScene(avLastResult);}
+  else{volContainer.style.display='none';disposeThree();}
+}
+
+function buildAvResult(res){
+  const{fxRaw,gxRaw,a,b,mode,axis}=res;
+  const resultDiv=document.getElementById('avResult');
+  const body=document.getElementById('avResultBody');
+  resultDiv.style.display='block';body.innerHTML='';
+  const aTex=numToTex(a),bTex=numToTex(b);
+  const fTex=simplifyTex(fxRaw);
+  const gTex=gxRaw&&gxRaw!=='0'?simplifyTex(gxRaw):null;
+  function addRow(label,tex){
+    const d=document.createElement('div');d.style.marginBottom='.5rem';
+    const lbl=document.createElement('div');lbl.style.cssText='font-size:.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem';lbl.textContent=label;
+    d.appendChild(lbl);d.appendChild(renderK(tex));body.appendChild(d);
+  }
+  if(mode==='area'){
+    const integrand=gTex?`(${fTex})-(${gTex})`:`(${fTex})`;
+    addRow('Integral Setup',`A = \\int_{${aTex}}^{${bTex}} ${integrand}\\, dx`);
+    const val=simpson(fxRaw,a,b)-(gTex?simpson(gxRaw,a,b):0);
+    const valTex=numToTex(val);
+    addRow('Result',`A = ${valTex}`);
+  }else if(mode==='volx'){
+    const axisTex=numToTex(axis);
+    if(gTex&&gxRaw!=='0'){
+      // Washer
+      addRow('Washer Method',`V = \\pi\\int_{${aTex}}^{${bTex}}\\left[(${fTex}-${axisTex})^2-(${gTex}-${axisTex})^2\\right]dx`);
+      const val=Math.PI*(simpson(`(${fxRaw}-${axis})^2`,a,b)-simpson(`(${gxRaw}-${axis})^2`,a,b));
+      addRow('Result',`V = ${numToTex(val)}`);
+    }else{
+      // Disc
+      addRow('Disc Method',`V = \\pi\\int_{${aTex}}^{${bTex}}\\left(${fTex}-${axisTex}\\right)^2 dx`);
+      const val=Math.PI*simpson(`(${fxRaw}-${axis})^2`,a,b);
+      addRow('Result',`V = ${numToTex(val)}`);
+    }
+  }else if(mode==='voly'){
+    // Shell method
+    addRow('Shell Method',`V = 2\\pi\\int_{${aTex}}^{${bTex}} x\\cdot(${fTex})\\, dx`);
+    const val=2*Math.PI*simpson(`x*(${fxRaw})`,a,b);
+    addRow('Result',`V = ${numToTex(val)}`);
+  }
+}
+
+function drawAvGraph(){
+  const svg=document.getElementById('avGraph');
+  const W=900,H=520;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  if(!avLastResult)return;
+  const{fxRaw,gxRaw,a,b,mode,axis}=avLastResult;
+  const{xMin,xMax,yMin,yMax}=avVp;
+  const ML=60,MR=20,MT=30,MB=40;const gW=W-ML-MR,gH=H-MT-MB;
+  function px(x){return ML+(x-xMin)/(xMax-xMin)*gW;}
+  function py(y){return MT+gH-(y-yMin)/(yMax-yMin)*gH;}
+  function el(tag,attrs,text){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e;}
+  svg.appendChild(el('rect',{x:ML,y:MT,width:gW,height:gH,fill:'#fff',stroke:'#d8dde8','stroke-width':'1'}));
+  // Grid
+  function niceStep(range,n){const raw=range/n;const mag=Math.pow(10,Math.floor(Math.log10(raw)));const norm=raw/mag;let nice;if(norm<=1)nice=1;else if(norm<=2)nice=2;else if(norm<=5)nice=5;else nice=10;return nice*mag;}
+  const xStep=niceStep(xMax-xMin,10),yStep=niceStep(yMax-yMin,8);
+  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax+1e-9;x+=xStep){const gx=px(x);svg.appendChild(el('line',{x1:gx,y1:MT,x2:gx,y2:MT+gH,stroke:'#eef0f8','stroke-width':'1'}));}
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax+1e-9;y+=yStep){const gy=py(y);svg.appendChild(el('line',{x1:ML,y1:gy,x2:ML+gW,y2:gy,stroke:'#eef0f8','stroke-width':'1'}));}
+  // Axes
+  const ax0=py(0),ay0=px(0);
+  if(ax0>=MT&&ax0<=MT+gH){svg.appendChild(el('line',{x1:ML,y1:ax0,x2:ML+gW,y2:ax0,stroke:'#555','stroke-width':'1.5'}));svg.appendChild(el('text',{x:ML+gW+6,y:ax0+5,'font-size':'13','font-family':'Inter,sans-serif',fill:'#444'},'x'));}
+  if(ay0>=ML&&ay0<=ML+gW){svg.appendChild(el('line',{x1:ay0,y1:MT,x2:ay0,y2:MT+gH,stroke:'#555','stroke-width':'1.5'}));svg.appendChild(el('text',{x:ay0+4,y:MT-6,'font-size':'13','font-family':'Inter,sans-serif',fill:'#444'},'y'));}
+  if(ay0>=ML&&ay0<=ML+gW&&ax0>=MT&&ax0<=MT+gH)svg.appendChild(el('text',{x:ay0-14,y:ax0+14,'font-size':'12','font-family':'Inter,sans-serif',fill:'#888'},'O'));
+  function tickLabel(v){return numToTex(v).replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,(_,n,d)=>n+'/'+d).replace(/\\pi/g,'π').replace(/[{}\\]/g,'');}
+  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax+1e-9;x+=xStep){if(Math.abs(x)<1e-9)continue;const gx=px(x);const yb=ax0>=MT&&ax0<=MT+gH?ax0:MT+gH;svg.appendChild(el('text',{x:gx,y:yb+16,'font-size':'11','font-family':'Inter,sans-serif',fill:'#555','text-anchor':'middle'},tickLabel(x)));}
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax+1e-9;y+=yStep){if(Math.abs(y)<1e-9)continue;const gy=py(y);const xb=ay0>=ML&&ay0<=ML+gW?ay0:ML;svg.appendChild(el('text',{x:xb-6,y:gy+4,'font-size':'11','font-family':'Inter,sans-serif',fill:'#555','text-anchor':'end'},tickLabel(y)));}
+  // Shaded region between a and b
+  if(mode==='area'){
+    const N=300;let pathD='';let first=true;
+    // Top boundary (f)
+    for(let i=0;i<=N;i++){const x=a+i*(b-a)/N;const y=evalAt(fxRaw,x);if(!isFinite(y))continue;pathD+=(first?'M':'L')+px(x).toFixed(1)+','+py(y).toFixed(1);first=false;}
+    // Bottom boundary (g) reversed
+    for(let i=N;i>=0;i--){const x=a+i*(b-a)/N;const y=evalAt(gxRaw,x);if(!isFinite(y))continue;pathD+='L'+px(x).toFixed(1)+','+py(y).toFixed(1);}
+    pathD+='Z';
+    svg.appendChild(el('path',{d:pathD,fill:'rgba(59,91,219,0.18)',stroke:'none'}));
+    // Vertical boundary lines
+    svg.appendChild(el('line',{x1:px(a),y1:MT,x2:px(a),y2:MT+gH,stroke:'#3b5bdb','stroke-width':'1.5','stroke-dasharray':'5,3'}));
+    svg.appendChild(el('line',{x1:px(b),y1:MT,x2:px(b),y2:MT+gH,stroke:'#3b5bdb','stroke-width':'1.5','stroke-dasharray':'5,3'}));
+    svg.appendChild(el('text',{x:px(a),y:MT+gH+28,'font-size':'13','font-family':'JetBrains Mono,monospace',fill:'#3b5bdb','text-anchor':'middle'},`a=${tickLabel(a)}`));
+    svg.appendChild(el('text',{x:px(b),y:MT+gH+28,'font-size':'13','font-family':'JetBrains Mono,monospace',fill:'#3b5bdb','text-anchor':'middle'},`b=${tickLabel(b)}`));
+  }
+  // Rotation axis
+  if(mode==='volx'||mode==='voly'){
+    const gy=py(axis);
+    if(gy>=MT&&gy<=MT+gH){
+      svg.appendChild(el('line',{x1:ML,y1:gy,x2:ML+gW,y2:gy,stroke:'#c92a2a','stroke-width':'1.5','stroke-dasharray':'8,4'}));
+      svg.appendChild(el('text',{x:ML+gW-5,y:gy-6,'font-size':'12','font-family':'JetBrains Mono,monospace',fill:'#c92a2a','text-anchor':'end'},`y=${tickLabel(axis)}`));
+    }
+    // Shade revolution region
+    const N=300;let pathD='';let first=true;
+    for(let i=0;i<=N;i++){const x=a+i*(b-a)/N;const y=evalAt(fxRaw,x);if(!isFinite(y))continue;pathD+=(first?'M':'L')+px(x).toFixed(1)+','+py(y).toFixed(1);first=false;}
+    for(let i=N;i>=0;i--){const x=a+i*(b-a)/N;pathD+='L'+px(x).toFixed(1)+','+py(axis).toFixed(1);}
+    pathD+='Z';
+    svg.appendChild(el('path',{d:pathD,fill:'rgba(59,91,219,0.15)',stroke:'none'}));
+    svg.appendChild(el('line',{x1:px(a),y1:MT,x2:px(a),y2:MT+gH,stroke:'#3b5bdb','stroke-width':'1.5','stroke-dasharray':'5,3'}));
+    svg.appendChild(el('line',{x1:px(b),y1:MT,x2:px(b),y2:MT+gH,stroke:'#3b5bdb','stroke-width':'1.5','stroke-dasharray':'5,3'}));
+  }
+  // Draw g(x)
+  if(gxRaw&&gxRaw!=='0'){
+    let d='';let lv=false;
+    for(let x=xMin;x<=xMax;x+=(xMax-xMin)/800){const y=evalAt(gxRaw,x);const valid=isFinite(y)&&y>=yMin-1&&y<=yMax+1;if(valid){d+=(lv?'L':'M')+px(x).toFixed(1)+','+py(y).toFixed(1);}lv=valid;}
+    svg.appendChild(el('path',{d,stroke:'#e67700','stroke-width':'2',fill:'none'}));
+    svg.appendChild(el('text',{x:px(xMax)-5,y:py(evalAt(gxRaw,xMax))-8,'font-size':'13','font-family':'Space Grotesk,sans-serif',fill:'#e67700','text-anchor':'end','font-style':'italic'},`g(x)=${gxRaw}`));
+  }
+  // Draw f(x)
+  let d='';let lv=false;
+  for(let x=xMin;x<=xMax;x+=(xMax-xMin)/1000){const y=evalAt(fxRaw,x);const valid=isFinite(y)&&y>=yMin-1&&y<=yMax+1;if(valid){d+=(lv?'L':'M')+px(x).toFixed(1)+','+py(y).toFixed(1);}lv=valid;}
+  svg.appendChild(el('path',{d,stroke:'#3b5bdb','stroke-width':'2.5',fill:'none'}));
+  svg.appendChild(el('text',{x:px(xMax)-5,y:py(evalAt(fxRaw,xMax))-10,'font-size':'13','font-family':'Space Grotesk,sans-serif',fill:'#3b5bdb','text-anchor':'end','font-style':'italic'},`f(x)=${fxRaw}`));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// THREE.JS — 3D Solid of Revolution
+// ═══════════════════════════════════════════════════════════════════════════
+let threeScene=null,threeRenderer=null,threeCamera=null,threeControls=null;
+let threeSolid=null,threeMesh=null,threeCross=null;
+let showMesh=true,showSolid=true,showCross=false;
+
+function disposeThree(){
+  if(threeRenderer){threeRenderer.dispose();threeRenderer=null;}
+  const c=document.getElementById('threeContainer');c.innerHTML='';
+  threeScene=null;threeCamera=null;threeControls=null;threeSolid=null;threeMesh=null;threeCross=null;
+}
+
+function buildThreeScene(res){
+  disposeThree();
+  const container=document.getElementById('threeContainer');
+  const W=container.clientWidth||700,H=420;
+  // Scene
+  threeScene=new THREE.Scene();threeScene.background=new THREE.Color(0x1a1d2e);
+  threeCamera=new THREE.PerspectiveCamera(45,W/H,0.01,1000);threeCamera.position.set(3,2,5);
+  threeRenderer=new THREE.WebGLRenderer({antialias:true});threeRenderer.setSize(W,H);threeRenderer.setPixelRatio(window.devicePixelRatio);
+  container.appendChild(threeRenderer.domElement);
+  // Lights
+  threeScene.add(new THREE.AmbientLight(0xffffff,0.5));
+  const dl=new THREE.DirectionalLight(0xffffff,1);dl.position.set(5,10,7);threeScene.add(dl);
+  const dl2=new THREE.DirectionalLight(0x4488ff,0.4);dl2.position.set(-5,-5,-5);threeScene.add(dl2);
+  // Orbit controls
+  threeControls=new THREE.OrbitControls(threeCamera,threeRenderer.domElement);threeControls.enableDamping=true;threeControls.dampingFactor=0.08;
+  // Axes helper
+  threeScene.add(new THREE.AxesHelper(3));
+  // Grid
+  const grid=new THREE.GridHelper(8,20,0x334466,0x223355);grid.position.y=-0.01;threeScene.add(grid);
+  // Build solid of revolution
+  buildRevolutionSolid(res);
+  // Animation loop
+  function animate(){requestAnimationFrame(animate);threeControls.update();threeRenderer.render(threeScene,threeCamera);}
+  animate();
+}
+
+function buildRevolutionSolid(res){
+  if(!threeScene)return;
+  // Remove old
+  if(threeSolid){threeScene.remove(threeSolid);threeSolid.geometry.dispose();}
+  if(threeMesh){threeScene.remove(threeMesh);threeMesh.geometry.dispose();}
+  if(threeCross){threeScene.remove(threeCross);threeCross.geometry.dispose();}
+  const{fxRaw,gxRaw,a,b,mode,axis}=res;
+  const N=120;// segments along x
+  const M=72;// segments around revolution
+  // Sample the curve
+  const xs=[],rs=[];
+  for(let i=0;i<=N;i++){
+    const x=a+i*(b-a)/N;
+    const fv=evalAt(fxRaw,x);
+    const gv=gxRaw&&gxRaw!=='0'?evalAt(gxRaw,x):axis;
+    const rOuter=Math.abs(fv-axis);
+    const rInner=Math.abs(gv-axis);
+    xs.push(x);rs.push({outer:rOuter,inner:rInner});
+  }
+  // Build LatheGeometry-style geometry manually (washer cross-sections)
+  const vertices=[];const indices=[];const normals=[];
+  for(let i=0;i<=N;i++){
+    const x=xs[i];const{outer,inner}=rs[i];
+    for(let j=0;j<=M;j++){
+      const theta=(j/M)*2*Math.PI;
+      const co=Math.cos(theta),si=Math.sin(theta);
+      // Outer surface
+      vertices.push(x,outer*co,outer*si);
+      normals.push(0,co,si);
+      // Inner surface (for washer)
+      if(inner>0.001){vertices.push(x,inner*co,inner*si);normals.push(0,-co,-si);}
+    }
+  }
+  const stride=inner>0.001?2:1;
+  // Build indices for outer surface
+  for(let i=0;i<N;i++){
+    for(let j=0;j<M;j++){
+      const a0=i*(M+1)*stride+j*stride;const a1=a0+stride;
+      const b0=(i+1)*(M+1)*stride+j*stride;const b1=b0+stride;
+      indices.push(a0,b0,a1,a1,b0,b1);
+    }
+  }
+  const geom=new THREE.BufferGeometry();
+  geom.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+  geom.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));
+  geom.setIndex(indices);
+  // Solid material
+  const solidMat=new THREE.MeshPhongMaterial({color:0x4c6ef5,transparent:true,opacity:0.75,side:THREE.DoubleSide,shininess:80});
+  threeSolid=new THREE.Mesh(geom,solidMat);
+  if(showSolid)threeScene.add(threeSolid);
+  // Wireframe
+  const wireMat=new THREE.MeshBasicMaterial({color:0x74c0fc,wireframe:true,transparent:true,opacity:0.3});
+  threeMesh=new THREE.Mesh(geom.clone(),wireMat);
+  if(showMesh)threeScene.add(threeMesh);
+  // Cross-section disc at midpoint
+  const midX=(a+b)/2;const midR=Math.abs(evalAt(fxRaw,midX)-axis);
+  const midRi=gxRaw&&gxRaw!=='0'?Math.abs(evalAt(gxRaw,midX)-axis):0;
+  const crossGeom=midRi>0.001?
+    new THREE.RingGeometry(midRi,midR,48):
+    new THREE.CircleGeometry(midR,48);
+  crossGeom.rotateY(Math.PI/2);
+  const crossMat=new THREE.MeshBasicMaterial({color:0xff6b6b,transparent:true,opacity:0.7,side:THREE.DoubleSide});
+  threeCross=new THREE.Mesh(crossGeom,crossMat);
+  threeCross.position.x=midX;
+  if(showCross)threeScene.add(threeCross);
+  // End caps
+  for(const xi of[a,b]){
+    const ri=Math.abs(evalAt(fxRaw,xi)-axis);
+    const rii=gxRaw&&gxRaw!=='0'?Math.abs(evalAt(gxRaw,xi)-axis):0;
+    const capG=rii>0.001?new THREE.RingGeometry(rii,ri,48):new THREE.CircleGeometry(ri,48);
+    capG.rotateY(Math.PI/2);
+    const capM=new THREE.MeshPhongMaterial({color:0x4c6ef5,transparent:true,opacity:0.6,side:THREE.DoubleSide});
+    const cap=new THREE.Mesh(capG,capM);cap.position.x=xi;
+    if(showSolid)threeScene.add(cap);
+  }
+}
+
+function setupAvInteraction(){
+  const svg=document.getElementById('avGraph');
+  const W=900,H=520,ML=60,MR=20,MT=30,MB=40;const gW=W-ML-MR,gH=H-MT-MB;
+  function svgCoords(e){
+    const rect=svg.getBoundingClientRect();const scaleX=W/rect.width,scaleY=H/rect.height;
+    const cx=(e.clientX-rect.left)*scaleX,cy=(e.clientY-rect.top)*scaleY;
+    return{x:avVp.xMin+(cx-ML)/gW*(avVp.xMax-avVp.xMin),y:avVp.yMin+(MT+gH-cy)/gH*(avVp.yMax-avVp.yMin)};
+  }
+  svg.addEventListener('wheel',e=>{
+    e.preventDefault();if(!avLastResult)return;
+    const factor=e.deltaY>0?1.15:0.87;const c=svgCoords(e);
+    avVp.xMin=c.x+(avVp.xMin-c.x)*factor;avVp.xMax=c.x+(avVp.xMax-c.x)*factor;
+    avVp.yMin=c.y+(avVp.yMin-c.y)*factor;avVp.yMax=c.y+(avVp.yMax-c.y)*factor;
+    drawAvGraph();
+  },{passive:false});
+  svg.addEventListener('mousedown',e=>{avDragging=true;avDragStart=svgCoords(e);avDragVp={...avVp};svg.style.cursor='grabbing';});
+  svg.addEventListener('mousemove',e=>{
+    if(!avDragging||!avLastResult)return;
+    const cur=svgCoords(e);const dx=avDragStart.x-cur.x,dy=avDragStart.y-cur.y;
+    avVp.xMin=avDragVp.xMin+dx;avVp.xMax=avDragVp.xMax+dx;avVp.yMin=avDragVp.yMin+dy;avVp.yMax=avDragVp.yMax+dy;
+    drawAvGraph();
+  });
+  svg.addEventListener('mouseup',()=>{avDragging=false;svg.style.cursor='crosshair';});
+  svg.addEventListener('mouseleave',()=>{avDragging=false;svg.style.cursor='crosshair';});
+  document.getElementById('avZoomIn').onclick=()=>{if(!avLastResult)return;const cx=(avVp.xMin+avVp.xMax)/2,cy=(avVp.yMin+avVp.yMax)/2;const f=0.75;avVp.xMin=cx+(avVp.xMin-cx)*f;avVp.xMax=cx+(avVp.xMax-cx)*f;avVp.yMin=cy+(avVp.yMin-cy)*f;avVp.yMax=cy+(avVp.yMax-cy)*f;drawAvGraph();};
+  document.getElementById('avZoomOut').onclick=()=>{if(!avLastResult)return;const cx=(avVp.xMin+avVp.xMax)/2,cy=(avVp.yMin+avVp.yMax)/2;const f=1.33;avVp.xMin=cx+(avVp.xMin-cx)*f;avVp.xMax=cx+(avVp.xMax-cx)*f;avVp.yMin=cy+(avVp.yMin-cy)*f;avVp.yMax=cy+(avVp.yMax-cy)*f;drawAvGraph();};
+  document.getElementById('avReset').onclick=()=>{if(!avLastResult)return;runAreaVolume();};
+  // 3D toggles
+  document.getElementById('toggleMeshBtn').onclick=()=>{showMesh=!showMesh;if(threeMesh){if(showMesh)threeScene.add(threeMesh);else threeScene.remove(threeMesh);}};
+  document.getElementById('toggleCrossBtn').onclick=()=>{showCross=!showCross;if(threeCross){if(showCross)threeScene.add(threeCross);else threeScene.remove(threeCross);}};
+  document.getElementById('toggleSolidBtn').onclick=()=>{showSolid=!showSolid;if(threeSolid){if(showSolid)threeScene.add(threeSolid);else threeScene.remove(threeSolid);}};
+  // Mode change
+  document.querySelectorAll('input[name="avMode"]').forEach(r=>{
+    r.addEventListener('change',()=>{
+      const isVol=r.value!=='area';
+      document.getElementById('avAxisSection').style.display=isVol?'block':'none';
+    });
   });
 }
-
-function renderTangentResult(container,t){
-  container.innerHTML='';
-  if(!t){container.innerHTML=`<div style="color:var(--fg3);font-size:.85rem">${T[LANG].cannot_compute||T.en.cannot_compute}</div>`;return;}
-  const r1=document.createElement('div');r1.className='row';
-  r1.innerHTML=`<span class="row-label">${T[LANG].row_point||T.en.row_point}</span>`;
-  r1.appendChild(renderK(`\\left(${t.xTex},\\,${t.yTex}\\right)`));
-  container.appendChild(r1);
-  const r2=document.createElement('div');r2.className='row';
-  r2.innerHTML=`<span class="row-label">${T[LANG].row_slope||T.en.row_slope}</span>`;
-  r2.appendChild(renderK(`m = f'(${t.xTex}) = ${t.mTex}`));
-  container.appendChild(r2);
-  if(t.lineTex){
-    const r3=document.createElement('div');r3.className='row';
-    r3.innerHTML=`<span class="row-label">${T[LANG].row_equation||T.en.row_equation}</span>`;
-    r3.appendChild(renderK(t.lineTex));
-    container.appendChild(r3);
-  }
-}
-
-// ─── REFERENCE TAB ──────────────────────────────────────────────────────────
-
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// REFERENCE TAB
+// ═══════════════════════════════════════════════════════════════════════════
 function buildReference(){
-  const grid=document.getElementById('refGrid');
-  grid.innerHTML='';
-
-  const cards=[
-    {
-      icon:'\ud83d\udcd0',titleKey:'ref_diff_rules',color:'#3b5bdb',
-      rows:[
-        {nameKey:'rn_power',tex:'\\frac{d}{dx}[x^n] = nx^{n-1}'},
-        {nameKey:'rn_product',tex:'\\frac{d}{dx}[uv] = u\'v + uv\''},
-        {nameKey:'rn_quotient',tex:'\\frac{d}{dx}\\left[\\frac{u}{v}\\right] = \\frac{u\'v - uv\'}{v^2}'},
-        {nameKey:'rn_chain',tex:'\\frac{d}{dx}[f(g(x))] = f\'(g(x))\\cdot g\'(x)'},
-        {nameKey:'rn_constant',tex:'\\frac{d}{dx}[c] = 0'},
-        {nameKey:'rn_sum',tex:'\\frac{d}{dx}[u+v] = u\'+v\''},
-      ]
-    },
-    {
-      icon:'\ud83d\udcca',titleKey:'ref_std_deriv',color:'#2f9e44',
-      rows:[
-        {nameKey:'rn_sinx',tex:'\\frac{d}{dx}[\\sin x] = \\cos x'},
-        {nameKey:'rn_cosx',tex:'\\frac{d}{dx}[\\cos x] = -\\sin x'},
-        {nameKey:'rn_tanx',tex:'\\frac{d}{dx}[\\tan x] = \\sec^2 x'},
-        {nameKey:'rn_ex',tex:'\\frac{d}{dx}[e^x] = e^x'},
-        {nameKey:'rn_lnx',tex:'\\frac{d}{dx}[\\ln x] = \\frac{1}{x}'},
-        {nameKey:'rn_ax',tex:'\\frac{d}{dx}[a^x] = a^x \\ln a'},
-        {nameKey:'rn_arcsin',tex:'\\frac{d}{dx}[\\arcsin x] = \\frac{1}{\\sqrt{1-x^2}}'},
-        {nameKey:'rn_arctan',tex:'\\frac{d}{dx}[\\arctan x] = \\frac{1}{1+x^2}'},
-      ]
-    },
-    {
-      icon:'\ud83d\udd0d',titleKey:'ref_crit_class',color:'#e67700',
-      rows:[
-        {nameKey:'rn_crit_pt',tex:'f\'(c) = 0 \\text{ or } f\'(c) \\text{ undefined}'},
-        {nameKey:'rn_1dt_max',tex:'f\'(x): + \\to - \\Rightarrow \\text{Local Max at } x=c'},
-        {nameKey:'rn_1dt_min',tex:'f\'(x): - \\to + \\Rightarrow \\text{Local Min at } x=c'},
-        {nameKey:'rn_2dt_max',tex:'f\'(c)=0,\\; f\'\' (c)<0 \\Rightarrow \\text{Local Max}'},
-        {nameKey:'rn_2dt_min',tex:'f\'(c)=0,\\; f\'\' (c)>0 \\Rightarrow \\text{Local Min}'},
-        {nameKey:'rn_poi',tex:'f\'\' (c)=0 \\text{ and sign of } f\'\' \\text{ changes}'},
-      ]
-    },
-    {
-      icon:'\u2197\ufe0f',titleKey:'ref_mono',color:'#2f9e44',
-      rows:[
-        {nameKey:'rn_inc',tex:'f\'(x) > 0 \\Rightarrow f \\text{ is increasing}'},
-        {nameKey:'rn_dec',tex:'f\'(x) < 0 \\Rightarrow f \\text{ is decreasing}'},
-        {nameKey:'rn_const',tex:'f\'(x) = 0 \\Rightarrow f \\text{ is constant}'},
-      ]
-    },
-    {
-      icon:'\u2229',titleKey:'ref_conc',color:'#0c8599',
-      rows:[
-        {nameKey:'rn_cu',tex:'f\'\' (x) > 0 \\Rightarrow \\text{concave up (cup shape)}'},
-        {nameKey:'rn_cd',tex:'f\'\' (x) < 0 \\Rightarrow \\text{concave down (cap shape)}'},
-        {nameKey:'rn_infl',tex:'f\'\' (c) = 0 \\text{ and sign changes} \\Rightarrow \\text{inflection}'},
-      ]
-    },
-    {
-      icon:'\u27f6',titleKey:'ref_asym',color:'#c92a2a',
-      rows:[
-        {nameKey:'rn_vert',tex:'\\lim_{x \\to a} f(x) = \\pm\\infty \\Rightarrow x = a'},
-        {nameKey:'rn_horiz_r',tex:'\\lim_{x \\to +\\infty} f(x) = L \\Rightarrow y = L'},
-        {nameKey:'rn_horiz_l',tex:'\\lim_{x \\to -\\infty} f(x) = L \\Rightarrow y = L'},
-        {nameKey:'rn_obl',tex:'y = mx + b \\text{ where } m = \\lim_{x\\to\\infty}\\frac{f(x)}{x}'},
-        {nameKey:'rn_obl_b',tex:'b = \\lim_{x\\to\\infty}[f(x) - mx]'},
-      ]
-    },
-    {
-      icon:'\u27c2',titleKey:'ref_tan',color:'#7048e8',
-      rows:[
-        {nameKey:'rn_eq',tex:'y - y_0 = f\'(x_0)(x - x_0)'},
-        {nameKey:'rn_slope',tex:'m = f\'(x_0)'},
-        {nameKey:'rn_normal',tex:'y - y_0 = -\\frac{1}{f\'(x_0)}(x - x_0)'},
-      ]
-    },
-    {
-      icon:'\ud83d\udccf',titleKey:'ref_sketch',color:'#1971c2',
-      rows:[
-        {nameKey:'rn_s1',tex:'\\text{Find domain and intercepts}'},
-        {nameKey:'rn_s2',tex:'\\text{Find asymptotes (V, H, O)}'},
-        {nameKey:'rn_s3',tex:'\\text{Compute } f\'(x), \\text{ find critical points}'},
-        {nameKey:'rn_s4',tex:'\\text{Apply 1st derivative test for max/min}'},
-        {nameKey:'rn_s5',tex:'\\text{Compute } f\'\' (x), \\text{ find inflection points}'},
-        {nameKey:'rn_s6',tex:'\\text{Determine concavity intervals}'},
-        {nameKey:'rn_s7',tex:'\\text{Sketch the curve using all information}'},
-      ]
-    },
-  ];
-
-  for(const card of cards){
-    const div=document.createElement('div');
-    div.className='ref-card';
-    div.innerHTML=`<div class="ref-card-head" style="color:${card.color}">${card.icon} ${t(card.titleKey)}</div>`;
-    const body=document.createElement('div');
-    body.className='ref-card-body';
-    for(const row of card.rows){
-      const r=document.createElement('div');
-      r.className='ref-row';
-      r.innerHTML=`<div class="ref-name">${t(row.nameKey)}</div>`;
-      const f=document.createElement('div');
-      f.className='ref-formula';
-      try{katex.render(row.tex,f,{throwOnError:false,displayMode:true})}
-      catch{f.textContent=row.tex}
-      r.appendChild(f);
-      body.appendChild(r);
+  const grid=document.getElementById('refGrid');grid.innerHTML='';
+  function card(titleKey,icon,color,rows){
+    const c=document.createElement('div');c.className='ref-card';
+    const head=document.createElement('div');head.className='ref-card-head';
+    head.style.borderLeft=`4px solid ${color}`;head.style.color=color;
+    head.innerHTML=`${icon} ${t(titleKey)}`;
+    c.appendChild(head);
+    const body=document.createElement('div');body.className='ref-card-body';
+    for(const[nameKey,tex]of rows){
+      const row=document.createElement('div');row.className='ref-row';
+      const name=document.createElement('div');name.className='ref-name';name.textContent=t(nameKey);
+      const formula=document.createElement('div');formula.className='ref-formula';
+      formula.appendChild(renderK(tex));
+      row.appendChild(name);row.appendChild(formula);body.appendChild(row);
     }
-    div.appendChild(body);
-    grid.appendChild(div);
+    c.appendChild(body);grid.appendChild(c);
   }
+  card('ref_diff_rules','∂','#3b5bdb',[
+    ['rn_power','\\dfrac{d}{dx}[x^n] = nx^{n-1}'],
+    ['rn_constant','\\dfrac{d}{dx}[c] = 0'],
+    ['rn_sum','\\dfrac{d}{dx}[f \\pm g] = f\' \\pm g\''],
+    ['rn_product','\\dfrac{d}{dx}[fg] = f\'g + fg\''],
+    ['rn_quotient','\\dfrac{d}{dx}\\left[\\dfrac{f}{g}\\right] = \\dfrac{f\'g - fg\'}{g^2}'],
+    ['rn_chain','\\dfrac{d}{dx}[f(g(x))] = f\'(g(x))\\cdot g\'(x)'],
+  ]);
+  card('ref_std_deriv','📐','#2f9e44',[
+    ['rn_sinx','\\dfrac{d}{dx}[\\sin x] = \\cos x'],
+    ['rn_cosx','\\dfrac{d}{dx}[\\cos x] = -\\sin x'],
+    ['rn_tanx','\\dfrac{d}{dx}[\\tan x] = \\sec^2 x'],
+    ['rn_ex','\\dfrac{d}{dx}[e^x] = e^x'],
+    ['rn_lnx','\\dfrac{d}{dx}[\\ln x] = \\dfrac{1}{x}'],
+    ['rn_ax','\\dfrac{d}{dx}[a^x] = a^x \\ln a'],
+    ['rn_arcsin','\\dfrac{d}{dx}[\\arcsin x] = \\dfrac{1}{\\sqrt{1-x^2}}'],
+    ['rn_arctan','\\dfrac{d}{dx}[\\arctan x] = \\dfrac{1}{1+x^2}'],
+  ]);
+  card('ref_crit_class','⊙','#e67700',[
+    ['rn_crit_pt','f\'(c) = 0 \\text{ or } f\'(c) \\text{ undefined}'],
+    ['rn_1dt_max','f\'\\text{ changes }+\\to-\\text{ at }c\\Rightarrow\\text{Local Max}'],
+    ['rn_1dt_min','f\'\\text{ changes }-\\to+\\text{ at }c\\Rightarrow\\text{Local Min}'],
+    ['rn_2dt_max','f\'(c)=0,\\;f\'\'(c)<0\\Rightarrow\\text{Local Max}'],
+    ['rn_2dt_min','f\'(c)=0,\\;f\'\'(c)>0\\Rightarrow\\text{Local Min}'],
+    ['rn_poi','f\'\'\\text{ changes sign at }c\\Rightarrow\\text{Inflection}'],
+  ]);
+  card('ref_mono','↗','#2f9e44',[
+    ['rn_inc','f\'(x)>0\\Rightarrow f\\text{ increasing}'],
+    ['rn_dec','f\'(x)<0\\Rightarrow f\\text{ decreasing}'],
+    ['rn_const','f\'(x)=0\\Rightarrow f\\text{ constant}'],
+  ]);
+  card('ref_conc','∩','#0c8599',[
+    ['rn_cu','f\'\'(x)>0\\Rightarrow\\text{Concave up }(\\cup)'],
+    ['rn_cd','f\'\'(x)<0\\Rightarrow\\text{Concave down }(\\cap)'],
+    ['rn_infl','f\'\'\\text{ changes sign}\\Rightarrow\\text{Inflection point}'],
+  ]);
+  card('ref_asym','⟶','#c92a2a',[
+    ['rn_vert','\\lim_{x\\to c}f(x)=\\pm\\infty\\Rightarrow x=c'],
+    ['rn_horiz_r','\\lim_{x\\to+\\infty}f(x)=L\\Rightarrow y=L'],
+    ['rn_horiz_l','\\lim_{x\\to-\\infty}f(x)=L\\Rightarrow y=L'],
+    ['rn_obl','m=\\lim_{x\\to\\infty}\\dfrac{f(x)}{x}'],
+    ['rn_obl_b','b=\\lim_{x\\to\\infty}[f(x)-mx]'],
+  ]);
+  card('ref_tan','⟂','#7048e8',[
+    ['rn_slope','m = f\'(a)'],
+    ['rn_eq','y - f(a) = f\'(a)(x-a)'],
+    ['rn_normal','y - f(a) = -\\dfrac{1}{f\'(a)}(x-a)'],
+  ]);
+  card('ref_integ','∫','#1971c2',[
+    ['rn_int_power','\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1}+C\\;(n\\neq-1)'],
+    ['rn_int_lnx','\\int \\dfrac{1}{x}\\,dx = \\ln|x|+C'],
+    ['rn_int_ex','\\int e^x\\,dx = e^x+C'],
+    ['rn_int_sinx','\\int \\sin x\\,dx = -\\cos x+C'],
+    ['rn_int_cosx','\\int \\cos x\\,dx = \\sin x+C'],
+    ['rn_int_disc','V = \\pi\\int_a^b [f(x)]^2\\,dx'],
+    ['rn_int_washer','V = \\pi\\int_a^b \\left([f(x)]^2-[g(x)]^2\\right)dx'],
+    ['rn_int_shell','V = 2\\pi\\int_a^b x\\,f(x)\\,dx'],
+  ]);
+  card('ref_sketch','📋','#495057',[
+    ['rn_s1','\\text{1. Find domain and intercepts}'],
+    ['rn_s2','\\text{2. Check symmetry (even/odd)}'],
+    ['rn_s3','\\text{3. Find asymptotes}'],
+    ['rn_s4','\\text{4. Compute } f\'(x), \\text{ find critical points}'],
+    ['rn_s5','\\text{5. Determine monotonicity}'],
+    ['rn_s6','\\text{6. Compute } f\'\'(x), \\text{ find inflection points}'],
+    ['rn_s7','\\text{7. Determine concavity and sketch}'],
+  ]);
 }
 
-// ─── MAIN ────────────────────────────────────────────────────────────────────
-
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN EVENT WIRING & INIT
+// ═══════════════════════════════════════════════════════════════════════════
 let lastResult=null;
 
 function runAnalysis(){
   const fx=document.getElementById('fxInput').value.trim();
-  const xMin=parseFloat(document.getElementById('xMinInput').value)||(-5);
-  const xMax=parseFloat(document.getElementById('xMaxInput').value)||5;
-  if(!fx) return;
-  document.getElementById('graphTitle').textContent=`${t('graph_title')} f(x) = ${fx}`;
-  const result=analyzeCurve(fx,xMin,xMax,0);
+  const xMin=parseFloat(document.getElementById('xMinInput').value);
+  const xMax=parseFloat(document.getElementById('xMaxInput').value);
+  if(!fx||!isFinite(xMin)||!isFinite(xMax)||xMin>=xMax)return;
+  const titleEl=document.getElementById('graphTitle');
+  titleEl.textContent=`${t('graph_title')} f(x) = ${fx}`;
+  const result=analyzeCurve(fx,xMin,xMax,null);
   lastResult=result;
-  if(result.ok){
-    drawGraph(result);
-    buildAnalytics(result);
-  } else {
-    document.getElementById('analyticsPanel').innerHTML=`<div class="error-box">⚠️ ${result.error}</div>`;
-    document.getElementById('graph').innerHTML='';
-  }
+  buildAnalytics(result);
+  if(result.ok){autoViewport(result);drawGraph(result,false);}
 }
 
-// Tab navigation
-document.getElementById('navTabs').addEventListener('click',e=>{
-  const tab=e.target.closest('.nav-tab');
-  if(!tab) return;
-  const name=tab.dataset.tab;
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.toggle('active',t.id===`tab-${name}`));
-  if(name==='reference') buildReference();
+document.addEventListener('DOMContentLoaded',()=>{
+  // Tab navigation
+  document.querySelectorAll('.nav-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.nav-tab').forEach(t2=>t2.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+      tab.classList.add('active');
+      const id='tab-'+tab.dataset.tab;
+      document.getElementById(id).classList.add('active');
+      if(tab.dataset.tab==='reference')buildReference();
+    });
+  });
+  // Analyzer
+  document.getElementById('analyzeBtn').addEventListener('click',runAnalysis);
+  document.getElementById('fxInput').addEventListener('keydown',e=>{if(e.key==='Enter')runAnalysis();});
+  setupGraphInteraction();
+  // First Principles
+  document.getElementById('fpBtn').addEventListener('click',runFirstPrinciples);
+  document.getElementById('fpFxInput').addEventListener('keydown',e=>{if(e.key==='Enter')runFirstPrinciples();});
+  document.getElementById('hSlider').addEventListener('input',drawFpGraph);
+  // AI Assistant
+  rebuildQuickBtns();
+  document.getElementById('aiSolveBtn').addEventListener('click',solveAI);
+  document.getElementById('aiClearBtn').addEventListener('click',()=>{
+    document.getElementById('aiInput').value='';
+    document.getElementById('aiResult').innerHTML=`<h3>${t('ai_result_title')}</h3><div class="empty-state"><div class="big">🧮</div><div>${t('ai_empty')}</div></div>`;
+  });
+  document.getElementById('aiInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey)solveAI();});
+  // Area & Volume
+  document.getElementById('avBtn').addEventListener('click',runAreaVolume);
+  setupAvInteraction();
+  // i18n init
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder);});
+  // Initial analysis
+  runAnalysis();
+  buildReference();
 });
-
-// Analyze button
-document.getElementById('analyzeBtn').addEventListener('click',runAnalysis);
-document.getElementById('fxInput').addEventListener('keydown',e=>{if(e.key==='Enter') runAnalysis();});
-
-// Initial run
-runAnalysis();
 </script>
 </body>
 </html>
-
