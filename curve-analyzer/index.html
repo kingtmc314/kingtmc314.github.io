@@ -148,6 +148,18 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
   .app-body{padding:.75rem}
   .logo{font-size:.95rem}
 }
+
+/* ─── MATH KEYBOARD ─────────────────────────────────────── */
+.math-input-wrap{position:relative;width:100%}
+.math-preview{min-height:2.2rem;padding:.35rem .75rem;background:var(--primary-bg);border:1.5px solid var(--primary);border-radius:8px;font-size:1rem;color:var(--fg);overflow-x:auto;white-space:nowrap;margin-bottom:.3rem;display:flex;align-items:center}
+.math-preview .katex-display{margin:0;text-align:left}
+.math-preview .katex-display>.katex{text-align:left}
+.math-kb{display:flex;flex-wrap:wrap;gap:.28rem;padding:.5rem .6rem;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:.4rem;box-shadow:var(--shadow)}
+.kb-btn{padding:.28rem .52rem;border-radius:6px;border:1.5px solid var(--border);background:var(--bg);color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:.82rem;cursor:pointer;transition:all .15s;line-height:1.3}
+.kb-btn:hover{background:var(--primary-bg);border-color:var(--primary);color:var(--primary)}
+.kb-btn:active{transform:scale(0.94)}
+.kb-section{display:flex;flex-wrap:wrap;gap:.28rem;align-items:center}
+.kb-sep{width:1px;height:1.6rem;background:var(--border);margin:0 .2rem}
 </style>
 </head>
 <body>
@@ -183,7 +195,11 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
   <div class="input-bar">
     <div class="input-field" style="flex:3;min-width:220px">
       <label data-i18n="label_function">Function f(x)</label>
-      <input type="text" id="fxInput" placeholder="e.g. sin(x), x^2-3*x+2, 1/x, ln(x)" value="sin(x)">
+      <div class="math-input-wrap">
+        <div class="math-preview" id="fxPreview"></div>
+        <div class="math-kb" id="fxKb"></div>
+        <input type="text" id="fxInput" placeholder="e.g. sin(x), x^2-3*x+2, 1/x, ln(x)" value="sin(x)" autocomplete="off" spellcheck="false">
+      </div>
     </div>
     <div class="input-field" style="max-width:130px">
       <label data-i18n="label_xmin">x min</label>
@@ -223,7 +239,11 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
   <div class="input-bar">
     <div class="input-field" style="flex:3;min-width:220px">
       <label data-i18n="fp_label_fn">Function f(x)</label>
-      <input type="text" id="fpFxInput" placeholder="e.g. x^2, sin(x), x^3+2*x" value="x^2">
+      <div class="math-input-wrap">
+        <div class="math-preview" id="fpFxPreview"></div>
+        <div class="math-kb" id="fpFxKb"></div>
+        <input type="text" id="fpFxInput" placeholder="e.g. x^2, sin(x), x^3+2*x" value="x^2" autocomplete="off" spellcheck="false">
+      </div>
     </div>
     <div class="input-field" style="max-width:160px">
       <label data-i18n="fp_label_at">Evaluate at x = (optional)</label>
@@ -278,7 +298,11 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
   <div class="input-bar">
     <div class="input-field" style="flex:2;min-width:180px">
       <label data-i18n="av_label_f">f(x) — upper curve</label>
-      <input type="text" id="avFxInput" placeholder="e.g. x^2, sin(x)" value="x^2">
+      <div class="math-input-wrap">
+        <div class="math-preview" id="avFxPreview"></div>
+        <div class="math-kb" id="avFxKb"></div>
+        <input type="text" id="avFxInput" placeholder="e.g. x^2, sin(x)" value="x^2" autocomplete="off" spellcheck="false">
+      </div>
     </div>
     <div class="input-field" style="flex:2;min-width:180px">
       <label data-i18n="av_label_g">g(x) — lower curve (optional)</label>
@@ -1263,15 +1287,22 @@ function runFirstPrinciples(){
     math.parse(fx);
     // Step 1: Definition
     addStep(1,t('fp_step1'),'\\begin{aligned}f\'(x) &= \\lim_{h \\to 0} \\dfrac{f(x+h) - f(x)}{h}\\end{aligned}');
-    // Step 2: Substitute
-    let fxhStr='';
+    // Step 2: Substitute - use mathjs toTex for proper LaTeX rendering
+    let fxhTex='f(x+h)';
+    let fxTex=simplifyTex(fx);
     try{
+      // Substitute x → (x+h) using mathjs transform
       const node=math.parse(fx);
-      const scope={x:math.parse('x+h')};
-      fxhStr=node.toString().replace(/\bx\b/g,'(x+h)');
-    }catch{fxhStr=`f(x+h)`;}
-    const fxTex=simplifyTex(fx);
-    addStep(2,t('fp_step2'),`\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{[${fxhStr.replace(/\*/g,'\\cdot ')}] - [${fxTex}]}{h}\\end{aligned}`);
+      const fxhNode=node.transform(n=>{
+        if(n.isSymbolNode&&n.name==='x')return math.parse('x+h');
+        return n;
+      });
+      fxhTex=fxhNode.toTex({parenthesis:'auto'});
+    }catch{
+      // Fallback: string replace
+      fxhTex=simplifyTex(fx.replace(/\bx\b/g,'(x+h)'));
+    }
+    addStep(2,t('fp_step2'),`\\begin{aligned}\\dfrac{f(x+h)-f(x)}{h} &= \\dfrac{\\left[${fxhTex}\\right] - \\left[${fxTex}\\right]}{h}\\end{aligned}`);
     // Step 3 & 4: Compute derivative symbolically with full algebraic expansion
     const fpStr=safeDerivative(fx);
     const fpTex=fpStr?simplifyTex(fpStr):'\\text{(see result)}';
@@ -2068,6 +2099,118 @@ function runAnalysis(){
   if(result.ok){autoViewport(result);drawGraph(result,false);}
 }
 
+
+// ═══════════════════════════════════════════════════════════════
+// MATH KEYBOARD + LIVE PREVIEW
+// ═══════════════════════════════════════════════════════════════
+const KB_BUTTONS = [
+  // Basic ops
+  {label:'x',ins:'x',tip:'variable x'},
+  {label:'x²',ins:'x^2',tip:'square'},
+  {label:'xⁿ',ins:'x^',tip:'power'},
+  {label:'√x',ins:'sqrt(',tip:'square root'},
+  {label:'∛x',ins:'cbrt(',tip:'cube root'},
+  {label:'1/x',ins:'1/',tip:'reciprocal'},
+  {sep:true},
+  // Trig
+  {label:'sin',ins:'sin(',tip:'sine'},
+  {label:'cos',ins:'cos(',tip:'cosine'},
+  {label:'tan',ins:'tan(',tip:'tangent'},
+  {label:'csc',ins:'csc(',tip:'cosecant'},
+  {label:'sec',ins:'sec(',tip:'secant'},
+  {label:'cot',ins:'cot(',tip:'cotangent'},
+  {sep:true},
+  // Inverse trig
+  {label:'sin⁻¹',ins:'asin(',tip:'arcsine'},
+  {label:'cos⁻¹',ins:'acos(',tip:'arccosine'},
+  {label:'tan⁻¹',ins:'atan(',tip:'arctangent'},
+  {sep:true},
+  // Exp/log
+  {label:'eˣ',ins:'exp(',tip:'e^x'},
+  {label:'ln',ins:'ln(',tip:'natural log'},
+  {label:'log',ins:'log(',tip:'log base 10'},
+  {label:'log₂',ins:'log2(',tip:'log base 2'},
+  {sep:true},
+  // Constants
+  {label:'π',ins:'pi',tip:'pi'},
+  {label:'e',ins:'e',tip:'Euler number'},
+  {sep:true},
+  // Brackets
+  {label:'(',ins:'(',tip:'open bracket'},
+  {label:')',ins:')',tip:'close bracket'},
+  {label:'|x|',ins:'abs(',tip:'absolute value'},
+  {sep:true},
+  // Special
+  {label:'⌫',ins:'__BACKSPACE__',tip:'backspace'},
+  {label:'Clear',ins:'__CLEAR__',tip:'clear all'},
+];
+
+function buildMathKb(kbEl, inputEl, previewEl) {
+  kbEl.innerHTML = '';
+  KB_BUTTONS.forEach(btn => {
+    if (btn.sep) {
+      const s = document.createElement('div');
+      s.className = 'kb-sep';
+      kbEl.appendChild(s);
+      return;
+    }
+    const b = document.createElement('button');
+    b.className = 'kb-btn';
+    b.textContent = btn.label;
+    b.title = btn.tip || '';
+    b.type = 'button';
+    b.addEventListener('mousedown', e => {
+      e.preventDefault(); // don't blur input
+      if (btn.ins === '__BACKSPACE__') {
+        const s = inputEl.selectionStart, e2 = inputEl.selectionEnd;
+        if (s !== e2) {
+          inputEl.value = inputEl.value.slice(0, s) + inputEl.value.slice(e2);
+          inputEl.setSelectionRange(s, s);
+        } else if (s > 0) {
+          inputEl.value = inputEl.value.slice(0, s-1) + inputEl.value.slice(s);
+          inputEl.setSelectionRange(s-1, s-1);
+        }
+      } else if (btn.ins === '__CLEAR__') {
+        inputEl.value = '';
+        inputEl.setSelectionRange(0, 0);
+      } else {
+        const s = inputEl.selectionStart, e2 = inputEl.selectionEnd;
+        const before = inputEl.value.slice(0, s);
+        const after = inputEl.value.slice(e2);
+        const ins = btn.ins;
+        inputEl.value = before + ins + after;
+        const newPos = s + ins.length;
+        inputEl.setSelectionRange(newPos, newPos);
+      }
+      inputEl.focus();
+      updatePreview(inputEl, previewEl);
+    });
+    kbEl.appendChild(b);
+  });
+}
+
+function updatePreview(inputEl, previewEl) {
+  const val = inputEl.value.trim();
+  if (!val) { previewEl.innerHTML = '<span style="color:var(--fg3);font-size:.85rem">f(x) = …</span>'; return; }
+  try {
+    const tex = math.parse(val).toTex({parenthesis:'auto'});
+    katex.render('f(x) = ' + tex, previewEl, {displayMode:false, throwOnError:false});
+  } catch {
+    previewEl.innerHTML = '<span style="color:var(--red);font-size:.85rem">' + val + '</span>';
+  }
+}
+
+function setupMathInput(inputId, kbId, previewId) {
+  const inputEl = document.getElementById(inputId);
+  const kbEl = document.getElementById(kbId);
+  const previewEl = document.getElementById(previewId);
+  if (!inputEl || !kbEl || !previewEl) return;
+  buildMathKb(kbEl, inputEl, previewEl);
+  inputEl.addEventListener('input', () => updatePreview(inputEl, previewEl));
+  inputEl.addEventListener('focus', () => updatePreview(inputEl, previewEl));
+  updatePreview(inputEl, previewEl);
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
   // Tab navigation
   document.querySelectorAll('.nav-tab').forEach(tab=>{
@@ -2115,6 +2258,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   // i18n init
   document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder);});
+  // Math keyboard + live preview for all function inputs
+  setupMathInput('fxInput','fxKb','fxPreview');
+  setupMathInput('fpFxInput','fpFxKb','fpFxPreview');
+  setupMathInput('avFxInput','avFxKb','avFxPreview');
   // Initial analysis
   runAnalysis();
   buildReference();
