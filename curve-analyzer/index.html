@@ -1707,7 +1707,7 @@ function runFirstPrinciples(){
     }catch{ fxhTex = fx.replace(/\bx\b/g,'(x+h)'); }
     const fpStr = safeDerivative(fx);
     const fpTex = fpStr ? simplifyTex(fpStr) : '?';
-    const t = currentLang;
+    const t = (typeof LANG !== 'undefined' ? LANG : 'en');
     // Step 1: Definition
     addStep(1, t==='zh'?'導數定義':'Definition of Derivative',
       `\\begin{aligned}f'(x) &= \\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}\\end{aligned}`);
