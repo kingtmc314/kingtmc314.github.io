@@ -1643,7 +1643,7 @@ function buildThreeScene(res){
   const W=container.clientWidth||700,H=420;
   // Scene
   threeScene=new THREE.Scene();threeScene.background=new THREE.Color(0x1a1d2e);
-  threeCamera=new THREE.PerspectiveCamera(45,W/H,0.01,1000);threeCamera.position.set(3,2,5);
+  threeCamera=new THREE.PerspectiveCamera(45,W/H,0.01,1000);threeCamera.position.set(2,1.5,3.5);threeCamera.lookAt(0.5,0,0);
   threeRenderer=new THREE.WebGLRenderer({antialias:true});threeRenderer.setSize(W,H);threeRenderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(threeRenderer.domElement);
   // Lights
