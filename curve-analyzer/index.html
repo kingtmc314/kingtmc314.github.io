@@ -1481,10 +1481,12 @@ function runFirstPrinciples(){
         lines.push({tex:`\\phantom{f'(x)} = \\cos x\\cdot 1`,note:t==='zh'?'標準極限 lim_{u→0} sin u/u = 1（取 u = h/2）':'Standard limit lim_{u→0} sin u/u = 1 (u = h/2)'});
         lines.push({tex:`\\therefore\\quad f'(x) = \\cos x`,note:''});
       } else {
+        // Addition formula: sin(g(x)+Δu) - sin(g(x)) = cos(g(x))sin(Δu) + sin(g(x))(cos(Δu)-1)
         lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sin(${gxhTex})-\\sin(${gxTex})}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{2\\cos\\!\\left(\\dfrac{${gxhTex}+${gxTex}}{2}\\right)\\sin\\!\\left(\\dfrac{\\Delta u}{2}\\right)}{h}`,note:t==='zh'?`和差化積，其中 Δu = g(x+h)−g(x)`:`Sum-to-product, where Δu = g(x+h)−g(x)`});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\cos\\!\\left(\\dfrac{${gxhTex}+${gxTex}}{2}\\right)\\cdot\\dfrac{\\sin(\\Delta u/2)}{\\Delta u/2}\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?'乘以 Δu/Δu 以引出標準極限':'Multiply by Δu/Δu to expose standard limit'});
-        lines.push({tex:`\\phantom{f'(x)} = \\cos(${gxTex})\\cdot 1\\cdot ${gpTex}`,note:t==='zh'?`h→0 時：sin(Δu/2)/(Δu/2)→1，Δu/h→g'(x)=${gpTex}`:`As h→0: sin(Δu/2)/(Δu/2)→1, Δu/h→g'(x)=${gpTex}`});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sin(${gxTex}+\\Delta u)-\\sin(${gxTex})}{h}`,note:t==='zh'?`令 \\Delta u = ${gxhTex}-${gxTex}`:`Let \\Delta u = ${gxhTex}-${gxTex}`});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sin(${gxTex})\\cos(\\Delta u)+\\cos(${gxTex})\\sin(\\Delta u)-\\sin(${gxTex})}{h}`,note:t==='zh'?'加法公式：sin(A+B) = sinA cosB + cosA sinB':'Addition formula: sin(A+B) = sinA cosB + cosA sinB'});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[\\cos(${gxTex})\\cdot\\dfrac{\\sin(\\Delta u)}{\\Delta u}+\\sin(${gxTex})\\cdot\\dfrac{\\cos(\\Delta u)-1}{\\Delta u}\\right]\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?'整理，乘以 \\dfrac{\\Delta u}{\\Delta u}':'Rearrange, multiply by \\dfrac{\\Delta u}{\\Delta u}'});
+        lines.push({tex:`\\phantom{f'(x)} = \\left[\\cos(${gxTex})\\cdot 1+\\sin(${gxTex})\\cdot 0\\right]\\cdot ${gpTex}`,note:t==='zh'?`\\Delta u\\to 0 時：\\lim_{y\\to 0}\\dfrac{\\sin y}{y}=1，\\lim_{y\\to 0}\\dfrac{\\cos y-1}{y}=0，\\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`:`As \\Delta u\\to 0: \\lim_{y\\to 0}\\dfrac{\\sin y}{y}=1, \\lim_{y\\to 0}\\dfrac{\\cos y-1}{y}=0, \\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`});
         lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx sin(g(x)) = cos(g(x))·g\'(x)':'Chain Rule: d/dx sin(g(x)) = cos(g(x))·g\'(x)'});
       }
       return lines;
@@ -1494,15 +1496,17 @@ function runFirstPrinciples(){
     if(typ.outer==='cos'){
       if(isPure){
         lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos(x+h)-\\cos x}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{-2\\sin\\!\\left(x+\\dfrac{h}{2}\\right)\\sin\\!\\left(\\dfrac{h}{2}\\right)}{h}`,note:t==='zh'?'和差化積：cos A − cos B = −2sin\\frac{A+B}{2}sin\\frac{A-B}{2}':'Sum-to-product: cos A − cos B = −2sin\\frac{A+B}{2}sin\\frac{A-B}{2}'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}-\\sin\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2}`,note:t==='zh'?'改寫 h = 2·(h/2)':'Rewrite h = 2·(h/2)'});
-        lines.push({tex:`\\phantom{f'(x)} = -\\sin x\\cdot 1`,note:t==='zh'?'標準極限 lim_{u→0} sin u/u = 1':'Standard limit lim_{u→0} sin u/u = 1'});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos x\\cos h-\\sin x\\sin h-\\cos x}{h}`,note:t==='zh'?'加法公式：cos(x+h) = cosx·cosh − sinx·sinh':'Addition formula: cos(x+h) = cosx·cosh − sinx·sinh'});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[\\cos x\\cdot\\dfrac{\\cos h-1}{h}-\\sin x\\cdot\\dfrac{\\sin h}{h}\\right]`,note:t==='zh'?'整理':'Rearrange'});
+        lines.push({tex:`\\phantom{f'(x)} = \\cos x\\cdot 0-\\sin x\\cdot 1`,note:t==='zh'?'標準極限：lim(cos h−1)/h=0，lim(sin h)/h=1':'Standard limits: lim(cos h−1)/h=0, lim(sin h)/h=1'});
         lines.push({tex:`\\therefore\\quad f'(x) = -\\sin x`,note:''});
       } else {
+        // Addition formula: cos(g(x)+Δu) - cos(g(x)) = cos(g(x))(cos(Δu)-1) - sin(g(x))sin(Δu)
         lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos(${gxhTex})-\\cos(${gxTex})}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{-2\\sin\\!\\left(\\dfrac{${gxhTex}+${gxTex}}{2}\\right)\\sin\\!\\left(\\dfrac{\\Delta u}{2}\\right)}{h}`,note:t==='zh'?'和差化積':'Sum-to-product'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}-\\sin\\!\\left(\\dfrac{${gxhTex}+${gxTex}}{2}\\right)\\cdot\\dfrac{\\sin(\\Delta u/2)}{\\Delta u/2}\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?'乘以 Δu/Δu':'Multiply by Δu/Δu'});
-        lines.push({tex:`\\phantom{f'(x)} = -\\sin(${gxTex})\\cdot 1\\cdot ${gpTex}`,note:t==='zh'?`h→0 時 Δu/h→g'(x)=${gpTex}`:`As h→0, Δu/h→g'(x)=${gpTex}`});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos(${gxTex}+\\Delta u)-\\cos(${gxTex})}{h}`,note:t==='zh'?`令 \\Delta u = ${gxhTex}-${gxTex}`:`Let \\Delta u = ${gxhTex}-${gxTex}`});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos(${gxTex})\\cos(\\Delta u)-\\sin(${gxTex})\\sin(\\Delta u)-\\cos(${gxTex})}{h}`,note:t==='zh'?'加法公式：cos(A+B) = cosA cosB − sinA sinB':'Addition formula: cos(A+B) = cosA cosB − sinA sinB'});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[\\cos(${gxTex})\\cdot\\dfrac{\\cos(\\Delta u)-1}{\\Delta u}-\\sin(${gxTex})\\cdot\\dfrac{\\sin(\\Delta u)}{\\Delta u}\\right]\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?'整理，乘以 \\dfrac{\\Delta u}{\\Delta u}':'Rearrange, multiply by \\dfrac{\\Delta u}{\\Delta u}'});
+        lines.push({tex:`\\phantom{f'(x)} = \\left[\\cos(${gxTex})\\cdot 0-\\sin(${gxTex})\\cdot 1\\right]\\cdot ${gpTex}`,note:t==='zh'?`\\Delta u\\to 0 時：\\lim_{y\\to 0}\\dfrac{\\cos y-1}{y}=0，\\lim_{y\\to 0}\\dfrac{\\sin y}{y}=1，\\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`:`As \\Delta u\\to 0: \\lim_{y\\to 0}\\dfrac{\\cos y-1}{y}=0, \\lim_{y\\to 0}\\dfrac{\\sin y}{y}=1, \\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`});
         lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx cos(g(x)) = −sin(g(x))·g\'(x)':'Chain Rule: d/dx cos(g(x)) = −sin(g(x))·g\'(x)'});
       }
       return lines;
@@ -1517,10 +1521,11 @@ function runFirstPrinciples(){
         lines.push({tex:`\\phantom{f'(x)} = e^x\\cdot 1`,note:t==='zh'?'標準極限 lim_{h→0}(e^h−1)/h = 1':'Standard limit lim_{h→0}(e^h−1)/h = 1'});
         lines.push({tex:`\\therefore\\quad f'(x) = e^x`,note:''});
       } else {
+        // Factor out e^{g(x)}: e^{g(x+h)} - e^{g(x)} = e^{g(x)} · (e^{Δu} - 1), Δu = g(x+h)-g(x)
         lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{e^{${gxhTex}}-e^{${gxTex}}}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{e^{${gxTex}}\\cdot e^{\\Delta u}-e^{${gxTex}}}{h}`,note:t==='zh'?`令 Δu = g(x+h)−g(x)，e^{g(x+h)} = e^{g(x)}·e^{Δu}`:`Let Δu = g(x+h)−g(x), e^{g(x+h)} = e^{g(x)}·e^{Δu}`});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}e^{${gxTex}}\\cdot\\dfrac{e^{\\Delta u}-1}{\\Delta u}\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?'乘以 Δu/Δu 以引出標準極限':'Multiply by Δu/Δu to expose standard limit'});
-        lines.push({tex:`\\phantom{f'(x)} = e^{${gxTex}}\\cdot 1\\cdot ${gpTex}`,note:t==='zh'?`h→0 時：(e^{Δu}−1)/Δu→1，Δu/h→g'(x)=${gpTex}`:`As h→0: (e^{Δu}−1)/Δu→1, Δu/h→g'(x)=${gpTex}`});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{e^{${gxTex}}\\left(e^{${gxhTex}-${gxTex}}-1\\right)}{h}`,note:t==='zh'?`提取 e^{g(x)}：e^{g(x+h)} = e^{g(x)}·e^{\\Delta u}`:`Factor out e^{g(x)}: e^{g(x+h)} = e^{g(x)}·e^{\\Delta u}`});
+        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}e^{${gxTex}}\\cdot\\dfrac{e^{\\Delta u}-1}{\\Delta u}\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?`令 \\Delta u = ${gxhTex}-${gxTex}，乘以 \\dfrac{\\Delta u}{\\Delta u}`:`Let \\Delta u = ${gxhTex}-${gxTex}, multiply by \\dfrac{\\Delta u}{\\Delta u}`});
+        lines.push({tex:`\\phantom{f'(x)} = e^{${gxTex}}\\cdot 1\\cdot ${gpTex}`,note:t==='zh'?`h\\to 0 時 \\Delta u\\to 0，標準極限 \\lim_{y\\to 0}\\dfrac{e^y-1}{y}=1，\\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`:`As h\\to 0, \\Delta u\\to 0; standard limit \\lim_{y\\to 0}\\dfrac{e^y-1}{y}=1; \\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`});
         lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx e^{g(x)} = e^{g(x)}·g\'(x)':'Chain Rule: d/dx e^{g(x)} = e^{g(x)}·g\'(x)'});
       }
       return lines;
