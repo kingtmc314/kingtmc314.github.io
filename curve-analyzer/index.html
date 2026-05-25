@@ -1685,9 +1685,37 @@ function runFirstPrinciples(){
     titleEl.textContent=t==='zh'?`f(x) = ${fx} 的基本原理推導`:`First Principles Derivation of f(x) = ${fx}`;
     stepsDiv.appendChild(titleEl);
 
-    const lines=buildLines(fx,fxTex,fxhTex,fpTex);
+        const lines=buildLines(fx,fxTex,fxhTex,fpTex);
     renderDSEBlock(lines);
-
+    // ── Substitute x = a block ────────────────────────────────────────────
+    if(isFinite(atX)&&fpStr){
+      const aTex=numToTex(atX);
+      const fpAtVal=evalAt(fpStr,atX);
+      const fpAtTex=isFinite(fpAtVal)?numToTex(Math.round(fpAtVal*1e8)/1e8):'?';
+      // Build substituted f(a+h) and f(a) tex
+      let faTeX,fahTeX;
+      try{
+        const nodeA=math.parse(fx);
+        const substA=nodeA.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(String(atX));return n;});
+        faTeX=math.simplify(substA).toTex({parenthesis:'auto'});
+      }catch{faTeX=numToTex(evalAt(fx,atX));}
+      try{
+        const nodeAH=math.parse(fx);
+        const substAH=nodeAH.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(`(${atX}+h)`);return n;});
+        fahTeX=substAH.toTex({parenthesis:'auto'});
+      }catch{fahTeX=`f(${aTex}+h)`;}
+      const subLines=[
+        {tex:`f'(${aTex}) = \\lim_{h\\to 0}\\dfrac{f(${aTex}+h)-f(${aTex})}{h}`,note:t==='zh'?`代入 x = ${aTex}`:`Substitute x = ${aTex}`},
+        {tex:`\\phantom{f'(${aTex})} = \\lim_{h\\to 0}\\dfrac{${fahTeX}-(${faTeX})}{h}`,note:''},
+        {tex:`\\phantom{f'(${aTex})} = \\left.f'(x)\\right|_{x=${aTex}} = ${fpAtTex}`,note:t==='zh'?'代入 x 的一般導數公式':'Evaluate general derivative at x = '+aTex},
+        {tex:`\\therefore\\quad f'(${aTex}) = ${fpAtTex}`,note:''}
+      ];
+      const subTitle=document.createElement('div');
+      subTitle.style.cssText='font-size:.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin:.9rem 0 .5rem';
+      subTitle.textContent=t==='zh'?`代入 x = ${atX}`:`Evaluate at x = ${atX}`;
+      stepsDiv.appendChild(subTitle);
+      renderDSEBlock(subLines);
+    }
     // Numerical verification
     if(isFinite(atX)){
       const hv=0.0001;
