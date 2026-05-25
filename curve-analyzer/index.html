@@ -1709,22 +1709,8 @@ function runFirstPrinciples(){
       const fpAtVal=evalAt(fpStr,atX);
       const fpApproxTex=isFinite(fpAtVal)?`\\approx ${numToTex(Math.round(fpAtVal*1e6)/1e6)}`:'?';
       // ── Build the "at a" version of buildLines ──────────────────────────
-      // Strategy: create a modified buildLines that uses a instead of x.
-      // We do this by creating a wrapper function that calls buildLines
-      // with all expressions having x replaced by a.
       function buildLinesAt(fxExpr, aVal, aTx, fpExTex){
-        // Replace x with aVal in an expression string
-        function sa(expr){
-          try{
-            const nd=math.parse(expr);
-            const s=nd.transform(n=>{
-              if(n.isSymbolNode&&n.name==='x') return math.parse(String(aVal));
-              return n;
-            });
-            return s.toTex({parenthesis:'auto'});
-          }catch{return expr.replace(/\bx\b/g,String(aVal));}
-        }
-        // Replace x with (aVal+h) in an expression string
+        // Replace x with (aVal+h) in an expression string → TeX
         function sah(expr){
           try{
             const nd=math.parse(expr);
@@ -1735,7 +1721,56 @@ function runFirstPrinciples(){
             return s.toTex({parenthesis:'auto'});
           }catch{return expr.replace(/\bx\b/g,`(${aVal}+h)`);}
         }
-        // Phantom prefix for alignment
+        // Replace x with aVal in an expression string → TeX
+        function sa(expr){
+          try{
+            const nd=math.parse(expr);
+            const s=nd.transform(n=>{
+              if(n.isSymbolNode&&n.name==='x') return math.parse(String(aVal));
+              return n;
+            });
+            return s.toTex({parenthesis:'auto'});
+          }catch{return expr.replace(/\bx\b/g,String(aVal));}
+        }
+        // Build Q(h) = [f(a+h)-f(a)]/h as a polynomial TeX string
+        // using finite-difference interpolation (works for polynomials)
+        function quotientPolyTex(fxStr, a){
+          try{
+            const fa=math.evaluate(fxStr,{x:a});
+            const qVals=[];
+            for(let i=1;i<=5;i++) qVals.push((math.evaluate(fxStr,{x:a+i})-fa)/i);
+            const d1=qVals.map((v,i)=>i>0?qVals[i]-qVals[i-1]:null).filter(v=>v!==null);
+            const d2=d1.map((v,i)=>i>0?d1[i]-d1[i-1]:null).filter(v=>v!==null);
+            const d3=d2.map((v,i)=>i>0?d2[i]-d2[i-1]:null).filter(v=>v!==null);
+            let degree=0;
+            if(d2.every(v=>Math.abs(v)<1e-6)) degree=1;
+            else if(d3.every(v=>Math.abs(v)<1e-6)) degree=2;
+            else degree=3;
+            let coeffs=[];
+            const r=v=>Math.round(v*1e6)/1e6;
+            if(degree===1){
+              const c1=r(qVals[1]-qVals[0]); const c0=r(qVals[0]-c1);
+              coeffs=[c0,c1];
+            } else if(degree===2){
+              const c2=r(d2[0]/2); const c1=r(d1[0]-3*c2); const c0=r(qVals[0]-c2-c1);
+              coeffs=[c0,c1,c2];
+            } else {
+              const c3=r(d3[0]/6); const c2=r(d2[0]/2-7*c3/2);
+              const c1=r(d1[0]-3*c2-7*c3); const c0=r(qVals[0]-c3-c2-c1);
+              coeffs=[c0,c1,c2,c3];
+            }
+            const terms=[];
+            for(let k=coeffs.length-1;k>=0;k--){
+              const c=coeffs[k];
+              if(Math.abs(c)<1e-9) continue;
+              const cTex=numToTex(c);
+              if(k===0) terms.push(cTex);
+              else if(k===1) terms.push(Math.abs(c)===1?(c<0?'-h':'h'):`${cTex} \\cdot h`);
+              else terms.push(Math.abs(c)===1?(c<0?`-h^{${k}}`:`h^{${k}}`):`${cTex} \\cdot h^{${k}}`);
+            }
+            return terms.join(' + ').replace(/\+ -/g,'- ') || '0';
+          }catch{return null;}
+        }
         const ph=`\\phantom{f'(${aTx})}`;
         const lim=`\\lim_{h\\to 0}`;
         const lines=[];
@@ -1745,31 +1780,26 @@ function runFirstPrinciples(){
         const fahTex=sah(fxExpr);
         const faTex=sa(fxExpr);
         lines.push({tex:`${ph} = ${lim}\\dfrac{${fahTex}-(${faTex})}{h}`,note:t==='zh'?'代入 f(a+h) 和 f(a)':'Substitute f(a+h) and f(a)'});
-        // Now get the intermediate steps by running the polynomial fallback
-        // with a substituted: compute (f(a+h)-f(a)) symbolically
+        // Try polynomial expansion using rationalize + interpolation
         let expandOK=false;
         try{
-          // Build f(a+h) - f(a) as a mathjs expression
           const fahStr=fxExpr.replace(/\bx\b/g,`(${aVal}+h)`);
           const faStr=fxExpr.replace(/\bx\b/g,String(aVal));
           const diffExpr=`(${fahStr})-(${faStr})`;
-          const diffSimp=math.simplify(math.parse(diffExpr),[],{exactFractions:false});
-          const diffStr=diffSimp.toString();
-          // Only use polynomial expansion if result is polynomial in h
+          const diffRat=math.rationalize(math.parse(diffExpr));
+          const diffStr=diffRat.toString();
           if(!/exp|sin|cos|tan|log|ln/.test(diffStr)){
-            const diffTex=simplifyTex(diffStr);
-            const quotSimp=math.simplify(math.parse(`(${diffStr})/h`),[],{exactFractions:false});
-            const quotTex=simplifyTex(quotSimp.toString());
-            lines.push({tex:`${ph} = ${lim}\\dfrac{${diffTex}}{h}`,note:t==='zh'?'展開 f(a+h)−f(a)':'Expand f(a+h)−f(a)'});
-            lines.push({tex:`${ph} = ${lim}\\left(${quotTex}\\right)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-            // Substitute h=0 in quotTex to get the limit
-            const limitVal=sa(quotSimp.toString().replace(/\bh\b/g,'0'));
-            lines.push({tex:`${ph} = ${fpExTex}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
-            expandOK=true;
+            const diffTex=diffRat.toTex({parenthesis:'auto'});
+            const quotTex=quotientPolyTex(fxExpr,aVal);
+            if(quotTex){
+              lines.push({tex:`${ph} = ${lim}\\dfrac{${diffTex}}{h}`,note:t==='zh'?'展開 f(a+h)−f(a)':'Expand f(a+h)−f(a)'});
+              lines.push({tex:`${ph} = ${lim}\\left(${quotTex}\\right)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
+              lines.push({tex:`${ph} = ${fpExTex}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
+              expandOK=true;
+            }
           }
         }catch{}
         if(!expandOK){
-          // For non-polynomial (trig, exp, ln etc.), show the general derivative substituted
           lines.push({tex:`${ph} = \\left.f'(x)\\right|_{x=${aTx}} = ${fpExTex}`,note:t==='zh'?'代入一般導數公式':'Substitute into general derivative'});
         }
         lines.push({tex:`\\therefore\\quad f'(${aTx}) = ${fpExTex}${fpApproxTex}`,note:''});
