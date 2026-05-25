@@ -1595,18 +1595,75 @@ function runFirstPrinciples(){
       return lines;
     }
 
-    // ── POLYNOMIAL / GENERIC FALLBACK ─────────────────────────────────────
+    // ── DETECT PRODUCT / QUOTIENT / SUM / DIFFERENCE ─────────────────────
+    // Try to parse the AST and route to a structured derivation
+    function texOf(expr){try{return math.parse(expr).toTex({parenthesis:'auto'});}catch{return expr;}}
+    function texOfXpH(expr){try{const n=math.parse(expr);const s=n.transform(nd=>{if(nd.isSymbolNode&&nd.name==='x')return math.parse('x+h');return nd;});return s.toTex({parenthesis:'auto'});}catch{return expr.replace(/\bx\b/g,'(x+h)');}}
+    function derivTex(expr){try{const d=math.derivative(expr.replace(/\bln\s*\(/g,'log('),'x');return simplifyTex(d.toString());}catch{return "f'(x)";}}
+    try{
+      const node=math.parse(fx);
+      const op=node.op;
+      if((op==='*'||op==='/'||op==='+'||op==='-')&&node.args&&node.args.length===2){
+        const uExpr=node.args[0].toString();
+        const vExpr=node.args[1].toString();
+        const uTex=texOf(uExpr);
+        const vTex=texOf(vExpr);
+        const uxhTex=texOfXpH(uExpr);
+        const vxhTex=texOfXpH(vExpr);
+        const upTex=derivTex(uExpr);
+        const vpTex=derivTex(vExpr);
+        if(op==='*'){
+          // Product Rule first principles
+          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${uxhTex})(${vxhTex})-(${uTex})(${vTex})}{h}`,note:''});
+          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${uxhTex})(${vxhTex})-(${uTex})(${vxhTex})+(${uTex})(${vxhTex})-(${uTex})(${vTex})}{h}`,note:t==='zh'?'加減 u(x)v(x+h)（配凑法）':'Add and subtract u(x)v(x+h)'});
+          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[(${vxhTex})\\cdot\\dfrac{${uxhTex}-(${uTex})}{h}+(${uTex})\\cdot\\dfrac{${vxhTex}-(${vTex})}{h}\\right]`,note:t==='zh'?'提取公因式，分拆為兩個差商':'Factor: split into two difference quotients'});
+          lines.push({tex:`\\phantom{f'(x)} = (${vTex})\\cdot(${upTex})+(${uTex})\\cdot(${vpTex})`,note:t==='zh'?`h→0：v(x+h)→v(x)，各差商→導數`:`As h→0: v(x+h)→v(x), each quotient→derivative`});
+          lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'乘積法則：(uv)\' = u\'v + uv\'':'Product Rule: (uv)\' = u\'v + uv\''});
+          return lines;
+        }
+        if(op==='/'){
+          // Quotient Rule first principles
+          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\dfrac{${uxhTex}}{${vxhTex}}-\\dfrac{${uTex}}{${vTex}}}{h}`,note:''});
+          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${uxhTex})(${vTex})-(${uTex})(${vxhTex})}{h\\cdot(${vxhTex})(${vTex})}`,note:t==='zh'?'通分':'Common denominator'});
+          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${vTex})\\dfrac{${uxhTex}-(${uTex})}{h}-(${uTex})\\dfrac{${vxhTex}-(${vTex})}{h}}{(${vxhTex})(${vTex})}`,note:t==='zh'?'加減 u(x)v(x)，分拆差商':'Add/subtract u(x)v(x), split quotients'});
+          lines.push({tex:`\\phantom{f'(x)} = \\dfrac{(${vTex})\\cdot(${upTex})-(${uTex})\\cdot(${vpTex})}{(${vTex})^2}`,note:t==='zh'?`h→0：v(x+h)→v(x)，各差商→導數`:`As h→0: v(x+h)→v(x), each quotient→derivative`});
+          lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'商法則：(u/v)\' = (u\'v − uv\')/v²':'Quotient Rule: (u/v)\' = (u\'v − uv\')/v²'});
+          return lines;
+        }
+        if(op==='+'||op==='-'){
+          const pm=op;
+          // Sum/Difference Rule first principles
+          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\left[(${uxhTex})${pm}(${vxhTex})\\right]-\\left[(${uTex})${pm}(${vTex})\\right]}{h}`,note:''});
+          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[\\dfrac{${uxhTex}-(${uTex})}{h}${pm}\\dfrac{${vxhTex}-(${vTex})}{h}\\right]`,note:t==='zh'?'重新整理，分拆為兩個差商':'Rearrange: split into two difference quotients'});
+          lines.push({tex:`\\phantom{f'(x)} = (${upTex})${pm}(${vpTex})`,note:t==='zh'?'各差商分別取極限':'Take limit of each quotient separately'});
+          lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?`${pm==='+'?'和':'差'}法則：(u${pm}v)' = u'${pm}v'`:`${pm==='+'?'Sum':'Difference'} Rule: (u${pm}v)' = u'${pm}v'`});
+          return lines;
+        }
+      }
+    }catch{}
+    // ── PURE POLYNOMIAL FALLBACK (for simple polynomials where mathjs can expand) ─
     let expandedNum='',cancelledExpr='';
+    let expandOK=false;
     try{
       const fxhExpr=fx.replace(/\bx\b/g,'(x+h)');
       const diffSimp=math.simplify(math.parse(`(${fxhExpr})-(${fx})`), [], {exactFractions:false});
-      expandedNum=simplifyTex(diffSimp.toString());
-      const quotSimp=math.simplify(math.parse(`(${diffSimp.toString()})/h`), [], {exactFractions:false});
-      cancelledExpr=simplifyTex(quotSimp.toString());
-    }catch{expandedNum=`${fxhTex}-(${fxTex})`;cancelledExpr=fpTex;}
-    lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{${expandedNum}}{h}`,note:t==='zh'?'展開 f(x+h)−f(x)，整理含 h 各項':'Expand f(x+h)−f(x), collect h-terms'});
-    lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left(${cancelledExpr}+\\text{(含 }h\\text{ 各項)}\\right)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-    lines.push({tex:`\\phantom{f'(x)} = ${fpTex}`,note:t==='zh'?'令 h → 0，含 h 各項消失':'Let h → 0'});
+      const diffStr=diffSimp.toString();
+      // Only use this path if the expanded form does NOT contain exp/sin/cos/ln (i.e. it's polynomial)
+      if(!/exp|sin|cos|tan|log|ln/.test(diffStr)){
+        expandedNum=simplifyTex(diffStr);
+        const quotSimp=math.simplify(math.parse(`(${diffStr})/h`), [], {exactFractions:false});
+        cancelledExpr=simplifyTex(quotSimp.toString());
+        expandOK=true;
+      }
+    }catch{}
+    if(expandOK){
+      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{${expandedNum}}{h}`,note:t==='zh'?'展開 f(x+h)−f(x)':'Expand f(x+h)−f(x)'});
+      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left(${cancelledExpr}\\right)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
+      lines.push({tex:`\\phantom{f'(x)} = ${fpTex}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
+    } else {
+      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{${fxhTex}-(${fxTex})}{h}`,note:''});
+      lines.push({tex:`\\phantom{f'(x)} = ${fpTex}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
+    }
     lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
     return lines;
   }
