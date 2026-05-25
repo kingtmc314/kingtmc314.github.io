@@ -42,6 +42,7 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 .input-field label{font-size:.78rem;font-weight:600;color:var(--fg2);text-transform:uppercase;letter-spacing:.04em}
 .input-field input{padding:.5rem .75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;color:var(--fg);background:var(--bg);transition:border .2s}
 .input-field input:focus{outline:none;border-color:var(--primary)}
+.at-hint{font-size:.72rem;color:var(--fg2);line-height:1.4;margin-top:.1rem;font-style:italic;opacity:.85}
 .btn{padding:.55rem 1.1rem;border-radius:8px;font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:all .18s;letter-spacing:.02em}
 .btn:active{transform:scale(0.97)}
 .btn-primary{background:var(--primary);color:#fff}
@@ -252,9 +253,10 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
         <input type="text" id="fpFxInput" placeholder="e.g. x^2, sin(x), x^3+2*x" value="x^2" autocomplete="off" spellcheck="false">
       </div>
     </div>
-    <div class="input-field" style="max-width:160px">
+    <div class="input-field" style="max-width:200px">
       <label data-i18n="fp_label_at">Evaluate at x = (optional)</label>
       <input type="text" id="fpAtInput" value="" placeholder="e.g. 2, -1, π">
+      <div class="at-hint" data-i18n="fp_at_hint">Enter a value to find f'(a) — the slope of the tangent at that point</div>
     </div>
     <button class="btn btn-primary" id="fpBtn" data-i18n="fp_btn">Derive</button>
   </div>
@@ -591,7 +593,8 @@ const T={
     none_found:'在範圍內未發現',none_detected:'在範圍內未發現漸近線',
     cannot_determine:'在範圍內無法確定',cannot_compute:'無法在此點計算',
     tan_placeholder:'x 値',tan_btn:'計算',
-    fp_label_fn:'函數 f(x)',fp_label_at:'在 x = 處求值',fp_btn:'求導',
+    fp_label_fn:'函數 f(x)',fp_label_at:'在 x = 處求導數值',fp_btn:'求導',
+    fp_at_hint:'輸入數字可求 f\'(a)，即曲線在 x = a 處的切線斜率',
     fp_steps_title:'逐步推導（基本原理）',
     fp_graph_title:'割線 → 切線 可視化',
     fp_empty:'輸入函數並點擊「求導」',
@@ -1689,93 +1692,90 @@ function runFirstPrinciples(){
     renderDSEBlock(lines);
     // ── Substitute x = a block (full detailed steps) ──────────────────────────────
     if(isFinite(atX)&&fpStr){
-      const aTex=numToTex(atX);
-      const aStr=String(atX);
-      // Helper: substitute x=a in expr string, return EXACT TeX (no numerical eval)
-      function substExactTex(exprStr,aVal){
+      // Helper: substitute x=a in a mathjs expression string, return exact TeX
+      function substXtoA(exprStr, aVal){
         try{
           const nd=math.parse(exprStr);
-          const s=nd.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(String(aVal));return n;});
+          const s=nd.transform(n=>{
+            if(n.isSymbolNode&&n.name==='x') return math.parse(String(aVal));
+            return n;
+          });
           return s.toTex({parenthesis:'auto'});
         }catch{return exprStr.replace(/\bx\b/g,String(aVal));}
       }
-      // Build the fx_at_a string: replace x with a in the function expression
-      // This creates a new "function" with a as a constant, so buildLines can work on it
-      // We generate the detailed lines by substituting a into each step of buildLines
-      const fxAtA_str=fx; // original fx
-      // Get fxTex with x=a substituted
-      const faExactTex=substExactTex(fx,atX);
-      // Get f(a+h) tex
-      let fahAtATex;
-      try{
-        const nd=math.parse(fx);
-        const s=nd.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(`(${aStr}+h)`);return n;});
-        fahAtATex=s.toTex({parenthesis:'auto'});
-      }catch{fahAtATex=`f(${aTex}+h)`;}
-      // f'(a) exact tex
-      const fpExactTex=substExactTex(fpStr,atX);
-      // f'(a) approx
+      const aTex=numToTex(atX);
+      // f'(a) exact tex and approx
+      const fpExactTex=substXtoA(fpStr,atX);
       const fpAtVal=evalAt(fpStr,atX);
       const fpApproxTex=isFinite(fpAtVal)?`\\approx ${numToTex(Math.round(fpAtVal*1e6)/1e6)}`:'?';
-      // Build detailed lines by substituting a into the general buildLines output
-      // We re-run buildLines but replace all x with a (exact) in each tex line
-      const generalLines=buildLines(fx,
-        math.parse(fx).toTex({parenthesis:'auto'}),
-        (() => { try{ const nd=math.parse(fx); const s=nd.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse('x+h');return n;}); return s.toTex({parenthesis:'auto'}); }catch{return fx.replace(/\bx\b/g,'(x+h)');} })(),
-        fpTex
-      );
-      // Now substitute x=a in each tex line of generalLines
-      // We do this by replacing x with a in the TeX strings carefully
-      function substTexLine(texStr, aVal, aTx){
-        // Replace x-related TeX tokens: x, {x}, x^, etc.
-        // Strategy: replace the mathjs expression's x with a, re-render
-        // Since TeX is complex, we use a targeted approach:
-        // Replace standalone x (not inside \text, not part of longer word)
-        // We rebuild by substituting in the original expression
-        return texStr
-          .replace(/\\phantom\{f'\(x\)\}/g, `\\phantom{f'(${aTx})}`)
-          .replace(/f'\(x\)/g, `f'(${aTx})`)
-          .replace(/f\(x\+h\)/g, `f(${aTx}+h)`)
-          .replace(/f\(x\)/g, `f(${aTx})`);
-      }
-      // Build subLines: line 1 is the definition with a, then detailed steps from generalLines (skip line 1 and last \therefore)
-      // but with x replaced by a throughout
-      const subLines=[];
-      subLines.push({tex:`f'(${aTex}) = \\lim_{h\\to 0}\\dfrac{f(${aTex}+h)-f(${aTex})}{h}`,note:t==='zh'?`代入 x = ${aTex}`:`Substitute x = ${aTex}`});
-      // Add the substituted f(a+h) and f(a) line
-      subLines.push({tex:`\\phantom{f'(${aTex})} = \\lim_{h\\to 0}\\dfrac{${fahAtATex}-(${faExactTex})}{h}`,note:t==='zh'?'代入 f(a+h) 和 f(a)':'Substitute f(a+h) and f(a)'});
-      // Add the intermediate algebra steps from generalLines (lines 2 onwards, skip first 2 and last \therefore)
-      // We substitute x=a in the TeX of each intermediate step
-      for(let i=2;i<generalLines.length-1;i++){
-        const gl=generalLines[i];
-        // Substitute x -> a in the tex
-        let newTex=gl.tex;
-        // Replace phantom{f'(x)} with phantom{f'(a)}
-        newTex=newTex.replace(/\\phantom\{f'\(x\)\}/g,`\\phantom{f'(${aTex})}`);
-        // Replace the actual x values in the math expressions
-        // We need to substitute a for x in the underlying expressions
-        // Parse the TeX back is hard, so we substitute in the source expressions
-        // For each line, re-derive by substituting a into the original expression
-        // This is the key: rebuild each intermediate step with a substituted
+      // ── Build the "at a" version of buildLines ──────────────────────────
+      // Strategy: create a modified buildLines that uses a instead of x.
+      // We do this by creating a wrapper function that calls buildLines
+      // with all expressions having x replaced by a.
+      function buildLinesAt(fxExpr, aVal, aTx, fpExTex){
+        // Replace x with aVal in an expression string
+        function sa(expr){
+          try{
+            const nd=math.parse(expr);
+            const s=nd.transform(n=>{
+              if(n.isSymbolNode&&n.name==='x') return math.parse(String(aVal));
+              return n;
+            });
+            return s.toTex({parenthesis:'auto'});
+          }catch{return expr.replace(/\bx\b/g,String(aVal));}
+        }
+        // Replace x with (aVal+h) in an expression string
+        function sah(expr){
+          try{
+            const nd=math.parse(expr);
+            const s=nd.transform(n=>{
+              if(n.isSymbolNode&&n.name==='x') return math.parse(`(${aVal}+h)`);
+              return n;
+            });
+            return s.toTex({parenthesis:'auto'});
+          }catch{return expr.replace(/\bx\b/g,`(${aVal}+h)`);}
+        }
+        // Phantom prefix for alignment
+        const ph=`\\phantom{f'(${aTx})}`;
+        const lim=`\\lim_{h\\to 0}`;
+        const lines=[];
+        // Line 1: definition
+        lines.push({tex:`f'(${aTx}) = ${lim}\\dfrac{f(${aTx}+h)-f(${aTx})}{h}`,note:t==='zh'?`代入 x = ${aTx}`:`Substitute x = ${aTx}`});
+        // Line 2: substitute f(a+h) and f(a)
+        const fahTex=sah(fxExpr);
+        const faTex=sa(fxExpr);
+        lines.push({tex:`${ph} = ${lim}\\dfrac{${fahTex}-(${faTex})}{h}`,note:t==='zh'?'代入 f(a+h) 和 f(a)':'Substitute f(a+h) and f(a)'});
+        // Now get the intermediate steps by running the polynomial fallback
+        // with a substituted: compute (f(a+h)-f(a)) symbolically
+        let expandOK=false;
         try{
-          // Extract the RHS after = from the tex line
-          // The tex has form \phantom{...} = \lim... or \phantom{...} = ...
-          // We substitute x=a in the expression by re-running the same logic
-          // but with a as the value
-          const rhsMatch=newTex.match(/= (.+)$/);
-          if(rhsMatch){
-            // Try to substitute x=a in the RHS TeX by finding the original expression
-            // For now, use string replacement of x-related TeX tokens
-            let rhs=rhsMatch[1];
-            // Replace x^2 with a^2, x with a, etc. in TeX
-            rhs=rhs.replace(/(?<![a-zA-Z\\])x(?![a-zA-Z])/g, aTex);
-            newTex=newTex.replace(/= (.+)$/, `= ${rhs}`);
+          // Build f(a+h) - f(a) as a mathjs expression
+          const fahStr=fxExpr.replace(/\bx\b/g,`(${aVal}+h)`);
+          const faStr=fxExpr.replace(/\bx\b/g,String(aVal));
+          const diffExpr=`(${fahStr})-(${faStr})`;
+          const diffSimp=math.simplify(math.parse(diffExpr),[],{exactFractions:false});
+          const diffStr=diffSimp.toString();
+          // Only use polynomial expansion if result is polynomial in h
+          if(!/exp|sin|cos|tan|log|ln/.test(diffStr)){
+            const diffTex=simplifyTex(diffStr);
+            const quotSimp=math.simplify(math.parse(`(${diffStr})/h`),[],{exactFractions:false});
+            const quotTex=simplifyTex(quotSimp.toString());
+            lines.push({tex:`${ph} = ${lim}\\dfrac{${diffTex}}{h}`,note:t==='zh'?'展開 f(a+h)−f(a)':'Expand f(a+h)−f(a)'});
+            lines.push({tex:`${ph} = ${lim}\\left(${quotTex}\\right)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
+            // Substitute h=0 in quotTex to get the limit
+            const limitVal=sa(quotSimp.toString().replace(/\bh\b/g,'0'));
+            lines.push({tex:`${ph} = ${fpExTex}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
+            expandOK=true;
           }
         }catch{}
-        subLines.push({tex:newTex,note:gl.note});
+        if(!expandOK){
+          // For non-polynomial (trig, exp, ln etc.), show the general derivative substituted
+          lines.push({tex:`${ph} = \\left.f'(x)\\right|_{x=${aTx}} = ${fpExTex}`,note:t==='zh'?'代入一般導數公式':'Substitute into general derivative'});
+        }
+        lines.push({tex:`\\therefore\\quad f'(${aTx}) = ${fpExTex}${fpApproxTex}`,note:''});
+        return lines;
       }
-      // Final result line
-      subLines.push({tex:`\\therefore\\quad f'(${aTex}) = ${fpExactTex}${fpApproxTex}`,note:''});
+      const subLines=buildLinesAt(fx,atX,aTex,fpExactTex);
       const subTitle=document.createElement('div');
       subTitle.style.cssText='font-size:.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin:.9rem 0 .5rem';
       subTitle.textContent=t==='zh'?`代入 x = ${atX}`:`Evaluate at x = ${atX}`;
