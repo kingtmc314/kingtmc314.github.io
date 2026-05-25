@@ -1697,8 +1697,17 @@ function runFirstPrinciples(){
       try{
         const nodeA=math.parse(fx);
         const substA=nodeA.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(String(atX));return n;});
-        faTeX=math.simplify(substA).toTex({parenthesis:'auto'});
-      }catch{faTeX=numToTex(evalAt(fx,atX));}
+        const faVal=evalAt(fx,atX);
+        // Try to get a clean simplified expression; fall back to rounded number
+        const faSimp=math.simplify(substA);
+        const faStr=faSimp.toString();
+        // If it simplifies to a plain number, show rounded value
+        if(/^-?[\d.]+$/.test(faStr.trim())){
+          faTeX=numToTex(Math.round(faVal*1e6)/1e6);
+        } else {
+          faTeX=faSimp.toTex({parenthesis:'auto'});
+        }
+      }catch{const faV=evalAt(fx,atX);faTeX=numToTex(Math.round(faV*1e6)/1e6);}
       try{
         const nodeAH=math.parse(fx);
         const substAH=nodeAH.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(`(${atX}+h)`);return n;});
