@@ -102,12 +102,11 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 .step-label{font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.2rem;text-transform:uppercase;letter-spacing:.03em}
 .h-slider{width:100%;margin:.5rem 0}
 /* DSE-STYLE DERIVATION */
-.dse-derivation{font-size:.95rem;overflow-x:auto}
-.dse-row{display:grid;grid-template-columns:1fr auto;gap:.5rem 1.25rem;align-items:center;padding:.15rem 0;border-bottom:1px solid transparent}
-.dse-row:last-child{border-bottom:none}
-.dse-math{overflow-x:auto;min-width:0}
-.dse-math .katex-display{margin:.1rem 0!important;text-align:left!important}
-.dse-note{font-size:.72rem;color:var(--fg3);font-style:italic;white-space:nowrap;padding:.15rem .5rem;background:var(--primary-bg);border-radius:4px;border-left:2px solid var(--primary);flex-shrink:0;max-width:220px;white-space:normal;line-height:1.35}
+.dse-derivation{display:flex;gap:1.25rem;align-items:flex-start;overflow-x:auto}
+.dse-math-col{flex-shrink:0;overflow-x:auto}
+.dse-math-col .katex-display{margin:.1rem 0!important;text-align:left!important}
+.dse-note-col{display:flex;flex-direction:column;justify-content:space-around;flex-shrink:0;min-width:140px;max-width:200px;align-self:stretch}
+.dse-note-item{font-size:.7rem;color:var(--fg3);font-style:italic;padding:.2rem .5rem;border-left:2px solid var(--primary);background:var(--primary-bg);border-radius:0 4px 4px 0;line-height:1.3;flex:1;display:flex;align-items:center;margin:.1rem 0}
 .dse-verify{margin-top:1rem;padding:.75rem 1rem;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;overflow-x:auto}
 /* AI ASSISTANT */
 .ai-layout{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
@@ -1288,24 +1287,40 @@ function runFirstPrinciples(){
   // Builds ONE aligned block with annotations on the right
   // lines: [{tex, note}]  where tex is the RHS of each = line, note is optional
   function renderDSEBlock(lines){
-    // Build a two-column layout: left = aligned math, right = annotations
+    // Strategy: render ONE aligned KaTeX block for all math lines,
+    // then render a matching column of notes beside it.
+    // Each line's tex already has the form:  LHS = RHS  or  \phantom{...} = RHS
+    // We convert them to aligned rows:  LHS &= RHS
     const wrapper=document.createElement('div');
     wrapper.className='dse-derivation';
-    lines.forEach((row,i)=>{
-      const rowEl=document.createElement('div');
-      rowEl.className='dse-row';
-      const mathEl=document.createElement('div');
-      mathEl.className='dse-math';
-      mathEl.appendChild(renderK(row.tex,true));
-      rowEl.appendChild(mathEl);
-      if(row.note){
-        const noteEl=document.createElement('div');
-        noteEl.className='dse-note';
-        noteEl.textContent=row.note;
-        rowEl.appendChild(noteEl);
-      }
-      wrapper.appendChild(rowEl);
+
+    // Build the aligned LaTeX string
+    // Convert each line: replace the FIRST bare ' = ' (not inside \lim, etc.) with ' &= '
+    const alignedRows=lines.map(row=>{
+      // Insert & before the first = sign that is preceded by a non-& character
+      // The tex lines are like: "f'(x) = \lim..." or "\phantom{f'(x)} = ..."
+      // We want:                "f'(x) &= \lim..." or "\phantom{f'(x)} &= ..."
+      return row.tex.replace(/^([^=]*)=/, '$1&=');
     });
+    const alignedTex=`\\begin{aligned}${alignedRows.join('\\\\')}\\end{aligned}`;
+
+    // Left column: single KaTeX block
+    const mathCol=document.createElement('div');
+    mathCol.className='dse-math-col';
+    mathCol.appendChild(renderK(alignedTex,true));
+
+    // Right column: notes stacked to match each row
+    const noteCol=document.createElement('div');
+    noteCol.className='dse-note-col';
+    lines.forEach(row=>{
+      const noteEl=document.createElement('div');
+      noteEl.className='dse-note-item';
+      if(row.note) noteEl.textContent=row.note;
+      noteCol.appendChild(noteEl);
+    });
+
+    wrapper.appendChild(mathCol);
+    wrapper.appendChild(noteCol);
     stepsDiv.appendChild(wrapper);
   }
 
