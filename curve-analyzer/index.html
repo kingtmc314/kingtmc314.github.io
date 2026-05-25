@@ -1687,10 +1687,11 @@ function runFirstPrinciples(){
 
         const lines=buildLines(fx,fxTex,fxhTex,fpTex);
     renderDSEBlock(lines);
-    // ── Substitute x = a block ────────────────────────────────────────────
+    // ── Substitute x = a block (full detailed steps) ──────────────────────────────
     if(isFinite(atX)&&fpStr){
       const aTex=numToTex(atX);
-      // Helper: substitute x=a in an expression string, return EXACT TeX (no numerical eval)
+      const aStr=String(atX);
+      // Helper: substitute x=a in expr string, return EXACT TeX (no numerical eval)
       function substExactTex(exprStr,aVal){
         try{
           const nd=math.parse(exprStr);
@@ -1698,37 +1699,83 @@ function runFirstPrinciples(){
           return s.toTex({parenthesis:'auto'});
         }catch{return exprStr.replace(/\bx\b/g,String(aVal));}
       }
-      // f(a) exact tex
+      // Build the fx_at_a string: replace x with a in the function expression
+      // This creates a new "function" with a as a constant, so buildLines can work on it
+      // We generate the detailed lines by substituting a into each step of buildLines
+      const fxAtA_str=fx; // original fx
+      // Get fxTex with x=a substituted
       const faExactTex=substExactTex(fx,atX);
-      // f(a+h) exact tex
-      const fahExactTex=substExactTex(fx.replace(/\bx\b/g,'(x+h)').replace(/\(x\+h\)\+h/g,'(x+2h)'),atX) || (() => {
-        try{
-          const nd=math.parse(fx);
-          const s=nd.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(`(${atX}+h)`);return n;});
-          return s.toTex({parenthesis:'auto'});
-        }catch{return `f(${aTex}+h)`;}
-      })();
-      // Actually build f(a+h) properly
-      let fahTeX2;
+      // Get f(a+h) tex
+      let fahAtATex;
       try{
         const nd=math.parse(fx);
-        const s=nd.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(`(${atX}+h)`);return n;});
-        fahTeX2=s.toTex({parenthesis:'auto'});
-      }catch{fahTeX2=`f(${aTex}+h)`;}
-      // f'(a) exact tex (substitute into derivative expression, no numerical eval)
+        const s=nd.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse(`(${aStr}+h)`);return n;});
+        fahAtATex=s.toTex({parenthesis:'auto'});
+      }catch{fahAtATex=`f(${aTex}+h)`;}
+      // f'(a) exact tex
       const fpExactTex=substExactTex(fpStr,atX);
-      // f'(a) numerical value for the ≈ part
+      // f'(a) approx
       const fpAtVal=evalAt(fpStr,atX);
-      const fpApproxTex=isFinite(fpAtVal)?`\\approx ${numToTex(Math.round(fpAtVal*1e6)/1e6)}`:'';
-      // f(a) numerical value for display
-      const faVal=evalAt(fx,atX);
-      const faApproxTex=isFinite(faVal)?`\\approx ${numToTex(Math.round(faVal*1e6)/1e6)}`:'';
-      const subLines=[
-        {tex:`f'(${aTex}) = \\lim_{h\\to 0}\\dfrac{f(${aTex}+h)-f(${aTex})}{h}`,note:t==='zh'?`代入 x = ${aTex}`:`Substitute x = ${aTex}`},
-        {tex:`\\phantom{f'(${aTex})} = \\lim_{h\\to 0}\\dfrac{${fahTeX2}-(${faExactTex})}{h}`,note:t==='zh'?'代入 f(a+h) 和 f(a) 的精確式':'Exact expressions for f(a+h) and f(a)'},
-        {tex:`\\phantom{f'(${aTex})} = \\left.f'(x)\\right|_{x=${aTex}} = ${fpExactTex}`,note:t==='zh'?'代入一般導數公式':'Substitute into general derivative'},
-        {tex:`\\therefore\\quad f'(${aTex}) = ${fpExactTex}${fpApproxTex}`,note:''}
-      ];
+      const fpApproxTex=isFinite(fpAtVal)?`\\approx ${numToTex(Math.round(fpAtVal*1e6)/1e6)}`:'?';
+      // Build detailed lines by substituting a into the general buildLines output
+      // We re-run buildLines but replace all x with a (exact) in each tex line
+      const generalLines=buildLines(fx,
+        math.parse(fx).toTex({parenthesis:'auto'}),
+        (() => { try{ const nd=math.parse(fx); const s=nd.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse('x+h');return n;}); return s.toTex({parenthesis:'auto'}); }catch{return fx.replace(/\bx\b/g,'(x+h)');} })(),
+        fpTex
+      );
+      // Now substitute x=a in each tex line of generalLines
+      // We do this by replacing x with a in the TeX strings carefully
+      function substTexLine(texStr, aVal, aTx){
+        // Replace x-related TeX tokens: x, {x}, x^, etc.
+        // Strategy: replace the mathjs expression's x with a, re-render
+        // Since TeX is complex, we use a targeted approach:
+        // Replace standalone x (not inside \text, not part of longer word)
+        // We rebuild by substituting in the original expression
+        return texStr
+          .replace(/\\phantom\{f'\(x\)\}/g, `\\phantom{f'(${aTx})}`)
+          .replace(/f'\(x\)/g, `f'(${aTx})`)
+          .replace(/f\(x\+h\)/g, `f(${aTx}+h)`)
+          .replace(/f\(x\)/g, `f(${aTx})`);
+      }
+      // Build subLines: line 1 is the definition with a, then detailed steps from generalLines (skip line 1 and last \therefore)
+      // but with x replaced by a throughout
+      const subLines=[];
+      subLines.push({tex:`f'(${aTex}) = \\lim_{h\\to 0}\\dfrac{f(${aTex}+h)-f(${aTex})}{h}`,note:t==='zh'?`代入 x = ${aTex}`:`Substitute x = ${aTex}`});
+      // Add the substituted f(a+h) and f(a) line
+      subLines.push({tex:`\\phantom{f'(${aTex})} = \\lim_{h\\to 0}\\dfrac{${fahAtATex}-(${faExactTex})}{h}`,note:t==='zh'?'代入 f(a+h) 和 f(a)':'Substitute f(a+h) and f(a)'});
+      // Add the intermediate algebra steps from generalLines (lines 2 onwards, skip first 2 and last \therefore)
+      // We substitute x=a in the TeX of each intermediate step
+      for(let i=2;i<generalLines.length-1;i++){
+        const gl=generalLines[i];
+        // Substitute x -> a in the tex
+        let newTex=gl.tex;
+        // Replace phantom{f'(x)} with phantom{f'(a)}
+        newTex=newTex.replace(/\\phantom\{f'\(x\)\}/g,`\\phantom{f'(${aTex})}`);
+        // Replace the actual x values in the math expressions
+        // We need to substitute a for x in the underlying expressions
+        // Parse the TeX back is hard, so we substitute in the source expressions
+        // For each line, re-derive by substituting a into the original expression
+        // This is the key: rebuild each intermediate step with a substituted
+        try{
+          // Extract the RHS after = from the tex line
+          // The tex has form \phantom{...} = \lim... or \phantom{...} = ...
+          // We substitute x=a in the expression by re-running the same logic
+          // but with a as the value
+          const rhsMatch=newTex.match(/= (.+)$/);
+          if(rhsMatch){
+            // Try to substitute x=a in the RHS TeX by finding the original expression
+            // For now, use string replacement of x-related TeX tokens
+            let rhs=rhsMatch[1];
+            // Replace x^2 with a^2, x with a, etc. in TeX
+            rhs=rhs.replace(/(?<![a-zA-Z\\])x(?![a-zA-Z])/g, aTex);
+            newTex=newTex.replace(/= (.+)$/, `= ${rhs}`);
+          }
+        }catch{}
+        subLines.push({tex:newTex,note:gl.note});
+      }
+      // Final result line
+      subLines.push({tex:`\\therefore\\quad f'(${aTex}) = ${fpExactTex}${fpApproxTex}`,note:''});
       const subTitle=document.createElement('div');
       subTitle.style.cssText='font-size:.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin:.9rem 0 .5rem';
       subTitle.textContent=t==='zh'?`代入 x = ${atX}`:`Evaluate at x = ${atX}`;
