@@ -6,7 +6,7 @@
 <title>Differentiation and Curve Sketching</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -168,6 +168,120 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 .kb-btn:active{transform:scale(0.94)}
 .kb-section{display:flex;flex-wrap:wrap;gap:.28rem;align-items:center}
 .kb-sep{width:1px;height:1.6rem;background:var(--border);margin:0 .2rem}
+/* M2 Calculus Studio — warm paper, forest ink, precise mathematical hierarchy */
+:root{--bg:#f5f5ef;--card:#fffefa;--border:#dde3d9;--fg:#213c32;--fg2:#637168;--fg3:#829086;--primary:#16715c;--primary-light:#238773;--primary-bg:#eaf3eb;--green:#16715c;--green-bg:#eaf3eb;--orange:#b87731;--orange-bg:#fbf1df;--purple:#746693;--purple-bg:#f0edf4;--radius:16px;--shadow:0 3px 20px rgba(37,66,48,.045)}
+body{background-color:var(--bg);background-image:radial-gradient(#cdd7c7 .65px,transparent .65px);background-size:16px 16px;font-size:14px;letter-spacing:-.01em}
+header{background:#fffefa;border-bottom:1px solid var(--border);box-shadow:none}
+.header-inner{height:74px;max-width:1450px;padding:0 32px}
+.logo{color:#254536;gap:12px;font-size:1.04rem;letter-spacing:-.035em;line-height:1.25}
+.logo svg{width:34px;height:34px}
+.logo small{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.8px;font-weight:400;color:var(--fg2);margin-top:5px}
+.header-links{gap:12px}
+.header-edition{color:var(--fg2);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px}
+#langToggle{border-color:var(--border)!important;background:#fffefa!important;border-radius:30px!important;color:var(--fg)!important;font-weight:500!important;min-height:36px}
+.nav-tabs{justify-content:center;gap:20px;background:#fffefa;padding:0 24px;position:sticky;top:74px;z-index:190}
+.nav-tab{padding:16px 14px;font-size:13px;border-bottom-width:3px;border-radius:0;display:flex;align-items:center;gap:10px;background:transparent!important}
+.nav-tab::before{content:attr(data-number);font-family:'JetBrains Mono',monospace;font-size:10px;opacity:.5}
+.nav-tab.active{font-weight:700;color:var(--primary)}
+.app-body{max-width:1450px;padding:24px 32px 60px}
+.studio-hero{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:center;padding:30px 36px 32px;background:#213f32;color:#f8f8ef;border-radius:20px;margin-bottom:24px;position:relative;overflow:hidden}
+.studio-hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:36px 36px;pointer-events:none}
+.hero-copy{z-index:1;max-width:700px}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.9px;font-weight:500;color:var(--primary);display:block}
+.studio-hero .eyebrow{color:#b7d8b1;margin-bottom:14px}
+.studio-hero h1{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:clamp(26px,3.1vw,40px);font-weight:500;line-height:1.18;letter-spacing:-.04em}
+.studio-hero p{color:#c1d0c3;font-size:13px;max-width:600px;margin-top:15px;line-height:1.8}
+.hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.hero-pill{color:#dde7d9;border:1px solid #78988066;background:#ffffff05;border-radius:30px;padding:4px 11px;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:.3px}
+.hero-math{z-index:1;border-left:1px solid #aec2a72b;padding-left:30px;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+.hero-math svg{width:100%;height:150px}
+.hero-math .katex{font-size:1em;color:#d6e6d0}
+.hero-math .katex-display{margin:0}
+.section-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:4px 2px 18px}
+.section-intro h2{font-size:23px;font-weight:500;line-height:1.25;margin-top:7px;letter-spacing:-.03em}
+.section-intro p{color:var(--fg2);font-size:12px;margin-top:8px;max-width:720px}
+.section-tag{background:var(--card);border:1px solid var(--border);padding:6px 12px;border-radius:30px;font-family:'JetBrains Mono',monospace;font-size:10px;white-space:nowrap;color:var(--fg2)}
+.input-bar{border:none;padding:22px;gap:18px;border-radius:16px;margin-bottom:14px;background:#fffefa;box-shadow:var(--shadow)}
+.input-field label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--fg2);font-weight:500}
+.input-field input{background:#f7f8f2;border:1px solid #d8e0d3;padding:12px;font-size:13px;border-radius:9px;min-height:44px}
+.input-field input:focus{outline:3px solid #16715c17;border-color:#16715c}
+.math-preview{background:transparent;border:none;padding:2px 2px 10px;min-height:32px;font-size:17px;margin:0}
+.math-preview .katex{font-size:1.12em}
+.math-tools{margin-top:6px;color:var(--fg2);font-size:10px;order:3}
+.math-tools summary{cursor:pointer;padding:6px 0;font-family:'JetBrains Mono',monospace;font-size:10px}
+.math-kb{box-shadow:none;background:#f7f8f2;padding:9px;margin-top:6px}
+.kb-btn{background:#fffefa;border-width:1px;font-size:11px;min-width:34px;min-height:32px}
+.at-hint{font-size:10px;line-height:1.6;max-width:220px;font-style:normal}
+.btn{padding:12px 18px;font-size:12px;font-weight:500;border-radius:9px;min-height:42px;letter-spacing:0;transition:background 160ms,transform 160ms,opacity 160ms}
+.btn-primary{background:#16715c}
+.btn-secondary{background:#fffefa;border:1px solid var(--border)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+:focus-visible{outline:3px solid #4d997e;outline-offset:3px}
+.example-strip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 2px 24px}
+.example-strip>span{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--fg2);margin-right:6px}
+.example-chip{border:1px solid var(--border);background:#fffefa;border-radius:30px;cursor:pointer;padding:5px 12px;color:var(--fg2);font-size:11px;transition:background 160ms,color 160ms}
+.example-chip:hover,.example-chip.active{background:var(--primary-bg);border-color:#9bbca1;color:var(--primary)}
+.example-chip .katex{font-size:1em}
+.fp-layout{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:20px}
+.fp-card{padding:24px;border:none;min-width:0}
+.fp-card h3{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1.3px;text-transform:uppercase;color:var(--fg2);margin-bottom:20px;display:flex;align-items:center;gap:9px}
+.fp-card h3::before{content:'';height:6px;width:6px;display:block;background:var(--primary);border-radius:50%}
+.proof-title .katex-display{text-align:left!important;margin:0 0 10px}.proof-title .katex-display>.katex{text-align:left}
+.proof-title .katex{font-size:1.1em}
+.proof-convention{font-size:10px;color:var(--fg2);border-bottom:1px solid var(--border);padding-bottom:16px;line-height:1.7}
+.proof-player{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:14px 0}
+.proof-player .btn{padding:8px 11px;min-height:34px;font-size:10px;border-radius:7px}
+#fpPrev{font-size:17px;line-height:1}
+.speed-label{display:flex;gap:6px;align-items:center;font-size:9px;color:var(--fg2);margin-left:auto}
+.speed-label select{border:1px solid var(--border);background:#fffefa;color:var(--fg);border-radius:5px;padding:4px;font-family:'JetBrains Mono',monospace;font-size:10px}
+#fpStepCount{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--fg2);flex-basis:100%;margin-top:5px}
+.proof-progress{height:3px;width:100%;background:#e6ebe1;margin-bottom:16px;overflow:hidden;border-radius:3px}
+#fpProgress{height:3px;background:#428567;transform-origin:left center;transition:transform 200ms}
+.proof-workspace{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+#fpMathScroll{max-height:460px;overflow:auto;padding:18px 0 24px;scrollbar-width:thin;scrollbar-color:#becdbb transparent;min-height:180px;background:linear-gradient(#fffefaee,#fffefaee),linear-gradient(#d7e4d4 1px,transparent 1px);background-size:auto,28px 28px}
+#fpAligned{min-width:100%;width:max-content;padding:0 5px}
+#fpAligned .katex-display{margin:0;text-align:left}
+#fpAligned .katex-display>.katex{text-align:left;font-size:1.02em}
+.proof-notes{background:#edf3e9;border:1px solid #dee8d7;border-radius:10px;padding:14px 16px;margin-top:10px}
+.proof-notes .eyebrow{font-size:8px;margin-bottom:6px}
+#fpActiveNote p{font-size:12px;color:#365a42;line-height:1.8}
+.proof-notes .standard-limit{font-size:11px;overflow-x:auto;color:#16715c}
+.proof-notes details{margin-top:8px;font-size:10px;color:var(--fg2)}
+.proof-notes summary{cursor:pointer}
+#fpNotesList{list-style:none;margin:8px 0 0;padding:0;max-height:160px;overflow:auto}
+#fpNotesList li{padding:5px 0;font-size:11px}.current-note{color:var(--primary);font-weight:600}
+.exact-answer{background:#213f32;border-radius:10px;color:#f5f8ee;padding:16px;margin-top:16px;overflow:auto}
+.exact-answer[hidden]{display:none}.answer-caption{font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8d4af;letter-spacing:1px;display:block}
+.exact-answer .katex-display{margin:.3em 0}.exact-answer .katex{font-size:1.1em}
+.proof-conditions{font-size:10px;color:var(--fg2);margin-top:12px;overflow:auto}.proof-conditions .katex{font-size:.9em}
+.graph-wrap{background:#fafbf8!important}.graph-card{border:0}.graph-card-header{background:#fffefa;padding:15px 20px;border-color:var(--border);font-size:11px}.graph-controls{background:#fffefa;padding:10px 16px}
+.graph-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:10px;color:var(--fg2);margin:14px 0 6px}.graph-legend span::before{content:'';display:inline-block;width:16px;height:2px;background:#16715c;vertical-align:middle;margin-right:6px}.graph-legend span:last-child::before{background:#c48339}
+#fpSecantInfo{background:#f7f8f2;border-radius:10px;padding:12px;font-size:12px;overflow:auto;margin-top:16px!important}.fp-graph-caption{font-size:10px;color:var(--fg2);line-height:1.8;margin-top:12px}
+#fpSecantInfo .katex{font-size:1em}.h-slider{accent-color:var(--primary)}
+.study-callout{border-top:1px solid var(--border);margin-top:20px;padding-top:18px;font-size:11px;color:var(--fg2)}.study-callout button{border:0;background:transparent;color:var(--primary);cursor:pointer;font-size:11px;margin-top:8px;text-decoration:underline;text-underline-offset:3px}
+.analytics-panel{border:0}.section-head{font-size:12px;padding:13px 18px}.section-body{padding:5px 18px 15px}.row-label{font-size:10px;min-width:95px}.analytics-panel .katex{font-size:1em}
+.ai-input-card,.ai-result-card,.av-controls,.ref-card{border:0}.ai-input-card h3,.ai-result-card h3{font-size:15px}.ai-textarea{font-size:13px;padding:16px;min-height:180px;background:#f8f9f3}.ai-step{background:#f7f8f2}.ai-step-label{font-size:10px}
+.ref-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}.ref-card-head{font-size:12px;padding:16px 20px}.ref-card-body{padding:10px 20px}.ref-name{font-size:9px}.ref-formula .katex{font-size:1em}
+.m2-hub{margin-bottom:28px}.m2-topics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.m2-topic{cursor:pointer;position:relative;text-align:left;border:1px solid var(--border);background:#fffefa;border-radius:12px;padding:18px;min-height:116px;color:var(--fg);transition:transform 180ms,border-color 180ms}.m2-topic:hover{transform:translateY(-2px);border-color:#aac0a3}.m2-topic.active{background:#eaf3e7;border-color:#769979}.m2-topic .topic-index{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--fg3);display:block;margin-bottom:10px}.m2-topic strong{font-size:13px;font-weight:500;display:block}.m2-topic small{font-size:10px;color:var(--fg2);display:block;margin-top:4px}.m2-topic::after{content:'↗';position:absolute;right:16px;top:15px;color:#718772;font-size:15px}
+.m2-detail{background:#fffefa;border-radius:16px;padding:26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:28px}.m2-detail h3{font-size:19px;font-weight:500;margin:7px 0 12px}.m2-detail p{font-size:12px;color:var(--fg2);line-height:1.85}.m2-formula{border-top:1px solid var(--border);padding:12px 0;overflow:auto;font-size:12px}.m2-worked{border-left:1px solid var(--border);padding-left:28px;min-width:0}.m2-worked .katex{font-size:1em}.m2-example-title{font-size:12px;font-weight:500;margin:12px 0}.m2-steps{max-height:260px;overflow:auto;margin:16px 0}.m2-steps .katex-display{text-align:left;margin:10px 0}.m2-steps .katex-display>.katex{text-align:left}.m2-practice{margin-top:20px;padding:16px;background:#f1f5eb;border-radius:10px}.m2-practice input{width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;background:#fffefa;color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:12px;margin:10px 0}.m2-feedback{font-size:11px;color:var(--primary);margin-top:8px;overflow:auto}
+.curriculum-source{font-size:10px;line-height:1.8;color:var(--fg2);margin:16px 0 26px}.curriculum-source a{color:var(--primary);text-underline-offset:3px}.reference-divider{border-top:1px solid var(--border);padding-top:22px;margin:28px 0 18px}.reference-divider h3{font-size:19px;font-weight:500}
+.studio-footer{border-top:1px solid var(--border);margin-top:32px;padding:22px 0 0;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;color:var(--fg2);font-size:10px;line-height:1.8}.studio-footer .footer-formula{font-family:'JetBrains Mono',monospace;letter-spacing:1px;font-size:9px}
+@media(min-width:1250px){.proof-workspace{grid-template-columns:minmax(0,1fr) 178px;gap:14px}.proof-notes{margin:0;align-self:start;padding:13px}.proof-notes .standard-limit .katex{font-size:.85em}#fpMathScroll{min-height:220px}.proof-player .btn{padding:8px 10px}}
+@media(max-width:1100px){.nav-tabs{gap:0}.m2-topics{grid-template-columns:repeat(3,minmax(0,1fr))}.fp-layout{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}.studio-hero{grid-template-columns:1fr 250px}.hero-math{padding-left:20px}}
+@media(max-width:900px){.fp-layout,.analyzer-layout,.av-layout,.ai-layout{grid-template-columns:1fr}.fp-card{padding:20px}.m2-detail{grid-template-columns:1fr}.m2-worked{border-left:0;border-top:1px solid var(--border);padding:20px 0 0}.header-edition{display:none}.app-body{padding:18px 20px 40px}.studio-hero{padding:26px}.studio-hero h1{font-size:30px}.section-intro h2{font-size:21px}.fp-layout .fp-card:nth-child(2){display:grid;grid-template-columns:1fr}.input-field[style*='max-width:200']{max-width:240px!important}.math-kb{max-width:100%}}
+@media(max-width:640px){.header-inner{height:66px;padding:0 16px}.logo{font-size:12px;max-width:255px;letter-spacing:-.01em;gap:9px}.logo svg{width:29px;height:29px}.logo small{font-size:7px;letter-spacing:1.3px;margin-top:4px}.header-links{gap:4px}.header-links .icon-btn{display:none}#langToggle{font-size:10px!important;padding:5px 10px!important}.nav-tabs{top:66px;padding:0 8px;justify-content:flex-start}.nav-tab{padding:13px 11px;font-size:10px;gap:6px}.nav-tab::before{font-size:8px}.app-body{padding:16px 12px 30px}.studio-hero{grid-template-columns:1fr;padding:25px 22px;border-radius:14px;margin-bottom:22px}.studio-hero h1{font-size:28px;line-height:1.22}.studio-hero p{font-size:11px}.hero-math{display:none}.hero-pills{margin-top:17px}.hero-pill{font-size:8px;padding:4px 8px}.section-intro{align-items:flex-start;margin-bottom:14px}.section-intro h2{font-size:20px}.section-intro p{font-size:10px}.section-tag{font-size:8px;padding:5px 7px}.input-bar{padding:18px;gap:12px}.input-field{width:100%;min-width:0!important}.input-field[style]{max-width:none!important}.input-bar>.btn{width:100%;min-height:42px}.at-hint{max-width:none;font-size:10px}.example-strip{gap:6px;margin-bottom:18px}.example-strip>span{font-size:9px;flex-basis:100%;margin-bottom:2px}.example-chip{padding:5px 10px;font-size:10px}.fp-card{padding:17px;border-radius:13px}.fp-card h3{font-size:9px;margin-bottom:16px}.proof-player{gap:5px}.proof-player .btn{font-size:9px;padding:7px 9px;min-height:32px}.speed-label{margin-left:0}.proof-workspace{display:block}#fpAligned .katex-display>.katex{font-size:.94em}#fpMathScroll{max-height:350px;min-height:155px;padding-bottom:20px}.proof-notes{padding:12px}#fpActiveNote p{font-size:11px}.proof-notes .eyebrow{font-size:8px}.m2-topics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.m2-topic{padding:15px;min-height:106px}.m2-topic strong{font-size:11px}.m2-topic small{font-size:9px}.m2-topic::after{font-size:12px;right:12px}.m2-detail{padding:19px;gap:10px;border-radius:13px}.m2-detail h3{font-size:17px}.m2-detail p{font-size:11px}.m2-formula{font-size:11px}.ref-grid{grid-template-columns:1fr}.analytics-panel .katex{font-size:.95em}.studio-footer{font-size:9px}.ai-result-card,.ai-input-card{padding:18px}.ai-textarea{font-size:12px}.empty-state{padding:24px 10px}}
+@media(prefers-reduced-motion:no-preference){.step-reveal{animation:proofReveal 230ms cubic-bezier(.23,1,.32,1)}@keyframes proofReveal{from{opacity:.6;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.tab-content.active{animation:proofReveal 180ms cubic-bezier(.23,1,.32,1)}}
+@media print{header,.nav-tabs,.studio-hero,.input-bar,.example-strip,.proof-player,.proof-notes,.studio-footer{display:none!important}.app-body{padding:0}.fp-layout{display:block}.fp-layout>.fp-card:nth-child(2){display:none}#fpMathScroll{max-height:none;overflow:visible}.fp-card{box-shadow:none}.proof-progress{display:none}}
+
+.math-tools:not([open]) .math-kb{display:none}
+.hero-copy h1{white-space:pre-line}
+.hero-math .math-block{overflow:visible}
+.math-block{max-width:100%}
+.math-input-wrap>input{width:100%}
+#fpAligned .katex-display>.katex{font-size:1.1em}
+.ref-grid{display:block;columns:3;column-gap:18px}.ref-card{display:inline-block;width:100%;break-inside:avoid;margin-bottom:18px;vertical-align:top}
+@media(max-width:1000px){.ref-grid{columns:2}}
+@media(max-width:640px){.ref-grid{columns:1}#fpAligned .katex-display>.katex{font-size:1.04em}}
 </style>
 </head>
 <body>
@@ -175,37 +289,39 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
   <div class="header-inner">
     <div class="logo">
       <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="28" height="28" rx="7" fill="#3b5bdb"/>
+        <rect width="28" height="28" rx="7" fill="#213f32"/>
         <path d="M4 20 Q8 8 12 14 Q16 20 20 10 L24 6" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
         <line x1="4" y1="22" x2="24" y2="22" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
         <line x1="5" y1="24" x2="5" y2="6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
-      <span data-i18n="app_title">Differentiation &amp; Curve Sketching</span>
+      <span><span data-i18n="app_title">Differentiation and Curve Sketching</span><small>M2 · ALGEBRA &amp; CALCULUS STUDIO</small></span>
     </div>
-    <div class="header-links">
+    <div class="header-links"><span class="header-edition">HKDSE / M2</span>
       <button id="langToggle" onclick="toggleLang()" style="padding:.35rem .75rem;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;border:1.5px solid var(--primary);background:var(--primary-bg);color:var(--primary);transition:all .2s;letter-spacing:.03em">中文</button>
-      <a href="https://github.com/kingtmc314/curve-analyzer" target="_blank" rel="noopener" class="icon-btn" title="GitHub">
+      <a href="https://github.com/kingtmc314/kingtmc314.github.io/tree/main/curve-analyzer" target="_blank" rel="noopener" class="icon-btn" title="GitHub">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
       </a>
     </div>
   </div>
 </header>
-<div class="nav-tabs" id="navTabs">
-  <div class="nav-tab active" data-tab="firstprinciples" data-i18n="tab_fp">🔬 First Principles</div>
-  <div class="nav-tab" data-tab="analyzer" data-i18n="tab_analyzer">📊 Analyzer</div>
-  <div class="nav-tab" data-tab="areav" data-i18n="tab_av">∫ Area &amp; Volume</div>
-  <div class="nav-tab" data-tab="ai" data-i18n="tab_ai">🤖 AI Assistant</div>
-  <div class="nav-tab" data-tab="reference" data-i18n="tab_reference">📚 Reference</div>
+<div class="nav-tabs" id="navTabs" role="tablist" aria-label="Learning tools">
+  <div class="nav-tab active" data-number="01" role="tab" tabindex="0" data-tab="firstprinciples" data-i18n="tab_fp"> First Principles</div>
+  <div class="nav-tab" data-number="02" role="tab" tabindex="0" data-tab="analyzer" data-i18n="tab_analyzer"> Analyzer</div>
+  <div class="nav-tab" data-number="03" role="tab" tabindex="0" data-tab="areav" data-i18n="tab_av">∫ Area &amp; Volume</div>
+  <div class="nav-tab" data-number="04" role="tab" tabindex="0" data-tab="ai" data-i18n="tab_ai"> AI Assistant</div>
+  <div class="nav-tab" data-number="05" role="tab" tabindex="0" data-tab="reference" data-i18n="tab_reference"> Reference</div>
 </div>
 <div class="app-body">
+<section class="studio-hero"><div class="hero-copy"><span class="eyebrow" data-i18n="hero_eyebrow"></span><h1 data-i18n="hero_title"></h1><p data-i18n="hero_desc"></p><div class="hero-pills"><span class="hero-pill" data-i18n="hero_exact"></span><span class="hero-pill" data-i18n="hero_steps"></span><span class="hero-pill" data-i18n="hero_m2"></span></div></div><div class="hero-math"><svg viewBox="0 0 280 150" aria-hidden="true"><g stroke="#c1d5b91f"><path d="M20 35H265M20 70H265M20 105H265M55 15V140M105 15V140M155 15V140M205 15V140M255 15V140"/></g><path d="M24 125H264M75 139V16" stroke="#b8cfa880"/><path d="M25 37Q75 177 135 98Q180 41 203 17" fill="none" stroke="#c1dda9" stroke-width="2.4"/><path d="M78 140L199 22" stroke="#d7b170" stroke-width="1.5" stroke-dasharray="5 4"/><circle cx="145" cy="75" r="4" fill="#c1dda9"/><text x="155" y="78" fill="#d0dfc7" font-size="10" font-family="monospace">P</text><text x="235" y="114" fill="#c1d5b9" font-size="10">x</text><text x="84" y="25" fill="#c1d5b9" font-size="10">y</text></svg><div id="heroFormula"></div></div></section>
 <!-- ═══════════════════════════════════════════════════════ ANALYZER TAB -->
 <div class="tab-content" id="tab-analyzer">
+<div class="section-intro"><div><span class="eyebrow">02 / M2 STUDIO</span><h2 data-i18n="intro_analyzer"></h2><p data-i18n="intro_analyzer_desc"></p></div><span class="section-tag" data-i18n="rad_tag"></span></div>
   <div class="input-bar">
     <div class="input-field" style="flex:3;min-width:220px">
       <label data-i18n="label_function">Function f(x)</label>
       <div class="math-input-wrap">
         <div class="math-preview" id="fxPreview"></div>
-        <div class="math-kb" id="fxKb"></div>
+        <details class="math-tools"><summary data-i18n="math_keyboard"></summary><div class="math-kb" id="fxKb"></div></details>
         <input type="text" id="fxInput" placeholder="e.g. sin(x), x^2-3*x+2, 1/x, ln(x)" value="sin(x)" autocomplete="off" spellcheck="false">
       </div>
     </div>
@@ -238,33 +354,35 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
       </div>
     </div>
     <div class="analytics-panel" id="analyticsPanel">
-      <div class="empty-state" id="emptyState"><div class="big">📈</div><div data-i18n="empty_state">Click <strong>Analyze</strong> to see results</div></div>
+      <div class="empty-state" id="emptyState"><div class="big"></div><div data-i18n="empty_state">Click <strong>Analyze</strong> to see results</div></div>
     </div>
   </div>
 </div>
 <!-- ═══════════════════════════════════════════════════════ FIRST PRINCIPLES TAB -->
 <div class="tab-content active" id="tab-firstprinciples">
+<div class="section-intro"><div><span class="eyebrow">01 / M2 STUDIO</span><h2 data-i18n="intro_fp"></h2><p data-i18n="intro_fp_desc"></p></div><span class="section-tag" data-i18n="rad_tag"></span></div>
   <div class="input-bar">
     <div class="input-field" style="flex:3;min-width:220px">
       <label data-i18n="fp_label_fn">Function f(x)</label>
       <div class="math-input-wrap">
         <div class="math-preview" id="fpFxPreview"></div>
-        <div class="math-kb" id="fpFxKb"></div>
+        <details class="math-tools"><summary data-i18n="math_keyboard"></summary><div class="math-kb" id="fpFxKb"></div></details>
         <input type="text" id="fpFxInput" placeholder="e.g. x^2, sin(x), x^3+2*x" value="x^2" autocomplete="off" spellcheck="false">
       </div>
     </div>
-    <div class="input-field" style="max-width:200px">
+    <div class="input-field" style="max-width:220px">
       <label data-i18n="fp_label_at">Evaluate at x = (optional)</label>
-      <input type="text" id="fpAtInput" value="" placeholder="e.g. 2, -1, π">
+      <input type="text" id="fpAtInput" value="" placeholder="2, 1/3, pi/2" aria-label="Tangent point x = a">
       <div class="at-hint" data-i18n="fp_at_hint">Enter a value to find f'(a) — the slope of the tangent at that point</div>
     </div>
     <button class="btn btn-primary" id="fpBtn" data-i18n="fp_btn">Derive</button>
   </div>
+  <div class="example-strip" id="fpExamples"><span data-i18n="fp_try"></span></div>
   <div class="fp-layout">
     <div class="fp-card">
       <h3 data-i18n="fp_steps_title">Step-by-Step Derivation</h3>
       <div id="fpSteps" class="step-list">
-        <div class="empty-state"><div class="big">🔬</div><div data-i18n="fp_empty">Enter a function and click Derive</div></div>
+        <div class="empty-state"><div class="big">∂</div><div data-i18n="fp_empty">Enter a function and click Derive</div></div>
       </div>
     </div>
     <div class="fp-card">
@@ -272,6 +390,7 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
       <div class="graph-wrap" style="background:#fafbff;border:1px solid var(--border);border-radius:8px">
         <svg id="fpGraph" viewBox="0 0 560 400" style="width:100%;height:auto"></svg>
       </div>
+      <div class="graph-legend"><span data-i18n="fp_curve_legend"></span><span data-i18n="fp_secant_legend"></span></div>
       <div style="margin-top:.75rem">
         <div style="display:flex;align-items:center;gap:.5rem">
           <label style="font-size:.82rem;font-weight:600;color:var(--fg2)" data-i18n="fp_h_label">h value:</label>
@@ -279,15 +398,16 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
         </div>
         <input type="range" class="h-slider" id="hSlider" min="-2" max="2" step="0.01" value="1">
       </div>
-      <div id="fpSecantInfo" style="margin-top:.5rem;font-size:.85rem;color:var(--fg2)"></div>
+      <button class="btn btn-secondary" id="fpAnimateSecant" data-i18n="fp_animate_secant"></button><p class="fp-graph-caption" data-i18n="fp_visual_note"></p><div id="fpSecantInfo"></div><div class="study-callout"><span data-i18n="fp_standard_tip"></span><br><button onclick="openM2Limits()" data-i18n="fp_open_limits"></button></div>
     </div>
   </div>
 </div>
 <!-- ═══════════════════════════════════════════════════════ AI ASSISTANT TAB -->
 <div class="tab-content" id="tab-ai">
+<div class="section-intro"><div><span class="eyebrow">04 / M2 STUDIO</span><h2 data-i18n="intro_ai"></h2><p data-i18n="intro_ai_desc"></p></div><span class="section-tag" data-i18n="rad_tag"></span></div>
   <div class="ai-layout">
     <div class="ai-input-card">
-      <h3 data-i18n="ai_input_title">🤖 Differentiation Problem Solver</h3>
+      <h3 data-i18n="ai_input_title"> Differentiation Problem Solver</h3>
       <label style="font-size:.82rem;font-weight:600;color:var(--fg2);display:block;margin-bottom:.4rem" data-i18n="ai_input_label">Enter your problem:</label>
       <textarea class="ai-textarea" id="aiInput" data-i18n-placeholder="ai_placeholder"></textarea>
       <div class="quick-btns" id="quickBtns"></div>
@@ -298,18 +418,19 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
     </div>
     <div class="ai-result-card" id="aiResult">
       <h3 data-i18n="ai_result_title">Solution</h3>
-      <div class="empty-state"><div class="big">🧮</div><div data-i18n="ai_empty">Enter a problem to solve</div></div>
+      <div class="empty-state"><div class="big"></div><div data-i18n="ai_empty">Enter a problem to solve</div></div>
     </div>
   </div>
 </div>
 <!-- ═══════════════════════════════════════════════════════ AREA & VOLUME TAB -->
 <div class="tab-content" id="tab-areav">
+<div class="section-intro"><div><span class="eyebrow">03 / M2 STUDIO</span><h2 data-i18n="intro_av"></h2><p data-i18n="intro_av_desc"></p></div><span class="section-tag" data-i18n="rad_tag"></span></div>
   <div class="input-bar">
     <div class="input-field" style="flex:2;min-width:180px">
       <label data-i18n="av_label_f">f(x) — upper curve</label>
       <div class="math-input-wrap">
         <div class="math-preview" id="avFxPreview"></div>
-        <div class="math-kb" id="avFxKb"></div>
+        <details class="math-tools"><summary data-i18n="math_keyboard"></summary><div class="math-kb" id="avFxKb"></div></details>
         <input type="text" id="avFxInput" placeholder="e.g. x^2, sin(x)" value="x^2" autocomplete="off" spellcheck="false">
       </div>
     </div>
@@ -380,8 +501,8 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
         <div class="av-section">
           <div class="av-section-title" data-i18n="av_method_title">Integration Method</div>
           <div class="av-row">
-            <select id="avMethodSelect">
-              <option value="auto" data-i18n="av_method_auto">Auto (Symbolic)</option>
+            <select id="avMethodSelect" disabled title="Method is determined by rotation mode">
+              <option value="auto" data-i18n="av_method_auto">Auto: exact when supported</option>
               <option value="disc" data-i18n="av_method_disc">Disc / Washer</option>
               <option value="shell" data-i18n="av_method_shell">Shell</option>
             </select>
@@ -397,9 +518,10 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 </div>
 <!-- ═══════════════════════════════════════════════════════ REFERENCE TAB -->
 <div class="tab-content" id="tab-reference">
-  <div class="ref-grid" id="refGrid"></div>
+<div class="section-intro"><div><span class="eyebrow">05 / M2 STUDIO</span><h2 data-i18n="intro_ref"></h2><p data-i18n="intro_ref_desc"></p></div><span class="section-tag" data-i18n="rad_tag"></span></div>
+  <div class="m2-hub" id="m2Hub"></div><p class="curriculum-source"><span data-i18n="m2_source_note"></span> <a href="https://www.edb.gov.hk/attachment/en/curriculum-development/kla/ma/res/m2_eng.pdf" target="_blank" rel="noopener" data-i18n="m2_edb"></a> · <a href="https://www.hkeaa.edu.hk/DocLibrary/HKDSE/Subject_Information/math/2027hkdse-e-math.pdf" target="_blank" rel="noopener" data-i18n="m2_hkeaa"></a></p><div class="reference-divider"><span class="eyebrow">FORMULA LIBRARY</span><h3 data-i18n="ref_library"></h3></div><div class="ref-grid" id="refGrid"></div>
 </div>
-</div><!-- end app-body -->
+<footer class="studio-footer"><span data-i18n="footer_note"></span><span class="footer-formula">UNDERSTAND THE CHANGE. SHOW THE REASON.</span></footer></div><!-- end app-body -->
 
 <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.3/lib/browser/math.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -490,12 +612,12 @@ header{background:var(--card);border-bottom:1px solid var(--border);position:sti
 // ═══════════════════════════════════════════════════════════════════════════
 // i18n
 // ═══════════════════════════════════════════════════════════════════════════
-let LANG='en';
+let LANG=localStorage.getItem('m2-language')||'zh';
 const T={
   en:{
     app_title:'Differentiation & Curve Sketching',
-    tab_analyzer:'📊 Analyzer',tab_fp:'🔬 First Principles',tab_ai:'🤖 AI Assistant',
-    tab_av:'∫ Area & Volume',tab_reference:'📚 Reference',
+    tab_analyzer:' Analyzer',tab_fp:' First Principles',tab_ai:' AI Assistant',
+    tab_av:'∫ Area & Volume',tab_reference:' Reference',
     label_function:'Function f(x)',label_xmin:'x min',label_xmax:'x max',
     btn_analyze:'Analyze',btn_reset:'⟳ Reset View',
     graph_hint:'Scroll to zoom · Drag to pan',
@@ -527,7 +649,7 @@ const T={
     fp_step3:'Expand and simplify numerator',fp_step4:'Cancel h and take limit as h→0',
     fp_step5:'Result: f\'(x)',fp_step6:'Numerical check at x = ',
     // AI Assistant
-    ai_input_title:'🤖 Differentiation Problem Solver',
+    ai_input_title:' Differentiation Problem Solver',
     ai_input_label:'Enter your problem:',
     ai_placeholder:'e.g. Find dy/dx for y = x³sin(x)\nOr: A particle moves so that s = t³ - 6t². Find the velocity and acceleration at t = 2.\nOr: Find the rate of change of area of a circle when r = 5 and dr/dt = 2.',
     ai_solve_btn:'Solve',ai_clear_btn:'Clear',
@@ -543,7 +665,7 @@ const T={
     av_mode_area:'Area',av_mode_volx:'Volume (x-axis)',av_mode_voly:'Volume (y-axis)',
     av_axis_title:'Axis of Rotation',av_axis_label:'y =',
     av_method_title:'Integration Method',
-    av_method_auto:'Auto (Symbolic)',av_method_disc:'Disc / Washer',av_method_shell:'Shell',
+    av_method_auto:'Auto: exact when supported',av_method_disc:'Disc / Washer',av_method_shell:'Shell',
     av_result_title:'Result',
     vol_3d_title:'3D Solid of Revolution',
     vol_toggle_mesh:'Mesh',vol_toggle_cross:'Cross-section',vol_toggle_solid:'Solid',
@@ -570,8 +692,8 @@ const T={
   },
   zh:{
     app_title:'微分與曲線素描',
-    tab_analyzer:'📊 分析器',tab_fp:'🔬 基本原理',tab_ai:'🤖 AI 輔助',
-    tab_av:'∫ 面積與體積',tab_reference:'📚 參考',
+    tab_analyzer:' 分析器',tab_fp:' 基本原理',tab_ai:' AI 輔助',
+    tab_av:'∫ 面積與體積',tab_reference:' 參考',
     label_function:'函數 f(x)',label_xmin:'x 最小値',label_xmax:'x 最大値',
     btn_analyze:'分析',btn_reset:'⟳ 重置視圖',
     graph_hint:'滾動縮放 · 拖動平移',
@@ -602,7 +724,7 @@ const T={
     fp_step1:'導數定義',fp_step2:'代入 f(x+h) 和 f(x)',
     fp_step3:'展開並化簡分子',fp_step4:'消去 h，取 h→0 的極限',
     fp_step5:'結果：f\'(x)',fp_step6:'在 x = 的數值驗證',
-    ai_input_title:'🤖 微分問題求解器',
+    ai_input_title:' 微分問題求解器',
     ai_input_label:'輸入你的問題：',
     ai_placeholder:'例：求 y = x³sin(x) 的 dy/dx\n或：一質點運動方程為 s = t³ - 6t²，求 t=2 時的速度和加速度。\n或：圓的面積以 r=5、dr/dt=2 的速率變化，求面積的變化率。',
     ai_solve_btn:'求解',ai_clear_btn:'清除',
@@ -642,14 +764,16 @@ const T={
     rn_int_lnx:'1/x',rn_int_disc:'圓盤法',rn_int_washer:'墊圈法',rn_int_shell:'殼法',
   }
 };
+Object.assign(T.en,{"app_title": "Differentiation and Curve Sketching", "tab_fp": "First Principles", "tab_analyzer": "Analyzer", "tab_av": "Area & Volume", "tab_ai": "AI Assistant", "tab_reference": "Reference", "hero_eyebrow": "HKDSE MATHEMATICS · EXTENDED PART MODULE 2", "hero_title": "See the change.\\nUnderstand every step.", "hero_desc": "From the first difference quotient to a complete curve. Explore exact mathematics, one reason at a time.", "hero_exact": "EXACT SYMBOLS", "hero_steps": "STEP-BY-STEP", "hero_m2": "M2 LEARNING", "intro_fp": "First principles, made visible.", "intro_fp_desc": "Build the derivative from its definition. Reveal each algebraic move, then see the secant become a tangent.", "intro_analyzer": "Explore the shape of a function.", "intro_analyzer_desc": "Derivatives, stationary points and the geometry of a curve. Symbolic expressions are exact; numerically located points are labelled approximate.", "intro_av": "From curves to areas and solids.", "intro_av_desc": "Set up a definite integral and explore the region or solid of revolution. Supported symbolic integrals are exact; numerical estimates are clearly labelled.", "intro_ai": "A little guidance for the next step.", "intro_ai_desc": "A local, rule-based learning assistant for supported differentiation problems — not a live AI service or an official marking scheme.", "intro_ref": "Your M2 learning notebook.", "intro_ref_desc": "Review the main algebra and calculus topics, reveal original worked examples, and test your understanding with exact answers.", "rad_tag": "RAD · EXACT FIRST", "math_keyboard": "Open mathematical keyboard", "fp_label_at": "Tangent point x = a (optional)", "fp_at_hint": "Enter the x-coordinate a to find f′(a), the tangent slope there. Leave blank for f′(x). All trig inputs use radians.", "fp_steps_title": "THE DERIVATION", "fp_graph_title": "THE GEOMETRY", "fp_btn": "Start derivation", "fp_try": "TRY AN EXAMPLE", "fp_play": "Play", "fp_pause": "Pause", "fp_next": "Next step", "fp_replay": "Restart", "fp_all": "Show all", "fp_speed": "Speed", "fp_step_word": "Step", "fp_why": "WHY THIS STEP", "fp_notes": "Previous explanations", "fp_exact_answer": "EXACT ANSWER", "fp_convention": "Qᵢ(h) denotes a difference quotient for h ≠ 0. Simplify it first, then take its limit — fewer repeated limit signs, with every equality kept valid. Inner quotients Lᵢ are proved below when needed.", "fp_conditions": "Domain conditions for this proof: ", "fp_curve_legend": "Curve / tangent", "fp_secant_legend": "Secant", "fp_animate_secant": "Animate h → 0", "fp_visual_note": "P is fixed at x = a; Q is at x = a + h. Plotting is numerical, but the slope expressions below are symbolic. The h = 0 position shows the tangent, not a division by zero.", "fp_graph_domain": "A separate domain or boundary analysis is needed at this point.", "fp_standard_tip": "Know the limit, not just the rule.", "fp_open_limits": "Open M2 standard limits →", "m2_core": "CORE IDEA", "m2_worked": "ORIGINAL WORKED EXAMPLE", "m2_your_turn": "YOUR TURN", "m2_answer_placeholder": "Exact answer, e.g. sqrt(3)/2 or pi/3", "m2_check": "Check answer", "m2_hint": "Hint", "m2_show": "Show answer", "m2_correct": "Correct — your expression matches the exact answer.", "m2_not_yet": "Not confirmed. Check your expression or compare with the reference answer; an equivalent form may need simplifying.", "m2_invalid": "Enter a mathematical expression, not prose.", "m2_exact": "Exact answer: ", "m2_source_note": "Original study notes and examples, aligned with the M2 topic areas. They are not official past-paper solutions or a complete course. Sources:", "m2_edb": "EDB curriculum notes", "m2_hkeaa": "HKEAA assessment framework", "ref_library": "Formula reference", "footer_note": "Independent M2 learning tool · Radians in calculus · Exact expressions before approximations", "ai_input_title": "Differentiation Problem Helper", "ai_empty": "Choose a supported example or enter a problem."});
+Object.assign(T.zh,{"app_title": "Differentiation and Curve Sketching", "tab_fp": "基本原理", "tab_analyzer": "分析器", "tab_av": "面積與體積", "tab_ai": "AI 輔助", "tab_reference": "M2 參考", "hero_eyebrow": "香港中學文憑試數學 · 延伸部分單元二", "hero_title": "看見變化，理解每一步。", "hero_desc": "從第一個差商到完整曲線，把精確數學逐步展開。每一行列式，都有清楚的理由。", "hero_exact": "精確符號", "hero_steps": "逐步推導", "hero_m2": "M2 溫習", "intro_fp": "從定義出發，讓推導看得見。", "intro_fp_desc": "逐步揭示代數整理及標準極限，再觀察割線如何趨向切線。", "intro_analyzer": "探索函數的曲線形狀。", "intro_analyzer_desc": "連繫導數、駐點與曲線幾何。符號表達式保持精確；數值定位的點會標明為近似。", "intro_av": "從曲線到面積與立體。", "intro_av_desc": "建立定積分，觀察區域及旋轉體。已支援的符號積分給出精確結果；數值估算會清楚標明。", "intro_ai": "為下一步提供一點指引。", "intro_ai_desc": "以本機規則處理已支援的微分題型；並非即時 AI 服務，亦不是官方評分參考。", "intro_ref": "你的 M2 數學筆記。", "intro_ref_desc": "溫習代數及微積分的主要課題，逐步閱讀原創例題，並以精確答案練習檢驗理解。", "rad_tag": "弧度 · 精確優先", "math_keyboard": "開啟數學鍵盤", "fp_label_at": "切線所在點 x = a（可留空）", "fp_at_hint": "輸入點的 x 座標 a，求該處的切線斜率 f′(a)。留空則求 f′(x)。三角輸入一律為弧度。", "fp_steps_title": "推導列式", "fp_graph_title": "幾何觀察", "fp_btn": "開始推導", "fp_try": "試試例子", "fp_play": "播放", "fp_pause": "暫停", "fp_next": "下一步", "fp_replay": "重新開始", "fp_all": "顯示全部", "fp_speed": "速度", "fp_step_word": "步驟", "fp_why": "這一步的理由", "fp_notes": "先前的解釋", "fp_exact_answer": "精確答案", "fp_convention": "Qᵢ(h) 表示 h ≠ 0 的差商。先做代數化簡，最後才取極限，減少重複極限符號而不改變等式。需要時，會另外逐步證明內部差商的極限 Lᵢ。", "fp_conditions": "此推導的定義域條件：", "fp_curve_legend": "曲線／切線", "fp_secant_legend": "割線", "fp_animate_secant": "動畫：h → 0", "fp_visual_note": "P 固定在 x = a；Q 位於 x = a + h。繪圖使用數值，下面的斜率列式則保留符號。h = 0 時顯示切線，不進行除以零的運算。", "fp_graph_domain": "此點需要另外分析定義域或邊界情況。", "fp_standard_tip": "理解標準極限，而不只是記住法則。", "fp_open_limits": "查看 M2 標準極限 →", "m2_core": "核心概念", "m2_worked": "原創逐步例題", "m2_your_turn": "到你試試", "m2_answer_placeholder": "精確答案，例如 sqrt(3)/2 或 pi/3", "m2_check": "核對答案", "m2_hint": "提示", "m2_show": "查看答案", "m2_correct": "正確，輸入式與精確答案相符。", "m2_not_yet": "暫未確認。請檢查列式或參考答案；等價形式可能仍需化簡。", "m2_invalid": "請輸入數學表達式，而非文字敘述。", "m2_exact": "精確答案：", "m2_source_note": "原創筆記與例題配合 M2 課題範圍，並非官方試題答案，亦不代替完整課程。來源：", "m2_edb": "教育局課程說明", "m2_hkeaa": "考評局評核框架", "ref_library": "公式參考", "footer_note": "獨立 M2 學習工具 · 微積分採用弧度 · 先精確式，後近似值", "ai_input_title": "微分題型輔助", "ai_empty": "選擇已支援的例子，或輸入題目。"});
 function t(key){return(T[LANG]&&T[LANG][key])||T.en[key]||key;}
 function toggleLang(){
-  LANG=LANG==='en'?'zh':'en';
+  LANG=LANG==='en'?'zh':'en';localStorage.setItem('m2-language',LANG);stopFpPlayback();
   document.getElementById('langToggle').textContent=LANG==='en'?'中文':'English';
   document.documentElement.lang=LANG==='zh'?'zh-TW':'en';
   document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder);});
-  rebuildQuickBtns();
+  rebuildQuickBtns();renderM2Hub();if(fpCurrentProof)runFirstPrinciples();
   if(lastResult&&lastResult.ok){buildAnalytics(lastResult);drawGraph(lastResult);}
   buildReference();
   if(avLastResult) buildAvResult(avLastResult);
@@ -658,39 +782,10 @@ function toggleLang(){
 // MATH ENGINE — shared utilities
 // ═══════════════════════════════════════════════════════════════════════════
 function gcd(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){[a,b]=[b,a%b]}return a||1;}
-function numToTex(n){
-  if(typeof n!=='number'||!isFinite(n))return'\\text{undefined}';
-  if(Math.abs(n)<1e-9)return'0';
-  const pi=Math.PI,sq2=Math.sqrt(2),sq3=Math.sqrt(3);
-  for(let d=1;d<=12;d++){
-    for(let p=-24;p<=24;p++){
-      if(p===0)continue;
-      if(Math.abs(n-p*pi/d)<1e-4){
-        const g=gcd(Math.abs(p),d);const pn=p/g,dn=d/g;
-        if(dn===1)return(pn===1?'':(pn===-1?'-':String(pn)))+'\\pi';
-        const numPart=Math.abs(pn)===1?'\\pi':`${Math.abs(pn)}\\pi`;
-        return(pn<0?'-':'')+`\\frac{${numPart}}{${dn}}`;
-      }
-      if(Math.abs(n-p*sq2/d)<1e-9){const g=gcd(Math.abs(p),d);const pn=p/g,dn=d/g;return(pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{2}}{${dn}}`;}
-      if(Math.abs(n-p*sq3/d)<1e-9){const g=gcd(Math.abs(p),d);const pn=p/g,dn=d/g;return(pn<0?'-':'')+`\\frac{${Math.abs(pn)}\\sqrt{3}}{${dn}}`;}
-    }
-  }
-  for(let d=1;d<=1000;d++){
-    const p=Math.round(n*d);
-    if(Math.abs(p/d-n)<1e-9){
-      const g=gcd(Math.abs(p),d);const pn=p/g,dn=d/g;
-      if(dn===1)return String(pn);
-      return(pn<0?'-':'')+`\\frac{${Math.abs(pn)}}{${dn}}`;
-    }
-  }
-  return n.toPrecision(6).replace(/\.?0+$/,'');
-}
-function evalAt(expr,x,varName='x'){try{const scope={};scope[varName]=x;const v=math.evaluate(expr,scope);return typeof v==='number'?v:NaN;}catch{return NaN;}}
-function safeDerivative(expr,v='x'){try{const e2=expr.replace(/\bln\s*\(/g,'log(');return math.derivative(e2,v).toString();}catch{return null;}}
-function simplifyTex(expr){
-  try{return math.simplify(math.parse(expr)).toTex({parenthesis:'auto'});}
-  catch{try{return math.parse(expr).toTex({parenthesis:'auto'});}catch{return expr;}}
-}
+function numToTex(n){return typeof n==='number'&&Number.isFinite(n)?Number(n.toPrecision(7)).toString():'\\text{undefined}';}
+function evalAt(expr,x,varName='x'){try{const scope={};scope[varName]=x;const v=FPExact.parse(expr).evaluate(scope);return typeof v==='number'?v:NaN;}catch{return NaN;}}
+function safeDerivative(expr,v='x'){try{const n=FPExact.parse(expr).transform(nd=>{if(nd.isFunctionNode&&['log10','log2'].includes(nd.fn.name))return math.parse(`log(${nd.args[0].toString()})/log(${nd.fn.name==='log10'?10:2})`);return nd;});return math.derivative(n,v,{simplify:false}).toString().replace(/\blog\s*\(/g,'ln(');}catch{return null;}}
+function simplifyTex(expr){try{return FPExact.et(FPExact.parse(expr));}catch{try{return math.parse(expr).toTex({parenthesis:'auto'});}catch{return expr;}}}
 function renderK(tex,block=true){
   const el=document.createElement(block?'div':'span');
   el.className=block?'math-block':'math-inline';
@@ -823,7 +918,7 @@ function findIntercepts(fx,xMin,xMax){
     if(isFinite(prev)&&isFinite(curr)&&prev*curr<=0){
       let lo=x-step,hi=x;
       for(let i=0;i<30;i++){const mid=(lo+hi)/2;const vm=evalAt(fx,mid);if(!isFinite(vm))break;if(evalAt(fx,lo)*vm<=0)hi=mid;else lo=mid;}
-      const xi=(lo+hi)/2;xInts.push({x:xi,xTex:numToTex(xi)});
+      const xi=(lo+hi)/2;xInts.push({x:xi,xTex:numToTex(xi),exact:false});
     }
     prev=curr;
   }
@@ -1149,8 +1244,8 @@ function setupGraphInteraction(){
 // ═══════════════════════════════════════════════════════════════════════════
 function buildAnalytics(result){
   const panel=document.getElementById('analyticsPanel');
-  if(!result.ok){panel.innerHTML=`<div class="error-box">⚠️ ${result.error||t('error_parse')}</div>`;return;}
-  panel.innerHTML='';
+  if(!result.ok){panel.replaceChildren();const e=document.createElement('div');e.className='error-box';e.textContent=result.error||t('error_parse');panel.appendChild(e);return;}
+  panel.innerHTML='';const notice=document.createElement('p');notice.style.cssText='padding:14px 18px;font-size:10px;color:var(--fg2);background:var(--primary-bg);line-height:1.8';notice.textContent=LANG==='zh'?'符號導數、已解代數駐點及切線保持精確。其他點、區間符號及漸近線由數值掃描估算；掃描不保證找出全部特徵。':'Symbolic derivatives, solved algebraic points and tangents are exact. Other points, interval signs and asymptotes use numerical scans, which may miss features.';panel.appendChild(notice);
   function section(id,icon,title,builder,color='#3b5bdb'){
     const sec=document.createElement('div');sec.className='section';
     const head=document.createElement('div');head.className='section-head';
@@ -1199,12 +1294,12 @@ function buildAnalytics(result){
       const cls=isMax?'badge-green':isMin?'badge-blue':'badge-orange';
       const label=isMax?t('badge_local_max'):isMin?t('badge_local_min'):t('badge_stationary');
       row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
-      row.appendChild(renderK(`\\left(${cp.xTex},\\,${cp.yTex}\\right)`));body.appendChild(row);
+      row.appendChild(renderK(`${cp.exact===false?"\\text{Approx. }":""}\\left(${cp.xTex},\\,${cp.yTex}\\right)`));body.appendChild(row);
     }
     for(const ip of result.inflectionPoints){
       const row=document.createElement('div');row.className='row';
       row.innerHTML=`<span class="badge badge-orange" style="margin-right:.4rem">${t('badge_inflection')}</span>`;
-      row.appendChild(renderK(`\\left(${ip.xTex},\\,${ip.yTex}\\right)`));body.appendChild(row);
+      row.appendChild(renderK(`${ip.exact===false?"\\text{Approx. }":""}\\left(${ip.xTex},\\,${ip.yTex}\\right)`));body.appendChild(row);
     }
   },'#e67700');
   // 5. Monotonicity
@@ -1243,7 +1338,7 @@ function buildAnalytics(result){
   // 8. Tangent Line
   section('s-tan','⟂',t('sec_tan'),body=>{
     const tanRow=document.createElement('div');
-    tanRow.innerHTML=`<div class="tan-input-row"><input type="number" id="tanXInput" value="${result.tangent?result.tangent.x:0}" step="0.1" placeholder="${t('tan_placeholder')}" style="width:110px;padding:.4rem .6rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem"><button class="btn btn-primary" id="tanBtn" style="font-size:.82rem;padding:.4rem .8rem">${t('tan_btn')}</button></div>`;
+    tanRow.innerHTML=`<div class="tan-input-row"><input type="text" id="tanXInput" value="${result.tangent?result.tangent.x:0}" step="0.1" placeholder="${t('tan_placeholder')}" style="width:110px;padding:.4rem .6rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem"><button class="btn btn-primary" id="tanBtn" style="font-size:.82rem;padding:.4rem .8rem">${t('tan_btn')}</button></div>`;
     body.appendChild(tanRow);
     const tanResult=document.createElement('div');tanResult.id='tanResult';
     if(result.tangent)renderTangentResult(tanResult,result.tangent);
@@ -1251,8 +1346,7 @@ function buildAnalytics(result){
     setTimeout(()=>{
       const btn=document.getElementById('tanBtn');
       if(btn)btn.onclick=()=>{
-        const xv=parseFloat(document.getElementById('tanXInput').value);
-        if(!isFinite(xv))return;
+        const xv=document.getElementById('tanXInput').value.trim();try{if(!Number.isFinite(Number(FPExact.parse(xv).evaluate())))return;}catch{return;}
         const tg=buildTangent(result.fx,result.fpStr,xv);
         const tr=document.getElementById('tanResult');if(tr)renderTangentResult(tr,tg);
         result.tangent=tg;drawGraph(result,true);
@@ -1273,633 +1367,357 @@ function renderTangentResult(container,tg){
 // ═══════════════════════════════════════════════════════════════════════════
 // FIRST PRINCIPLES ENGINE
 // ═══════════════════════════════════════════════════════════════════════════
-let fpLastFx='',fpLastAt=2;
+/* Original teaching derivations. Every algebraic equality retains all terms.
+   Numeric evaluation is only for domain checks and the visual graph. */
+/* Original teaching derivations. Every algebraic equality retains all terms.
+   Numeric evaluation is only for domain checks and the visual graph. */
+const FPExact = (() => {
+  const lim = '\\lim_{h\\to0}';
+  const W = (s) => `\\left(${s}\\right)`;
+  const F = (a,b) => `\\dfrac{${a}}{${b}}`;
+  const normal = (s) => s.replace(/π/g,'pi').replace(/−/g,'-').replace(/²/g,'^2').replace(/³/g,'^3').replace(/\bln\s*\(/g,'log(').replace(/\blog\s*\(/g,'log10(');
+  // Keep an unambiguous canonical natural log; public log means base 10.
+  function parse(s) {
+    if(s.length>600)throw Error('Expression too long.');
+    s = s.replace(/π/g,'pi').replace(/−/g,'-').replace(/²/g,'^2').replace(/³/g,'^3');
+    const n = math.parse(s);
+    return n.transform(nd => {
+      if(nd.isFunctionNode && nd.fn.name==='ln') return math.parse(`log(${nd.args[0].toString()})`);
+      if(nd.isFunctionNode && nd.fn.name==='log' && nd.args.length===1) return math.parse(`log10(${nd.args[0].toString()})`);
+      return nd;
+    });
+  }
+  const strip = n => n.isParenthesisNode ? strip(n.content) : n;
+  const has = (n,v) => { let yes=false; n.traverse(q=>{if(q.isSymbolNode&&q.name===v)yes=true;});return yes; };
+  const str = n => typeof n==='string'?n:n.toString();
+  function special(name,arg) {
+    if(arg==='0') return ({sin:'0',cos:'1',tan:'0',exp:'1',sqrt:'0',cbrt:'0'})[name];
+    if(name==='exp' && arg==='1')return 'e';
+    if(name==='exp'){const m=arg.match(/^(-?\d+) \* log\((\d+)\)$/);if(m)return `${m[2]}^(${m[1]})`;}
+    if(name==='log' && arg==='1')return '0';
+    if(name==='log' && arg==='e')return '1';
+    if((name==='sqrt'||name==='cbrt') && /^-?\d+$/.test(arg)) {
+      const k=Number(arg); if(!Number.isSafeInteger(k)||Math.abs(k)>1e9)return;
+      if(name==='sqrt' && k>=0){let out=1,left=k;for(let d=2;d*d<=left;d++)while(left%(d*d)===0){out*=d;left/=d*d;}return left===1?String(out):out===1?undefined:`${out}*sqrt(${left})`;}
+      if(name==='cbrt'){const r=Math.round(Math.cbrt(k));if(r*r*r===k)return String(r);}
+    }
+    if(name==='sin'||name==='cos'||name==='tan') {
+      let r;try{const q=math.simplify(`(${arg})/pi`);if(has(q,'pi')||has(q,'x')||has(q,'h'))return;r=math.fraction(q.evaluate());}catch{return;}
+      const v=r.valueOf();const k=Math.round(v*12);if(Math.abs(v*12-k)>1e-12)return;
+      const j=((k%24)+24)%24;
+      const sine={0:'0',2:'1/2',3:'sqrt(2)/2',4:'sqrt(3)/2',6:'1',8:'sqrt(3)/2',9:'sqrt(2)/2',10:'1/2',12:'0',14:'-1/2',15:'-sqrt(2)/2',16:'-sqrt(3)/2',18:'-1',20:'-sqrt(3)/2',21:'-sqrt(2)/2',22:'-1/2'};
+      if(name==='sin')return sine[j];
+      if(name==='cos')return sine[(j+6)%24];
+      if(sine[j]!==undefined && sine[(j+6)%24]!==undefined && sine[(j+6)%24]!=='0')return `(${sine[j]})/(${sine[(j+6)%24]})`;
+    }
+  }
+  function exact(expr) {
+    // Shield function calls before simplify so cos(2), exp(sin(1)), ln(5)
+    // are NEVER evaluated to decimals. Only known identities are reduced.
+    const protectedNodes=[];
+    function shield(nd) {
+      if(nd.isFunctionNode){
+        const args=nd.args.map(a=>exact(a.toString()));
+        const value=special(nd.fn.name,args[0]);
+        if(value!==undefined)return shield(math.parse(value));
+        const call=math.parse(`${nd.fn.name}(${args.join(',')})`);
+        let index=protectedNodes.findIndex(p=>p.toString()===call.toString());if(index<0){index=protectedNodes.length;protectedNodes.push(call);}return new math.SymbolNode('FPsymbol'+index);
+      }
+      return nd.map?nd.map(shield):nd;
+    }
+    try {
+      const safe=shield(math.parse(str(expr)));
+      const simple=math.simplify(safe, math.simplify.rules, {exactFractions:true});
+      let restored=simple.transform(nd=>nd.isSymbolNode&&/^FPsymbol\d+$/.test(nd.name)?protectedNodes[Number(nd.name.slice(8))]:nd);
+      if(restored.isOperatorNode&&restored.op==='/'&&restored.args[1].isFunctionNode&&restored.args[1].fn.name==='sqrt'){const k=restored.args[1].args[0].toString();if(/^\d+$/.test(k)&&Number(k)>0)return exact(`(${restored.args[0].toString()})*sqrt(${k})/(${k})`);}
+      return restored.toString();
+    }catch{return str(expr);}
+  }
+  const tex = (expr) => math.parse(str(expr)).transform(n=>n.isFunctionNode&&n.fn.name==='exp'?math.parse(`e^(${n.args[0].toString()})`):n).toTex({parenthesis:'auto'}).replace(/\\log\b/g,'\\ln');
+  const et = expr => tex(exact(expr));
+  const sub = (node,z) => node.transform(nd=>nd.isSymbolNode&&nd.name==='x'?math.parse(z):nd);
+  const at = (node,z) => exact(sub(node,z));
+  const rawAt = (node,z) => tex(sub(node,z));
+  const plus = (a,b) => exact(`(${a})+(${b})`);
+  const times = (a,b) => exact(`(${a})*(${b})`);
+  const divide = (a,b) => exact(`(${a})/(${b})`);
+  function mulP(a,b) {
+    const c=new Map();for(const [ka,va]of a)for(const[kb,vb]of b){const aa=ka.split(',').map(Number),bb=kb.split(',').map(Number);const key=`${aa[0]+bb[0]},${aa[1]+bb[1]}`;if(aa[0]+bb[0]>20||aa[1]+bb[1]>20)throw Error('degree');c.set(key,plus(c.get(key)||'0',times(va,vb)));}return c;
+  }
+  function addP(a,b,sign=1){const c=new Map(a);for(const[k,v]of b)c.set(k,plus(c.get(k)||'0',sign===1?v:times('-1',v)));return c;}
+  function poly(n) {
+    n=strip(n);
+    if(!has(n,'x')&&!has(n,'h'))return new Map([['0,0',exact(n)]]);
+    if(n.isSymbolNode&&(n.name==='x'||n.name==='h'))return new Map([[n.name==='x'?'1,0':'0,1','1']]);
+    if(n.isOperatorNode){
+      const a=poly(n.args[0]);
+      if(n.args.length===1 && n.op==='-')return new Map([...a].map(([k,v])=>[k,times('-1',v)]));
+      if(n.op==='^'){const k=Number(exact(n.args[1]));if(!Number.isInteger(k)||k<0||k>12)throw Error('degree');let p=new Map([['0,0','1']]);for(let i=0;i<k;i++)p=mulP(p,a);return p;}
+      const b=poly(n.args[1]);
+      if(n.op==='+')return addP(a,b);if(n.op==='-')return addP(a,b,-1);if(n.op==='*')return mulP(a,b);
+      if(n.op==='/'&&[...b.keys()].every(k=>k==='0,0'))return new Map([...a].map(([k,v])=>[k,divide(v,b.get('0,0'))]));
+    }
+    throw Error('not polynomial');
+  }
+  function pstr(p) {
+    for(const[,v]of p){const match=v.replace(/\s/g,'').match(/^(-?\d+)(?:\/(\d+))?$/);if(match&&(Math.abs(Number(match[1]))>Number.MAX_SAFE_INTEGER||Number(match[2]||1)>Number.MAX_SAFE_INTEGER))throw Error('Coefficient exceeds the exact teaching range.');}
+    return [...p].filter(([,v])=>v!=='0').sort(([a],[b])=>{const aa=a.split(',').map(Number),bb=b.split(',').map(Number);return bb[0]-aa[0]||bb[1]-aa[1];}).map(([k,v])=>{const[i,j]=k.split(',').map(Number);return `(${v})${i?`*x^${i}`:''}${j?`*h^${j}`:''}`;}).join('+')||'0';
+  }
+  function difference(n,z) {
+    const a=poly(sub(n,`(${z})+h`)),b=poly(sub(n,z));
+    const p=addP(a,b,-1),q=new Map();
+    for(const[k,v]of p){if(v==='0')continue;const[i,j]=k.split(',').map(Number);if(j===0)throw Error('uncancelled');q.set(`${i},${j-1}`,v);}
+    const r=new Map([...q].filter(([k])=>k.endsWith(',0')));
+    return {expanded:et(pstr(p)),quotient:et(pstr(q)),result:exact(pstr(r)),q:exact(pstr(q))};
+  }
+  function canonical(n) {
+    n=strip(n);
+    if(n.isOperatorNode&&n.op==='^'){
+      const base=strip(n.args[0]),power=exact(n.args[1]);
+      if(base.isSymbolNode&&base.name==='e')return math.parse(`exp(${n.args[1].toString()})`);
+      const fm=power.match(/^(-?\d+)\s*\/\s*(\d+)$/);
+      if(fm&&['2','3'].includes(fm[2]))return math.parse(`(${fm[2]==='2'?'sqrt':'cbrt'}(${base.toString()}))^(${fm[1]})`);
+      if(/^-[1-9]\d*$/.test(power))return math.parse(`1/((${base.toString()})^${-Number(power)})`);
+      if(!has(base,'x')&&has(n.args[1],'x'))return math.parse(`exp((${n.args[1].toString()})*log(${base.toString()}))`);
+    }
+    if(n.isFunctionNode){const u=n.args[0].toString(),f=n.fn.name;
+      if(f==='tan')return math.parse(`sin(${u})/cos(${u})`);
+      if(f==='sec')return math.parse(`1/cos(${u})`);
+      if(f==='csc')return math.parse(`1/sin(${u})`);
+      if(f==='cot')return math.parse(`cos(${u})/sin(${u})`);
+      if(f==='log10')return math.parse(`log(${u})/log(10)`);
+      if(f==='log2')return math.parse(`log(${u})/log(2)`);
+      if(f==='log'&&n.args.length===2)return math.parse(`log(${u})/log(${n.args[1].toString()})`);
+    }
+    return n;
+  }
+  function validate(n,z) {
+    const allowed=new Set(['sin','cos','tan','sec','csc','cot','exp','log','log10','log2','sqrt','cbrt']);
+    n.traverse(nd=>{
+      if(nd.isSymbolNode&&!['x','pi','e',...allowed].includes(nd.name))throw Error('Only x, pi, e and the supported functions may be used.');
+      if(nd.isFunctionNode&&!allowed.has(nd.fn.name))throw Error(`A verified first-principles derivation is not available for ${nd.fn.name}. Use a supported example instead.`);
+      if(nd.isAssignmentNode||nd.isAccessorNode||nd.isArrayNode||nd.isBlockNode)throw Error('Enter a single real-valued function.');
+    });
+    if(z!=='x') {
+      const value=Number(math.evaluate(sub(n,z).toString()));if(!Number.isFinite(value))throw Error('The function is not real and finite at this point.');
+    }
+  }
+  function build(input,point='') {
+    const root=parse(input),z=point?exact(parse(point)):'x';
+    root.traverse(n=>{if(n.isConstantNode&&typeof n.value==='number'&&(Math.abs(n.value)>1000000||!Number.isFinite(n.value)))throw Error('For exact teaching steps, use finite constants no larger than 10^6.');});
+    if(point){const p=parse(point);if(has(p,'x')||has(p,'h'))throw Error('The point must be a constant, for example 2, 1/3 or pi/2.');const v=Number(p.evaluate());if(!Number.isFinite(v)||Math.abs(v)>1000000)throw Error('Enter a finite real point with magnitude no greater than 10^6.');}
+    validate(root,z);
+    const rows=[],assumptions=new Set();let count=0,qcount=0;
+    const add=(lhs,rhs,en,zh,formula='',kind='algebra')=>rows.push({lhs,rhs,note:{en,zh},formula,kind});
+    const req=(s)=>assumptions.add(s);
+    function check(u,condition) {
+      if(z==='x'){req(condition(et(at(u,z))));return;}
+      const v=Number(sub(u,z).evaluate());
+      if(!(v>0))throw Error('This derivation requires a positive inner value here. A boundary or zero needs a separate one-sided/special proof; no finite derivative is asserted.');
+    }
+    function derive(orig,lhs,depth=0) {
+      if(depth>7||rows.length>160)throw Error('This expression is too long for a reliable teaching derivation. Split it into smaller parts.');
+      const qname=`Q_{${qcount++}}(h)`,limitName=lhs||`f'(${et(z)})`;let algebraStarted=false,limitTaken=false;
+      function emit(left,right,en,zh,formula='',kind='algebra'){
+        if(kind==='context'){add(left,right,en,zh,formula,kind);return;}
+        if(right.includes(lim)){
+          add(algebraStarted?'':qname,right.split(lim).join(''),en,zh,formula,kind);algebraStarted=true;
+        }else{
+          add(limitTaken?'':limitName,limitTaken?right:`${lim}${qname}=${right}`,en,zh,formula,kind);limitTaken=true;
+        }
+      }
+      const n=strip(orig),nx=rawAt(n,z),nh=rawAt(n,`(${z})+h`);
+      emit(lhs,`${lim}${F(`${nh}-${W(nx)}`,'h')}`,'Substitute into the difference quotient.','代入差商。');
+      let d;try{d=difference(n,z);}catch{}
+      if(d){
+        emit('',`${lim}${F(d.expanded,'h')}`,'Expand and collect every term; the constant terms cancel.','展開並合併全部項；不含 h 的項互相抵消。');
+        emit('',`${lim}${W(d.quotient)}`,'Factor h and cancel it for h ≠ 0.','提出並約去 h（h ≠ 0）。');
+        emit('',et(d.result),'Now take h → 0.','現在才令 h → 0。','', 'result');return d.result;
+      }
+      const c=canonical(n);
+      if(c.toString()!==n.toString()) {
+        emit('',`${lim}${F(`${rawAt(c,`(${z})+h`)}-${W(rawAt(c,z))}`,'h')}`,'Rewrite using an exact identity before deriving.','先用恆等式改寫，再推導。');
+        if(n.isOperatorNode&&n.op==='^'&&!has(n.args[0],'x'))check(n.args[0],a=>`${a}>0`);
+        return derive(c,lhs,depth+1);
+      }
+      function child(u) {
+        const id=++count,name=`L_{${id}}`;
+        add('\\text{'+(typeof LANG!=='undefined'&&LANG==='zh'?'內部差商':'Inner quotient')+'}',`\\quad ${name}=${lim}${F(`${rawAt(u,`(${z})+h`)}-${W(rawAt(u,z))}`,'h')}`,'Derive this inner quotient from first principles as well.','內部差商亦從基本原理逐步推導。','', 'context');
+        const result=derive(u,name,depth+1);return {name,result};
+      }
+      if(n.isOperatorNode && ['+','-','*','/'].includes(n.op)) {
+        const u=n.args[0],v=n.args[1];
+        if(!v&&n.op==='-'){const a=child(u);const result=times('-1',a.result);emit(lhs,et(result),'Apply the minus sign.','加上負號。','', 'result');return result;}
+        if(!v)throw Error('Unsupported operator.');
+        const U=et(at(u,z)),V=et(at(v,z)),Uh=rawAt(u,`(${z})+h`),Vh=rawAt(v,`(${z})+h`);
+        const du=F(`${Uh}-${W(U)}`,'h'),dv=F(`${Vh}-${W(V)}`,'h');
+        if(n.op==='*'){
+          emit('',`${lim}${F(`${W(Uh)}${W(Vh)}-${W(U)}${W(Vh)}+${W(U)}${W(Vh)}-${W(U)}${W(V)}`,'h')}`,'Add and subtract u(a)v(a+h); no product rule is assumed.','加減 u(a)v(a+h) 配湊；未使用乘積法則。');
+          emit('',`${lim}${W(`${W(Vh)}${du}+${W(U)}${dv}`)}`,'Factor and split into two difference quotients.','提取公因式，分拆成兩個差商。');
+        }else if(n.op==='/'){
+          if(z!=='x'&&Math.abs(Number(sub(v,z).evaluate()))<1e-14)throw Error('The denominator is zero at the selected point.');req(`${V}\\ne0`);
+          emit('',`${lim}${F(`${W(Uh)}${W(V)}-${W(U)}${W(Vh)}`,`h${W(Vh)}${W(V)}`)}`,'Use a common denominator.','通分。');
+          emit('',`${lim}${F(`${W(Uh)}${W(V)}-${W(U)}${W(V)}+${W(U)}${W(V)}-${W(U)}${W(Vh)}`,`h${W(Vh)}${W(V)}`)}`,'Add and subtract u(a)v(a).','加減 u(a)v(a) 配湊。');
+          emit('',`${lim}${F(`${W(V)}${du}-${W(U)}${dv}`,`${W(Vh)}${W(V)}`)}`,'Factor and split the difference quotients.','提出公因式，分拆差商。');
+        }else emit('',`${lim}${W(`${du}${n.op}${dv}`)}`,'Split the sum/difference without changing the limit.','分拆和／差，保留極限。');
+        const a=child(u),b=child(v);
+        const uval=at(u,z),vval=at(v,z);
+        const result=n.op==='*'?plus(times(vval,a.result),times(uval,b.result)):n.op==='/'?divide(exact(`(${vval})*(${a.result})-(${uval})*(${b.result})`),`(${vval})^2`):exact(`(${a.result})${n.op}(${b.result})`);
+        const final=n.op==='*'?`${W(V)}${W(et(a.result))}+${W(U)}${W(et(b.result))}`:n.op==='/'?F(`${W(V)}${W(et(a.result))}-${W(U)}${W(et(b.result))}`,`${W(V)}^2`):`${W(et(a.result))}${n.op}${W(et(b.result))}`;
+        emit(lhs,final,'Use the inner limits proved above and continuity of the factors.','使用上面已證的內部極限及因子的連續性。');
+        emit('',et(result),'Simplify exactly.','精確化簡。','', 'result');return result;
+      }
+      if(n.isOperatorNode&&n.op==='^') {
+        const power=Number(exact(n.args[1]));
+        if(!Number.isInteger(power)||power<1||power>12)throw Error('Use integer powers up to 12, sqrt or cbrt for a fully verified derivation.');
+        const u=n.args[0],U=et(at(u,z)),Uh=rawAt(u,`(${z})+h`),delta=`\\Delta_{${++count}}`;
+        emit(delta,`${Uh}-${W(U)}`,'Define the inner increment; it tends to zero by continuity.','設內部增量；由連續性，增量趨向 0。','', 'context');
+        const sum=Array.from({length:power},(_,i)=>`${W(Uh)}^{${power-1-i}}${W(U)}^{${i}}`).join('+');
+        emit(lhs,`${lim}${F(`${W(`${Uh}-${W(U)}`)}${W(sum)}`,'h')}`,'Use Aⁿ − Bⁿ = (A − B)(Aⁿ⁻¹ + ⋯ + Bⁿ⁻¹), retaining every term.','使用差冪因式分解，保留全部項而非提前刪去增量項。');
+        emit('',`${lim}${F(`${Uh}-${W(U)}`,'h')}${W(sum)}`,'Separate the inner quotient and the finite sum.','分拆內部差商及有限和。');
+        const a=child(u),result=times(times(String(power),`(${at(u,z)})^${power-1}`),a.result);
+        emit(lhs,`${W(et(a.result))}\\cdot ${power}${W(U)}^{${power-1}}`,'All terms in the finite sum have the same limit.','有限和的每項均趨向相同值。');emit('',et(result),'Simplify exactly.','精確化簡。','', 'result');return result;
+      }
+      if(n.isFunctionNode) {
+        const u=n.args[0],U=et(at(u,z)),Uh=rawAt(u,`(${z})+h`),name=n.fn.name,delta=`\\Delta_{${++count}}`;
+        if(name==='sqrt'||name==='cbrt') {
+          if(name==='sqrt')check(u,a=>`${a}>0`);
+          else {if(z!=='x'&&Number(sub(u,z).evaluate())===0)throw Error('At a zero inner value, the cube-root derivative needs a separate proof.');req(`${U}\\ne0`);}
+          const rt=s=>name==='sqrt'?`\\sqrt{${s}}`:`\\sqrt[3]{${s}}`,A=rt(Uh),B=rt(U),den=name==='sqrt'?`${A}+${B}`:`${A}^2+${A}${B}+${B}^2`;
+          emit('',`${lim}${F(`${W(`${A}-${B}`)}${W(den)}`,`h${W(den)}`)}`,'Multiply numerator AND denominator by the rationalising factor.','分子和分母同乘有理化因子，不能漏掉分母。');
+          emit('',`${lim}${F(`${Uh}-${W(U)}`,`h${W(den)}`)}`,'Apply the difference-of-squares/cubes identity.','使用差平方／差立方恆等式。');
+          emit('',`${lim}${F(`${Uh}-${W(U)}`,'h')}\\cdot ${F('1',den)}`,'Separate the inner quotient.','分拆內部差商。');
+          const a=child(u),denExpr=name==='sqrt'?`2*sqrt(${at(u,z)})`:`3*cbrt(${at(u,z)})^2`,result=divide(a.result,denExpr);
+          emit(lhs,F(et(a.result),et(denExpr)),'Take the inner limit proved above and the continuous root factors.','取已證的內部極限及根式因子的極限。');emit('',et(result),'Simplify exactly.','精確化簡。','', 'result');return result;
+        }
+        if(!['sin','cos','exp','log'].includes(name))throw Error('No verified derivation template is available.');
+        if(name==='exp') {
+          emit('',`${W(`e^{${U}}`)}${lim}${F(`e^{${Uh}-${W(U)}}-1`,'h')}`,'Factor eᵍ⁽ᵃ⁾ OUTSIDE the limit first.','先把 eᵍ⁽ᵃ⁾ 提出極限外。');
+          emit(delta,`${Uh}-${W(U)}`,'Now define the inner increment Δ; continuity gives Δ → 0.','然後設內部增量 Δ；由連續性得 Δ → 0。','', 'context');
+          emit(lhs,`e^{${U}}${lim}${W(`${F(`e^{${delta}}-1`,delta)}\\cdot ${F(delta,'h')}`)}`,'Match the exponential standard limit; extend its quotient continuously at Δ = 0.','配成指數標準極限；Δ = 0 時採用比值的連續延拓。',`\\lim_{y\\to0}${F('e^y-1','y')}=1`);
+        }else if(name==='sin'||name==='cos') {
+          emit(delta,`${Uh}-${W(U)}`,'Define Δ; all angles are in radians.','設 Δ；所有角度均以弧度表示。','', 'context');
+          const A=name==='sin'?`\\sin${W(U)}\\cos${W(delta)}+\\cos${W(U)}\\sin${W(delta)}-\\sin${W(U)}`:`\\cos${W(U)}\\cos${W(delta)}-\\sin${W(U)}\\sin${W(delta)}-\\cos${W(U)}`;
+          emit(lhs,`${lim}${F(A,'h')}`,'Use the addition formula BEFORE taking limits.','取極限前先使用加法公式。',name==='sin'?'\\sin(A+B)=\\sin A\\cos B+\\cos A\\sin B':'\\cos(A+B)=\\cos A\\cos B-\\sin A\\sin B');
+          const B=name==='sin'?`\\cos${W(U)}${F(`\\sin${W(delta)}`,'h')}+\\sin${W(U)}${F(`\\cos${W(delta)}-1`,'h')}`:`\\cos${W(U)}${F(`\\cos${W(delta)}-1`,'h')}-\\sin${W(U)}${F(`\\sin${W(delta)}`,'h')}`;
+          emit('',`${lim}${W(B)}`,'Collect the sine and cosine increments separately.','分別整理正弦與餘弦的增量。');
+          const C=name==='sin'?`\\cos${W(U)}${F(`\\sin${W(delta)}`,delta)}+\\sin${W(U)}${F(`\\cos${W(delta)}-1`,delta)}`:`\\cos${W(U)}${F(`\\cos${W(delta)}-1`,delta)}-\\sin${W(U)}${F(`\\sin${W(delta)}`,delta)}`;
+          emit('',`${lim}${W(C)}${F(delta,'h')}`,'Match both standard limits; define the ratios by continuity when Δ = 0.','配成兩個標準極限；Δ = 0 時以連續延拓定義比值。',`\\lim_{y\\to0}${F('\\sin y','y')}=1,\\quad\\lim_{y\\to0}${F('\\cos y-1','y')}=0`);
+        }else {
+          check(u,a=>`${a}>0`);
+          emit('',`${lim}${F(`\\ln${W(F(Uh,U))}`,'h')}`,'Use ln A − ln B = ln(A/B); the inner value is positive.','使用對數商法則；內部值必須為正。');
+          emit(delta,`${Uh}-${W(U)}`,'Define the increment, then write g(a+h)/g(a) = 1 + Δ/g(a).','設增量，再把比值寫成 1 + Δ/g(a)。','', 'context');
+          emit(lhs,`${lim}${F(`\\ln${W(`1+${F(delta,U)}`)}`,'h')}`,'Rewrite the ratio as 1 + Δ/g(a).','把對數內部改寫為 1 + Δ/g(a)。');
+          emit('',`${F('1',U)}${lim}${W(`${F(`\\ln${W(`1+${F(delta,U)}`)}`,F(delta,U))}\\cdot${F(delta,'h')}`)}`,'Set y = Δ/g(a) and match the natural-log standard limit.','設 y = Δ/g(a)，配成自然對數標準極限。',`\\lim_{y\\to0}${F('\\ln(1+y)','y')}=1`);
+        }
+        const a=child(u),factor=name==='sin'?`cos(${at(u,z)})`:name==='cos'?`-sin(${at(u,z)})`:name==='exp'?`exp(${at(u,z)})`:`1/(${at(u,z)})`,result=times(factor,a.result);
+        const evalLine=name==='sin'?`${W(`\\cos${W(U)}\\cdot1+\\sin${W(U)}\\cdot0`)}${W(et(a.result))}`:name==='cos'?`${W(`\\cos${W(U)}\\cdot0-\\sin${W(U)}\\cdot1`)}${W(et(a.result))}`:name==='exp'?`e^{${U}}\\cdot1\\cdot${W(et(a.result))}`:`${F('1',U)}\\cdot1\\cdot${W(et(a.result))}`;
+        emit(lhs,evalLine,'Apply the standard limits and the inner limit just proved.','使用標準極限及剛才已證的內部极限。');emit('',et(result),'Simplify exactly; no decimal evaluation of trig/log/exp.','精確化簡；不把三角、對數及指數值轉為小數。','', 'result');return result;
+      }
+      throw Error('A complete verified derivation is not available for this expression.');
+    }
+    const target=`f'(${et(z)})`;
+    add(target,`${lim}${F(`f(${et(z)}+h)-f(${et(z)})`,'h')}`,'Definition: the tangent slope is the limit of the secant slopes.','定義：切線斜率是割線斜率的極限。');
+    const result=derive(root,'',0);if(/[0-9]e[+-]?\d{2,}/i.test(result))throw Error('The exact coefficient is outside the teaching range. Use smaller constants.');
+    add(`\\therefore\\quad ${target}`,et(result),'Exact result, subject to the domain conditions.','精確結果，須符合所列定義域條件。','', 'answer');
+    return {rows,result,resultTex:et(result),point:z,pointTex:et(z),function:root.toString(),functionTex:tex(root),assumptions:[...assumptions]};
+  }
+  return {build,exact,tex,et,parse,sub,at,difference,poly,pstr};
+})();
+
+let fpLastFx='',fpLastAt=0,fpLastPoint='0',fpCurrentProof=null;
+const fpPlayback={index:1,timer:null,delay:2200};
+function stopFpPlayback(){clearTimeout(fpPlayback.timer);fpPlayback.timer=null;const b=document.getElementById('fpPlay');if(b)b.textContent=t('fp_play');}
+function setFpStep(index,animated=false){
+  if(!fpCurrentProof)return;
+  fpPlayback.index=Math.max(1,Math.min(index,fpCurrentProof.rows.length));
+  const visible=fpCurrentProof.rows.slice(0,fpPlayback.index),mathCol=document.getElementById('fpAligned');
+  const aligned=visible.map((r,i)=>`${i===visible.length-1?'\\color{#16715c}':''}${r.lhs}&=${r.rhs}`).join('\\\\[0.65em]');
+  mathCol.replaceChildren(renderK(`\\begin{aligned}${aligned}\\end{aligned}`,true));
+  mathCol.classList.toggle('step-reveal',animated);if(animated)setTimeout(()=>mathCol.classList.remove('step-reveal'),240);
+  const row=visible[visible.length-1],note=document.getElementById('fpActiveNote');
+  note.replaceChildren();const p=document.createElement('p');p.textContent=row.note[LANG]||row.note.en;note.appendChild(p);
+  if(row.formula){const f=renderK(row.formula,true);f.classList.add('standard-limit');note.appendChild(f);}
+  document.getElementById('fpStepCount').textContent=`${t('fp_step_word')} ${fpPlayback.index} / ${fpCurrentProof.rows.length}`;
+  document.getElementById('fpProgress').style.transform=`scaleX(${fpPlayback.index/fpCurrentProof.rows.length})`;
+  document.getElementById('fpPrev').disabled=fpPlayback.index===1;
+  document.getElementById('fpNext').disabled=fpPlayback.index===fpCurrentProof.rows.length;
+  const answer=document.getElementById('fpExactAnswer');
+  answer.hidden=fpPlayback.index!==fpCurrentProof.rows.length;
+  if(!answer.hidden){answer.replaceChildren(renderK(`f'(${fpCurrentProof.pointTex})=${fpCurrentProof.resultTex}`));const label=document.createElement('span');label.className='answer-caption';label.textContent=t('fp_exact_answer');answer.prepend(label);}
+  const notes=document.getElementById('fpNotesList');notes.replaceChildren();
+  visible.forEach((r,i)=>{const li=document.createElement('li');li.className=i===visible.length-1?'current-note':'';li.textContent=`${i+1}. ${r.note[LANG]||r.note.en}`;notes.appendChild(li);});
+  if(animated&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const scroll=document.getElementById('fpMathScroll');scroll.scrollTo({top:scroll.scrollHeight,behavior:'smooth'});
+  }
+}
+function playFp(){
+  if(fpPlayback.timer){stopFpPlayback();return;}
+  if(!fpCurrentProof)return;if(fpPlayback.index>=fpCurrentProof.rows.length)setFpStep(1);
+  document.getElementById('fpPlay').textContent=t('fp_pause');
+  const tick=()=>{if(fpPlayback.index>=fpCurrentProof.rows.length){stopFpPlayback();return;}setFpStep(fpPlayback.index+1,true);fpPlayback.timer=setTimeout(tick,fpPlayback.delay);};
+  fpPlayback.timer=setTimeout(tick,fpPlayback.delay);
+}
 function runFirstPrinciples(){
-  const fx=document.getElementById('fpFxInput').value.trim();
-  const atXRaw=document.getElementById('fpAtInput').value.trim();
-  let atX=NaN;
-  if(atXRaw){
-    try{const v=math.evaluate(atXRaw);atX=typeof v==='number'?v:NaN;}catch{atX=parseFloat(atXRaw);}
-  }
-  if(!fx)return;
-  fpLastFx=fx;fpLastAt=isFinite(atX)?atX:0;
-  const stepsDiv=document.getElementById('fpSteps');stepsDiv.innerHTML='';
-  const t=(typeof LANG!=='undefined'?LANG:'en');
-
-  // ── DSE-style renderer ────────────────────────────────────────────────────
-  // Builds ONE aligned block with annotations on the right
-  // lines: [{tex, note}]  where tex is the RHS of each = line, note is optional
-  function renderDSEBlock(lines){
-    // Strategy: render ONE aligned KaTeX block for all math lines,
-    // then render a matching column of notes beside it.
-    // Each line's tex already has the form:  LHS = RHS  or  \phantom{...} = RHS
-    // We convert them to aligned rows:  LHS &= RHS
-    const wrapper=document.createElement('div');
-    wrapper.className='dse-derivation';
-
-    // Build the aligned LaTeX string
-    // Convert each line: replace the FIRST bare ' = ' (not inside \lim, etc.) with ' &= '
-    const alignedRows=lines.map(row=>{
-      // Insert & before the first = sign that is preceded by a non-& character
-      // The tex lines are like: "f'(x) = \lim..." or "\phantom{f'(x)} = ..."
-      // We want:                "f'(x) &= \lim..." or "\phantom{f'(x)} &= ..."
-      return row.tex.replace(/^([^=]*)=/, '$1&=');
-    });
-    const alignedTex=`\\begin{aligned}${alignedRows.join('\\\\')}\\end{aligned}`;
-
-    // Left column: single KaTeX block
-    const mathCol=document.createElement('div');
-    mathCol.className='dse-math-col';
-    mathCol.appendChild(renderK(alignedTex,true));
-
-    // Right column: notes stacked to match each row
-    const noteCol=document.createElement('div');
-    noteCol.className='dse-note-col';
-    lines.forEach(row=>{
-      const noteEl=document.createElement('div');
-      noteEl.className='dse-note-item';
-      if(row.note) noteEl.textContent=row.note;
-      noteCol.appendChild(noteEl);
-    });
-
-    wrapper.appendChild(mathCol);
-    wrapper.appendChild(noteCol);
-    stepsDiv.appendChild(wrapper);
-  }
-
-  // ── Helpers ───────────────────────────────────────────────────────────────
-  function toTex(expr){try{return math.parse(expr).toTex({parenthesis:'auto'});}catch{return expr;}}
-  function substXplusH(expr){
-    try{
-      const node=math.parse(expr);
-      const subst=node.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse('x+h');return n;});
-      return subst.toTex({parenthesis:'auto'});
-    }catch{return expr.replace(/\bx\b/g,'(x+h)');}
-  }
-  function innerDerivTex(innerExpr){
-    try{const s=safeDerivative(innerExpr);if(s)return simplifyTex(s);}catch{}
-    return "g'(x)";
-  }
-
-  // ── Composite function classifier ─────────────────────────────────────────
-  function classifyAST(expr){
-    const e=expr.trim().replace(/\s/g,'');
-    if(/^x$/.test(e)) return {outer:'power',n:1,inner:'x',innerTex:'x',isPure:true};
-    if(/^x\^(-?\d+(\.\d+)?)$/.test(e)){const n=parseFloat(e.split('^')[1]);return {outer:'power',n,inner:'x',innerTex:'x',isPure:true};}
-    if(/^x\^\((-?\d+)\/(\d+)\)$/.test(e)){const m=e.match(/^x\^\((-?\d+)\/(\d+)\)$/);return {outer:'power_frac',p:parseInt(m[1]),q:parseInt(m[2]),inner:'x',innerTex:'x',isPure:true};}
-    if(/^sqrt\(x\)$/.test(e)) return {outer:'sqrt',inner:'x',innerTex:'x',isPure:true};
-    if(/^cbrt\(x\)$/.test(e)) return {outer:'cbrt',inner:'x',innerTex:'x',isPure:true};
-    if(/^1\/x$/.test(e)) return {outer:'reciprocal',inner:'x',innerTex:'x',isPure:true};
-    if(/^sin\(x\)$/.test(e)) return {outer:'sin',inner:'x',innerTex:'x',isPure:true};
-    if(/^cos\(x\)$/.test(e)) return {outer:'cos',inner:'x',innerTex:'x',isPure:true};
-    if(/^tan\(x\)$/.test(e)) return {outer:'tan',inner:'x',innerTex:'x',isPure:true};
-    if(/^exp\(x\)$/.test(e)||/^e\^x$/.test(e)) return {outer:'exp',inner:'x',innerTex:'x',isPure:true};
-    if(/^ln\(x\)$/.test(e)) return {outer:'ln',inner:'x',innerTex:'x',isPure:true};
-    if(/^log\(x\)$/.test(e)||/^log10\(x\)$/.test(e)) return {outer:'log10',inner:'x',innerTex:'x',isPure:true};
-    if(/^log2\(x\)$/.test(e)) return {outer:'log2',inner:'x',innerTex:'x',isPure:true};
-    if(/^(\d+(\.\d+)?)\^x$/.test(e)){const a=parseFloat(e.split('^')[0]);return {outer:'ax',a,inner:'x',innerTex:'x',isPure:true};}
-    // Composite: func(g(x))
-    const funcMatch=e.match(/^(sin|cos|tan|sec|csc|cot|asin|acos|atan|sinh|cosh|tanh|exp|ln|log|log2|sqrt|cbrt)\((.+)\)$/);
-    if(funcMatch){
-      const outerName=funcMatch[1];const innerExpr=funcMatch[2];
-      let innerTex=innerExpr;try{innerTex=math.parse(innerExpr).toTex({parenthesis:'auto'});}catch{}
-      return {outer:outerName,inner:innerExpr,innerTex,isPure:false};
-    }
-    // Composite: (g(x))^n
-    const powMatch=e.match(/^\((.+)\)\^(-?\d+(\.\d+)?)$/);
-    if(powMatch){
-      const innerExpr=powMatch[1];const n=parseFloat(powMatch[2]);
-      let innerTex=innerExpr;try{innerTex=math.parse(innerExpr).toTex({parenthesis:'auto'});}catch{}
-      return {outer:'power',n,inner:innerExpr,innerTex,isPure:false};
-    }
-    // Composite: (g(x))^(p/q)
-    const powFracMatch=e.match(/^\((.+)\)\^\((-?\d+)\/(\d+)\)$/);
-    if(powFracMatch){
-      const innerExpr=powFracMatch[1];const p=parseInt(powFracMatch[2]),q=parseInt(powFracMatch[3]);
-      let innerTex=innerExpr;try{innerTex=math.parse(innerExpr).toTex({parenthesis:'auto'});}catch{}
-      return {outer:'power_frac',p,q,inner:innerExpr,innerTex,isPure:false};
-    }
-    return {outer:'polynomial',inner:expr,innerTex:toTex(expr),isPure:true};
-  }
-
-  // ── Build the derivation lines array ──────────────────────────────────────
-  function buildLines(fx, fxTex, fxhTex, fpTex){
-    const typ=classifyAST(fx);
-    const gx=typ.inner, gxTex=typ.innerTex;
-    const gxhTex=substXplusH(gx);
-    const gpTex=innerDerivTex(gx);
-    const isPure=typ.isPure;
-    const lines=[];
-
-    // Line 1: definition with lim
-    lines.push({
-      tex:`f'(x) = \\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}`,
-      note:t==='zh'?'導數定義':'Definition of derivative'
-    });
-    // Line 2: substitute
-    lines.push({
-      tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\left[${fxhTex}\\right]-\\left[${fxTex}\\right]}{h}`,
-      note:t==='zh'?'代入 f(x+h) 和 f(x)':'Substitute f(x+h) and f(x)'
-    });
-
-    // ── POWER (pure integer) ──────────────────────────────────────────────
-    if(isPure && typ.outer==='power'){
-      const n=typ.n;
-      if(n===1){
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{h}{h}`,note:t==='zh'?'化簡分子':'Simplify numerator'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0} 1`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-        lines.push({tex:`\\phantom{f'(x)} = 1`,note:t==='zh'?'取極限':'Take the limit'});
-      } else if(n===2){
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{x^2+2xh+h^2-x^2}{h}`,note:t==='zh'?'展開 (x+h)²':'Expand (x+h)²'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{2xh+h^2}{h}`,note:t==='zh'?'化簡':'Simplify'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}(2x+h)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-        lines.push({tex:`\\phantom{f'(x)} = 2x`,note:t==='zh'?'令 h → 0':'Let h → 0'});
-      } else if(n===3){
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{x^3+3x^2h+3xh^2+h^3-x^3}{h}`,note:t==='zh'?'展開 (x+h)³':'Expand (x+h)³'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{3x^2h+3xh^2+h^3}{h}`,note:t==='zh'?'化簡':'Simplify'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}(3x^2+3xh+h^2)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-        lines.push({tex:`\\phantom{f'(x)} = 3x^2`,note:t==='zh'?'令 h → 0':'Let h → 0'});
-      } else {
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{${n}x^{${n-1}}h+\\binom{${n}}{2}x^{${n-2}}h^2+\\cdots+h^{${n}}}{h}`,note:t==='zh'?`二項式定理展開 (x+h)^{${n}}`:`Binomial expansion of (x+h)^{${n}}`});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left(${n}x^{${n-1}}+\\binom{${n}}{2}x^{${n-2}}h+\\cdots+h^{${n-1}}\\right)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-        lines.push({tex:`\\phantom{f'(x)} = ${n}x^{${n-1}}`,note:t==='zh'?'令 h → 0，含 h 各項消失':'Let h → 0'});
-      }
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-      return lines;
-    }
-
-    // ── POWER FRAC (pure x^(p/q)) ─────────────────────────────────────────
-    if(isPure && typ.outer==='power_frac'){
-      const p=typ.p,q=typ.q;
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(x+h)^{${p}/${q}}-x^{${p}/${q}}}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{u^{${p}}-v^{${p}}}{h}`,note:t==='zh'?`令 u=(x+h)^{1/${q}},\\, v=x^{1/${q}}`:`Let u=(x+h)^{1/${q}},\\, v=x^{1/${q}}`});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(u-v)(u^{${p-1}}+\\cdots+v^{${p-1}})}{h}`,note:t==='zh'?`因式分解 aⁿ−bⁿ`:`Factor aⁿ−bⁿ`});
-      lines.push({tex:`\\phantom{f'(x)} = \\dfrac{${p}}{${q}}x^{${p}/${q}-1}`,note:t==='zh'?`h→0 時 u→v=x^{1/${q}}`:`As h→0, u→v=x^{1/${q}}`});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-      return lines;
-    }
-
-    // ── SQRT (pure) ───────────────────────────────────────────────────────
-    if(isPure && typ.outer==='sqrt'){
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sqrt{x+h}-\\sqrt{x}}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(\\sqrt{x+h}-\\sqrt{x})(\\sqrt{x+h}+\\sqrt{x})}{h(\\sqrt{x+h}+\\sqrt{x})}`,note:t==='zh'?'分子有理化（乘以共軛式）':'Rationalise numerator (multiply by conjugate)'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(x+h)-x}{h(\\sqrt{x+h}+\\sqrt{x})}`,note:t==='zh'?'展開分子：差平方':'Expand: difference of squares'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{1}{\\sqrt{x+h}+\\sqrt{x}}`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-      lines.push({tex:`\\phantom{f'(x)} = \\dfrac{1}{2\\sqrt{x}}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-      return lines;
-    }
-
-    // ── CBRT (pure) ───────────────────────────────────────────────────────
-    if(isPure && typ.outer==='cbrt'){
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sqrt[3]{x+h}-\\sqrt[3]{x}}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(u-v)(u^2+uv+v^2)}{h}`,note:t==='zh'?'令 u=(x+h)^{1/3}, v=x^{1/3}；用 a³−b³ 因式分解':'Let u=(x+h)^{1/3}, v=x^{1/3}; use a³−b³ factoring'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(x+h)-x}{h(u^2+uv+v^2)}`,note:t==='zh'?'分子 u³−v³ = (x+h)−x = h':'Numerator u³−v³ = h'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{1}{u^2+uv+v^2}`,note:t==='zh'?'約去 h':'Cancel h'});
-      lines.push({tex:`\\phantom{f'(x)} = \\dfrac{1}{3x^{2/3}}`,note:t==='zh'?'令 h→0，u→v=x^{1/3}，分母→3v²':'As h→0, u→v, denominator→3v²'});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-      return lines;
-    }
-
-    // ── RECIPROCAL 1/x ────────────────────────────────────────────────────
-    if(isPure && typ.outer==='reciprocal'){
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\dfrac{1}{x+h}-\\dfrac{1}{x}}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{x-(x+h)}{h\\cdot x(x+h)}`,note:t==='zh'?'通分':'Common denominator'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{-h}{h\\cdot x(x+h)}`,note:t==='zh'?'化簡分子':'Simplify numerator'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{-1}{x(x+h)}`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-      lines.push({tex:`\\phantom{f'(x)} = -\\dfrac{1}{x^2}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-      return lines;
-    }
-
-    // ── SIN ───────────────────────────────────────────────────────────────
-    if(typ.outer==='sin'){
-      if(isPure){
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sin(x+h)-\\sin x}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{2\\cos\\!\\left(x+\\dfrac{h}{2}\\right)\\sin\\!\\left(\\dfrac{h}{2}\\right)}{h}`,note:t==='zh'?'和差化積：sin A − sin B = 2cos\\frac{A+B}{2}sin\\frac{A-B}{2}':'Sum-to-product: sin A − sin B = 2cos\\frac{A+B}{2}sin\\frac{A-B}{2}'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\cos\\!\\left(x+\\dfrac{h}{2}\\right)\\cdot\\dfrac{\\sin(h/2)}{h/2}`,note:t==='zh'?'改寫 h = 2·(h/2)':'Rewrite h = 2·(h/2)'});
-        lines.push({tex:`\\phantom{f'(x)} = \\cos x\\cdot 1`,note:t==='zh'?'標準極限 lim_{u→0} sin u/u = 1（取 u = h/2）':'Standard limit lim_{u→0} sin u/u = 1 (u = h/2)'});
-        lines.push({tex:`\\therefore\\quad f'(x) = \\cos x`,note:''});
-      } else {
-        // Addition formula: sin(g(x)+Δu) - sin(g(x)) = cos(g(x))sin(Δu) + sin(g(x))(cos(Δu)-1)
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sin(${gxhTex})-\\sin(${gxTex})}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sin(${gxTex}+\\Delta u)-\\sin(${gxTex})}{h}`,note:t==='zh'?`令 \\Delta u = ${gxhTex}-${gxTex}`:`Let \\Delta u = ${gxhTex}-${gxTex}`});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sin(${gxTex})\\cos(\\Delta u)+\\cos(${gxTex})\\sin(\\Delta u)-\\sin(${gxTex})}{h}`,note:t==='zh'?'加法公式：sin(A+B) = sinA cosB + cosA sinB':'Addition formula: sin(A+B) = sinA cosB + cosA sinB'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[\\cos(${gxTex})\\cdot\\dfrac{\\sin(\\Delta u)}{\\Delta u}+\\sin(${gxTex})\\cdot\\dfrac{\\cos(\\Delta u)-1}{\\Delta u}\\right]\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?'整理，乘以 \\dfrac{\\Delta u}{\\Delta u}':'Rearrange, multiply by \\dfrac{\\Delta u}{\\Delta u}'});
-        lines.push({tex:`\\phantom{f'(x)} = \\left[\\cos(${gxTex})\\cdot 1+\\sin(${gxTex})\\cdot 0\\right]\\cdot ${gpTex}`,note:t==='zh'?`\\Delta u\\to 0 時：\\lim_{y\\to 0}\\dfrac{\\sin y}{y}=1，\\lim_{y\\to 0}\\dfrac{\\cos y-1}{y}=0，\\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`:`As \\Delta u\\to 0: \\lim_{y\\to 0}\\dfrac{\\sin y}{y}=1, \\lim_{y\\to 0}\\dfrac{\\cos y-1}{y}=0, \\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`});
-        lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx sin(g(x)) = cos(g(x))·g\'(x)':'Chain Rule: d/dx sin(g(x)) = cos(g(x))·g\'(x)'});
-      }
-      return lines;
-    }
-
-    // ── COS ───────────────────────────────────────────────────────────────
-    if(typ.outer==='cos'){
-      if(isPure){
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos(x+h)-\\cos x}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos x\\cos h-\\sin x\\sin h-\\cos x}{h}`,note:t==='zh'?'加法公式：cos(x+h) = cosx·cosh − sinx·sinh':'Addition formula: cos(x+h) = cosx·cosh − sinx·sinh'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[\\cos x\\cdot\\dfrac{\\cos h-1}{h}-\\sin x\\cdot\\dfrac{\\sin h}{h}\\right]`,note:t==='zh'?'整理':'Rearrange'});
-        lines.push({tex:`\\phantom{f'(x)} = \\cos x\\cdot 0-\\sin x\\cdot 1`,note:t==='zh'?'標準極限：lim(cos h−1)/h=0，lim(sin h)/h=1':'Standard limits: lim(cos h−1)/h=0, lim(sin h)/h=1'});
-        lines.push({tex:`\\therefore\\quad f'(x) = -\\sin x`,note:''});
-      } else {
-        // Addition formula: cos(g(x)+Δu) - cos(g(x)) = cos(g(x))(cos(Δu)-1) - sin(g(x))sin(Δu)
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos(${gxhTex})-\\cos(${gxTex})}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos(${gxTex}+\\Delta u)-\\cos(${gxTex})}{h}`,note:t==='zh'?`令 \\Delta u = ${gxhTex}-${gxTex}`:`Let \\Delta u = ${gxhTex}-${gxTex}`});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\cos(${gxTex})\\cos(\\Delta u)-\\sin(${gxTex})\\sin(\\Delta u)-\\cos(${gxTex})}{h}`,note:t==='zh'?'加法公式：cos(A+B) = cosA cosB − sinA sinB':'Addition formula: cos(A+B) = cosA cosB − sinA sinB'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[\\cos(${gxTex})\\cdot\\dfrac{\\cos(\\Delta u)-1}{\\Delta u}-\\sin(${gxTex})\\cdot\\dfrac{\\sin(\\Delta u)}{\\Delta u}\\right]\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?'整理，乘以 \\dfrac{\\Delta u}{\\Delta u}':'Rearrange, multiply by \\dfrac{\\Delta u}{\\Delta u}'});
-        lines.push({tex:`\\phantom{f'(x)} = \\left[\\cos(${gxTex})\\cdot 0-\\sin(${gxTex})\\cdot 1\\right]\\cdot ${gpTex}`,note:t==='zh'?`\\Delta u\\to 0 時：\\lim_{y\\to 0}\\dfrac{\\cos y-1}{y}=0，\\lim_{y\\to 0}\\dfrac{\\sin y}{y}=1，\\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`:`As \\Delta u\\to 0: \\lim_{y\\to 0}\\dfrac{\\cos y-1}{y}=0, \\lim_{y\\to 0}\\dfrac{\\sin y}{y}=1, \\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`});
-        lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx cos(g(x)) = −sin(g(x))·g\'(x)':'Chain Rule: d/dx cos(g(x)) = −sin(g(x))·g\'(x)'});
-      }
-      return lines;
-    }
-
-    // ── EXP e^x ───────────────────────────────────────────────────────────
-    if(typ.outer==='exp'){
-      if(isPure){
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{e^{x+h}-e^x}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{e^x\\cdot e^h-e^x}{h}`,note:t==='zh'?'指數法則 e^{x+h} = e^x·e^h':'Exponent law: e^{x+h} = e^x·e^h'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}e^x\\cdot\\dfrac{e^h-1}{h}`,note:t==='zh'?'提取 e^x':'Factor out e^x'});
-        lines.push({tex:`\\phantom{f'(x)} = e^x\\cdot 1`,note:t==='zh'?'標準極限 lim_{h→0}(e^h−1)/h = 1':'Standard limit lim_{h→0}(e^h−1)/h = 1'});
-        lines.push({tex:`\\therefore\\quad f'(x) = e^x`,note:''});
-      } else {
-        // Factor out e^{g(x)}: e^{g(x+h)} - e^{g(x)} = e^{g(x)} · (e^{Δu} - 1), Δu = g(x+h)-g(x)
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{e^{${gxhTex}}-e^{${gxTex}}}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{e^{${gxTex}}\\left(e^{${gxhTex}-${gxTex}}-1\\right)}{h}`,note:t==='zh'?`提取 e^{g(x)}：e^{g(x+h)} = e^{g(x)}·e^{\\Delta u}`:`Factor out e^{g(x)}: e^{g(x+h)} = e^{g(x)}·e^{\\Delta u}`});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}e^{${gxTex}}\\cdot\\dfrac{e^{\\Delta u}-1}{\\Delta u}\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?`令 \\Delta u = ${gxhTex}-${gxTex}，乘以 \\dfrac{\\Delta u}{\\Delta u}`:`Let \\Delta u = ${gxhTex}-${gxTex}, multiply by \\dfrac{\\Delta u}{\\Delta u}`});
-        lines.push({tex:`\\phantom{f'(x)} = e^{${gxTex}}\\cdot 1\\cdot ${gpTex}`,note:t==='zh'?`h\\to 0 時 \\Delta u\\to 0，標準極限 \\lim_{y\\to 0}\\dfrac{e^y-1}{y}=1，\\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`:`As h\\to 0, \\Delta u\\to 0; standard limit \\lim_{y\\to 0}\\dfrac{e^y-1}{y}=1; \\dfrac{\\Delta u}{h}\\to g'(x)=${gpTex}`});
-        lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx e^{g(x)} = e^{g(x)}·g\'(x)':'Chain Rule: d/dx e^{g(x)} = e^{g(x)}·g\'(x)'});
-      }
-      return lines;
-    }
-
-    // ── LN ────────────────────────────────────────────────────────────────
-    if(typ.outer==='ln'){
-      if(isPure){
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\ln(x+h)-\\ln x}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{1}{h}\\ln\\!\\left(\\dfrac{x+h}{x}\\right)`,note:t==='zh'?'對數商法則 ln A − ln B = ln(A/B)':'Log quotient rule: ln A − ln B = ln(A/B)'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{1}{h}\\ln\\!\\left(1+\\dfrac{h}{x}\\right)`,note:t==='zh'?'化簡分式':'Simplify fraction'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{u\\to 0}\\dfrac{1}{x}\\cdot\\dfrac{\\ln(1+u)}{u}`,note:t==='zh'?'令 u = h/x（h→0 ⟺ u→0），改寫為 (1/x)·ln(1+u)/u':'Let u = h/x, rewrite as (1/x)·ln(1+u)/u'});
-        lines.push({tex:`\\phantom{f'(x)} = \\dfrac{1}{x}\\cdot 1`,note:t==='zh'?'標準極限 lim_{u→0} ln(1+u)/u = 1':'Standard limit lim_{u→0} ln(1+u)/u = 1'});
-        lines.push({tex:`\\therefore\\quad f'(x) = \\dfrac{1}{x}`,note:''});
-      } else {
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\ln(${gxhTex})-\\ln(${gxTex})}{h}`,note:''});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{1}{h}\\ln\\!\\left(\\dfrac{${gxhTex}}{${gxTex}}\\right)`,note:t==='zh'?'對數商法則':'Log quotient rule'});
-        lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{1}{${gxTex}}\\cdot\\dfrac{\\ln(1+\\Delta u/g(x))}{\\Delta u/g(x)}\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?`令 Δu = g(x+h)−g(x)，乘以 Δu/Δu`:`Let Δu = g(x+h)−g(x), multiply by Δu/Δu`});
-        lines.push({tex:`\\phantom{f'(x)} = \\dfrac{1}{${gxTex}}\\cdot 1\\cdot ${gpTex}`,note:t==='zh'?`h→0 時：ln(1+v)/v→1，Δu/h→g'(x)=${gpTex}`:`As h→0: ln(1+v)/v→1, Δu/h→g'(x)=${gpTex}`});
-        lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx ln(g(x)) = g\'(x)/g(x)':'Chain Rule: d/dx ln(g(x)) = g\'(x)/g(x)'});
-      }
-      return lines;
-    }
-
-    // ── LOG10 ─────────────────────────────────────────────────────────────
-    if(typ.outer==='log10'||typ.outer==='log'){
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\log_{10}(x+h)-\\log_{10}x}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{1}{h}\\log_{10}\\!\\left(1+\\dfrac{h}{x}\\right)`,note:t==='zh'?'對數商法則':'Log quotient rule'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{u\\to 0}\\dfrac{1}{x\\ln 10}\\cdot\\dfrac{\\ln(1+u)}{u}`,note:t==='zh'?'令 u=h/x，log_{10}(1+u) = ln(1+u)/ln10':'Let u=h/x, log_{10}(1+u) = ln(1+u)/ln10'});
-      lines.push({tex:`\\phantom{f'(x)} = \\dfrac{1}{x\\ln 10}`,note:t==='zh'?'標準極限 lim_{u→0} ln(1+u)/u = 1':'Standard limit lim_{u→0} ln(1+u)/u = 1'});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-      return lines;
-    }
-
-    // ── LOG2 ──────────────────────────────────────────────────────────────
-    if(typ.outer==='log2'){
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\log_2(x+h)-\\log_2 x}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{1}{h}\\log_2\\!\\left(1+\\dfrac{h}{x}\\right)`,note:t==='zh'?'對數商法則':'Log quotient rule'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{u\\to 0}\\dfrac{1}{x\\ln 2}\\cdot\\dfrac{\\ln(1+u)}{u}`,note:t==='zh'?'令 u=h/x，log_2(1+u) = ln(1+u)/ln2':'Let u=h/x, log_2(1+u) = ln(1+u)/ln2'});
-      lines.push({tex:`\\phantom{f'(x)} = \\dfrac{1}{x\\ln 2}`,note:t==='zh'?'標準極限':'Standard limit'});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-      return lines;
-    }
-
-    // ── a^x ───────────────────────────────────────────────────────────────
-    if(typ.outer==='ax'){
-      const a=typ.a;
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{${a}^{x+h}-${a}^x}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{${a}^x\\cdot ${a}^h-${a}^x}{h}`,note:t==='zh'?`指數法則 ${a}^{x+h} = ${a}^x·${a}^h`:`Exponent law: ${a}^{x+h} = ${a}^x·${a}^h`});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}${a}^x\\cdot\\dfrac{${a}^h-1}{h}`,note:(t==='zh'?`提取 ${a}^x`:`Factor out ${a}^x`)});
-      lines.push({tex:`\\phantom{f'(x)} = ${a}^x\\cdot\\ln ${a}`,note:t==='zh'?`標準極限 lim_{h→0}(${a}^h−1)/h = ln ${a}`:`Standard limit lim_{h→0}(${a}^h−1)/h = ln ${a}`});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-      return lines;
-    }
-
-    // ── COMPOSITE POWER (g(x))^n ──────────────────────────────────────────
-    if(!isPure && (typ.outer==='power'||typ.outer==='power_frac')){
-      const n=typ.n||(typ.p&&typ.q?`${typ.p}/${typ.q}`:'n');
-      const nm1=typeof n==='number'?n-1:`${n}-1`;
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${gxhTex})^{${n}}-(${gxTex})^{${n}}}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(u+\\Delta u)^{${n}}-u^{${n}}}{h}`,note:t==='zh'?`令 u = g(x) = ${gxTex}，Δu = g(x+h)−g(x)`:`Let u = g(x) = ${gxTex}, Δu = g(x+h)−g(x)`});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}${n}u^{${nm1}}\\cdot\\dfrac{\\Delta u}{h}`,note:t==='zh'?'二項式定理展開，約去 h':'Binomial expansion, cancel h'});
-      lines.push({tex:`\\phantom{f'(x)} = ${n}\\cdot(${gxTex})^{${nm1}}\\cdot ${gpTex}`,note:t==='zh'?`h→0 時 Δu/h → g'(x) = ${gpTex}`:`As h→0, Δu/h → g'(x) = ${gpTex}`});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx [g(x)]ⁿ = n[g(x)]ⁿ⁻¹·g\'(x)':'Chain Rule: d/dx [g(x)]ⁿ = n[g(x)]ⁿ⁻¹·g\'(x)'});
-      return lines;
-    }
-
-    // ── COMPOSITE SQRT (sqrt(g(x))) ───────────────────────────────────────
-    if(!isPure && typ.outer==='sqrt'){
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\sqrt{${gxhTex}}-\\sqrt{${gxTex}}}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{g(x+h)-g(x)}{h(\\sqrt{${gxhTex}}+\\sqrt{${gxTex}})}`,note:t==='zh'?'分子有理化（乘以共軛式）':'Rationalise numerator'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{g(x+h)-g(x)}{h}\\cdot\\dfrac{1}{\\sqrt{${gxhTex}}+\\sqrt{${gxTex}}}`,note:t==='zh'?'分拆分式':'Separate fraction'});
-      lines.push({tex:`\\phantom{f'(x)} = ${gpTex}\\cdot\\dfrac{1}{2\\sqrt{${gxTex}}}`,note:t==='zh'?`h→0 時 [g(x+h)−g(x)]/h → g'(x) = ${gpTex}`:`As h→0, [g(x+h)−g(x)]/h → g'(x) = ${gpTex}`});
-      lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'鏈式法則：d/dx √(g(x)) = g\'(x)/(2√(g(x)))':'Chain Rule: d/dx √(g(x)) = g\'(x)/(2√(g(x)))'});
-      return lines;
-    }
-
-    // ── DETECT PRODUCT / QUOTIENT / SUM / DIFFERENCE ─────────────────────
-    // Try to parse the AST and route to a structured derivation
-    function texOf(expr){try{return math.parse(expr).toTex({parenthesis:'auto'});}catch{return expr;}}
-    function texOfXpH(expr){try{const n=math.parse(expr);const s=n.transform(nd=>{if(nd.isSymbolNode&&nd.name==='x')return math.parse('x+h');return nd;});return s.toTex({parenthesis:'auto'});}catch{return expr.replace(/\bx\b/g,'(x+h)');}}
-    function derivTex(expr){try{const d=math.derivative(expr.replace(/\bln\s*\(/g,'log('),'x');return simplifyTex(d.toString());}catch{return "f'(x)";}}
-    try{
-      const node=math.parse(fx);
-      const op=node.op;
-      if((op==='*'||op==='/'||op==='+'||op==='-')&&node.args&&node.args.length===2){
-        const uExpr=node.args[0].toString();
-        const vExpr=node.args[1].toString();
-        const uTex=texOf(uExpr);
-        const vTex=texOf(vExpr);
-        const uxhTex=texOfXpH(uExpr);
-        const vxhTex=texOfXpH(vExpr);
-        const upTex=derivTex(uExpr);
-        const vpTex=derivTex(vExpr);
-        if(op==='*'){
-          // Product Rule first principles
-          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${uxhTex})(${vxhTex})-(${uTex})(${vTex})}{h}`,note:''});
-          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${uxhTex})(${vxhTex})-(${uTex})(${vxhTex})+(${uTex})(${vxhTex})-(${uTex})(${vTex})}{h}`,note:t==='zh'?'加減 u(x)v(x+h)（配凑法）':'Add and subtract u(x)v(x+h)'});
-          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[(${vxhTex})\\cdot\\dfrac{${uxhTex}-(${uTex})}{h}+(${uTex})\\cdot\\dfrac{${vxhTex}-(${vTex})}{h}\\right]`,note:t==='zh'?'提取公因式，分拆為兩個差商':'Factor: split into two difference quotients'});
-          lines.push({tex:`\\phantom{f'(x)} = (${vTex})\\cdot(${upTex})+(${uTex})\\cdot(${vpTex})`,note:t==='zh'?`h→0：v(x+h)→v(x)，各差商→導數`:`As h→0: v(x+h)→v(x), each quotient→derivative`});
-          lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'乘積法則：(uv)\' = u\'v + uv\'':'Product Rule: (uv)\' = u\'v + uv\''});
-          return lines;
-        }
-        if(op==='/'){
-          // Quotient Rule first principles
-          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\dfrac{${uxhTex}}{${vxhTex}}-\\dfrac{${uTex}}{${vTex}}}{h}`,note:''});
-          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${uxhTex})(${vTex})-(${uTex})(${vxhTex})}{h\\cdot(${vxhTex})(${vTex})}`,note:t==='zh'?'通分':'Common denominator'});
-          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{(${vTex})\\dfrac{${uxhTex}-(${uTex})}{h}-(${uTex})\\dfrac{${vxhTex}-(${vTex})}{h}}{(${vxhTex})(${vTex})}`,note:t==='zh'?'加減 u(x)v(x)，分拆差商':'Add/subtract u(x)v(x), split quotients'});
-          lines.push({tex:`\\phantom{f'(x)} = \\dfrac{(${vTex})\\cdot(${upTex})-(${uTex})\\cdot(${vpTex})}{(${vTex})^2}`,note:t==='zh'?`h→0：v(x+h)→v(x)，各差商→導數`:`As h→0: v(x+h)→v(x), each quotient→derivative`});
-          lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?'商法則：(u/v)\' = (u\'v − uv\')/v²':'Quotient Rule: (u/v)\' = (u\'v − uv\')/v²'});
-          return lines;
-        }
-        if(op==='+'||op==='-'){
-          const pm=op;
-          // Sum/Difference Rule first principles
-          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{\\left[(${uxhTex})${pm}(${vxhTex})\\right]-\\left[(${uTex})${pm}(${vTex})\\right]}{h}`,note:''});
-          lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left[\\dfrac{${uxhTex}-(${uTex})}{h}${pm}\\dfrac{${vxhTex}-(${vTex})}{h}\\right]`,note:t==='zh'?'重新整理，分拆為兩個差商':'Rearrange: split into two difference quotients'});
-          lines.push({tex:`\\phantom{f'(x)} = (${upTex})${pm}(${vpTex})`,note:t==='zh'?'各差商分別取極限':'Take limit of each quotient separately'});
-          lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:t==='zh'?`${pm==='+'?'和':'差'}法則：(u${pm}v)' = u'${pm}v'`:`${pm==='+'?'Sum':'Difference'} Rule: (u${pm}v)' = u'${pm}v'`});
-          return lines;
-        }
-      }
-    }catch{}
-    // ── PURE POLYNOMIAL FALLBACK (for simple polynomials where mathjs can expand) ─
-    let expandedNum='',cancelledExpr='';
-    let expandOK=false;
-    try{
-      const fxhExpr=fx.replace(/\bx\b/g,'(x+h)');
-      const diffSimp=math.simplify(math.parse(`(${fxhExpr})-(${fx})`), [], {exactFractions:false});
-      const diffStr=diffSimp.toString();
-      // Only use this path if the expanded form does NOT contain exp/sin/cos/ln (i.e. it's polynomial)
-      if(!/exp|sin|cos|tan|log|ln/.test(diffStr)){
-        expandedNum=simplifyTex(diffStr);
-        const quotSimp=math.simplify(math.parse(`(${diffStr})/h`), [], {exactFractions:false});
-        cancelledExpr=simplifyTex(quotSimp.toString());
-        expandOK=true;
-      }
-    }catch{}
-    if(expandOK){
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{${expandedNum}}{h}`,note:t==='zh'?'展開 f(x+h)−f(x)':'Expand f(x+h)−f(x)'});
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\left(${cancelledExpr}\\right)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-      lines.push({tex:`\\phantom{f'(x)} = ${fpTex}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
-    } else {
-      lines.push({tex:`\\phantom{f'(x)} = \\lim_{h\\to 0}\\dfrac{${fxhTex}-(${fxTex})}{h}`,note:''});
-      lines.push({tex:`\\phantom{f'(x)} = ${fpTex}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
-    }
-    lines.push({tex:`\\therefore\\quad f'(x) = ${fpTex}`,note:''});
-    return lines;
-  }
-
+  stopFpPlayback();const fx=document.getElementById('fpFxInput').value.trim(),point=document.getElementById('fpAtInput').value.trim();
+  const container=document.getElementById('fpSteps');if(!fx)return;updatePreview(document.getElementById('fpFxInput'),document.getElementById('fpFxPreview'));
   try{
-    let fxTex,fxhTex;
-    try{fxTex=math.parse(fx).toTex({parenthesis:'auto'});}catch{fxTex=fx;}
-    try{
-      const node=math.parse(fx);
-      const subst=node.transform(n=>{if(n.isSymbolNode&&n.name==='x')return math.parse('x+h');return n;});
-      fxhTex=subst.toTex({parenthesis:'auto'});
-    }catch{fxhTex=fx.replace(/\bx\b/g,'(x+h)');}
-    const fpStr=safeDerivative(fx);
-    const fpTex=fpStr?simplifyTex(fpStr):'?';
-
-    // Render the title
-    const titleEl=document.createElement('div');
-    titleEl.style.cssText='font-size:.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.75rem';
-    titleEl.textContent=t==='zh'?`f(x) = ${fx} 的基本原理推導`:`First Principles Derivation of f(x) = ${fx}`;
-    stepsDiv.appendChild(titleEl);
-
-        const lines=buildLines(fx,fxTex,fxhTex,fpTex);
-    renderDSEBlock(lines);
-    // ── Substitute x = a block (full detailed steps) ──────────────────────────────
-    if(isFinite(atX)&&fpStr){
-      // Helper: substitute x=a in a mathjs expression string, return exact TeX
-      function substXtoA(exprStr, aVal){
-        try{
-          const nd=math.parse(exprStr);
-          const s=nd.transform(n=>{
-            if(n.isSymbolNode&&n.name==='x') return math.parse(String(aVal));
-            return n;
-          });
-          return s.toTex({parenthesis:'auto'});
-        }catch{return exprStr.replace(/\bx\b/g,String(aVal));}
-      }
-      const aTex=numToTex(atX);
-      // f'(a) exact tex and approx
-      const fpExactTex=substXtoA(fpStr,atX);
-      const fpAtVal=evalAt(fpStr,atX);
-      const fpApproxTex=isFinite(fpAtVal)?`\\approx ${numToTex(Math.round(fpAtVal*1e6)/1e6)}`:'?';
-      // ── Build the "at a" version of buildLines ──────────────────────────
-      function buildLinesAt(fxExpr, aVal, aTx, fpExTex){
-        // Replace x with (aVal+h) in an expression string → TeX
-        function sah(expr){
-          try{
-            const nd=math.parse(expr);
-            const s=nd.transform(n=>{
-              if(n.isSymbolNode&&n.name==='x') return math.parse(`(${aVal}+h)`);
-              return n;
-            });
-            return s.toTex({parenthesis:'auto'});
-          }catch{return expr.replace(/\bx\b/g,`(${aVal}+h)`);}
-        }
-        // Replace x with aVal in an expression string → TeX
-        function sa(expr){
-          try{
-            const nd=math.parse(expr);
-            const s=nd.transform(n=>{
-              if(n.isSymbolNode&&n.name==='x') return math.parse(String(aVal));
-              return n;
-            });
-            return s.toTex({parenthesis:'auto'});
-          }catch{return expr.replace(/\bx\b/g,String(aVal));}
-        }
-        // Build Q(h) = [f(a+h)-f(a)]/h as a polynomial TeX string
-        // using finite-difference interpolation (works for polynomials)
-        function quotientPolyTex(fxStr, a){
-          try{
-            const fa=math.evaluate(fxStr,{x:a});
-            const qVals=[];
-            for(let i=1;i<=5;i++) qVals.push((math.evaluate(fxStr,{x:a+i})-fa)/i);
-            const d1=qVals.map((v,i)=>i>0?qVals[i]-qVals[i-1]:null).filter(v=>v!==null);
-            const d2=d1.map((v,i)=>i>0?d1[i]-d1[i-1]:null).filter(v=>v!==null);
-            const d3=d2.map((v,i)=>i>0?d2[i]-d2[i-1]:null).filter(v=>v!==null);
-            let degree=0;
-            if(d2.every(v=>Math.abs(v)<1e-6)) degree=1;
-            else if(d3.every(v=>Math.abs(v)<1e-6)) degree=2;
-            else degree=3;
-            let coeffs=[];
-            const r=v=>Math.round(v*1e6)/1e6;
-            if(degree===1){
-              const c1=r(qVals[1]-qVals[0]); const c0=r(qVals[0]-c1);
-              coeffs=[c0,c1];
-            } else if(degree===2){
-              const c2=r(d2[0]/2); const c1=r(d1[0]-3*c2); const c0=r(qVals[0]-c2-c1);
-              coeffs=[c0,c1,c2];
-            } else {
-              const c3=r(d3[0]/6); const c2=r(d2[0]/2-7*c3/2);
-              const c1=r(d1[0]-3*c2-7*c3); const c0=r(qVals[0]-c3-c2-c1);
-              coeffs=[c0,c1,c2,c3];
-            }
-            const terms=[];
-            for(let k=coeffs.length-1;k>=0;k--){
-              const c=coeffs[k];
-              if(Math.abs(c)<1e-9) continue;
-              const cTex=numToTex(c);
-              if(k===0) terms.push(cTex);
-              else if(k===1) terms.push(Math.abs(c)===1?(c<0?'-h':'h'):`${cTex} \\cdot h`);
-              else terms.push(Math.abs(c)===1?(c<0?`-h^{${k}}`:`h^{${k}}`):`${cTex} \\cdot h^{${k}}`);
-            }
-            return terms.join(' + ').replace(/\+ -/g,'- ') || '0';
-          }catch{return null;}
-        }
-        const ph=`\\phantom{f'(${aTx})}`;
-        const lim=`\\lim_{h\\to 0}`;
-        const lines=[];
-        // Line 1: definition
-        lines.push({tex:`f'(${aTx}) = ${lim}\\dfrac{f(${aTx}+h)-f(${aTx})}{h}`,note:t==='zh'?`代入 x = ${aTx}`:`Substitute x = ${aTx}`});
-        // Line 2: substitute f(a+h) and f(a)
-        const fahTex=sah(fxExpr);
-        const faTex=sa(fxExpr);
-        lines.push({tex:`${ph} = ${lim}\\dfrac{${fahTex}-(${faTex})}{h}`,note:t==='zh'?'代入 f(a+h) 和 f(a)':'Substitute f(a+h) and f(a)'});
-        // Try polynomial expansion using rationalize + interpolation
-        let expandOK=false;
-        try{
-          const fahStr=fxExpr.replace(/\bx\b/g,`(${aVal}+h)`);
-          const faStr=fxExpr.replace(/\bx\b/g,String(aVal));
-          const diffExpr=`(${fahStr})-(${faStr})`;
-          const diffRat=math.rationalize(math.parse(diffExpr));
-          const diffStr=diffRat.toString();
-          if(!/exp|sin|cos|tan|log|ln/.test(diffStr)){
-            const diffTex=diffRat.toTex({parenthesis:'auto'});
-            const quotTex=quotientPolyTex(fxExpr,aVal);
-            if(quotTex){
-              lines.push({tex:`${ph} = ${lim}\\dfrac{${diffTex}}{h}`,note:t==='zh'?'展開 f(a+h)−f(a)':'Expand f(a+h)−f(a)'});
-              lines.push({tex:`${ph} = ${lim}\\left(${quotTex}\\right)`,note:t==='zh'?'約去 h（h ≠ 0）':'Cancel h (h ≠ 0)'});
-              lines.push({tex:`${ph} = ${fpExTex}`,note:t==='zh'?'令 h → 0':'Let h → 0'});
-              expandOK=true;
-            }
-          }
-        }catch{}
-        if(!expandOK){
-          lines.push({tex:`${ph} = \\left.f'(x)\\right|_{x=${aTx}} = ${fpExTex}`,note:t==='zh'?'代入一般導數公式':'Substitute into general derivative'});
-        }
-        lines.push({tex:`\\therefore\\quad f'(${aTx}) = ${fpExTex}${fpApproxTex}`,note:''});
-        return lines;
-      }
-      const subLines=buildLinesAt(fx,atX,aTex,fpExactTex);
-      const subTitle=document.createElement('div');
-      subTitle.style.cssText='font-size:.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin:.9rem 0 .5rem';
-      subTitle.textContent=t==='zh'?`代入 x = ${atX}`:`Evaluate at x = ${atX}`;
-      stepsDiv.appendChild(subTitle);
-      renderDSEBlock(subLines);
-    }
-    // Numerical verification
-    if(isFinite(atX)){
-      const hv=0.0001;
-      const numDeriv=(evalAt(fx,atX+hv)-evalAt(fx,atX-hv))/(2*hv);
-      const numTex2=numToTex(Math.round(numDeriv*1e6)/1e6);
-      const verifyEl=document.createElement('div');
-      verifyEl.className='dse-verify';
-      const label=document.createElement('div');
-      label.style.cssText='font-size:.78rem;font-weight:700;color:#2f9e44;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem';
-      label.textContent=t==='zh'?'數值驗證（中心差分）':'Numerical Verification (Central Difference)';
-      verifyEl.appendChild(label);
-      const vMath=document.createElement('div');
-      vMath.appendChild(renderK(`\\left.\\dfrac{f(${numToTex(atX)}+h)-f(${numToTex(atX)}-h)}{2h}\\right|_{h=0.0001}\\approx ${numTex2}`,true));
-      verifyEl.appendChild(vMath);
-      stepsDiv.appendChild(verifyEl);
-    }
-  }catch(e){stepsDiv.innerHTML=`<div class="error-box">⚠️ ${e.message}</div>`;}
-  drawFpGraph();
+    fpCurrentProof=FPExact.build(fx,point);fpLastFx=fx;fpLastPoint=point?fpCurrentProof.point:([0,1,2,-1].find(a=>Number.isFinite(evalAt(fx,a))&&Number.isFinite(evalAt(safeDerivative(fx),a)))??1).toString();fpLastAt=Number(math.evaluate(fpLastPoint));
+    container.innerHTML=`<div class="proof-title" id="fpProofTitle"></div><div class="proof-convention" data-i18n="fp_convention"></div><div class="proof-player"><button class="btn btn-secondary" id="fpPrev" aria-label="Previous step">‹</button><button class="btn btn-primary" id="fpPlay"></button><button class="btn btn-secondary" id="fpNext"></button><button class="btn btn-secondary" id="fpReplay"></button><button class="btn btn-secondary" id="fpAll"></button><label class="speed-label"><span data-i18n="fp_speed"></span><select id="fpSpeed"><option value="3500">0.5×</option><option value="2200" selected>1×</option><option value="1100">2×</option></select></label><span id="fpStepCount" aria-live="polite"></span></div><div class="proof-progress"><div id="fpProgress"></div></div><div class="proof-workspace"><div id="fpMathScroll"><div id="fpAligned"></div></div><aside class="proof-notes"><span class="eyebrow" data-i18n="fp_why"></span><div id="fpActiveNote" aria-live="polite"></div><details><summary data-i18n="fp_notes"></summary><ol id="fpNotesList"></ol></details></aside></div><div id="fpExactAnswer" class="exact-answer" hidden></div><div id="fpConditions" class="proof-conditions"></div>`;
+    document.getElementById('fpProofTitle').appendChild(renderK(`f(x)=${fpCurrentProof.functionTex}${point?`,\\quad a=${fpCurrentProof.pointTex}`:''}`));
+    container.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+    const labels={fpPlay:'fp_play',fpNext:'fp_next',fpReplay:'fp_replay',fpAll:'fp_all'};for(const[id,key]of Object.entries(labels))document.getElementById(id).textContent=t(key);
+    document.getElementById('fpPlay').onclick=playFp;
+    document.getElementById('fpPrev').onclick=()=>{stopFpPlayback();setFpStep(fpPlayback.index-1);};
+    document.getElementById('fpNext').onclick=()=>{stopFpPlayback();setFpStep(fpPlayback.index+1,true);};
+    document.getElementById('fpReplay').onclick=()=>{stopFpPlayback();setFpStep(1);};
+    document.getElementById('fpAll').onclick=()=>{stopFpPlayback();setFpStep(fpCurrentProof.rows.length);};
+    document.getElementById('fpSpeed').onchange=e=>{fpPlayback.delay=Number(e.target.value);};
+    if(fpCurrentProof.assumptions.length){const el=document.getElementById('fpConditions');el.appendChild(document.createTextNode(t('fp_conditions')));el.appendChild(renderK(fpCurrentProof.assumptions.join(',\\quad')));}
+    setFpStep(1);document.getElementById('hSlider').value='1';drawFpGraph();
+  }catch(e){fpCurrentProof=null;container.replaceChildren();const box=document.createElement('div');box.className='error-box';box.textContent=(LANG==='zh'?'未能建立已核實的完整推導。請檢查函數、點值及定義域；邊界／零點可能需要另行證明。\n':'')+e.message;container.appendChild(box);}
 }
-
-
+let fpGraphAnimation=null;
+function animateFpSecant(){
+  if(fpGraphAnimation){cancelAnimationFrame(fpGraphAnimation);fpGraphAnimation=null;return;}
+  if(!fpLastFx)return;let start=null;const tick=time=>{if(start===null)start=time;const p=Math.min(1,(time-start)/2600);document.getElementById('hSlider').value=String(Math.round((1-p)**2*100)/100);drawFpGraph();if(p<1)fpGraphAnimation=requestAnimationFrame(tick);else fpGraphAnimation=null;};fpGraphAnimation=requestAnimationFrame(tick);
+}
 function drawFpGraph(){
-  const svg=document.getElementById('fpGraph');
-  const W=560,H=400;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
-  const fx=fpLastFx;const a=fpLastAt;
-  if(!fx)return;
-  const h=parseFloat(document.getElementById('hSlider').value)||1;
-  document.getElementById('hValDisplay').textContent=h.toFixed(3);
-  const ML=50,MR=20,MT=25,MB=35;const gW=W-ML-MR,gH=H-MT-MB;
-  // Compute range
-  let yMin=Infinity,yMax=-Infinity;
-  const xMin=a-4,xMax=a+4;
-  for(let x=xMin;x<=xMax;x+=0.05){const y=evalAt(fx,x);if(isFinite(y)){yMin=Math.min(yMin,y);yMax=Math.max(yMax,y);}}
-  if(!isFinite(yMin)){yMin=-3;yMax=3;}
-  const pad=(yMax-yMin)*0.2||1;yMin-=pad;yMax+=pad;
-  function px(x){return ML+(x-xMin)/(xMax-xMin)*gW;}
-  function py(y){return MT+gH-(y-yMin)/(yMax-yMin)*gH;}
-  function el(tag,attrs,text){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e;}
-  svg.appendChild(el('rect',{x:ML,y:MT,width:gW,height:gH,fill:'#fff',stroke:'#d8dde8','stroke-width':'1'}));
-  // Axes
-  const ax0=py(0),ay0=px(0);
-  if(ax0>=MT&&ax0<=MT+gH)svg.appendChild(el('line',{x1:ML,y1:ax0,x2:ML+gW,y2:ax0,stroke:'#888','stroke-width':'1.2'}));
-  if(ay0>=ML&&ay0<=ML+gW)svg.appendChild(el('line',{x1:ay0,y1:MT,x2:ay0,y2:MT+gH,stroke:'#888','stroke-width':'1.2'}));
-  // Curve
-  let d='';let lv=false;
-  for(let x=xMin;x<=xMax;x+=0.02){
-    const y=evalAt(fx,x);const valid=isFinite(y)&&y>=yMin-1&&y<=yMax+1;
-    if(valid){const gx=px(x),gy=py(y);d+=(lv?'L':'M')+gx.toFixed(1)+','+gy.toFixed(1);}
-    lv=valid;
+  const svg=document.getElementById('fpGraph'),fx=fpLastFx,a=fpLastAt;if(!fx)return;svg.replaceChildren();
+  const W=560,H=400,ML=48,MR=24,MT=28,MB=36,gW=W-ML-MR,gH=H-MT-MB;
+  const h=Number(document.getElementById('hSlider').value);document.getElementById('hValDisplay').textContent=String(h);
+  const xMin=a-3,xMax=a+3,vals=[];for(let x=xMin;x<=xMax;x+=.04){const y=evalAt(fx,x);if(Number.isFinite(y))vals.push(y);}
+  vals.sort((x,y)=>x-y);let yMin=vals[Math.floor(vals.length*.05)]??-3,yMax=vals[Math.floor(vals.length*.95)]??3;const pad=(yMax-yMin)*.2||1;yMin-=pad;yMax+=pad;
+  const px=x=>ML+(x-xMin)/(xMax-xMin)*gW,py=y=>MT+gH-(y-yMin)/(yMax-yMin)*gH;
+  const el=(tag,attrs,text)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e;};
+  const defs=el('defs',{}),clip=el('clipPath',{id:'fpPlotClip'});clip.appendChild(el('rect',{x:ML,y:MT,width:gW,height:gH}));defs.appendChild(clip);svg.appendChild(defs);
+  svg.appendChild(el('rect',{x:ML,y:MT,width:gW,height:gH,fill:'#fafbf8',stroke:'#dce3dd'}));
+  for(let i=Math.ceil(xMin);i<=xMax;i++){svg.appendChild(el('line',{x1:px(i),y1:MT,x2:px(i),y2:MT+gH,stroke:'#e4e9e3'}));svg.appendChild(el('text',{x:px(i),y:MT+gH+20,'text-anchor':'middle','font-size':11,fill:'#727d74'},String(i)));}
+  for(let i=0;i<=6;i++){const y=yMin+(yMax-yMin)*i/6;svg.appendChild(el('line',{x1:ML,y1:py(y),x2:ML+gW,y2:py(y),stroke:'#e4e9e3'}));}
+  const group=el('g',{'clip-path':'url(#fpPlotClip)'});svg.appendChild(group);
+  if(py(0)>=MT&&py(0)<=MT+gH)group.appendChild(el('line',{x1:ML,y1:py(0),x2:ML+gW,y2:py(0),stroke:'#9ba79e'}));
+  if(px(0)>=ML&&px(0)<=ML+gW)group.appendChild(el('line',{x1:px(0),y1:MT,x2:px(0),y2:MT+gH,stroke:'#9ba79e'}));
+  let d='',validBefore=false;for(let x=xMin;x<=xMax;x+=.015){const y=evalAt(fx,x),valid=Number.isFinite(y)&&y>yMin-3*pad&&y<yMax+3*pad;if(valid)d+=(validBefore?'L':'M')+px(x).toFixed(2)+','+py(y).toFixed(2);validBefore=valid;}
+  group.appendChild(el('path',{d,stroke:'#16715c','stroke-width':2.7,fill:'none'}));
+  const fa=evalAt(fx,a),fab=evalAt(fx,a+h),dp=safeDerivative(fx),tangent=dp?evalAt(dp,a):NaN;
+  if(Number.isFinite(fa)){
+    group.appendChild(el('circle',{cx:px(a),cy:py(fa),r:5,fill:'#16715c',stroke:'#fff','stroke-width':2}));
+    group.appendChild(el('text',{x:px(a)+9,y:py(fa)-10,'font-size':12,fill:'#16715c'},'P(a, f(a))'));
   }
-  svg.appendChild(el('path',{d,stroke:'#3b5bdb','stroke-width':'2.2',fill:'none'}));
-  // Point (a, f(a))
-  const fa=evalAt(fx,a);const fab=evalAt(fx,a+h);
-  if(isFinite(fa)){
-    const gxa=px(a),gya=py(fa);
-    svg.appendChild(el('circle',{cx:gxa,cy:gya,r:'6',fill:'#3b5bdb',stroke:'#fff','stroke-width':'2'}));
-    svg.appendChild(el('text',{x:gxa+8,y:gya-8,'font-size':'11','font-family':'JetBrains Mono,monospace',fill:'#3b5bdb'},`(${a}, f(${a}))`));
+  if(Number.isFinite(tangent)&&Number.isFinite(fa))group.appendChild(el('line',{x1:px(xMin),y1:py(fa+tangent*(xMin-a)),x2:px(xMax),y2:py(fa+tangent*(xMax-a)),stroke:'#16715c','stroke-width':1.8,opacity:.55}));
+  if(h!==0&&Number.isFinite(fab)&&Number.isFinite(fa)){
+    const slope=(fab-fa)/h;group.appendChild(el('line',{x1:px(xMin),y1:py(fa+slope*(xMin-a)),x2:px(xMax),y2:py(fa+slope*(xMax-a)),stroke:'#c48339','stroke-width':2,'stroke-dasharray':'6 4'}));group.appendChild(el('circle',{cx:px(a+h),cy:py(fab),r:5,fill:'#c48339',stroke:'#fff','stroke-width':2}));group.appendChild(el('text',{x:px(a+h)+9,y:py(fab)+17,'font-size':12,fill:'#a06524'},'Q(a+h, f(a+h))'));
   }
-  // Secant line through (a, f(a)) and (a+h, f(a+h))
-  if(isFinite(fa)&&isFinite(fab)&&Math.abs(h)>0.001){
-    const slope=(fab-fa)/h;
-    const x1=xMin,y1=fa+slope*(x1-a);const x2=xMax,y2=fa+slope*(x2-a);
-    svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#e67700','stroke-width':'1.8','stroke-dasharray':'5,3'}));
-    svg.appendChild(el('circle',{cx:px(a+h),cy:py(fab),r:'5',fill:'#e67700',stroke:'#fff','stroke-width':'1.5'}));
-    svg.appendChild(el('text',{x:px(a+h)+8,y:py(fab)-8,'font-size':'11','font-family':'JetBrains Mono,monospace',fill:'#e67700'},`(${(a+h).toFixed(3)}, f(${(a+h).toFixed(3)}))`));
-    // Slope label
-    const slopeTex=numToTex(Math.round(slope*1e6)/1e6);
-    const info=document.getElementById('fpSecantInfo');
-    if(info){
-      const fpStr=safeDerivative(fx);const fpa=fpStr?evalAt(fpStr,a):NaN;
-      info.innerHTML=`Secant slope = <strong>${slopeTex}</strong>&nbsp;&nbsp;|&nbsp;&nbsp;f'(${a}) = <strong>${numToTex(Math.round(fpa*1e6)/1e6)}</strong>`;
-    }
-  }else{
-    // Draw tangent when h≈0
-    const fpStr=safeDerivative(fx);const fpa=fpStr?evalAt(fpStr,a):NaN;
-    if(isFinite(fpa)&&isFinite(fa)){
-      const x1=xMin,y1=fa+fpa*(x1-a);const x2=xMax,y2=fa+fpa*(x2-a);
-      svg.appendChild(el('line',{x1:px(x1),y1:py(y1),x2:px(x2),y2:py(y2),stroke:'#2f9e44','stroke-width':'2','stroke-dasharray':'none'}));
-    }
-    const info=document.getElementById('fpSecantInfo');
-    if(info)info.innerHTML=`h → 0: Secant → Tangent. f'(${a}) = <strong>${numToTex(Math.round(evalAt(safeDerivative(fx)||'0',a)*1e6)/1e6)}</strong>`;
-  }
+  const info=document.getElementById('fpSecantInfo');info.replaceChildren();info.appendChild(renderK(`a=${FPExact.et(fpLastPoint)}`));
+  try{
+    const nd=FPExact.parse(fx),aExpr=fpLastPoint,hExpr=FPExact.exact(String(h));
+    const sec=h===0?null:FPExact.exact(`(${FPExact.at(nd,`(${aExpr})+(${hExpr})`)}-(${FPExact.at(nd,aExpr)}))/(${hExpr})`);
+    const exactSlope=fpCurrentProof&&fpCurrentProof.point!=='x'?fpCurrentProof.resultTex:exactAtTex(safeDerivative(fx),aExpr);
+    if(sec)info.appendChild(renderK(`m_{\\mathrm{sec}}=${FPExact.et(sec)}`));
+    info.appendChild(renderK(`m_{\\mathrm{tan}}=${exactSlope}`));
+  }catch{const p=document.createElement('p');p.textContent=t('fp_graph_domain');info.appendChild(p);}
 }
+
 </script>
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1925,11 +1743,20 @@ function rebuildQuickBtns(){
   }
 }
 
+let aiStepTimer=null;
+function installAIStepPlayer(container){
+ clearInterval(aiStepTimer);aiStepTimer=null;const steps=[...container.querySelectorAll('.ai-step')];if(!steps.length)return;let shown=1;
+ const bar=document.createElement('div');bar.className='proof-player';const play=document.createElement('button');play.className='btn btn-primary';play.textContent=t('fp_play');const next=document.createElement('button');next.className='btn btn-secondary';next.textContent=t('fp_next');const reset=document.createElement('button');reset.className='btn btn-secondary';reset.textContent=t('fp_replay');const counter=document.createElement('span');counter.className='eyebrow';
+ const draw=()=>{steps.forEach((e,i)=>e.hidden=i>=shown);next.disabled=shown>=steps.length;counter.textContent=`${t('fp_step_word')} ${shown} / ${steps.length}`;if(shown>=steps.length){clearInterval(aiStepTimer);aiStepTimer=null;play.textContent=t('fp_play');}};
+ play.onclick=()=>{if(aiStepTimer){clearInterval(aiStepTimer);aiStepTimer=null;play.textContent=t('fp_play');return;}if(shown>=steps.length)shown=1;draw();play.textContent=t('fp_pause');aiStepTimer=setInterval(()=>{shown=Math.min(steps.length,shown+1);draw();},2200);};
+ next.onclick=()=>{clearInterval(aiStepTimer);aiStepTimer=null;shown=Math.min(steps.length,shown+1);play.textContent=t('fp_play');draw();};reset.onclick=()=>{clearInterval(aiStepTimer);aiStepTimer=null;shown=1;play.textContent=t('fp_play');draw();};bar.append(play,next,reset,counter);container.querySelector('h3').after(bar);draw();
+}
 function solveAI(){
+  clearInterval(aiStepTimer);aiStepTimer=null;
   const input=document.getElementById('aiInput').value.trim();
   if(!input)return;
   const resultDiv=document.getElementById('aiResult');
-  resultDiv.innerHTML=`<h3>${t('ai_result_title')}</h3><div style="color:var(--fg3);padding:1rem">⏳ Solving...</div>`;
+  resultDiv.innerHTML=`<h3>${t('ai_result_title')}</h3><div style="color:var(--fg3);padding:1rem"> Solving...</div>`;
   setTimeout(()=>_solveAI(input,resultDiv),50);
 }
 
@@ -1939,7 +1766,7 @@ function _solveAI(input,resultDiv){
   const lower=input.toLowerCase();
   // Detect problem type
   const isRate=lower.includes('rate')||lower.includes('velocity')||lower.includes('acceleration')||lower.includes('speed')||lower.includes('dr/dt')||lower.includes('ds/dt')||lower.includes('dv/dt')||lower.includes('da/dt')||lower.includes('particle')||lower.includes('質點')||lower.includes('速度')||lower.includes('加速度')||lower.includes('變率');
-  const isImplicit=lower.includes('implicit')||lower.includes('dy/dx')||(lower.includes('y^2')||lower.includes('y²'));
+  const isImplicit=lower.includes('implicit')||lower.includes('隱函數')||lower.includes('隱式')||(lower.includes('y^2')||lower.includes('y²'));
   const isTangent=lower.includes('tangent')||lower.includes('切線');
   const isMaxMin=lower.includes('maximum')||lower.includes('minimum')||lower.includes('max')||lower.includes('min')||lower.includes('最大')||lower.includes('最小');
   // Extract function expression from input
@@ -1949,7 +1776,7 @@ function _solveAI(input,resultDiv){
       /differentiate\s+([^\n,\.]+)/i,/derivative of\s+([^\n,\.]+)/i,
       /求\s*([^\n，。]+)/,/微分\s*([^\n，。]+)/
     ];
-    for(const p of patterns){const m=text.match(p);if(m)return m[1].trim().replace(/\s+/g,'');}
+    for(const p of patterns){const m=text.match(p);if(m)return m[1].trim().replace(/\s+(using|at|find|when)\b.*$/i,'').replace(/\s+/g,'');}
     return null;
   }
   function extractAt(text){
@@ -1987,8 +1814,8 @@ function _solveAI(input,resultDiv){
           }
           if(atT!==null&&isFinite(atT)){
             const vAt=evalAt(fp,atT,varName);const fppStr=safeDerivative(fp,varName)||'0';const aAt=fpp?evalAt(fppStr,atT,varName):NaN;
-            const atParts=[`v(${numToTex(atT)}) &= ${numToTex(vAt)}`];
-            if(isFinite(aAt))atParts.push(`a(${numToTex(atT)}) &= ${numToTex(aAt)}`);
+            const atParts=[`v(${numToTex(atT)}) &= ${exactAtTex(fp,String(atT),varName)}`];
+            if(isFinite(aAt))atParts.push(`a(${numToTex(atT)}) &= ${exactAtTex(fppStr,String(atT),varName)}`);
             addStep(`At ${varName} = ${numToTex(atT)}`,`\\begin{aligned}${atParts.join(' \\\\ ')}\\end{aligned}`);
           }
         }
@@ -2001,19 +1828,16 @@ function _solveAI(input,resultDiv){
           const r=parseFloat(rMatch[1]);const drdt=parseFloat(rateMatch[1]);
           const dAdr=2*Math.PI*r;const dAdt=dAdr*drdt;
           addStep('Circle: A = πr²','\\frac{dA}{dr} = 2\\pi r');
-          addStep(`At r = ${numToTex(r)}, dr/dt = ${numToTex(drdt)}`,`\\frac{dA}{dt} = 2\\pi \\cdot ${numToTex(r)} \\cdot ${numToTex(drdt)} = ${numToTex(dAdt)}`);
+          addStep(`At r = ${numToTex(r)}, dr/dt = ${numToTex(drdt)}`,`\\frac{dA}{dt} = 2\\pi \\cdot ${numToTex(r)} \\cdot ${numToTex(drdt)} = ${FPExact.et(`2*pi*(${r})*(${drdt})`)}`);
         }
       }
     }else if(isImplicit){
-      addStep('Implicit Differentiation','\\text{Differentiate both sides w.r.t. } x');
-      addStep('Chain Rule on y terms','\\frac{d}{dx}[y^n] = n y^{n-1}\\frac{dy}{dx}');
-      const fnRaw=extractFn(input);
-      if(fnRaw){
-        const fp=safeDerivative(fnRaw);if(fp){addStep('Result',`\\frac{dy}{dx} = ${simplifyTex(fp)}`);}
-      }else{
-        addStep('General Form','\\frac{d}{dx}[F(x,y)] = 0 \\Rightarrow F_x + F_y\\frac{dy}{dx} = 0');
-        addStep('Solve for dy/dx','\\frac{dy}{dx} = -\\frac{F_x}{F_y}');
-      }
+      const match=input.replace(/²/g,'^2').replace(/³/g,'^3').match(/([xy0-9+*^().\s-]+)\s*=\s*([0-9.]+)/i);
+      if(match){const expression=`(${match[1].trim()})-(${match[2]})`,dx=safeDerivative(expression,'x'),dy=safeDerivative(expression,'y');if(!dx||!dy)throw Error('Could not differentiate this implicit equation.');
+        addStep(LANG==='zh'?'原方程':'Equation',`${simplifyTex(match[1])}=${match[2]}`);
+        addStep(LANG==='zh'?'對 x 微分':'Differentiate with respect to x',`${simplifyTex(dx)}+\\left(${simplifyTex(dy)}\\right)\\dfrac{dy}{dx}=0`);
+        addStep(LANG==='zh'?'解出 dy/dx':'Solve for dy/dx',`\\dfrac{dy}{dx}=${simplifyTex(`-(${dx})/(${dy})`)}\\quad(${simplifyTex(dy)}\\ne0)`);
+      }else{addStep(LANG==='zh'?'隱函數微分':'Implicit differentiation','F_x+F_y\\dfrac{dy}{dx}=0\\quad\\Rightarrow\\quad\\dfrac{dy}{dx}=-\\dfrac{F_x}{F_y}\\quad(F_y\\ne0)');}
     }else if(isTangent){
       const fnRaw=extractFn(input);const atX=extractAt(input);
       if(fnRaw){
@@ -2023,15 +1847,11 @@ function _solveAI(input,resultDiv){
         if(fp){
           const fpTex=simplifyTex(fp);addStep('Derivative',`\\begin{aligned}f'(x) &= ${fpTex}\\end{aligned}`);
           if(atX!==null&&isFinite(atX)){
-            const y0=evalAt(fn,atX);const m=evalAt(fp,atX);
-            const x0Tex=numToTex(atX),y0Tex=numToTex(y0),mTex=numToTex(m);
-            addStep(`Point at x = ${x0Tex}`,`f(${x0Tex}) = ${y0Tex} \\Rightarrow \\text{Point: }(${x0Tex}, ${y0Tex})`);
-            addStep('Slope',`m = f'(${x0Tex}) = ${mTex}`);
-            const b=y0-m*atX;const bTex=numToTex(Math.abs(b));
-            const mPart=mTex==='1'?'':mTex==='-1'?'-':mTex;
-            const lineTex=Math.abs(b)<1e-9?`y=${mPart}x`:`y=${mPart}x${b>0?'+':'-'}${bTex}`;
-            addStep('Tangent Equation',`y - ${y0Tex} = ${mTex}(x - ${x0Tex})`);
-            addStep('Simplified',lineTex);
+            const tangent=buildTangent(fn,fp,String(atX));if(!tangent)throw Error('No finite tangent slope at this point.');
+            addStep(LANG==='zh'?'曲線上的點':'Point on the curve',`\\left(${tangent.xTex},${tangent.yTex}\\right)`);
+            addStep(LANG==='zh'?'切線斜率':'Tangent slope',`m=f'(${tangent.xTex})=${tangent.mTex}`);
+            addStep(LANG==='zh'?'切線方程':'Tangent equation',tangent.lineTex);
+
           }
         }
       }
@@ -2084,10 +1904,11 @@ function _solveAI(input,resultDiv){
         addStep('Hint','\\text{Please specify the function, e.g. "Differentiate f(x) = x^2 sin(x)"}');
       }
     }
+    installAIStepPlayer(resultDiv);
     if(resultDiv.querySelectorAll('.ai-step').length===0){
-      resultDiv.innerHTML+=`<div class="empty-state"><div class="big">🤔</div><div>Could not parse the problem. Try specifying the function explicitly, e.g. "f(x) = x^2".</div></div>`;
+      resultDiv.innerHTML+=`<div class="empty-state"><div class="big"></div><div>Could not parse the problem. Try specifying the function explicitly, e.g. "f(x) = x^2".</div></div>`;
     }
-  }catch(e){resultDiv.innerHTML+=`<div class="error-box">⚠️ ${e.message}</div>`;}
+  }catch(e){const box=document.createElement('div');box.className='error-box';box.textContent=e.message;resultDiv.appendChild(box);}
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2119,12 +1940,12 @@ function syncAnalyticsToAV(result){
       const cls=isMax?'badge-green':isMin?'badge-blue':'badge-orange';
       const label=isMax?t('badge_local_max'):isMin?t('badge_local_min'):t('badge_stationary');
       row.innerHTML=`<span class="badge ${cls}" style="margin-right:.4rem">${label}</span>`;
-      row.appendChild(renderK(`\\left(${cp.xTex},\\,${cp.yTex}\\right)`));card.appendChild(row);
+      row.appendChild(renderK(`${cp.exact===false?"\\text{Approx. }":""}\\left(${cp.xTex},\\,${cp.yTex}\\right)`));card.appendChild(row);
     }
     for(const ip of result.inflectionPoints){
       const row=document.createElement('div');row.className='row';
       row.innerHTML=`<span class="badge badge-orange" style="margin-right:.4rem">${t('badge_inflection')}</span>`;
-      row.appendChild(renderK(`\\left(${ip.xTex},\\,${ip.yTex}\\right)`));card.appendChild(row);
+      row.appendChild(renderK(`${ip.exact===false?"\\text{Approx. }":""}\\left(${ip.xTex},\\,${ip.yTex}\\right)`));card.appendChild(row);
     }
   }
   panel.appendChild(card);
@@ -2164,7 +1985,7 @@ function computeIntegralExact(fn,a,b){
   if(!isFinite(numVal))return{tex:'\\text{undefined}',numeric:NaN};
   // Try to express numerically as exact value
   const tex=numToTex(numVal);
-  return{tex,numeric:numVal};
+  return{tex:`\\approx ${tex}`,numeric:numVal,exact:false};
 }
 
 function runAreaVolume(){
@@ -2173,7 +1994,7 @@ function runAreaVolume(){
   const a=parseFloat(document.getElementById('avAInput').value);
   const b=parseFloat(document.getElementById('avBInput').value);
   const mode=document.querySelector('input[name="avMode"]:checked').value;
-  const axis=parseFloat(document.getElementById('avAxisInput').value)||0;
+  const axis=mode==='voly'?0:(parseFloat(document.getElementById('avAxisInput').value)||0);
   if(!fxRaw||!isFinite(a)||!isFinite(b)||a>=b)return;
   try{math.parse(fxRaw);}catch{return;}
   avLastResult={fxRaw,gxRaw,a,b,mode,axis};
@@ -2321,7 +2142,7 @@ function threeAnimLoop(){
 threeAnimLoop(); // Start once, runs forever
 
 function disposeThree(){
-  if(threeRenderer){threeRenderer.dispose();threeRenderer=null;}
+  if(threeControls)threeControls.dispose();if(threeScene)threeScene.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});if(threeRenderer){threeRenderer.dispose();threeRenderer=null;}
   const c=document.getElementById('threeContainer');c.innerHTML='';
   threeScene=null;threeCamera=null;threeControls=null;threeSolid=null;threeMesh=null;threeCross=null;
 }
@@ -2331,9 +2152,9 @@ function buildThreeScene(res){
   const container=document.getElementById('threeContainer');
   const W=container.clientWidth||700,H=420;
   // Scene
-  threeScene=new THREE.Scene();threeScene.background=new THREE.Color(0x1a1d2e);
+  threeScene=new THREE.Scene();threeScene.background=new THREE.Color(0x21362e);
   threeCamera=new THREE.PerspectiveCamera(45,W/H,0.01,1000);threeCamera.position.set(2,1.5,3.5);threeCamera.lookAt(0.5,0,0);
-  threeRenderer=new THREE.WebGLRenderer({antialias:true});threeRenderer.setSize(W,H);threeRenderer.setPixelRatio(window.devicePixelRatio);
+  try{threeRenderer=new THREE.WebGLRenderer({antialias:true});}catch{container.textContent=LANG==='zh'?'此瀏覽器未能啟用 WebGL；上面的積分結果仍可使用。':'WebGL is unavailable in this browser; the integral result remains usable.';return;}threeRenderer.setSize(W,H);threeRenderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(threeRenderer.domElement);
   // Lights
   threeScene.add(new THREE.AmbientLight(0xffffff,0.5));
@@ -2351,80 +2172,25 @@ function buildThreeScene(res){
 }
 
 function buildRevolutionSolid(res){
-  if(!threeScene)return;
-  // Remove old
-  if(threeSolid){threeScene.remove(threeSolid);threeSolid.geometry.dispose();}
-  if(threeMesh){threeScene.remove(threeMesh);threeMesh.geometry.dispose();}
-  if(threeCross){threeScene.remove(threeCross);threeCross.geometry.dispose();}
-  const{fxRaw,gxRaw,a,b,mode,axis}=res;
-  const N=120;// segments along x
-  const M=72;// segments around revolution
-  // Sample the curve
-  const xs=[],rs=[];
-  for(let i=0;i<=N;i++){
-    const x=a+i*(b-a)/N;
-    const fv=evalAt(fxRaw,x);
-    const gv=gxRaw&&gxRaw!=='0'?evalAt(gxRaw,x):axis;
-    const rOuter=Math.abs(fv-axis);
-    const rInner=Math.abs(gv-axis);
-    xs.push(x);rs.push({outer:rOuter,inner:rInner});
-  }
-  // Build LatheGeometry-style geometry manually (washer cross-sections)
-  const vertices=[];const indices=[];const normals=[];
-  for(let i=0;i<=N;i++){
-    const x=xs[i];const{outer,inner}=rs[i];
-    for(let j=0;j<=M;j++){
-      const theta=(j/M)*2*Math.PI;
-      const co=Math.cos(theta),si=Math.sin(theta);
-      // Outer surface
-      vertices.push(x,outer*co,outer*si);
-      normals.push(0,co,si);
-      // Inner surface (for washer)
-      if(inner>0.001){vertices.push(x,inner*co,inner*si);normals.push(0,-co,-si);}
-    }
-  }
-  const stride=rs[0]&&rs[0].inner>0.001?2:1;
-  // Build indices for outer surface
-  for(let i=0;i<N;i++){
-    for(let j=0;j<M;j++){
-      const a0=i*(M+1)*stride+j*stride;const a1=a0+stride;
-      const b0=(i+1)*(M+1)*stride+j*stride;const b1=b0+stride;
-      indices.push(a0,b0,a1,a1,b0,b1);
-    }
-  }
-  const geom=new THREE.BufferGeometry();
-  geom.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
-  geom.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));
-  geom.setIndex(indices);
-  // Solid material
-  const solidMat=new THREE.MeshPhongMaterial({color:0x4c6ef5,transparent:true,opacity:0.75,side:THREE.DoubleSide,shininess:80});
-  threeSolid=new THREE.Mesh(geom,solidMat);
-  if(showSolid)threeScene.add(threeSolid);
-  // Wireframe
-  const wireMat=new THREE.MeshBasicMaterial({color:0x74c0fc,wireframe:true,transparent:true,opacity:0.3});
-  threeMesh=new THREE.Mesh(geom.clone(),wireMat);
-  if(showMesh)threeScene.add(threeMesh);
-  // Cross-section disc at midpoint
-  const midX=(a+b)/2;const midR=Math.abs(evalAt(fxRaw,midX)-axis);
-  const midRi=gxRaw&&gxRaw!=='0'?Math.abs(evalAt(gxRaw,midX)-axis):0;
-  const crossGeom=midRi>0.001?
-    new THREE.RingGeometry(midRi,midR,48):
-    new THREE.CircleGeometry(midR,48);
-  crossGeom.rotateY(Math.PI/2);
-  const crossMat=new THREE.MeshBasicMaterial({color:0xff6b6b,transparent:true,opacity:0.7,side:THREE.DoubleSide});
-  threeCross=new THREE.Mesh(crossGeom,crossMat);
-  threeCross.position.x=midX;
-  if(showCross)threeScene.add(threeCross);
-  // End caps
-  for(const xi of[a,b]){
-    const ri=Math.abs(evalAt(fxRaw,xi)-axis);
-    const rii=gxRaw&&gxRaw!=='0'?Math.abs(evalAt(gxRaw,xi)-axis):0;
-    const capG=rii>0.001?new THREE.RingGeometry(rii,ri,48):new THREE.CircleGeometry(ri,48);
-    capG.rotateY(Math.PI/2);
-    const capM=new THREE.MeshPhongMaterial({color:0x4c6ef5,transparent:true,opacity:0.6,side:THREE.DoubleSide});
-    const cap=new THREE.Mesh(capG,capM);cap.position.x=xi;
-    if(showSolid)threeScene.add(cap);
-  }
+ if(!threeScene)return;
+ const {fxRaw,gxRaw,a,b,mode,axis}=res,N=100,M=64,vertices=[],indices=[];
+ const isY=mode==='voly',origin=isY?0:axis;
+ function pair(x,theta){const f=evalAt(fxRaw,x),g=evalAt(gxRaw||'0',x),co=Math.cos(theta),si=Math.sin(theta);
+   if(isY)return [[x*co,Math.max(f,g),x*si],[x*co,Math.min(f,g),x*si]];
+   const rf=Math.abs(f-origin),rg=Math.abs(g-origin),outer=Math.max(rf,rg),inner=(f-origin)*(g-origin)<=0?0:Math.min(rf,rg);
+   return [[x,origin+outer*co,outer*si],[x,origin+inner*co,inner*si]];
+ }
+ for(let i=0;i<=N;i++)for(let j=0;j<=M;j++){const points=pair(a+(b-a)*i/N,2*Math.PI*j/M);if(points.some(p=>p.some(v=>!Number.isFinite(v))))return;vertices.push(...points[0],...points[1]);}
+ const at=(i,j,s)=>2*(i*(M+1)+j)+s;
+ for(let i=0;i<N;i++)for(let j=0;j<M;j++)for(let s=0;s<2;s++){const A=at(i,j,s),B=at(i+1,j,s),C=at(i,j+1,s),D=at(i+1,j+1,s);indices.push(A,B,C,C,B,D);}
+ for(const i of [0,N])for(let j=0;j<M;j++){const A=at(i,j,0),B=at(i,j,1),C=at(i,j+1,0),D=at(i,j+1,1);indices.push(A,C,B,B,C,D);}
+ const geom=new THREE.BufferGeometry();geom.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geom.setIndex(indices);geom.computeVertexNormals();
+ threeSolid=new THREE.Mesh(geom,new THREE.MeshPhongMaterial({color:0x51917b,transparent:true,opacity:.72,side:THREE.DoubleSide,shininess:65}));threeMesh=new THREE.Mesh(geom.clone(),new THREE.MeshBasicMaterial({color:0xb3d8a6,wireframe:true,transparent:true,opacity:.18}));if(showSolid)threeScene.add(threeSolid);if(showMesh)threeScene.add(threeMesh);
+ const mid=(a+b)/2;let cross;
+ if(!isY){const p=pair(mid,0),outer=Math.abs(p[0][1]-origin),inner=Math.abs(p[1][1]-origin);cross=inner>1e-9?new THREE.RingGeometry(inner,outer,64):new THREE.CircleGeometry(outer,64);cross.rotateY(Math.PI/2);}
+ else {const shape=new THREE.Shape();for(let i=0;i<=N;i++){const x=a+(b-a)*i/N,y=Math.max(evalAt(fxRaw,x),evalAt(gxRaw||'0',x));if(i===0)shape.moveTo(x,y);else shape.lineTo(x,y);}for(let i=N;i>=0;i--){const x=a+(b-a)*i/N;shape.lineTo(x,Math.min(evalAt(fxRaw,x),evalAt(gxRaw||'0',x)));}shape.closePath();cross=new THREE.ShapeGeometry(shape);}
+ threeCross=new THREE.Mesh(cross,new THREE.MeshBasicMaterial({color:0xd8b06d,transparent:true,opacity:.75,side:THREE.DoubleSide}));if(!isY)threeCross.position.set(mid,origin,0);if(showCross)threeScene.add(threeCross);
+ geom.computeBoundingBox();const center=new THREE.Vector3(),size=new THREE.Vector3();geom.boundingBox.getCenter(center);geom.boundingBox.getSize(size);const distance=Math.max(size.x,size.y,size.z,1)*1.7;threeCamera.position.copy(center).add(new THREE.Vector3(distance,distance*.65,distance));threeControls.target.copy(center);threeCamera.lookAt(center);
 }
 
 function setupAvInteraction(){
@@ -2462,7 +2228,7 @@ function setupAvInteraction(){
   document.querySelectorAll('input[name="avMode"]').forEach(r=>{
     r.addEventListener('change',()=>{
       const isVol=r.value!=='area';
-      document.getElementById('avAxisSection').style.display=isVol?'block':'none';
+      document.getElementById('avAxisSection').style.display=r.value==='volx'?'block':'none';
     });
   });
 }
@@ -2497,7 +2263,7 @@ function buildReference(){
     ['rn_quotient','\\dfrac{d}{dx}\\left[\\dfrac{f}{g}\\right] = \\dfrac{f\'g - fg\'}{g^2}'],
     ['rn_chain','\\dfrac{d}{dx}[f(g(x))] = f\'(g(x))\\cdot g\'(x)'],
   ]);
-  card('ref_std_deriv','📐','#2f9e44',[
+  card('ref_std_deriv','','#2f9e44',[
     ['rn_sinx','\\dfrac{d}{dx}[\\sin x] = \\cos x'],
     ['rn_cosx','\\dfrac{d}{dx}[\\cos x] = -\\sin x'],
     ['rn_tanx','\\dfrac{d}{dx}[\\tan x] = \\sec^2 x'],
@@ -2547,7 +2313,7 @@ function buildReference(){
     ['rn_int_washer','V = \\pi\\int_a^b \\left([f(x)]^2-[g(x)]^2\\right)dx'],
     ['rn_int_shell','V = 2\\pi\\int_a^b x\\,f(x)\\,dx'],
   ]);
-  card('ref_sketch','📋','#495057',[
+  card('ref_sketch','','#495057',[
     ['rn_s1','\\text{1. Find domain and intercepts}'],
     ['rn_s2','\\text{2. Check symmetry (even/odd)}'],
     ['rn_s3','\\text{3. Find asymptotes}'],
@@ -2559,6 +2325,155 @@ function buildReference(){
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+const M2_TOPICS=[
+ {id:'limits',group:['Calculus','微積分'],title:['Limits & first principles','極限與基本原理'],sub:['Factor · rationalise · standard limits','因式分解・有理化・標準極限'],desc:['Begin with algebra, not a derivative formula. Cancel only factors that are non-zero, and state the standard limit used. Trigonometric limits require radians.','先做代數整理，不能直接套用導數公式。只約去非零因子，並寫明所用的標準極限。三角極限必須使用弧度。'],formulas:['\\lim_{y\\to0}\\dfrac{\\sin y}{y}=1,\\quad\\lim_{y\\to0}\\dfrac{\\cos y-1}{y}=0','\\lim_{y\\to0}\\dfrac{e^y-1}{y}=1,\\quad\\lim_{y\\to0}\\dfrac{\\ln(1+y)}{y}=1','f\'(a)=\\lim_{h\\to0}\\dfrac{f(a+h)-f(a)}h'],example:['Evaluate the limit by rationalisation.','利用有理化求極限。'],steps:['\\lim_{h\\to0}\\dfrac{\\sqrt{4+h}-2}{h}','=\\lim_{h\\to0}\\dfrac{(\\sqrt{4+h}-2)(\\sqrt{4+h}+2)}{h(\\sqrt{4+h}+2)}','=\\lim_{h\\to0}\\dfrac{(4+h)-4}{h(\\sqrt{4+h}+2)}','=\\lim_{h\\to0}\\dfrac1{\\sqrt{4+h}+2}','=\\dfrac14'],practice:['Find the limit. Enter an exact value.','求極限，輸入精確值。'],question:'\\lim_{h\\to0}\\dfrac{e^{3h}-1}{h}',answer:'3',answerTex:'3',hint:['Rewrite as 3(e³ʰ − 1)/(3h).','改寫為 3(e³ʰ − 1)/(3h)。']},
+ {id:'trig',group:['Foundation','基礎知識'],title:['Trigonometry & radians','三角函數與弧度'],sub:['Addition formulae · double angles','加法公式・倍角公式'],desc:['Radians connect angle with arc length and make the standard derivatives valid. Use addition formulae to separate the change in an inner angle from its fixed value.','弧度把角與弧長連繫起來，亦是標準三角導數成立的條件。利用加法公式，把內部角的增量與原來角值分開。'],formulas:['\\theta=\\dfrac sr,\\quad s=r\\theta','\\sin(A+B)=\\sin A\\cos B+\\cos A\\sin B','\\cos(A+B)=\\cos A\\cos B-\\sin A\\sin B','\\sin2A=2\\sin A\\cos A,\\quad\\cos2A=1-2\\sin^2 A'],example:['Find sin 75° exactly using the addition formula.','用加法公式求 sin 75° 的精確值。'],steps:['\\sin75^\\circ=\\sin(45^\\circ+30^\\circ)','=\\sin45^\\circ\\cos30^\\circ+\\cos45^\\circ\\sin30^\\circ','=\\dfrac{\\sqrt2}{2}\\dfrac{\\sqrt3}{2}+\\dfrac{\\sqrt2}{2}\\dfrac12','=\\dfrac{\\sqrt6+\\sqrt2}{4}'],practice:['Evaluate in radians.','以弧度求值。'],question:'\\cos\\left(\\dfrac{\\pi}{6}\\right)',answer:'sqrt(3)/2',answerTex:'\\dfrac{\\sqrt3}2',hint:['π/6 radians is 30°.','π/6 弧度等於 30°。']},
+ {id:'induction',group:['Foundation','基礎知識'],title:['Induction & binomial theorem','歸納法與二項式定理'],sub:['Base case · induction step · expansion','起始情況・歸納步驟・展開'],desc:['A proof by induction needs a base case and an implication from k to k+1. A few successful numerical checks are not a proof. The binomial theorem expands integer powers without discarding higher-order terms.','數學歸納法須證明起始情況，並由 k 的假設推至 k+1。驗證幾個數字不等於證明。二項式定理可完整展開整數冪，不能提前刪去高次項。'],formulas:['P(1),\\quad P(k)\\Rightarrow P(k+1)\\quad(k\\in\\mathbb N)','(a+b)^n=\\sum_{r=0}^{n}\\binom nr a^{n-r}b^r','\\binom nr=\\dfrac{n!}{r!(n-r)!}'],example:['Prove 1 + 3 + ⋯ + (2n−1) = n².','證明 1 + 3 + ⋯ + (2n−1) = n²。'],steps:['n=1:\\quad 1=1^2','\\text{Assume }\\sum_{r=1}^{k}(2r-1)=k^2','\\sum_{r=1}^{k+1}(2r-1)=k^2+[2(k+1)-1]','=k^2+2k+1=(k+1)^2','\\therefore\\quad\\sum_{r=1}^{n}(2r-1)=n^2\\quad(n\\in\\mathbb N)'],practice:['Find the coefficient of x².','求 x² 的係數。'],question:'(1+2x)^4',answer:'24',answerTex:'24',hint:['Use C(4,2) × 2².','使用 C(4,2) × 2²。']},
+ {id:'diff',group:['Calculus','微積分'],title:['Differentiation techniques','微分技巧'],sub:['Chain · product · implicit · parametric','鏈式・乘積・隱函數・參數'],desc:['Choose a rule from the function structure and keep the inner derivative. In implicit differentiation, y depends on x. For a parametric curve, divide dy/dt by dx/dt where dx/dt is non-zero.','按函數結構選擇法則，並保留內部導數。隱函數微分中的 y 是 x 的函數。參數曲線則在 dx/dt 非零時，用 dy/dt 除以 dx/dt。'],formulas:['(uv)\'=u\'v+uv\',\\quad\\left(\\dfrac uv\\right)\'=\\dfrac{u\'v-uv\'}{v^2}','\\dfrac d{dx}F(g(x))=F\'(g(x))g\'(x)','F(x,y)=0\\Rightarrow\\dfrac{dy}{dx}=-\\dfrac{F_x}{F_y}\\quad(F_y\\ne0)','\\dfrac{dy}{dx}=\\dfrac{dy/dt}{dx/dt}\\quad(dx/dt\\ne0)'],example:['Differentiate x² + y² = 25 implicitly.','以隱函數微分求 x² + y² = 25 的 dy/dx。'],steps:['x^2+y^2=25','\\dfrac d{dx}(x^2)+\\dfrac d{dx}(y^2)=\\dfrac d{dx}(25)','2x+2y\\dfrac{dy}{dx}=0','2y\\dfrac{dy}{dx}=-2x','\\dfrac{dy}{dx}=-\\dfrac xy\\quad(y\\ne0)'],practice:['Differentiate with respect to x.','對 x 微分。'],question:'y=e^{2x}',answer:'2*exp(2*x)',answerTex:'2e^{2x}',hint:['Multiply e²ˣ by the derivative of 2x. Use exp(2*x) in your input.','e²ˣ 須乘以 2x 的導數。輸入可用 exp(2*x)。']},
+ {id:'applications',group:['Calculus','微積分'],title:['Curves, tangents & extrema','曲線、切線與極值'],sub:['Sign charts · stationary points','符號表・駐點'],desc:['A stationary point satisfies f′ = 0, but is not necessarily an extremum. Check a sign change or the second derivative. When f′(a) = 0 the normal is vertical, not a line with an infinite numeric slope.','駐點滿足 f′ = 0，但未必是極值。應檢查導數的符號變化或二階導數。若 f′(a) = 0，法線是垂直線，不能把斜率當作一般數值。'],formulas:['y-f(a)=f\'(a)(x-a)','f\'(c)=0,\\ f\'\'(c)>0\\Rightarrow\\text{local minimum}','f\'(c)=0,\\ f\'\'(c)<0\\Rightarrow\\text{local maximum}','f\'>0\\Rightarrow\\text{increasing},\\quad f\'<0\\Rightarrow\\text{decreasing}'],example:['Classify the stationary points of f(x) = x³ − 3x.','分類 f(x) = x³ − 3x 的駐點。'],steps:['f\'(x)=3x^2-3','f\'(x)=0\\Rightarrow x^2=1\\Rightarrow x=\\pm1','f\'\'(x)=6x','f\'\'(-1)=-6<0,\\quad f(-1)=2','f\'\'(1)=6>0,\\quad f(1)=-2','(-1,2):\\text{ local max};\\quad(1,-2):\\text{ local min}'],practice:['Find the tangent slope at x = 2.','求 x = 2 處的切線斜率。'],question:'f(x)=x^3-3x',answer:'9',answerTex:'9',hint:['Evaluate 3x² − 3 at x = 2.','把 x = 2 代入 3x² − 3。']},
+ {id:'integration',group:['Calculus','微積分'],title:['Integration & applications','積分與應用'],sub:['Substitution · parts · area · volume','換元・分部・面積・體積'],desc:['Keep +C in indefinite integrals. For definite integrals, transform the bounds when you change variables. Geometric area uses |f−g|; if the curves cross, split at the intersections. Volume uses the outer radius squared minus the inner radius squared.','不定積分須保留 +C。定積分換元時，積分界限亦須改變。幾何面積使用 |f−g|；若曲線相交，要在交點分段。體積則使用外半徑平方減內半徑平方。'],formulas:['\\int u\\,dv=uv-\\int v\\,du','\\int_a^b f(x)\\,dx=F(b)-F(a),\\quad F\'=f','A=\\int_a^b|f(x)-g(x)|\\,dx','V=\\pi\\int_a^b(R^2-r^2)\\,dx'],example:['Evaluate ∫₀¹ x eˣ dx by integration by parts.','以分部積分求 ∫₀¹ x eˣ dx。'],steps:['u=x,\\quad dv=e^x\\,dx','du=dx,\\quad v=e^x','\\int_0^1 xe^x\\,dx=[xe^x]_0^1-\\int_0^1e^x\\,dx','=e-[e^x]_0^1','=e-(e-1)=1'],practice:['Find the volume generated by y = x, 0 ≤ x ≤ 1, about the x-axis.','把 y = x（0 ≤ x ≤ 1）繞 x 軸旋轉，求體積。'],question:'V=\\pi\\int_0^1x^2\\,dx',answer:'pi/3',answerTex:'\\dfrac\\pi3',hint:['Integrate x² first, then multiply by π.','先積分 x²，再乘以 π。']},
+ {id:'matrices',group:['Algebra','代數'],title:['Matrices & determinants','矩陣與行列式'],sub:['Inverse · systems of equations','逆矩陣・線性方程組'],desc:['Matrix multiplication is order-sensitive. An inverse exists only when the determinant is non-zero. Use a matrix equation to solve a linear system and verify by substitution into the original equations.','矩陣乘法須注意次序。行列式非零時才存在逆矩陣。把線性方程組寫成矩陣方程，解出後應代回原方程驗證。'],formulas:['\\det\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}=ad-bc','A^{-1}=\\dfrac1{ad-bc}\\begin{pmatrix}d&-b\\\\-c&a\\end{pmatrix}\\quad(ad-bc\\ne0)','A\\mathbf x=\\mathbf b\\Rightarrow\\mathbf x=A^{-1}\\mathbf b'],example:['Solve 2x + y = 5 and x + y = 3.','解方程組 2x + y = 5 和 x + y = 3。'],steps:['\\begin{pmatrix}2&1\\\\1&1\\end{pmatrix}\\begin{pmatrix}x\\\\y\\end{pmatrix}=\\begin{pmatrix}5\\\\3\\end{pmatrix}','\\det A=2\\cdot1-1\\cdot1=1\\ne0','A^{-1}=\\begin{pmatrix}1&-1\\\\-1&2\\end{pmatrix}','\\begin{pmatrix}x\\\\y\\end{pmatrix}=\\begin{pmatrix}1&-1\\\\-1&2\\end{pmatrix}\\begin{pmatrix}5\\\\3\\end{pmatrix}','=\\begin{pmatrix}2\\\\1\\end{pmatrix}'],practice:['Find the determinant.','求行列式。'],question:'\\det\\begin{pmatrix}3&2\\\\1&4\\end{pmatrix}',answer:'10',answerTex:'10',hint:['Use ad − bc = 3×4 − 2×1.','使用 ad − bc = 3×4 − 2×1。']},
+ {id:'vectors',group:['Algebra','代數'],title:['Vectors & 3D geometry','向量與立體幾何'],sub:['Dot · cross · scalar triple product','內積・叉積・純量三重積'],desc:['The dot product gives a scalar and detects perpendicular vectors. The cross product gives a vector perpendicular to both inputs. Its magnitude gives a parallelogram area; the absolute scalar triple product gives a parallelepiped volume.','內積的結果是純量，可用以判別垂直。叉積的結果是與兩個輸入向量均垂直的向量。叉積的長度是平行四邊形面積；純量三重積的絕對值是平行六面體體積。'],formulas:['\\mathbf a\\cdot\\mathbf b=|\\mathbf a||\\mathbf b|\\cos\\theta','|\\mathbf a\\times\\mathbf b|=|\\mathbf a||\\mathbf b|\\sin\\theta','V=|\\mathbf a\\cdot(\\mathbf b\\times\\mathbf c)|','\\operatorname{proj}_{\\mathbf b}\\mathbf a=\\dfrac{\\mathbf a\\cdot\\mathbf b}{|\\mathbf b|^2}\\mathbf b'],example:['Find the parallelogram area for a = (1,0,0), b = (0,2,0).','求 a = (1,0,0)、b = (0,2,0) 所張成的平行四邊形面積。'],steps:['\\mathbf a\\times\\mathbf b=\\begin{vmatrix}\\mathbf i&\\mathbf j&\\mathbf k\\\\1&0&0\\\\0&2&0\\end{vmatrix}','=0\\mathbf i-0\\mathbf j+2\\mathbf k','=(0,0,2)','A=|\\mathbf a\\times\\mathbf b|=\\sqrt{0^2+0^2+2^2}=2'],practice:['Find a · b for a = (1,2,3), b = (2,0,1).','已知 a = (1,2,3)、b = (2,0,1)，求 a · b。'],question:'(1,2,3)\\cdot(2,0,1)',answer:'5',answerTex:'5',hint:['Multiply corresponding components, then add.','對應分量相乘後相加。']}
+];
+let m2Selected='limits',m2Step=1;
+const m2Text=a=>a[LANG==='zh'?1:0];
+function selectM2(id){m2Selected=id;m2Step=1;renderM2Hub();}
+function renderM2Hub(){
+ const hub=document.getElementById('m2Hub');if(!hub)return;
+ hub.replaceChildren();const grid=document.createElement('div');grid.className='m2-topics';hub.appendChild(grid);
+ for(const topic of M2_TOPICS){const b=document.createElement('button');b.type='button';b.className='m2-topic'+(topic.id===m2Selected?' active':'');b.setAttribute('aria-pressed',topic.id===m2Selected?'true':'false');const i=document.createElement('span');i.className='topic-index';i.textContent=m2Text(topic.group);const title=document.createElement('strong');title.textContent=m2Text(topic.title);const desc=document.createElement('small');desc.textContent=m2Text(topic.sub);b.append(i,title,desc);b.onclick=()=>selectM2(topic.id);grid.appendChild(b);}
+ const topic=M2_TOPICS.find(x=>x.id===m2Selected),detail=document.createElement('div');detail.className='m2-detail';
+ const left=document.createElement('div');const tag=document.createElement('span');tag.className='eyebrow';tag.textContent=t('m2_core');const h=document.createElement('h3');h.textContent=m2Text(topic.title);const p=document.createElement('p');p.textContent=m2Text(topic.desc);left.append(tag,h,p);
+ topic.formulas.forEach(f=>{const e=renderK(f);e.className+=' m2-formula';left.appendChild(e);});
+ const right=document.createElement('div');right.className='m2-worked';const caption=document.createElement('span');caption.className='eyebrow';caption.textContent=t('m2_worked');const title=document.createElement('div');title.className='m2-example-title';title.textContent=m2Text(topic.example);const steps=document.createElement('div');steps.id='m2Steps';steps.className='m2-steps';
+ const controls=document.createElement('div');controls.className='quick-btns';const next=document.createElement('button');next.className='btn btn-primary';next.textContent=t('fp_next');next.onclick=()=>{m2Step=Math.min(m2Step+1,topic.steps.length);drawSteps();};const reset=document.createElement('button');reset.className='btn btn-secondary';reset.textContent=t('fp_replay');reset.onclick=()=>{m2Step=1;drawSteps();};controls.append(next,reset);
+ function drawSteps(){const eq=topic.steps.slice(0,m2Step).map(s=>s.startsWith('=')?'&='+s.slice(1):'&'+s).join('\\\\[.5em]');steps.replaceChildren(renderK(`\\begin{aligned}${eq}\\end{aligned}`));next.disabled=m2Step>=topic.steps.length;steps.classList.remove('step-reveal');void steps.offsetWidth;steps.classList.add('step-reveal');}
+ right.append(caption,title,steps,controls);drawSteps();
+ const practice=document.createElement('div');practice.className='m2-practice';const lab=document.createElement('span');lab.className='eyebrow';lab.textContent=t('m2_your_turn');const prompt=document.createElement('p');prompt.textContent=m2Text(topic.practice);const input=document.createElement('input');input.type='text';input.autocomplete='off';input.spellcheck=false;input.placeholder=t('m2_answer_placeholder');input.setAttribute('aria-label',t('m2_answer_placeholder'));
+ const buttons=document.createElement('div');buttons.className='quick-btns';const check=document.createElement('button');check.className='btn btn-primary';check.textContent=t('m2_check');const hint=document.createElement('button');hint.className='btn btn-secondary';hint.textContent=t('m2_hint');const show=document.createElement('button');show.className='btn btn-secondary';show.textContent=t('m2_show');const feedback=document.createElement('div');feedback.className='m2-feedback';feedback.setAttribute('aria-live','polite');
+ check.onclick=()=>{feedback.replaceChildren();try{const provided=FPExact.parse(input.value).toString(),delta=FPExact.exact(`(${provided})-(${topic.answer})`);feedback.textContent=delta==='0'?t('m2_correct'):t('m2_not_yet');}catch{feedback.textContent=t('m2_invalid');}};
+ hint.onclick=()=>{feedback.textContent=m2Text(topic.hint);};show.onclick=()=>{feedback.replaceChildren(document.createTextNode(t('m2_exact')),renderK(topic.answerTex));};input.onkeydown=e=>{if(e.key==='Enter')check.click();};buttons.append(check,hint,show);practice.append(lab,prompt,renderK(topic.question),input,buttons,feedback);right.appendChild(practice);detail.append(left,right);hub.appendChild(detail);
+}
+function openM2Limits(){document.querySelector('[data-tab="reference"]').click();selectM2('limits');document.getElementById('m2Hub').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}
+
+// Exact low-degree algebra and verified antiderivative templates.
+// Unresolved values stay as unevaluated exact expressions with a separate ≈.
+function exactAtTex(expr,value,varName='x'){
+  const node=FPExact.parse(expr).transform(n=>n.isSymbolNode&&n.name===varName?math.parse(String(value)):n);return FPExact.et(node);
+}
+function approximateTex(n){return Number.isFinite(n)?Number(n.toPrecision(7)).toString():'\\text{undefined}';}
+function solvePolynomialExact(expr){
+  try{
+    const p=FPExact.poly(FPExact.parse(expr)),co=[];
+    for(const[k,v]of p){const[i,j]=k.split(',').map(Number);if(j)return null;co[i]=v;}
+    for(let i=0;i<co.length;i++)co[i]=co[i]||'0';while(co.length&&co.at(-1)==='0')co.pop();
+    if(co.length<=1)return [];
+    const roots=[];
+    function divideRoot(r){const q=Array(co.length-1).fill('0');q[q.length-1]=co.at(-1);for(let i=q.length-2;i>=0;i--)q[i]=FPExact.exact(`(${co[i+1]})+(${r})*(${q[i+1]})`);co.splice(0,co.length,...q);}
+    while(co.length>3){let root=null;for(let d=1;d<=12&&root===null;d++)for(let n=-36;n<=36;n++){const r=FPExact.exact(`${n}/${d}`);if(FPExact.exact(co.map((v,i)=>`(${v})*(${r})^${i}`).join('+'))==='0'){root=r;break;}}if(root===null)return null;roots.push(root);divideRoot(root);}
+    if(co.length===2)roots.push(FPExact.exact(`-(${co[0]})/(${co[1]})`));
+    if(co.length===3){const[c,b,a]=co,D=FPExact.exact(`(${b})^2-4*(${a})*(${c})`);if(Number(math.evaluate(D))>=0){roots.push(FPExact.exact(`(-(${b})+sqrt(${D}))/(2*(${a}))`));if(D!=='0')roots.push(FPExact.exact(`(-(${b})-sqrt(${D}))/(2*(${a}))`));}}
+    return [...new Set(roots)].sort((a,b)=>Number(math.evaluate(a))-Number(math.evaluate(b)));
+  }catch{return null;}
+}
+function antiderivativeExact(expr,depth=0){
+  if(depth>7)return null;
+  const n=FPExact.parse(expr);let p;try{p=FPExact.poly(n);}catch{}
+  if(p){const q=new Map();for(const[k,v]of p){const[i,j]=k.split(',').map(Number);if(j)return null;q.set(`${i+1},0`,FPExact.exact(`(${v})/${i+1}`));}return FPExact.exact(FPExact.pstr(q));}
+  const strip=n=>n.isParenthesisNode?strip(n.content):n,node=strip(n),hasX=n=>{let yes=false;n.traverse(k=>{if(k.isSymbolNode&&k.name==='x')yes=true;});return yes;};
+  if(node.isOperatorNode){const a=node.args[0],b=node.args[1];
+    if(['+','-'].includes(node.op)&&b){const aa=antiderivativeExact(a.toString(),depth+1),bb=antiderivativeExact(b.toString(),depth+1);if(aa&&bb)return FPExact.exact(`(${aa})${node.op}(${bb})`);}
+    if(node.op==='*'&&b){const constant=!hasX(a)?a:!hasX(b)?b:null,other=constant===a?b:a;if(constant){const result=antiderivativeExact(other.toString(),depth+1);if(result)return FPExact.exact(`(${constant.toString()})*(${result})`);}}
+    if(node.op==='/'&&b&&!hasX(b)){const aa=antiderivativeExact(a.toString(),depth+1);if(aa)return FPExact.exact(`(${aa})/(${b.toString()})`);}
+    if(node.op==='^'&&strip(a).isSymbolNode&&strip(a).name==='e')return antiderivativeExact(`exp(${b.toString()})`,depth+1);
+    if(node.op==='/'&&FPExact.exact(a)==='1'){const k=safeDerivative(b.toString());if(k&&!hasX(FPExact.parse(k))&&FPExact.exact(k)!=='0')return `log(abs(${b.toString()}))/(${FPExact.exact(k)})`;}
+  }
+  if(node.isFunctionNode&&['sin','cos','exp'].includes(node.fn.name)){
+    const u=node.args[0],k=safeDerivative(u.toString());if(!k||hasX(FPExact.parse(k))||FPExact.exact(k)==='0')return null;
+    const f=node.fn.name==='sin'?`-cos(${u.toString()})`:node.fn.name==='cos'?`sin(${u.toString()})`:`exp(${u.toString()})`;
+    return FPExact.exact(`(${f})/(${k})`);
+  }
+  return null;
+}
+function definiteIntegralExact(expr,a,b){
+  const anti=antiderivativeExact(expr);if(!anti)return null;
+  // Antiderivatives here are canonical natural logs; do not reinterpret them.
+  const n=math.parse(anti),right=FPExact.at(n,String(b)),left=FPExact.at(n,String(a));
+  return {anti,result:FPExact.exact(`(${right})-(${left})`)};
+}
+function domainConditionsExact(fx){
+  const conditions=[];FPExact.parse(fx).traverse(n=>{
+    if(n.isFunctionNode){const u=FPExact.tex(n.args[0]);if(['log','log10','log2'].includes(n.fn.name))conditions.push(`${u}>0`);if(n.fn.name==='sqrt')conditions.push(`${u}\\ge0`);if(['tan','sec'].includes(n.fn.name))conditions.push(`\\cos(${u})\\ne0`);if(['csc','cot'].includes(n.fn.name))conditions.push(`\\sin(${u})\\ne0`);}
+    if(n.isOperatorNode&&n.op==='/')conditions.push(`${FPExact.tex(n.args[1])}\\ne0`);
+    if(n.isOperatorNode&&n.op==='^'){const power=Number(FPExact.exact(n.args[1]));if(power<0)conditions.push(`${FPExact.tex(n.args[0])}\\ne0`);if(!Number.isInteger(power))conditions.push(`${FPExact.tex(n.args[0])}\\ge0`);}
+  });
+  return {tex:conditions.length?`\\{x\\in\\mathbb R:${[...new Set(conditions)].join(',\\ ')}\\}`:'\\mathbb R',text:'Symbolic real-domain conditions'};
+}
+function buildAvResult(res){
+ const {fxRaw,gxRaw,a,b,mode,axis}=res,body=document.getElementById('avResultBody');document.getElementById('avResult').style.display='block';body.replaceChildren();
+ const xtex=FPExact.et(String(a)),btex=FPExact.et(String(b)),fx=FPExact.parse(fxRaw).toString(),gx=FPExact.parse(gxRaw||'0').toString(),ftex=FPExact.tex(math.parse(fx)),gtex=FPExact.tex(math.parse(gx));
+ const add=(label,formula)=>{const el=document.createElement('div');el.style.marginBottom='14px';const title=document.createElement('span');title.className='eyebrow';title.textContent=label;el.append(title,renderK(formula));body.append(el);};
+ const label=(en,zh)=>LANG==='zh'?zh:en;
+ try{
+  if(mode==='area'){
+    const integrand=`(${fx})-(${gx})`,anti=antiderivativeExact(integrand.replace(/\blog\(/g,'ln(')),roots=solvePolynomialExact(integrand.replace(/\blog\(/g,'ln('));
+    add(label('Geometric area','幾何面積'),`A=\\int_{${xtex}}^{${btex}}\\left|${ftex}-(${gtex})\\right|\\,dx`);
+    if(anti&&roots!==null){const cuts=[String(a),...roots.filter(r=>{const v=Number(math.evaluate(r));return v>a&&v<b;}),String(b)];let result='0';
+      for(let i=1;i<cuts.length;i++){const n=math.parse(anti),difference=FPExact.exact(`(${FPExact.at(n,cuts[i])})-(${FPExact.at(n,cuts[i-1])})`),sign=Number(math.evaluate(difference))<0?'-':'';const value=FPExact.exact(`${sign}(${difference})`);result=FPExact.exact(`(${result})+(${value})`);add(label('Interval contribution','分段面積'),`A_{${i}}=\\left|[${FPExact.tex(anti)}]_{${FPExact.et(cuts[i-1])}}^{${FPExact.et(cuts[i])}}\\right|=${FPExact.et(value)}`);}
+      add(label('Exact area','精確面積'),`A=${FPExact.et(result)}`);
+    }else{const numeric=simpson(`abs((${fxRaw})-(${gxRaw||'0'}))`,a,b);add(label('Numerical estimate only','僅為數值估算'),`A\\approx ${approximateTex(numeric)}`);}
+  }else if(mode==='volx'){
+    // The disc region uses the axis as a boundary when g = 0. Otherwise both
+    // curves must be on the same side of the axis, or a piecewise disc proof is needed.
+    const hasLower=true,rootsF=solvePolynomialExact(`(${fxRaw})-(${axis})`),rootsG=hasLower?solvePolynomialExact(`(${gxRaw})-(${axis})`):[],cross=solvePolynomialExact(`(${fxRaw})-(${gxRaw||'0'})`),symmetric=solvePolynomialExact(`(${fxRaw})+(${gxRaw||'0'})-2*(${axis})`);
+    if(rootsF===null||rootsG===null||cross===null||symmetric===null)throw Error(label('For this region, verify its radii and intersections before calculating a volume.','此區域須先核實半徑及交點，不能直接套用體積公式。'));
+    const cuts=[String(a),...[...rootsF,...rootsG,...cross,...symmetric].filter(r=>{const v=Number(math.evaluate(r));return v>a&&v<b;}),String(b)].sort((x,y)=>Number(math.evaluate(x))-Number(math.evaluate(y)));
+    let exactResult='0',numericResult=0,allExact=true;
+    add(label('Disc / washer geometry','圓盤／環形截面'),`V=\\pi\\int_{${xtex}}^{${btex}}(R^2-r^2)\\,dx`);
+    for(let i=1;i<cuts.length;i++){const lo=Number(math.evaluate(cuts[i-1])),hi=Number(math.evaluate(cuts[i]));if(hi-lo<1e-12)continue;const mid=(lo+hi)/2,vf=evalAt(fxRaw,mid)-axis,vg=hasLower?evalAt(gxRaw,mid)-axis:0;
+      const rf=`((${fxRaw})-(${axis}))^2`,rg=hasLower?`((${gxRaw})-(${axis}))^2`:'0';let expr;
+      if(hasLower&&vf*vg<0)expr=Math.abs(vf)>=Math.abs(vg)?rf:rg;else expr=Math.abs(vf)>=Math.abs(vg)?`(${rf})-(${rg})`:`(${rg})-(${rf})`;
+      const anti=antiderivativeExact(expr);if(anti){const n=math.parse(anti),value=FPExact.exact(`(${FPExact.at(n,cuts[i])})-(${FPExact.at(n,cuts[i-1])})`);exactResult=FPExact.exact(`(${exactResult})+(${value})`);add(label('Interval volume','分段體積'),`V_{${i}}=\\pi[${FPExact.tex(anti)}]_{${FPExact.et(cuts[i-1])}}^{${FPExact.et(cuts[i])}}=${FPExact.et(`pi*(${value})`)}`);}else allExact=false;
+      numericResult+=Math.PI*simpson(expr,lo,hi);
+    }
+    add(label(allExact?'Exact volume':'Numerical estimate only',allExact?'精確體積':'僅為數值估算'),allExact?`V=${FPExact.et(`pi*(${exactResult})`)}`:`V\\approx${approximateTex(numericResult)}`);
+  }else{
+    if(a<0)throw Error(label('Shell mode requires 0 ≤ a < b so the region does not overlap after rotation.','圓柱殼模式須符合 0 ≤ a < b，以免旋轉後區域重疊。'));
+    const difference=`(${fxRaw})-(${gxRaw||'0'})`,roots=solvePolynomialExact(difference);if(roots===null||roots.some(r=>{const v=Number(math.evaluate(r));return v>a&&v<b;}))throw Error(label('Split the region at its intersections before using shells.','使用圓柱殼前，請先在交點把區域分段。'));
+    const sign=evalAt(difference,(a+b)/2)<0?'-':'',expr=`${sign}x*(${difference})`,val=definiteIntegralExact(expr,a,b);
+    add(label('Shell method about x = 0','繞 x = 0 的圓柱殼法'),`V=2\\pi\\int_{${xtex}}^{${btex}}x\\left|${ftex}-(${gtex})\\right|\\,dx`);
+    add(label(val?'Exact volume':'Numerical estimate only',val?'精確體積':'僅為數值估算'),val?`V=${FPExact.et(`2*pi*(${val.result})`)}`:`V\\approx ${approximateTex(2*Math.PI*simpson(expr,a,b))}`);
+  }
+ }catch(e){const box=document.createElement('div');box.className='error-box';box.textContent=e.message;body.appendChild(box);}
+}
+
+const sampledCriticalPoints=findCriticalPoints,sampledInflections=findInflectionPoints;
+findCriticalPoints=function(fx,fp,fpp,min,max){
+ const roots=solvePolynomialExact(fp);
+ if(roots===null)return sampledCriticalPoints(fx,fp,fpp,min,max).map(p=>({...p,exact:false,xTex:approximateTex(p.x),yTex:approximateTex(p.y)}));
+ return roots.filter(r=>{const v=Number(math.evaluate(r));return v>=min&&v<=max;}).map(r=>{const x=Number(math.evaluate(r)),y=evalAt(fx,x),d2=fpp?evalAt(fpp,x):0;let kind=d2>1e-10?'Local Min':d2<-1e-10?'Local Max':'Stationary';if(kind==='Stationary'){const l=evalAt(fp,x-1e-4),rr=evalAt(fp,x+1e-4);if(l>0&&rr<0)kind='Local Max';if(l<0&&rr>0)kind='Local Min';}return{x,y,xExpr:r,xTex:FPExact.et(r),yTex:exactAtTex(fx,r),kind,exact:true};});
+};
+findInflectionPoints=function(fx,fpp,min,max){
+ const roots=solvePolynomialExact(fpp);
+ if(roots===null)return sampledInflections(fx,fpp,min,max).map(p=>({...p,exact:false,xTex:approximateTex(p.x),yTex:approximateTex(p.y)}));
+ return roots.filter(r=>{const v=Number(math.evaluate(r));return v>=min&&v<=max&&evalAt(fpp,v-1e-4)*evalAt(fpp,v+1e-4)<0;}).map(r=>{const x=Number(math.evaluate(r));return{x,y:evalAt(fx,x),xExpr:r,xTex:FPExact.et(r),yTex:exactAtTex(fx,r),exact:true};});
+};
+buildTangent=function(fx,fp,tanX){
+ const a=String(tanX),x=Number(FPExact.parse(a).evaluate()),y=evalAt(fx,x),m=evalAt(fp,x);if(!Number.isFinite(y)||!Number.isFinite(m))return null;
+ const xTex=FPExact.et(FPExact.parse(a)),yTex=exactAtTex(fx,a),mTex=exactAtTex(fp,a);
+ return{x,y,m,xTex,yTex,mTex,lineTex:`y-\\left(${yTex}\\right)=\\left(${mTex}\\right)\\left(x-(${xTex})\\right)`};
+};
+detectDomain=domainConditionsExact;
+// Reuse exact critical boundaries in sign intervals; the interval scan itself
+// is explicitly described as numerical and is never an exact root proof.
+const sampledAnalysis=analyzeCurve;
+analyzeCurve=function(fx,min,max,tanX){
+ const r=sampledAnalysis(fx,min,max,tanX);if(!r.ok)return r;
+ for(const key of ['monotonicity','concavity'])for(const iv of r[key]){const pts=key==='monotonicity'?r.criticalPoints:r.inflectionPoints;const from=pts.find(p=>p.exact&&Math.abs(p.x-iv.from)<1e-8),to=pts.find(p=>p.exact&&Math.abs(p.x-iv.to)<1e-8);iv.fromTex=from?from.xTex:FPExact.et(String(iv.from));iv.toTex=to?to.xTex:FPExact.et(String(iv.to));}
+ if(r.intercepts.yInt)r.intercepts.yInt.yTex=exactAtTex(fx,'0');
+ return r;
+};
+
 // MAIN EVENT WIRING & INIT
 // ═══════════════════════════════════════════════════════════════════════════
 let lastResult=null;
@@ -2605,7 +2520,7 @@ const KB_BUTTONS = [
   // Exp/log
   {label:'eˣ',ins:'exp(',tip:'e^x'},
   {label:'ln',ins:'ln(',tip:'natural log'},
-  {label:'log',ins:'log(',tip:'log base 10'},
+  {label:'log₁₀',ins:'log10(',tip:'log base 10'},
   {label:'log₂',ins:'log2(',tip:'log base 2'},
   {sep:true},
   // Constants
@@ -2636,7 +2551,7 @@ function buildMathKb(kbEl, inputEl, previewEl) {
     b.textContent = btn.label;
     b.title = btn.tip || '';
     b.type = 'button';
-    b.addEventListener('mousedown', e => {
+    b.addEventListener('click', e => {
       e.preventDefault(); // don't blur input
       if (btn.ins === '__BACKSPACE__') {
         const s = inputEl.selectionStart, e2 = inputEl.selectionEnd;
@@ -2670,10 +2585,10 @@ function updatePreview(inputEl, previewEl) {
   const val = inputEl.value.trim();
   if (!val) { previewEl.innerHTML = '<span style="color:var(--fg3);font-size:.85rem">f(x) = …</span>'; return; }
   try {
-    const tex = math.parse(val).toTex({parenthesis:'auto'});
+    const tex = FPExact.tex(FPExact.parse(val));
     katex.render('f(x) = ' + tex, previewEl, {displayMode:false, throwOnError:false});
   } catch {
-    previewEl.innerHTML = '<span style="color:var(--red);font-size:.85rem">' + val + '</span>';
+    previewEl.replaceChildren();const err=document.createElement('span');err.style.color='var(--red)';err.textContent=val;previewEl.appendChild(err);
   }
 }
 
@@ -2697,7 +2612,9 @@ document.addEventListener('DOMContentLoaded',()=>{
       tab.classList.add('active');
       const id='tab-'+tab.dataset.tab;
       document.getElementById(id).classList.add('active');
-      if(tab.dataset.tab==='reference')buildReference();
+      if(tab.dataset.tab==='reference'){buildReference();renderM2Hub();}
+      if(tab.dataset.tab!=='ai'){clearInterval(aiStepTimer);aiStepTimer=null;}if(tab.dataset.tab!=='firstprinciples'){stopFpPlayback();if(fpGraphAnimation){cancelAnimationFrame(fpGraphAnimation);fpGraphAnimation=null;}}
+      document.querySelectorAll('.nav-tab').forEach(n=>n.setAttribute('aria-selected',n===tab?'true':'false'));
       // Sync analyzer function into Area & Volume when switching to that tab
       if(tab.dataset.tab==='areav'){
         const analyzerFx=document.getElementById('fxInput').value.trim();
@@ -2713,6 +2630,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       }
     });
   });
+  document.querySelectorAll('.nav-tab').forEach(tab=>tab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tab.click();}}));
   // Analyzer
   document.getElementById('analyzeBtn').addEventListener('click',runAnalysis);
   document.getElementById('fxInput').addEventListener('keydown',e=>{if(e.key==='Enter')runAnalysis();});
@@ -2720,13 +2638,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   // First Principles
   document.getElementById('fpBtn').addEventListener('click',runFirstPrinciples);
   document.getElementById('fpFxInput').addEventListener('keydown',e=>{if(e.key==='Enter')runFirstPrinciples();});
-  document.getElementById('hSlider').addEventListener('input',drawFpGraph);
+  document.getElementById('hSlider').addEventListener('input',()=>{if(fpGraphAnimation){cancelAnimationFrame(fpGraphAnimation);fpGraphAnimation=null;}drawFpGraph();});
+  document.getElementById('fpAtInput').addEventListener('keydown',e=>{if(e.key==='Enter')runFirstPrinciples();});
+  document.getElementById('fpAnimateSecant').onclick=animateFpSecant;
+  for(const id of ['fpFxInput','fpAtInput'])document.getElementById(id).addEventListener('input',()=>{stopFpPlayback();fpCurrentProof=null;document.getElementById('fpSteps').replaceChildren();const p=document.createElement('p');p.className='empty-state';p.textContent=t('fp_empty');document.getElementById('fpSteps').appendChild(p);});
   // AI Assistant
   rebuildQuickBtns();
   document.getElementById('aiSolveBtn').addEventListener('click',solveAI);
   document.getElementById('aiClearBtn').addEventListener('click',()=>{
-    document.getElementById('aiInput').value='';
-    document.getElementById('aiResult').innerHTML=`<h3>${t('ai_result_title')}</h3><div class="empty-state"><div class="big">🧮</div><div>${t('ai_empty')}</div></div>`;
+    clearInterval(aiStepTimer);aiStepTimer=null;document.getElementById('aiInput').value='';
+    document.getElementById('aiResult').innerHTML=`<h3>${t('ai_result_title')}</h3><div class="empty-state"><div class="big"></div><div>${t('ai_empty')}</div></div>`;
   });
   document.getElementById('aiInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey)solveAI();});
   // Area & Volume
@@ -2739,6 +2660,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   setupMathInput('fxInput','fxKb','fxPreview');
   setupMathInput('fpFxInput','fpFxKb','fpFxPreview');
   setupMathInput('avFxInput','avFxKb','avFxPreview');
+  document.documentElement.lang=LANG==='zh'?'zh-TW':'en';document.getElementById('langToggle').textContent=LANG==='en'?'中文':'English';
+  document.getElementById('heroFormula').appendChild(renderK("f'(x)=\\lim_{h\\to0}\\dfrac{f(x+h)-f(x)}h"));
+  const examples=['x^2','sin(x^2)','exp(sin(x))','x^2*cos(x)','ln(x^2+1)','sqrt(x^2+1)'];
+  for(const fn of examples){const b=document.createElement('button');b.className='example-chip';b.appendChild(renderK(FPExact.tex(FPExact.parse(fn)),false));b.onclick=()=>{document.getElementById('fpFxInput').value=fn;document.getElementById('fpAtInput').value='';updatePreview(document.getElementById('fpFxInput'),document.getElementById('fpFxPreview'));document.querySelectorAll('.example-chip').forEach(e=>e.classList.toggle('active',e===b));runFirstPrinciples();};document.getElementById('fpExamples').appendChild(b);}
+  renderM2Hub();runFirstPrinciples();
   // Initial analysis
   runAnalysis();
   buildReference();
