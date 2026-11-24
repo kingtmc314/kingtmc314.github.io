@@ -673,37 +673,77 @@ button:disabled { color: #dddde5; background: #5b5d71; border-color: #86889b; bo
 @media (max-width: 350px) {
   .zoom-toolbar { gap: 4px; padding: 6px 8px; }
 }
+
+/* Language selection remains visible and usable at every viewport width. */
+.header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 14px; min-width: 0; }
+.language-switch { display: inline-flex; flex: none; align-items: center; gap: 7px; color: #4b417e; font-size: 12px; font-weight: 750; }
+.language-switch select { width: 118px; min-height: 38px; padding: 6px 7px; border: 1.5px solid #bcb1ee; border-radius: 10px; background: #fff; color: #302365; font-size: 12px; font-weight: 750; }
+/* Restore the normal style to the nested translated heading. */
+.header-right > span:last-child > span { padding: 0; border-radius: 0; background: transparent; color: inherit; }
+.visual-heading h1 .heading-primary { color: inherit; font-weight: 700; }
+.icon-button span[data-i18n] { font-size: inherit; }
+.panel-footer .footer-copy { margin: 0; color: inherit; }
+
+/* Allow longer English labels to wrap instead of widening a card. */
+#controls .point-row > strong { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+.line-title label, .zoom-label, .language-switch { min-width: 0; }
+.section-label, .visual-heading h1, .visual-note, .quiz-copy, .panel-footer { overflow-wrap: anywhere; }
+
+@media (min-width: 1000px) and (min-height: 600px) {
+  .language-switch select { min-height: 34px; }
+  /* Two narrow line cards cannot comfortably contain English labels and inputs. */
+  html[lang="en"] #controls:has(.line-box + .line-box) { grid-template-columns: minmax(0, 1fr); }
+  html[lang="en"] #controls:has(.line-box + .line-box) .control-row { grid-template-columns: minmax(0, 1fr) minmax(60px, 1.35fr) minmax(60px, 4.5em); }
+}
+@media (min-width: 1300px) and (min-height: 600px) {
+  /* At wider desktop sizes both lines fit alongside the canvas and working. */
+  html[lang="en"] #controls:has(.line-box + .line-box) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html[lang="en"] #controls:has(.line-box + .line-box) .control-row { grid-template-columns: minmax(55px, .8fr) minmax(40px, 1.2fr) minmax(55px, 4em); }
+  html[lang="en"] #controls:has(.line-box + .line-box) .line-title { flex-wrap: wrap; }
+}
+@media (max-width: 760px) {
+  .header-right { display: none; }
+  .header-actions { flex: none; }
+  .language-switch select { min-height: 44px; }
+}
+@media (max-width: 430px) {
+  .language-switch > span { display: none; }
+  .language-switch select { width: 108px; }
+  .quiz-actions { flex-wrap: wrap; }
+  .quiz-actions button { flex-basis: min(100%, 145px); }
+  #controls .point-row { grid-template-columns: minmax(0, .85fr) repeat(2, minmax(0, 1fr)); }
+}
 </style>
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="brand-icon" aria-hidden="true"><svg width="27" height="27" viewBox="0 0 27 27" fill="none"><circle cx="13.5" cy="13.5" r="9" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/><circle cx="19.9" cy="7.1" r="3" fill="currentColor"/><path d="M4 22.8h19M13.5 4v19" stroke="currentColor" stroke-width="1" opacity=".55"/></svg></span><div><strong>軌跡實驗室</strong><span>LOCUS LAB</span></div></div>
-  <div class="header-right"><span>HKDSE 數學</span><i></i><span>必修部分 <b>＋ 延伸</b></span></div>
+  <div class="brand"><span class="brand-icon" aria-hidden="true"><svg width="27" height="27" viewBox="0 0 27 27" fill="none"><circle cx="13.5" cy="13.5" r="9" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/><circle cx="19.9" cy="7.1" r="3" fill="currentColor"/><path d="M4 22.8h19M13.5 4v19" stroke="currentColor" stroke-width="1" opacity=".55"/></svg></span><div><strong data-i18n data-zh="軌跡實驗室" data-en="Locus Lab">軌跡實驗室</strong><span>LOCUS LAB</span></div></div>
+  <div class="header-actions"><div class="header-right"><span data-i18n data-zh="HKDSE 數學" data-en="HKDSE Mathematics">HKDSE 數學</span><i></i><span><span data-i18n data-zh="必修部分" data-en="Compulsory Part">必修部分</span> <b data-i18n data-zh="＋ 延伸" data-en="＋ Extension">＋ 延伸</b></span></div><label class="language-switch" for="languageSelect"><span data-i18n data-zh="語言" data-en="Language">語言</span><select id="languageSelect" aria-label="選擇語言" data-i18n-aria-zh="選擇語言" data-i18n-aria-en="Choose language"><option value="zh" data-i18n data-zh="繁體中文" data-en="Chinese (Traditional)">繁體中文</option><option value="en" data-i18n data-zh="English" data-en="English">English</option></select></label></div>
 </header>
 <main class="app-layout">
-  <section class="visual-column" aria-label="互動直角坐標系">
-    <div class="visual-heading"><div><div class="eyebrow light">INTERACTIVE COORDINATE PLANE</div><h1>直角坐標系 <span>動態畫布</span></h1></div><div class="case-chip"><span class="chip-dot"></span><span id="caseCounter">01 / 07</span></div></div>
+  <section class="visual-column" aria-label="互動直角坐標系" data-i18n-aria-zh="互動直角坐標系" data-i18n-aria-en="Interactive Cartesian coordinate plane">
+    <div class="visual-heading"><div><div class="eyebrow light">INTERACTIVE COORDINATE PLANE</div><h1><span class="heading-primary" data-i18n data-zh="直角坐標系" data-en="Cartesian plane">直角坐標系</span> <span data-i18n data-zh="動態畫布" data-en="Interactive canvas">動態畫布</span></h1></div><div class="case-chip"><span class="chip-dot"></span><span id="caseCounter">01 / 07</span></div></div>
     <div class="canvas-card">
-      <div class="canvas-head"><div><span class="live-dot"></span>互動畫布 <span class="canvas-sub">COORDINATE PLANE</span></div><span id="statusTag">自動播放中</span></div>
-      <div class="zoom-toolbar" role="group" aria-label="畫布視野控制"><span class="zoom-label">視野</span><button class="zoom-button" id="zoomOut" type="button" aria-label="縮小視野" title="縮小視野">−</button><output class="zoom-percent" id="zoomPercent" aria-label="目前縮放比例" aria-live="polite">100%</output><button class="zoom-button" id="zoomIn" type="button" aria-label="放大視野" title="放大視野">＋</button><button class="zoom-button zoom-reset" id="zoomReset" type="button" aria-label="重設視野，回到 100% 並以原點居中" title="重設視野">重設</button></div>
-      <div class="canvas-wrap"><canvas id="canvas" tabindex="0" aria-label="直角坐標系畫布。可以拖動動點 P 及定點，拖曳空白處平移視野。">你的瀏覽器不支援 HTML5 Canvas。</canvas><div class="canvas-tip" id="canvasTip">拖曳 <b>P</b> 或定點；拖曳空白處平移視野</div></div>
-      <div class="canvas-foot"><div class="legend"><span><i class="legend-dot p-dot"></i>動點 P</span><span><i class="legend-dot fixed-dot"></i>定點／定線</span><span><i class="legend-line"></i>軌跡</span></div><div id="pointCoords" class="point-coords">P (0, 0)</div></div>
+      <div class="canvas-head"><div><span class="live-dot"></span><span data-i18n data-zh="互動畫布" data-en="Interactive canvas">互動畫布</span> <span class="canvas-sub">COORDINATE PLANE</span></div><span id="statusTag">自動播放中</span></div>
+      <div class="zoom-toolbar" role="group" aria-label="畫布視野控制" data-i18n-aria-zh="畫布視野控制" data-i18n-aria-en="Canvas view controls"><span class="zoom-label" data-i18n data-zh="視野" data-en="View">視野</span><button class="zoom-button" id="zoomOut" type="button" aria-label="縮小視野" title="縮小視野" data-i18n-aria-zh="縮小視野" data-i18n-aria-en="Zoom out" data-i18n-title-zh="縮小視野" data-i18n-title-en="Zoom out">−</button><output class="zoom-percent" id="zoomPercent" aria-label="目前縮放比例" aria-live="polite" data-i18n-aria-zh="目前縮放比例" data-i18n-aria-en="Current zoom level">100%</output><button class="zoom-button" id="zoomIn" type="button" aria-label="放大視野" title="放大視野" data-i18n-aria-zh="放大視野" data-i18n-aria-en="Zoom in" data-i18n-title-zh="放大視野" data-i18n-title-en="Zoom in">＋</button><button class="zoom-button zoom-reset" id="zoomReset" type="button" aria-label="重設視野，回到 100% 並以原點居中" title="重設視野" data-i18n-aria-zh="重設視野，回到 100% 並以原點居中" data-i18n-aria-en="Reset view to 100% and centre on the origin" data-i18n-title-zh="重設視野" data-i18n-title-en="Reset view" data-i18n data-zh="重設" data-en="Reset">重設</button></div>
+      <div class="canvas-wrap"><canvas id="canvas" tabindex="0" aria-label="直角坐標系畫布。可以拖動動點 P 及定點，拖曳空白處平移視野。" data-i18n-aria-zh="直角坐標系畫布。可以拖動動點 P 及定點，拖曳空白處平移視野。" data-i18n-aria-en="Cartesian plane canvas. Drag the moving point P or a fixed point; drag a blank area to pan the view." data-i18n data-zh="你的瀏覽器不支援 HTML5 Canvas。" data-en="Your browser does not support HTML5 Canvas.">你的瀏覽器不支援 HTML5 Canvas。</canvas><div class="canvas-tip" id="canvasTip"><span data-i18n data-zh="拖曳" data-en="Drag">拖曳</span> <b>P</b> <span data-i18n data-zh="或定點；拖曳空白處平移視野" data-en="or a fixed point; drag a blank area to pan">或定點；拖曳空白處平移視野</span></div></div>
+      <div class="canvas-foot"><div class="legend"><span><i class="legend-dot p-dot"></i><span data-i18n data-zh="動點 P" data-en="Moving point P">動點 P</span></span><span><i class="legend-dot fixed-dot"></i><span data-i18n data-zh="定點／定線" data-en="Fixed point / line">定點／定線</span></span><span><i class="legend-line"></i><span data-i18n data-zh="軌跡" data-en="Locus">軌跡</span></span></div><div id="pointCoords" class="point-coords">P (0, 0)</div></div>
     </div>
-    <div class="playbar"><div class="play-group"><button class="play-button" id="playBtn" type="button"><span id="playIcon" aria-hidden="true">Ⅱ</span><span id="playText">暫停</span></button><button class="icon-button" id="clearBtn" type="button" title="清除殘影"><span aria-hidden="true">↺</span> 清除殘影</button></div><div class="switches"><label class="switch-label"><input type="checkbox" id="gridToggle" checked><span class="switch"></span>坐標網格</label><label class="switch-label"><input type="checkbox" id="locusToggle" checked><span class="switch"></span>完整軌跡</label></div></div>
-    <div class="visual-note"><span class="note-icon">✳</span><span>拖曳定點改變條件；動點會自動貼合軌跡。動態量度以 ≈ 顯示近似值，推導方程採用精確值。</span></div>
+    <div class="playbar"><div class="play-group"><button class="play-button" id="playBtn" type="button"><span id="playIcon" aria-hidden="true">Ⅱ</span><span id="playText">暫停</span></button><button class="icon-button" id="clearBtn" type="button" title="清除殘影" data-i18n-title-zh="清除殘影" data-i18n-title-en="Clear trail"><span aria-hidden="true">↺</span> <span data-i18n data-zh="清除殘影" data-en="Clear trail">清除殘影</span></button></div><div class="switches"><label class="switch-label"><input type="checkbox" id="gridToggle" checked><span class="switch"></span><span data-i18n data-zh="坐標網格" data-en="Coordinate grid">坐標網格</span></label><label class="switch-label"><input type="checkbox" id="locusToggle" checked><span class="switch"></span><span data-i18n data-zh="完整軌跡" data-en="Full locus">完整軌跡</span></label></div></div>
+    <div class="visual-note"><span class="note-icon" aria-hidden="true">✳</span><span data-i18n data-zh="拖曳定點改變條件；動點會自動貼合軌跡。動態量度以 ≈ 顯示近似值，推導方程採用精確值。" data-en="Drag a fixed point to change the conditions; the moving point stays on the locus. Live measurements marked ≈ are approximate; the derived equations use exact values.">拖曳定點改變條件；動點會自動貼合軌跡。動態量度以 ≈ 顯示近似值，推導方程採用精確值。</span></div>
   </section>
-  <aside class="panel" aria-label="條件選擇器、控制面板與代數推導">
+  <aside class="panel" aria-label="條件選擇器、控制面板與代數推導" data-i18n-aria-zh="條件選擇器、控制面板與代數推導" data-i18n-aria-en="Locus selector, controls and algebraic working">
     <div class="panel-inner">
       <section class="panel-section chooser">
-        <div class="section-label"><span>01</span> 選擇軌跡條件 <small>LOCUS CASE</small></div>
-        <div class="select-wrap"><select id="caseSelect" aria-label="選擇軌跡條件"></select><span aria-hidden="true">⌄</span></div>
+        <div class="section-label"><span>01</span> <span data-i18n data-zh="選擇軌跡條件" data-en="Choose a locus condition">選擇軌跡條件</span> <small>LOCUS CASE</small></div>
+        <div class="select-wrap"><select id="caseSelect" aria-label="選擇軌跡條件" data-i18n-aria-zh="選擇軌跡條件" data-i18n-aria-en="Choose a locus condition"></select><span aria-hidden="true">⌄</span></div>
         <div class="case-intro"><div class="case-kicker" id="caseKicker">CASE 01</div><h2 id="caseTitle"></h2><p id="caseDescription"></p><div class="condition-line" id="conditionFormula"></div></div>
       </section>
-      <section class="panel-section"><div class="section-label"><span>02</span> 調整幾何條件 <small>CONTROLS</small></div><div id="controls"></div><p class="control-help" id="controlHelp"></p><div class="inline-warning" id="warning" role="status" hidden></div></section>
-      <section class="panel-section measurements"><div class="section-label"><span>03</span> 即時數值 <small>LIVE MEASUREMENTS</small><span class="live-pill"><i></i> LIVE</span></div><div class="measure-grid" id="measurements"></div></section>
-      <section class="panel-section quiz-section"><div class="quiz-copy"><div><span class="quiz-icon">?</span><div><strong>課堂小測試</strong><p>隨機出題，先猜形狀及方程。</p></div></div><span class="quiz-tag">TRY IT</span></div><div class="quiz-actions"><button id="quizBtn" class="quiz-btn" type="button">↻ &nbsp; 隨機出題</button><button id="revealBtn" class="reveal-btn" type="button">顯示答案與圖像驗證 <span>↗</span></button></div><p id="quizHint" class="quiz-hint" hidden>答案及完整軌跡已隱藏。請先根據條件思考，再揭曉答案。</p></section>
-      <section class="panel-section solution-section" id="solutionSection"><div class="section-label"><span>04</span> 代數方程與幾何描述 <small>WORKING</small></div><div id="solution"></div></section>
-      <div class="panel-footer">HKDSE MATHEMATICS <span>·</span> 由條件出發，理解軌跡</div>
+      <section class="panel-section"><div class="section-label"><span>02</span> <span data-i18n data-zh="調整幾何條件" data-en="Adjust the geometry">調整幾何條件</span> <small>CONTROLS</small></div><div id="controls"></div><p class="control-help" id="controlHelp"></p><div class="inline-warning" id="warning" role="status" hidden></div></section>
+      <section class="panel-section measurements"><div class="section-label"><span>03</span> <span data-i18n data-zh="即時數值" data-en="Live measurements">即時數值</span> <small>LIVE MEASUREMENTS</small><span class="live-pill"><i></i> LIVE</span></div><div class="measure-grid" id="measurements"></div></section>
+      <section class="panel-section quiz-section"><div class="quiz-copy"><div><span class="quiz-icon" aria-hidden="true">?</span><div><strong data-i18n data-zh="課堂小測試" data-en="Classroom quiz">課堂小測試</strong><p data-i18n data-zh="隨機出題，先猜形狀及方程。" data-en="Generate a random question and predict its shape and equation.">隨機出題，先猜形狀及方程。</p></div></div><span class="quiz-tag">TRY IT</span></div><div class="quiz-actions"><button id="quizBtn" class="quiz-btn" type="button"><span aria-hidden="true">↻</span> &nbsp; <span data-i18n data-zh="隨機出題" data-en="Random question">隨機出題</span></button><button id="revealBtn" class="reveal-btn" type="button">顯示答案與圖像驗證 <span>↗</span></button></div><p id="quizHint" class="quiz-hint" hidden>答案及完整軌跡已隱藏。請先根據條件思考，再揭曉答案。</p></section>
+      <section class="panel-section solution-section" id="solutionSection"><div class="section-label"><span>04</span> <span data-i18n data-zh="代數方程與幾何描述" data-en="Algebraic equation and geometric description">代數方程與幾何描述</span> <small>WORKING</small></div><div id="solution"></div></section>
+      <div class="panel-footer">HKDSE MATHEMATICS <span>·</span> <span class="footer-copy" data-i18n data-zh="由條件出發，理解軌跡" data-en="Understand loci through their conditions">由條件出發，理解軌跡</span></div>
     </div>
   </aside>
 </main>
@@ -1140,14 +1180,37 @@ const cases={
  6:{label:'與兩定點形成直角',title:'以兩定點形成直角',desc:'動點 P 與定點 A、B 形成直角，即 ∠APB = 90°。',condition:'PA\\perp PB',hint:'拖曳定點 A 或 B；A、B 必須不同，亦不屬於軌跡。'},
  7:{label:'與定點及定直線保持等距（延伸）',title:'與定點及定直線保持等距（延伸）',desc:'動點 P 到焦點 F 和準線 L 的最短距離相等。',condition:'PF=d(P,L)',hint:'拖曳焦點 F 或調整準線；焦點不可位於準線上。'}
 };
+// 與 cases 對應，方程共用以確保兩個語言使用相同的數學條件。
+const englishCases={
+ 1:{label:'Fixed distance from a point',title:'Fixed distance from a point',desc:'The distance from the moving point P to the fixed point A is always r.',condition:cases[1].condition,hint:'Drag the fixed point A, or adjust the radius r.'},
+ 2:{label:'Equidistant from two fixed points',title:'Equidistant from two fixed points',desc:'The moving point P is equidistant from two distinct fixed points A and B.',condition:cases[2].condition,hint:'Drag A or B to see how the equidistant positions change.'},
+ 3:{label:'Fixed distance from a line',title:'Fixed distance from a line',desc:'The shortest distance from the moving point P to the fixed line L is always d.',condition:cases[3].condition,hint:'The line can be made vertical; distance is measured along a perpendicular.'},
+ 4:{label:'Equidistant from two parallel lines',title:'Equidistant from two parallel lines',desc:'The moving point P is equidistant from two distinct parallel lines.',condition:cases[4].condition,hint:'The lines share a slope; adjust their intercepts to change their positions.'},
+ 5:{label:'Equidistant from two intersecting lines',title:'Equidistant from two intersecting lines',desc:'The moving point P is equidistant from two intersecting lines.',condition:cases[5].condition,hint:'The lines must intersect; adjust their slopes and intercepts separately.'},
+ 6:{label:'A right angle with two fixed points',title:'A right angle with two fixed points',desc:'The moving point P forms a right angle with the fixed points A and B: ∠APB = 90°.',condition:cases[6].condition,hint:'Drag A or B; they must be distinct and are not part of the locus.'},
+ 7:{label:'Equidistant from a point and a line (extension)',title:'Equidistant from a point and a line (extension)',desc:'The moving point P is equidistant from the focus F and the directrix L.',condition:cases[7].condition,hint:'Drag the focus F or adjust the directrix; the focus cannot lie on the directrix.'}
+};
 function defaults(id){const d={A:{x:-3,y:0},B:{x:3,y:0},F:{x:0,y:2},r:3,d:2,L1:{m:0,k:0,vertical:false},L2:{m:-1,k:1,vertical:false}};
  if(id===1)d.A={x:-1,y:0};if(id===2){d.A={x:-3,y:-1};d.B={x:3,y:1};}if(id===3)d.L1={m:.5,k:0,vertical:false};if(id===4){d.L1={m:.5,k:-2,vertical:false};d.L2={m:.5,k:2,vertical:false};}if(id===5){d.L1={m:.5,k:0,vertical:false};d.L2={m:-1,k:0,vertical:false};}if(id===7){d.F={x:0,y:2};d.L1={m:0,k:-2,vertical:false};}return d;}
-const S={id:1,cfg:defaults(1),model:null,P:{x:0,y:0},path:0,playing:true,showGrid:true,showLocus:true,showAnswer:true,quiz:false,trail:[],drag:null,progress:0,lastFrame:0,uiFrame:0,notice:'',bounds:null,view:null,cachedPaths:null};
+const S={lang:'zh',id:1,cfg:defaults(1),model:null,P:{x:0,y:0},path:0,playing:true,showGrid:true,showLocus:true,showAnswer:true,quiz:false,trail:[],drag:null,progress:0,lastFrame:0,uiFrame:0,notice:'',bounds:null,view:null,cachedPaths:null};
+function tr(zh,en){return S.lang==='en'?en:zh;}
 const canvas=$('canvas'),ctx=canvas.getContext('2d');
 for(let i=1;i<=7;i++){const o=document.createElement('option');o.value=i;o.textContent=`0${i}  ${cases[i].label}`;$('caseSelect').append(o);}
+function updateLanguage(){
+ document.documentElement.lang=tr('zh-Hant-HK','en');
+ document.title=tr('軌跡實驗室 Locus Lab | HKDSE 數學','Locus Lab | HKDSE Mathematics');
+ document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=el.getAttribute(`data-${S.lang}`);});
+ document.querySelectorAll('[data-i18n-aria-zh]').forEach(el=>el.setAttribute('aria-label',el.getAttribute(`data-i18n-aria-${S.lang}`)));
+ document.querySelectorAll('[data-i18n-title-zh]').forEach(el=>el.setAttribute('title',el.getAttribute(`data-i18n-title-${S.lang}`)));
+ for(const option of $('caseSelect').options){const id=Number(option.value);option.textContent=`0${id}  ${tr(cases[id].label,englishCases[id].label)}`;}
+ $('languageSelect').value=S.lang;
+ // 舊語言的警告可能不再適用；不要改變題目、配置或小測狀態。
+ warning('');renderAll();setPlaying(S.playing);
+}
+$('languageSelect').addEventListener('change',e=>{S.lang=e.target.value==='en'?'en':'zh';updateLanguage();});
 function build(){S.model=Geo.build(S.id,S.cfg);S.cachedPaths=null;return !S.model.error&&S.model.paths.length>0;}
 function warning(message){S.notice=message||'';const el=$('warning');el.hidden=!S.notice;el.textContent=S.notice;}
-function setPlaying(v){S.playing=!!v;S.lastFrame=0;$('playText').textContent=v?'暫停':'自動播放';$('playIcon').textContent=v?'Ⅱ':'▶';$('statusTag').textContent=v?'自動播放中':'已暫停 · 可拖曳';}
+function setPlaying(v){S.playing=!!v;S.lastFrame=0;$('playText').textContent=v?tr('暫停','Pause'):tr('自動播放','Auto-play');$('playIcon').textContent=v?'Ⅱ':'▶';$('statusTag').textContent=v?tr('自動播放中','Auto-playing'):tr('已暫停 · 可拖曳','Paused · drag to explore');}
 function clearTrail(){S.trail=[];}
 function addTrail(p,breakBefore=false){if(S.quiz&&!S.showAnswer)return;const last=S.trail[S.trail.length-1];if(!last||breakBefore||Math.hypot(last.x-p.x,last.y-p.y)>.025){S.trail.push({x:p.x,y:p.y,path:S.path,breakBefore});if(S.trail.length>1900)S.trail.shift();}}
 function pathProjection(p){let best=null;S.model.paths.forEach((path,i)=>{const q=Geo.project(path,p),d=(q.x-p.x)**2+(q.y-p.y)**2;if(!best||d<best.d)best={point:q,index:i,d};});return best;}
@@ -1155,34 +1218,36 @@ function initP(){if(!S.model||S.model.error)return;const b=S.bounds||{xmin:-9,xm
 function resetCase(id){S.id=id;S.cfg=defaults(id);S.showAnswer=true;S.showLocus=true;S.quiz=false;S.path=0;S.progress=.3;clearTrail();warning('');build();setPlaying(true);$('locusToggle').checked=true;initP();renderAll();syncProgress();}
 function validateCfg(cfg){return Geo.build(S.id,cfg).error||null;}
 const copyCfg=()=>JSON.parse(JSON.stringify(S.cfg));
-function changedConfig(next,rerender=false){const err=validateCfg(next);if(err){warning('此設定會令題目退化，請選擇其他數值。');if(rerender)renderControls();return false;}warning('');S.cfg=next;build();const q=pathProjection(S.P);if(q){S.P=q.point;S.path=q.index;}keepPVisible();clearTrail();if(rerender)renderControls();renderContent();syncProgress();return true;}
+function changedConfig(next,rerender=false){const err=validateCfg(next);if(err){warning(tr('此設定會令題目退化，請選擇其他數值。','These values make the locus degenerate. Choose different values.'));if(rerender)renderControls();return false;}warning('');S.cfg=next;build();const q=pathProjection(S.P);if(q){S.P=q.point;S.path=q.index;}keepPVisible();clearTrail();if(rerender)renderControls();renderContent();syncProgress();return true;}
 /* 數值欄位只在 Enter／blur 提交，避免播放時或輸入中失去焦點。 */
 function controlAriaLabel(key,label){
  const [name]=key.split('.');
  if(name==='L1'||name==='L2'){
   const single=S.id===3||S.id===7;
-  return `${single?'定直線 L':name==='L1'?'定直線 L₁':'定直線 L₂'} ${label}`;
+  const line=single?tr('定直線 L','Fixed line L'):name==='L1'?tr('定直線 L₁','Fixed line L₁'):tr('定直線 L₂','Fixed line L₂');
+  return `${line} ${label}`;
  }
  return label;
 }
 function sliderRow(key,label,value,min,max,step){
- const aria=esc(controlAriaLabel(key,label));
- return `<div class="control-row"><strong>${esc(label)}</strong><input type="range" data-control="${key}" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${aria} 滑桿"><input class="numeric-input" type="number" data-number-control="${key}" data-committed="${value}" min="${min}" max="${max}" step="${step}" value="${value}" inputmode="${min<0?'text':'decimal'}" aria-label="${aria} 數值"></div>`;
+ const aria=controlAriaLabel(key,label);
+ return `<div class="control-row"><strong>${esc(label)}</strong><input type="range" data-control="${key}" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${esc(tr(`${aria} 滑桿`,`${aria} slider`))}"><input class="numeric-input" type="number" data-number-control="${key}" data-committed="${value}" min="${min}" max="${max}" step="${step}" value="${value}" inputmode="${min<0?'text':'decimal'}" aria-label="${esc(tr(`${aria} 數值`,`${aria} value`))}"></div>`;
 }
 function lineBox(name,line,allowSlope=true,lockVertical=false){
  const n=name==='L1'?'L₁':'L₂',single=S.id===3||S.id===7;
- const title=single?'定直線 L':`定直線 ${n}`;
- return `<div class="line-box"><div class="line-title"><span class="swatch ${name==='L2'?'alt':''}"></span> ${title} <label><input data-vertical="${name}" type="checkbox" ${line.vertical?'checked':''} ${lockVertical?'disabled':''} aria-label="${title} 垂直線 x = k"> 垂直線 x = k</label></div>${allowSlope&&!line.vertical?sliderRow(`${name}.m`,'斜率 m',line.m,-3,3,.25):''}${sliderRow(`${name}.k`,line.vertical?'位置 k（x = k）':'截距 k',line.k,-5,5,.25)}</div>`;
+ const title=single?tr('定直線 L','Fixed line L'):tr(`定直線 ${n}`,`Fixed line ${n}`);
+ const vertical=tr('垂直線 x = k','Vertical line x = k');
+ return `<div class="line-box"><div class="line-title"><span class="swatch ${name==='L2'?'alt':''}"></span> ${esc(title)} <label><input data-vertical="${name}" type="checkbox" ${line.vertical?'checked':''} ${lockVertical?'disabled':''} aria-label="${esc(`${title} ${vertical}`)}"> ${esc(vertical)}</label></div>${allowSlope&&!line.vertical?sliderRow(`${name}.m`,tr('斜率 m','Slope m'),line.m,-3,3,.25):''}${sliderRow(`${name}.k`,line.vertical?tr('位置 k（x = k）','Position k (x = k)'):tr('截距 k','Intercept k'),line.k,-5,5,.25)}</div>`;
 }
 function pointRow(name,point){
- const title=name==='F'?'焦點 F':`定點 ${name}`;
+ const title=name==='F'?tr('焦點 F','Focus F'):tr(`定點 ${name}`,`Fixed point ${name}`);
  const axis=coordinate=>{
   const value=point[coordinate];
   // 畫布可拖到很寬的座標範圍；不要令既有合法拖曳結果變為無效。
   const min=Math.min(-20,value),max=Math.max(20,value);
-  return `<label class="point-axis"><span aria-hidden="true">${coordinate}</span><input class="numeric-input" type="number" data-number-control="${name}.${coordinate}" data-committed="${value}" min="${min}" max="${max}" step="0.1" value="${value}" inputmode="text" aria-label="${title} 的 ${coordinate} 坐標"></label>`;
+  return `<label class="point-axis"><span aria-hidden="true">${coordinate}</span><input class="numeric-input" type="number" data-number-control="${name}.${coordinate}" data-committed="${value}" min="${min}" max="${max}" step="0.1" value="${value}" inputmode="text" aria-label="${esc(tr(`${title} 的 ${coordinate} 坐標`,`${title} ${coordinate}-coordinate`))}"></label>`;
  };
- return `<div class="point-row" role="group" aria-label="${title} 坐標"><strong>${title}</strong>${axis('x')}${axis('y')}</div>`;
+ return `<div class="point-row" role="group" aria-label="${esc(tr(`${title} 坐標`,`${title} coordinates`))}"><strong>${esc(title)}</strong>${axis('x')}${axis('y')}</div>`;
 }
 function controlValue(key){
  const [name,prop]=key.split('.');
@@ -1206,20 +1271,20 @@ function syncControlValue(key){
  });
 }
 function numericDegenerateWarning(){
- if(S.id===2||S.id===6)return '定點 A、B 不可重合；已恢復上次的數值。';
- if(S.id===7)return '焦點 F 不可位於準線上；已恢復上次的數值。';
- if(S.id===4)return '兩條平行線不可重合；已恢復上次的數值。';
- if(S.id===5)return '兩條直線必須相交，不可平行或重合；已恢復上次的數值。';
- return '此設定會令題目退化；已恢復上次的數值。';
+ if(S.id===2||S.id===6)return tr('定點 A、B 不可重合；已恢復上次的數值。','Fixed points A and B must be distinct; the previous value has been restored.');
+ if(S.id===7)return tr('焦點 F 不可位於準線上；已恢復上次的數值。','The focus F cannot lie on the directrix; the previous value has been restored.');
+ if(S.id===4)return tr('兩條平行線不可重合；已恢復上次的數值。','The two parallel lines must be distinct; the previous value has been restored.');
+ if(S.id===5)return tr('兩條直線必須相交，不可平行或重合；已恢復上次的數值。','The lines must intersect and cannot be parallel or coincident; the previous value has been restored.');
+ return tr('此設定會令題目退化；已恢復上次的數值。','These values make the locus degenerate; the previous value has been restored.');
 }
 function commitNumeric(input){
  const key=input.dataset.numberControl,old=controlValue(key),raw=input.value.trim();
  if(input.dataset.dirty!=='true'&&raw===input.dataset.committed)return;
  const min=Number(input.min),max=Number(input.max),step=Number(input.step),value=Number(raw);
  let message='';
- if(!raw||input.validity.badInput||!Number.isFinite(value))message='請輸入有效數字，不可留空；已恢復上次的數值。';
- else if(value<min||value>max)message=`請輸入 ${min} 至 ${max} 之間的數值；已恢復上次的數值。`;
- else if(input.validity.stepMismatch)message=`請依 ${step} 的步進輸入數值；已恢復上次的數值。`;
+ if(!raw||input.validity.badInput||!Number.isFinite(value))message=tr('請輸入有效數字，不可留空；已恢復上次的數值。','Enter a valid number; the field cannot be empty. The previous value has been restored.');
+ else if(value<min||value>max)message=tr(`請輸入 ${min} 至 ${max} 之間的數值；已恢復上次的數值。`,`Enter a value from ${min} to ${max}; the previous value has been restored.`);
+ else if(input.validity.stepMismatch)message=tr(`請依 ${step} 的步進輸入數值；已恢復上次的數值。`,`Enter a value in increments of ${step}; the previous value has been restored.`);
  if(!message){
   const cfg=copyCfg();assignControl(cfg,key,value);
   if(!changedConfig(cfg))message=numericDegenerateWarning();
@@ -1239,8 +1304,8 @@ function commitNumeric(input){
 }
 function renderControls(){
  let html='';const c=S.cfg;
- if(S.id===1)html=sliderRow('r','半徑 r',c.r,.5,5,.25);
- if(S.id===3)html=sliderRow('d','距離 d',c.d,.5,4,.25);
+ if(S.id===1)html=sliderRow('r',tr('半徑 r','Radius r'),c.r,.5,5,.25);
+ if(S.id===3)html=sliderRow('d',tr('距離 d','Distance d'),c.d,.5,4,.25);
  if([3,4,5,7].includes(S.id))html+=lineBox('L1',c.L1,true,false);
  if(S.id===4)html+=lineBox('L2',c.L2,false,true);
  if(S.id===5)html+=lineBox('L2',c.L2,true,false);
@@ -1249,7 +1314,7 @@ function renderControls(){
   html+=`<div class="point-controls">${names.map(name=>pointRow(name,c[name])).join('')}</div>`;
  }
  $('controls').innerHTML=html;
- $('controlHelp').textContent=cases[S.id].hint+' 輸入數值後按 Enter 或離開欄位套用。';
+ $('controlHelp').textContent=tr(cases[S.id].hint,englishCases[S.id].hint)+tr(' 輸入數值後按 Enter 或離開欄位套用。',' After entering a value, press Enter or leave the field to apply it.');
  $('controls').querySelectorAll('[data-control]').forEach(input=>input.addEventListener('input',e=>{
   const key=e.target.dataset.control,value=Number(e.target.value),cfg=copyCfg();
   if(!Number.isFinite(value))return;
@@ -1393,36 +1458,44 @@ const exactLocus = (() => {
   function radicalTimes(r, e) {
     return eq(r.coefficient, ONE) && r.inside === 1n ? e : radicalTex(r) + e;
   }
-  function footSteps(steps, L, index) {
+  function footSteps(steps, L, index, tr) {
     const suffix = index ? '_{' + index + '}' : '';
     const H = 'H' + suffix, lineName = 'L' + suffix, t = 't' + suffix;
     const PH = 'PH' + suffix;
     const addStep = (p, math) => steps.push({p, t: math});
     if (L.vertical) {
-      addStep('定直線是垂直線。過 P 的垂線是水平線，所以垂足的橫坐標等於直線的位置，縱坐標等於 P 的縱坐標。',
+      addStep(tr('定直線是垂直線。過 P 的垂線是水平線，所以垂足的橫坐標等於直線的位置，縱坐標等於 P 的縱坐標。',
+        'The fixed line is vertical. The perpendicular through P is horizontal, so the foot has the same x-coordinate as the line and the same y-coordinate as P.'),
         lineName + ':' + lineEq(L) + '\\quad ' + H + '=(' + tex(L.k) + ',y)');
-      addStep('由 P 與垂足的兩點距離，求出垂直線段長度的平方。',
+      addStep(tr('由 P 與垂足的兩點距離，求出垂直線段長度的平方。',
+        'Use the distance between P and the foot to find the squared length of the perpendicular segment.'),
         PH + '^{2}=' + sqExpr(shift('x', L.k)));
       return;
     }
     if (L.m.n === 0n) {
-      addStep('定直線是水平線。過 P 的垂線是垂直線，所以垂足的橫坐標等於 P 的橫坐標，縱坐標等於直線的截距。',
+      addStep(tr('定直線是水平線。過 P 的垂線是垂直線，所以垂足的橫坐標等於 P 的橫坐標，縱坐標等於直線的截距。',
+        'The fixed line is horizontal. The perpendicular through P is vertical, so the foot has the same x-coordinate as P and the y-coordinate of the line.'),
         lineName + ':' + lineEq(L) + '\\quad ' + H + '=(x,' + tex(L.k) + ')');
-      addStep('由 P 與垂足的兩點距離，求出垂直線段長度的平方。',
+      addStep(tr('由 P 與垂足的兩點距離，求出垂直線段長度的平方。',
+        'Use the distance between P and the foot to find the squared length of the perpendicular segment.'),
         PH + '^{2}=' + sqExpr(shift('y', L.k)));
       return;
     }
     const ht = expr([[L.m, t], [L.k, '']]);
-    addStep('寫出定直線，設垂足在直線上，並以參數表示其坐標。',
+    addStep(tr('寫出定直線，設垂足在直線上，並以參數表示其坐標。',
+      'Write the fixed line and express the coordinates of the foot on the line using a parameter.'),
       lineName + ':' + lineEq(L) + '\\quad ' + H + '=(' + t + ',' + ht + ')');
     const slope = neg(div(ONE, L.m));
-    addStep('過 P 的垂線斜率是直線斜率的負倒數；將垂足坐標代入該垂線的方程。即使 P 在線上，過 P 的垂線仍然存在。',
-      'm_{\\text{垂線}}=' + tex(slope) + '\\quad (' + ht + ')-y=' + tex(slope) + '(' + t + '-x)');
+    addStep(tr('過 P 的垂線斜率是直線斜率的負倒數；將垂足坐標代入該垂線的方程。即使 P 在線上，過 P 的垂線仍然存在。',
+      'The slope of the perpendicular through P is the negative reciprocal of the line’s slope. Substitute the foot’s coordinates into the equation of that perpendicular. The perpendicular through P still exists when P lies on the line.'),
+      'm_{\\text{' + tr('垂線', 'perpendicular') + '}}=' + tex(slope) + '\\quad (' + ht + ')-y=' + tex(slope) + '(' + t + '-x)');
     const hx = expr([[div(ONE, L.q), 'x'], [div(L.m, L.q), 'y'], [neg(div(mul(L.m, L.k), L.q)), '']]);
     const hy = expr([[div(L.m, L.q), 'x'], [div(sq(L.m), L.q), 'y'], [div(L.k, L.q), '']]);
-    addStep('解上式得到垂足的橫坐標，再代回直線方程，求出垂足坐標。',
+    addStep(tr('解上式得到垂足的橫坐標，再代回直線方程，求出垂足坐標。',
+      'Solve the equation for the x-coordinate of the foot, then substitute back into the line equation to find both coordinates.'),
       t + '=' + hx + '\\quad ' + H + '=(' + hx + ',' + hy + ')');
-    addStep('把垂足坐標代入兩點距離公式，平方後整理。',
+    addStep(tr('把垂足坐標代入兩點距離公式，平方後整理。',
+      'Substitute the foot’s coordinates into the distance formula, square and simplify.'),
       PH + '^{2}=(x-(' + hx + '))^{2}+(y-(' + hy + '))^{2}=' + distanceSq(L));
   }
   // Reduce an equation ax+by+c=0 to primitive integer coefficients.
@@ -1462,89 +1535,100 @@ const exactLocus = (() => {
   }
   function solve(state) {
     const c = state.cfg, id = state.id;
+    // English is opt-in; missing or other language values retain the original Chinese output.
+    const tr = (zh, en) => state.lang === 'en' ? en : zh;
     const steps = [], addStep = (p, t) => steps.push({p, t});
     let answer = '', desc = '', extra = '';
     if (id === 1) {
       const A = pointR(c.A), r = from(c.r);
-      addStep('設動點為 P；以下列出定點及固定半徑。', 'P=(x,y)\\quad A=' + point(A) + '\\quad r=' + tex(r));
-      addStep('由兩點距離及題目條件，寫出等式。', 'PA=\\sqrt{' + sqdist(A) + '}=' + tex(r));
+      addStep(tr('設動點為 P；以下列出定點及固定半徑。', 'Let P be the moving point. The fixed point and radius are shown below.'), 'P=(x,y)\\quad A=' + point(A) + '\\quad r=' + tex(r));
+      addStep(tr('由兩點距離及題目條件，寫出等式。', 'Apply the distance formula and the given condition to obtain the equation.'), 'PA=\\sqrt{' + sqdist(A) + '}=' + tex(r));
       answer = sqdist(A) + '=' + tex(sq(r));
-      addStep('兩邊平方並約簡，得到圓的方程。', answer);
-      desc = 'P 的軌跡是以 A 為圓心、給定長度為半徑的圓（Circle）。';
+      addStep(tr('兩邊平方並約簡，得到圓的方程。', 'Square both sides and simplify to obtain the equation of the circle.'), answer);
+      desc = tr('P 的軌跡是以 A 為圓心、給定長度為半徑的圓（Circle）。', 'The locus of P is the circle with centre A and the given radius.');
     } else if (id === 2) {
       const A = pointR(c.A), B = pointR(c.B);
-      addStep('設動點為 P；兩個不同定點的坐標如下。', 'P=(x,y)\\quad A=' + point(A) + '\\quad B=' + point(B));
-      addStep('兩段距離相等；由兩點距離公式，將兩邊平方。', 'PA=PB\\quad ' + sqdist(A) + '=' + sqdist(B));
+      addStep(tr('設動點為 P；兩個不同定點的坐標如下。', 'Let P be the moving point. The coordinates of the two distinct fixed points are shown below.'), 'P=(x,y)\\quad A=' + point(A) + '\\quad B=' + point(B));
+      addStep(tr('兩段距離相等；由兩點距離公式，將兩邊平方。', 'The two distances are equal. Apply the distance formula and square both sides.'), 'PA=PB\\quad ' + sqdist(A) + '=' + sqdist(B));
       const a = mul(TWO, sub(B.x, A.x)), b = mul(TWO, sub(B.y, A.y));
       const v = sub(add(sq(B.x), sq(B.y)), add(sq(A.x), sq(A.y)));
       const [pa, pb, pc] = primitive(a, b, neg(v));
       answer = expr([[pa, 'x'], [pb, 'y']]) + '=' + tex(neg(pc));
-      addStep('展開、約去兩邊的平方項，再約簡係數。', answer);
-      desc = 'P 的軌跡是線段 AB 的垂直平分線（Perpendicular Bisector）。';
-      extra = '直線上的點到 A、B 的距離相等，直線亦經過 AB 的中點。';
+      addStep(tr('展開、約去兩邊的平方項，再約簡係數。', 'Expand, cancel the squared terms on both sides, and simplify the coefficients.'), answer);
+      desc = tr('P 的軌跡是線段 AB 的垂直平分線（Perpendicular Bisector）。', 'The locus of P is the perpendicular bisector of the line segment AB.');
+      extra = tr('直線上的點到 A、B 的距離相等，直線亦經過 AB 的中點。', 'Every point on this line is equidistant from A and B, and the line passes through the midpoint of AB.');
     } else if (id === 3) {
       const L = line(c.L1), d = from(c.d);
-      addStep('設動點為 P，並列出定直線和固定距離。', 'P=(x,y)\\quad L:' + lineEq(L) + '\\quad d=' + tex(d));
-      footSteps(steps, L, '');
-      addStep('按條件令垂直線段長度的平方等於固定距離的平方。', 'PH^{2}=' + distanceSq(L) + '=' + tex(sq(d)));
+      addStep(tr('設動點為 P，並列出定直線和固定距離。', 'Let P be the moving point, and write down the fixed line and distance.'), 'P=(x,y)\\quad L:' + lineEq(L) + '\\quad d=' + tex(d));
+      footSteps(steps, L, '', tr);
+      addStep(tr('按條件令垂直線段長度的平方等於固定距離的平方。', 'By the given condition, set the squared length of the perpendicular segment equal to the square of the fixed distance.'), 'PH^{2}=' + distanceSq(L) + '=' + tex(sq(d)));
       const offset = radical(mul(sq(d), L.q));
       answer = L.E + '=\\pm ' + radicalTex(offset);
-      addStep('取平方根時保留正、負兩個分支，得到兩條直線。', answer);
-      desc = 'P 的軌跡是定直線兩側、與該直線平行且距離均為指定長度的兩條直線。';
-      extra = '正、負兩個分支都要保留。';
+      addStep(tr('取平方根時保留正、負兩個分支，得到兩條直線。', 'Taking square roots gives positive and negative branches, which must both be retained; these give two lines.'), answer);
+      desc = tr('P 的軌跡是定直線兩側、與該直線平行且距離均為指定長度的兩條直線。', 'The locus of P consists of two lines parallel to the fixed line, one on each side, each at the specified distance.');
+      extra = tr('正、負兩個分支都要保留。', 'Both the positive and negative branches must be retained.');
     } else if (id === 4) {
       const L = line(c.L1), R = line(c.L2), mid = div(add(L.k, R.k), TWO);
-      addStep('設動點為 P，列出兩條不同的平行定直線。', 'P=(x,y)\\quad L_{1}:' + lineEq(L) + '\\quad L_{2}:' + lineEq(R));
-      footSteps(steps, L, 1); footSteps(steps, R, 2);
-      addStep('兩條垂直線段長度相等，故其平方相等；同斜率使平方式的係數相同。',
+      addStep(tr('設動點為 P，列出兩條不同的平行定直線。', 'Let P be the moving point, and write down the two distinct fixed parallel lines.'), 'P=(x,y)\\quad L_{1}:' + lineEq(L) + '\\quad L_{2}:' + lineEq(R));
+      footSteps(steps, L, 1, tr); footSteps(steps, R, 2, tr);
+      addStep(tr('兩條垂直線段長度相等，故其平方相等；同斜率使平方式的係數相同。',
+        'The perpendicular segments have equal lengths, so their squares are equal. The parallel lines give the same coefficient in both squared-distance expressions.'),
         'PH_{1}^{2}=PH_{2}^{2}\\quad ' + distanceSq(L) + '=' + distanceSq(R));
       answer = lineEq({...L, k: mid});
-      addStep('兩線不同，消去相同係數並解平方方程，只餘兩截距的中間位置。', answer);
-      desc = 'P 的軌跡是兩條平行線正中間、與它們平行的一條直線。';
-      extra = '兩條定直線須是不同的平行線。';
+      addStep(tr('兩線不同，消去相同係數並解平方方程，只餘兩截距的中間位置。', 'Since the lines are distinct, cancel the common coefficient and solve the squared equation; only the line halfway between them remains.'), answer);
+      desc = tr('P 的軌跡是兩條平行線正中間、與它們平行的一條直線。', 'The locus of P is the line halfway between the two parallel lines, parallel to both.');
+      extra = tr('兩條定直線須是不同的平行線。', 'The two fixed lines must be distinct and parallel.');
     } else if (id === 5) {
       const L = line(c.L1), R = line(c.L2);
-      addStep('設動點為 P，列出兩條相交定直線。', 'P=(x,y)\\quad L_{1}:' + lineEq(L) + '\\quad L_{2}:' + lineEq(R));
-      footSteps(steps, L, 1); footSteps(steps, R, 2);
-      addStep('由兩段垂線長度相等，令剛才求得的平方相等。',
+      addStep(tr('設動點為 P，列出兩條相交定直線。', 'Let P be the moving point, and write down the two intersecting fixed lines.'), 'P=(x,y)\\quad L_{1}:' + lineEq(L) + '\\quad L_{2}:' + lineEq(R));
+      footSteps(steps, L, 1, tr); footSteps(steps, R, 2, tr);
+      addStep(tr('由兩段垂線長度相等，令剛才求得的平方相等。',
+        'The perpendicular segments have equal lengths, so set the squared lengths just obtained equal.'),
         'PH_{1}^{2}=PH_{2}^{2}\\quad ' + distanceSq(L) + '=' + distanceSq(R));
       const left = radicalTimes(radical(div(ONE, L.q)), '(' + L.E + ')');
       const right = radicalTimes(radical(div(ONE, R.q)), '(' + R.E + ')');
       answer = left + '=\\pm ' + right;
-      addStep('取平方根並保留正、負兩種可能；兩個分支就是兩條角平分線。', answer);
-      desc = 'P 的軌跡是兩條相交直線的兩條角平分線（Angle Bisectors）。';
-      extra = '兩條角平分線互相垂直；兩定直線的交點亦在軌跡上。';
+      addStep(tr('取平方根並保留正、負兩種可能；兩個分支就是兩條角平分線。', 'Take square roots and retain both the positive and negative possibilities; the two branches are the angle bisectors.'), answer);
+      desc = tr('P 的軌跡是兩條相交直線的兩條角平分線（Angle Bisectors）。', 'The locus of P consists of the two angle bisectors of the intersecting lines.');
+      extra = tr('兩條角平分線互相垂直；兩定直線的交點亦在軌跡上。', 'The two angle bisectors are perpendicular to each other, and the intersection of the fixed lines also lies on the locus.');
     } else if (id === 6) {
       const A = pointR(c.A), B = pointR(c.B);
       const mx = div(add(A.x, B.x), TWO), my = div(add(A.y, B.y), TWO);
       const ab2 = add(sq(sub(A.x, B.x)), sq(sub(A.y, B.y)));
-      addStep('設動點為 P；列出兩個不同定點，並先排除無法構成夾角的端點。',
+      addStep(tr('設動點為 P；列出兩個不同定點，並先排除無法構成夾角的端點。',
+        'Let P be the moving point. Write down the two distinct fixed points and first exclude the endpoints, where the angle is undefined.'),
         'P=(x,y)\\quad A=' + point(A) + '\\quad B=' + point(B) + '\\quad P\\neq A\\quad P\\neq B');
-      addStep('先考慮兩線段均非垂直線的情況。直角表示兩線段的斜率乘積為負一。',
+      addStep(tr('先考慮兩線段均非垂直線的情況。直角表示兩線段的斜率乘積為負一。',
+        'First consider the case in which neither segment is vertical. A right angle means that the product of their slopes is negative one.'),
         'm_{AP}=\\frac{' + shift('y', A.y) + '}{' + shift('x', A.x) + '}\\quad m_{BP}=\\frac{' + shift('y', B.y) + '}{' + shift('x', B.x) + '}\\quad m_{AP}m_{BP}=-1');
-      addStep('消去分母並移項，得到不含分母的方程。',
+      addStep(tr('消去分母並移項，得到不含分母的方程。',
+        'Clear the denominators and rearrange to obtain an equation without denominators.'),
         '(' + shift('x', A.x) + ')(' + shift('x', B.x) + ')+(' + shift('y', A.y) + ')(' + shift('y', B.y) + ')=0');
-      addStep('若其中一段垂直，因端點已排除，上式恰好要求另一段水平；反過來亦然。因此垂直或水平情況也符合這個方程，毋須除以零。',
+      addStep(tr('若其中一段垂直，因端點已排除，上式恰好要求另一段水平；反過來亦然。因此垂直或水平情況也符合這個方程，毋須除以零。',
+        'If one segment is vertical, the excluded endpoints ensure that the equation above requires the other segment to be horizontal, and conversely. Thus vertical and horizontal cases also satisfy this equation, without division by zero.'),
         'AP\\perp BP\\quad P\\neq A\\quad P\\neq B');
       const centre = {x: mx, y: my}, r2 = div(ab2, FOUR);
-      addStep('整理並配方；圓心為兩定點的中點，半徑為兩定點距離的一半。',
+      addStep(tr('整理並配方；圓心為兩定點的中點，半徑為兩定點距離的一半。',
+        'Rearrange and complete the square. The centre is the midpoint of the two fixed points, and the radius is half the distance between them.'),
         'M=' + point(centre) + '\\quad ' + sqdist(centre) + '=' + tex(r2));
       answer = sqdist(centre) + '=' + tex(r2) + '\\quad P\\neq A\\quad P\\neq B';
-      desc = 'P 的軌跡是以 AB 為直徑的圓，但不包括 A、B 兩點。';
-      extra = '在 A 或 B，其中一條線段長度為零，夾角沒有定義；其餘圓上點均符合斜率垂直條件，包括一水平一垂直的情況。';
+      desc = tr('P 的軌跡是以 AB 為直徑的圓，但不包括 A、B 兩點。', 'The locus of P is the circle with diameter AB, excluding A and B.');
+      extra = tr('在 A 或 B，其中一條線段長度為零，夾角沒有定義；其餘圓上點均符合斜率垂直條件，包括一水平一垂直的情況。', 'At A or B, one segment has zero length and the angle is undefined. Every other point on the circle satisfies the perpendicularity condition, including cases where one segment is horizontal and the other vertical.');
     } else if (id === 7) {
       const F = pointR(c.F), L = line(c.L1);
-      addStep('設動點為 P；列出焦點和準線。焦點不在準線上。',
+      addStep(tr('設動點為 P；列出焦點和準線。焦點不在準線上。',
+        'Let P be the moving point. Write down the focus and directrix; the focus does not lie on the directrix.'),
         'P=(x,y)\\quad F=' + point(F) + '\\quad L:' + lineEq(L));
-      footSteps(steps, L, '');
-      addStep('由兩點距離公式求焦距的平方；題目要求焦距等於垂線段長度。',
+      footSteps(steps, L, '', tr);
+      addStep(tr('由兩點距離公式求焦距的平方；題目要求焦距等於垂線段長度。',
+        'Use the distance formula to find the squared distance from P to the focus; the condition requires that distance to equal the length of the perpendicular segment.'),
         'PF^{2}=' + sqdist(F) + '\\quad PF=PH');
       const rawEquation = sqdist(F) + '=' + distanceSq(L);
-      addStep('兩段長度均非負，因此等長等價於平方相等；代入垂足結果。', rawEquation);
+      addStep(tr('兩段長度均非負，因此等長等價於平方相等；代入垂足結果。', 'Both lengths are non-negative, so they are equal if and only if their squares are equal. Substitute the result obtained from the foot.'), rawEquation);
       answer = parabolaSimplified(F,L);
-      addStep('展開、合併同類項，並把分母及公因數約去，得到精確的拋物線方程。', answer);
-      desc = 'P 的軌跡是以 F 為焦點、L 為準線，向焦點一側開口的拋物線（Parabola）。';
-      extra = '焦點不可在準線上；頂點是焦點與它在準線上的垂足的中點。';
+      addStep(tr('展開、合併同類項，並把分母及公因數約去，得到精確的拋物線方程。', 'Expand, combine like terms, and clear denominators and common factors to obtain the exact equation of the parabola.'), answer);
+      desc = tr('P 的軌跡是以 F 為焦點、L 為準線，向焦點一側開口的拋物線（Parabola）。', 'The locus of P is the parabola with focus F and directrix L, opening toward the focus.');
+      extra = tr('焦點不可在準線上；頂點是焦點與它在準線上的垂足的中點。', 'The focus must not lie on the directrix. The vertex is the midpoint of the focus and its perpendicular foot on the directrix.');
     } else throw new Error('Unknown locus case: ' + id);
     return {steps, answer, desc, extra};
   }
@@ -1623,6 +1707,22 @@ const exactLocus = (() => {
       const expectedDistance=(p.x-expectedFoot.x)**2+(p.y-expectedFoot.y)**2;
       for(const part of parts) assert.ok(Math.abs(value(part,p.x,p.y)-expectedDistance)<1e-8,'PH² '+distance.t);
     }
+    // Translation changes prose and the perpendicular label only, never the
+    // number/order of steps, equations, restrictions, or the final answer.
+    function assertBilingual(id,cfg,zh=solve({id,cfg})) {
+      const en=solve({id,cfg,lang:'en'});
+      const label='case '+id;
+      assert.ok(!/\p{Script=Han}/u.test(JSON.stringify(en)), label+' English output contains Chinese');
+      assert.equal(en.answer,zh.answer,label+' answer differs');
+      assert.equal(en.steps.length,zh.steps.length,label+' step count differs');
+      assert.ok(en.desc && (!!en.extra === !!zh.extra),label+' description or extra differs');
+      en.steps.forEach((step,i)=>{
+        assert.ok(step.p && step.p!==zh.steps[i].p,label+' untranslated step '+i);
+        assert.equal(step.t.replaceAll('m_{\\text{perpendicular}}','m_{\\text{垂線}}'),
+          zh.steps[i].t,label+' formula differs in step '+i);
+      });
+      return en;
+    }
     const expected = [null,'(x+1)^{2}+y^{2}=9','3x+y=0',
       'y-\\frac{1}{2}x=\\pm \\sqrt{5}','y=\\frac{1}{2}x',
       '\\frac{2\\sqrt{5}}{5}(y-\\frac{1}{2}x)=\\pm \\frac{\\sqrt{2}}{2}(y+x)',
@@ -1635,6 +1735,38 @@ const exactLocus = (() => {
       assert.ok(result.desc && typeof result.extra==='string');
       const all=JSON.stringify(result);
       assert.ok(!/NaN|Infinity|undefined|≈/.test(all), 'invalid or approximate exact output');
+      assert.deepEqual(solve({id,cfg:defaultCfg(id),lang:'zh'}),result,'explicit Chinese '+id);
+      assert.deepEqual(solve({id,cfg:defaultCfg(id),lang:'other'}),result,'language fallback '+id);
+      assertBilingual(id,defaultCfg(id),result);
+    }
+    // Exercise horizontal, vertical and oblique feet, including both lines in
+    // every valid orientation pairing for the intersecting-lines case.
+    const orientations=[
+      {m:0,k:-2,vertical:false},
+      {m:0,k:-2,vertical:true},
+      {m:.5,k:-2,vertical:false}
+    ];
+    const probe={x:1.3,y:-.7};
+    for(const L of orientations) {
+      for(const id of [3,4,7]) {
+        const cfg=defaultCfg(id);
+        cfg.L1={...L}; cfg.L2={...L,k:2}; cfg.F={x:3,y:4};
+        const en=assertBilingual(id,cfg);
+        verifyFoot(en,cfg.L1,id===4?1:'',probe);
+        if(id===4) verifyFoot(en,cfg.L2,2,probe);
+        const labelCount=en.steps.filter(s=>s.t.includes('m_{\\text{perpendicular}}')).length;
+        assert.equal(labelCount,!L.vertical && L.m!==0?(id===4?2:1):0,'perpendicular label case '+id);
+      }
+      for(const R of orientations) {
+        if((L.vertical && R.vertical) || (!L.vertical && !R.vertical && L.m===0 && R.m===0)) continue;
+        const cfg=defaultCfg(5);
+        cfg.L1={...L}; cfg.L2={...R,k:1};
+        if(!L.vertical && !R.vertical && L.m===R.m) cfg.L2.m=1.25;
+        const en=assertBilingual(5,cfg);
+        verifyFoot(en,cfg.L1,1,probe); verifyFoot(en,cfg.L2,2,probe);
+        const expectedLabels=[cfg.L1,cfg.L2].filter(line=>!line.vertical && line.m!==0).length;
+        assert.equal(en.steps.filter(s=>s.t.includes('m_{\\text{perpendicular}}')).length,expectedLabels,'case 5 perpendicular labels');
+      }
     }
     // Exact rational reduction and removal of ordinary binary-float noise.
     assert.equal(tex(from(.1+.2)), '\\frac{3}{10}');
@@ -1671,13 +1803,16 @@ const exactLocus = (() => {
       let B={x:coordinate(),y:coordinate()};
       if(A.x===B.x && A.y===B.y) B={x:B.x+1,y:B.y};
       const cfg=defaultCfg(1); cfg.A=A; cfg.B=B; cfg.r=(Math.floor(rand()*20)+1)/4;
-      const c1answer=solve({id:1,cfg}).answer;
+      const c1result=solve({id:1,cfg}), c1answer=c1result.answer;
+      assertBilingual(1,cfg,c1result);
       const angle=rand()*Math.PI*2;
       assertOn(c1answer,{x:A.x+cfg.r*Math.cos(angle),y:A.y+cfg.r*Math.sin(angle)},'case 1 random');
       const M={x:(A.x+B.x)/2,y:(A.y+B.y)/2}, dx=B.x-A.x,dy=B.y-A.y;
-      const c2answer=solve({id:2,cfg}).answer;
+      const c2result=solve({id:2,cfg}), c2answer=c2result.answer;
+      assertBilingual(2,cfg,c2result);
       assertOn(c2answer,{x:M.x+dy*.37,y:M.y-dx*.37},'case 2 random');
-      const c6answer=solve({id:6,cfg}).answer;
+      const c6result=solve({id:6,cfg}), c6answer=c6result.answer;
+      assertBilingual(6,cfg,c6result);
       assertOn(c6answer,{x:M.x+dy/2,y:M.y-dx/2},'case 6 random');
       assert.ok(c6answer.includes('P\\neq A')&&c6answer.includes('P\\neq B'));
       if(dx!==0 && dy!==0) {
@@ -1692,6 +1827,7 @@ const exactLocus = (() => {
       const d=(Math.floor(rand()*16)+1)/4;
       const cfg=defaultCfg(3); cfg.L1=L; cfg.d=d;
       const result3=solve({id:3,cfg}), a3=result3.answer;
+      assertBilingual(3,cfg,result3);
       const u=(rand()-.5)*10;
       verifyFoot(result3,L,'',{x:u,y:u+.73});
       for(const sign of [-1,1]) {
@@ -1702,6 +1838,7 @@ const exactLocus = (() => {
       const k2=k+pick([-2,-1.25,.25,1,2]);
       cfg.L2={m,k:k2,vertical};
       const result4=solve({id:4,cfg}), a4=result4.answer, mid=(k+k2)/2;
+      assertBilingual(4,cfg,result4);
       verifyFoot(result4,L,1,{x:u,y:u+.73}); verifyFoot(result4,cfg.L2,2,{x:u,y:u+.73});
       assertOn(a4,vertical?{x:mid,y:u}:{x:u,y:m*u+mid},'case 4');
       let R;
@@ -1710,6 +1847,7 @@ const exactLocus = (() => {
       else {let m2=pick(slopes); if(m2===m) m2=m+0.25; R={m:m2,k:k2,vertical:false};}
       cfg.L2=R;
       const result5=solve({id:5,cfg}), a5=result5.answer;
+      assertBilingual(5,cfg,result5);
       verifyFoot(result5,L,1,{x:u,y:u+.73}); verifyFoot(result5,R,2,{x:u,y:u+.73});
       // Intersection plus points in each bisector's direction, using independently normalized normals.
       const n1=vertical?{x:1,y:0}: {x:-m/Math.hypot(1,m),y:1/Math.hypot(1,m)};
@@ -1729,6 +1867,7 @@ const exactLocus = (() => {
       if(Math.abs(signed(L,F))<.1) F=vertical?{x:k+1.2,y:-.7}:{x:-.7,y:m*(-.7)+k+1.2};
       cfg.F=F;
       const result7=solve({id:7,cfg}), a7=result7.answer, hf=foot(L,F), D=signed(L,F);
+      assertBilingual(7,cfg,result7);
       verifyFoot(result7,L,'',{x:u,y:u+.73});
       const n=vertical?{x:1,y:0}:{x:-m/Math.hypot(1,m),y:1/Math.hypot(1,m)};
       const tangent={x:n.y,y:-n.x};
@@ -1744,7 +1883,7 @@ const exactLocus = (() => {
         }
       }
     }
-    console.log('PASS: 7 defaults; exact fractions/radicals; excluded endpoints; 250 randomized configurations for every case, including horizontal, vertical and oblique lines.');
+    console.log('PASS: 7 bilingual defaults; horizontal, vertical and oblique English steps; exact fractions/radicals; excluded endpoints; 250 randomized bilingual configurations for every case.');
   }
   return {solve, runTests};
 })();
@@ -1754,23 +1893,40 @@ if (typeof module !== 'undefined' && typeof require === 'function' && require.ma
   exactLocus.runTests();
 }
 
-function renderMeasurements(){if(!S.model||S.model.error)return;const P=S.P,c=S.cfg,L=Geo.line(c.L1),L2=Geo.line(c.L2);const d1=Math.abs(Geo.signed(L,P)),d2=Math.abs(Geo.signed(L2,P));let cards=[['動點 Moving Point',`P\\approx ${pt(P)}`]];
- if(S.id===1)cards.push(['動點至定點',`PA\\approx ${fixed(dist(P,c.A))}`],['固定半徑',`r=${num(c.r)}`]);
- if(S.id===2)cards.push(['動點至定點 A',`PA\\approx ${fixed(dist(P,c.A))}`],['動點至定點 B',`PB\\approx ${fixed(dist(P,c.B))}`]);
- if(S.id===3)cards.push(['動點至直線',`d(P,L)\\approx ${fixed(d1)}`],['固定距離',`d=${num(c.d)}`],['定直線 Fixed Line',lineEq(c.L1)]);
- if(S.id===4||S.id===5)cards.push(['動點至直線 L₁',`d(P,L_{1})\\approx ${fixed(d1)}`],['動點至直線 L₂',`d(P,L_{2})\\approx ${fixed(d2)}`],['定直線 L₁',lineEq(c.L1)],['定直線 L₂',lineEq(c.L2)]);
- if(S.id===6){const ux=c.A.x-P.x,uy=c.A.y-P.y,vx=c.B.x-P.x,vy=c.B.y-P.y,den=Math.hypot(ux,uy)*Math.hypot(vx,vy),a=den?Math.acos(Math.max(-1,Math.min(1,(ux*vx+uy*vy)/den)))*180/Math.PI:NaN;cards.push(['動點至定點 A',`PA\\approx ${fixed(dist(P,c.A))}`],['動點至定點 B',`PB\\approx ${fixed(dist(P,c.B))}`],['夾角 Angle',`\\angle APB\\approx ${fixed(a,1)}^{\\circ}`]);}
- if(S.id===7)cards.push(['動點至焦點 F',`PF\\approx ${fixed(dist(P,c.F))}`],['動點至準線 L',`d(P,L)\\approx ${fixed(d1)}`],['準線 Directrix',lineEq(c.L1)]);
+function renderMeasurements(){if(!S.model||S.model.error)return;const P=S.P,c=S.cfg,L=Geo.line(c.L1),L2=Geo.line(c.L2);const d1=Math.abs(Geo.signed(L,P)),d2=Math.abs(Geo.signed(L2,P));let cards=[[tr('動點 Moving Point','Moving point'),`P\\approx ${pt(P)}`]];
+ if(S.id===1)cards.push([tr('動點至定點','Distance from P to A'),`PA\\approx ${fixed(dist(P,c.A))}`],[tr('固定半徑','Fixed radius'),`r=${num(c.r)}`]);
+ if(S.id===2)cards.push([tr('動點至定點 A','Distance from P to A'),`PA\\approx ${fixed(dist(P,c.A))}`],[tr('動點至定點 B','Distance from P to B'),`PB\\approx ${fixed(dist(P,c.B))}`]);
+ if(S.id===3)cards.push([tr('動點至直線','Distance from P to L'),`d(P,L)\\approx ${fixed(d1)}`],[tr('固定距離','Fixed distance'),`d=${num(c.d)}`],[tr('定直線 Fixed Line','Fixed line'),lineEq(c.L1)]);
+ if(S.id===4||S.id===5)cards.push([tr('動點至直線 L₁','Distance from P to L₁'),`d(P,L_{1})\\approx ${fixed(d1)}`],[tr('動點至直線 L₂','Distance from P to L₂'),`d(P,L_{2})\\approx ${fixed(d2)}`],[tr('定直線 L₁','Fixed line L₁'),lineEq(c.L1)],[tr('定直線 L₂','Fixed line L₂'),lineEq(c.L2)]);
+ if(S.id===6){const ux=c.A.x-P.x,uy=c.A.y-P.y,vx=c.B.x-P.x,vy=c.B.y-P.y,den=Math.hypot(ux,uy)*Math.hypot(vx,vy),a=den?Math.acos(Math.max(-1,Math.min(1,(ux*vx+uy*vy)/den)))*180/Math.PI:NaN;cards.push([tr('動點至定點 A','Distance from P to A'),`PA\\approx ${fixed(dist(P,c.A))}`],[tr('動點至定點 B','Distance from P to B'),`PB\\approx ${fixed(dist(P,c.B))}`],[tr('夾角 Angle','Angle APB'),`\\angle APB\\approx ${fixed(a,1)}^{\\circ}`]);}
+ if(S.id===7)cards.push([tr('動點至焦點 F','Distance from P to focus F'),`PF\\approx ${fixed(dist(P,c.F))}`],[tr('動點至準線 L','Distance from P to directrix L'),`d(P,L)\\approx ${fixed(d1)}`],[tr('準線 Directrix','Directrix'),lineEq(c.L1)]);
  const root=$('measurements');root.innerHTML=cards.map(([name,val])=>`<div class="measure-card"><div class="measure-name">${esc(name)}</div>${texHTML(val,'measure-value')}</div>`).join('');renderMathIn(root);$('pointCoords').textContent=`P ≈ (${fixed(P.x)}, ${fixed(P.y)})`;}
-function renderContent(){const item=cases[S.id];$('caseSelect').value=S.id;$('caseCounter').textContent=`0${S.id} / 07`;$('caseKicker').textContent=`CASE 0${S.id}　/　07`;$('caseTitle').textContent=item.title;$('caseDescription').textContent=item.desc;setMath($('conditionFormula'),item.condition);const locked=S.quiz&&!S.showAnswer;$('quizHint').hidden=!locked;$('quizHint').textContent='答案和完整軌跡已隱藏；揭曉前可拖曳 P，但播放、殘影及完整軌跡暫停。';$('playBtn').disabled=locked;$('locusToggle').disabled=locked;$('playBtn').title=locked?'揭曉答案後可播放':'';$('locusToggle').title=locked?'揭曉答案後可顯示完整軌跡':'';$('revealBtn').textContent=S.showAnswer?'答案及圖像已顯示 ✓':'顯示答案與圖像驗證 ↗';$('revealBtn').setAttribute('aria-pressed',String(S.showAnswer));renderMeasurements();renderSolution();}
+function renderContent(){
+ const data=S.lang==='en'?englishCases:cases,item=data[S.id],select=$('caseSelect');
+ // 更新現有選項，而非重建選單或變更目前案例及其狀態。
+ Array.from(select.options).forEach(option=>{const id=Number(option.value);if(data[id])option.textContent=`0${id}  ${data[id].label}`;});
+ select.value=S.id;$('caseCounter').textContent=`0${S.id} / 07`;$('caseKicker').textContent=`CASE 0${S.id}　/　07`;$('caseTitle').textContent=item.title;$('caseDescription').textContent=item.desc;setMath($('conditionFormula'),item.condition);
+ $('controlHelp').textContent=item.hint+tr(' 輸入數值後按 Enter 或離開欄位套用。',' Press Enter or leave the field to apply a value.');
+ const locked=S.quiz&&!S.showAnswer;
+ $('quizHint').hidden=!locked;
+ $('quizHint').textContent=tr('答案和完整軌跡已隱藏；揭曉前可拖曳 P，但播放、殘影及完整軌跡暫停。','The answer and full locus are hidden. You can drag P, but playback, the trail and the full locus are unavailable until you reveal the answer.');
+ $('playBtn').disabled=locked;$('locusToggle').disabled=locked;
+ $('playBtn').title=locked?tr('揭曉答案後可播放','Reveal the answer to enable playback'):'';
+ $('locusToggle').title=locked?tr('揭曉答案後可顯示完整軌跡','Reveal the answer to show the full locus'):'';
+ $('quizBtn').textContent=tr('↻   隨機出題','↻  New random question');
+ $('revealBtn').textContent=S.showAnswer?tr('答案及圖像已顯示 ✓','Answer and graph shown ✓'):tr('顯示答案與圖像驗證 ↗','Reveal answer and graph ↗');
+ $('revealBtn').setAttribute('aria-pressed',String(S.showAnswer));
+ if(typeof refreshCanvasWarning==='function')refreshCanvasWarning();renderMeasurements();renderSolution();
+}
 function renderAll(){renderControls();renderContent();}
 function newQuiz(){const c=defaults(S.id),ri=()=>randomInt(-3,3),ms=[-1,-.5,0,.5,1];c.A={x:ri(),y:ri()};do{c.B={x:ri(),y:ri()};}while(dist(c.A,c.B)<1.4);c.F={x:ri(),y:ri()};c.r=randomInt(1,4);c.d=randomInt(1,3);c.L1={m:ms[randomInt(0,ms.length-1)],k:randomInt(-2,2),vertical:false};c.L2={m:S.id===4?c.L1.m:ms[randomInt(0,ms.length-1)],k:randomInt(-2,2),vertical:false};if(S.id===4)while(c.L2.k===c.L1.k)c.L2.k=randomInt(-2,2);if(S.id===5)while(c.L2.m===c.L1.m)c.L2.m=ms[randomInt(0,ms.length-1)];if(S.id===7)while(Math.abs(Geo.signed(Geo.line(c.L1),c.F))<.7)c.F={x:ri(),y:ri()};S.cfg=c;build();S.showAnswer=false;S.showLocus=false;S.quiz=true;$('locusToggle').checked=false;S.progress=.3;clearTrail();warning('');setPlaying(false);initP();renderAll();}
 
 /*
  * 解題步驟控制：在 base.js、solutions.js 之後及 app.js 之前，
  * 置於同一個 closure，並移除 solutions.js 中原有的 renderSolution。
- * 對外介面：renderSolution()；讀取 S.id、S.cfg、S.showAnswer、S.quiz
- * 及 solutionFor()，使用 $、esc、texHTML、renderMathIn 排版。
+ * 對外介面：renderSolution()；讀取 S.id、S.cfg、S.lang、S.showAnswer、S.quiz
+ * 及 solutionFor()，使用 $、tr、esc、texHTML、renderMathIn 排版。
+ * 切換 S.lang 後呼叫 renderSolution()（或呼叫包含它的 renderContent()）。
  * 課堂模式由第一步開始；小測從隱藏狀態揭曉時顯示全部。
  */
 const animatedSolutionController = (() => {
@@ -1781,6 +1937,7 @@ const animatedSolutionController = (() => {
     signature: null,
     visible: null,
     quiz: null,
+    lang: null,
     data: null,
     shown: 0,
     playing: false,
@@ -1790,7 +1947,7 @@ const animatedSolutionController = (() => {
 
   function signature() {
     // P、畫布播放狀態及軌跡殘影並不影響推導，故不納入簽名。
-    return JSON.stringify([S.id, S.cfg]);
+    return JSON.stringify([S.id, S.cfg, S.lang]);
   }
 
   function stop() {
@@ -1806,19 +1963,21 @@ const animatedSolutionController = (() => {
     state.signature = null;
     state.visible = null;
     state.quiz = null;
+    state.lang = null;
     state.data = null;
     state.shown = 0;
     target.innerHTML = `
-      <div class="solution-progress" role="status" aria-live="polite" aria-atomic="true">步驟 — / —</div>
-      <div class="solution-controls" role="group" aria-label="推導步驟控制">
-        <button type="button" class="solution-control solution-control-play" data-solution-action="play" aria-controls="solutionWorkingArea" aria-label="自動播放推導步驟">自動播放</button>
-        <button type="button" class="solution-control" data-solution-action="previous" aria-controls="solutionWorkingArea" aria-label="顯示上一步推導">上一步</button>
-        <button type="button" class="solution-control" data-solution-action="next" aria-controls="solutionWorkingArea" aria-label="顯示下一步推導">下一步</button>
-        <button type="button" class="solution-control" data-solution-action="all" aria-controls="solutionWorkingArea" aria-label="立即顯示全部推導及答案">顯示全部</button>
+      <div class="solution-progress" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div class="solution-controls" role="group">
+        <button type="button" class="solution-control solution-control-play" data-solution-action="play" aria-controls="solutionWorkingArea"></button>
+        <button type="button" class="solution-control" data-solution-action="previous" aria-controls="solutionWorkingArea"></button>
+        <button type="button" class="solution-control" data-solution-action="next" aria-controls="solutionWorkingArea"></button>
+        <button type="button" class="solution-control" data-solution-action="all" aria-controls="solutionWorkingArea"></button>
       </div>
       <div class="solution-working" id="solutionWorkingArea"></div>`;
     state.refs = {
       progress: target.querySelector('.solution-progress'),
+      controls: target.querySelector('.solution-controls'),
       working: target.querySelector('.solution-working'),
       play: target.querySelector('[data-solution-action="play"]'),
       previous: target.querySelector('[data-solution-action="previous"]'),
@@ -1836,12 +1995,22 @@ const animatedSolutionController = (() => {
     const total = available ? state.data.steps.length : 0;
     const complete = available && state.shown >= total;
     const progressText = available
-      ? `步驟 ${state.shown} / ${total}${complete ? ' · 推導完成' : ''}`
-      : '步驟 — / —';
+      ? tr(`步驟 ${state.shown} / ${total}${complete ? ' · 推導完成' : ''}`,
+           `Steps ${state.shown} / ${total}${complete ? ' · Derivation complete' : ''}`)
+      : tr('步驟 — / —', 'Steps — / —');
     // 不重寫相同的文字，以免頻繁 renderContent 造成無謂的朗讀。
     if (refs.progress.textContent !== progressText) refs.progress.textContent = progressText;
-    refs.play.textContent = state.playing ? '暫停播放' : '自動播放';
-    refs.play.setAttribute('aria-label', state.playing ? '暫停推導播放' : '自動播放推導步驟');
+    refs.controls.setAttribute('aria-label', tr('推導步驟控制', 'Derivation step controls'));
+    refs.play.textContent = state.playing ? tr('暫停播放', 'Pause') : tr('自動播放', 'Auto-play');
+    refs.play.setAttribute('aria-label', state.playing
+      ? tr('暫停推導播放', 'Pause derivation playback')
+      : tr('自動播放推導步驟', 'Auto-play derivation steps'));
+    refs.previous.textContent = tr('上一步', 'Previous');
+    refs.previous.setAttribute('aria-label', tr('顯示上一步推導', 'Show previous derivation step'));
+    refs.next.textContent = tr('下一步', 'Next');
+    refs.next.setAttribute('aria-label', tr('顯示下一步推導', 'Show next derivation step'));
+    refs.all.textContent = tr('顯示全部', 'Show all');
+    refs.all.setAttribute('aria-label', tr('立即顯示全部推導及答案', 'Show all derivation steps and the answer now'));
 
     const controls = [
       [refs.play, !available || (!state.playing && complete)],
@@ -1861,7 +2030,7 @@ const animatedSolutionController = (() => {
   function makeStep(step, index, animate) {
     const row = document.createElement('div');
     row.className = 'working-step' + (animate ? ' solution-enter' : '');
-    row.innerHTML = `<span class="step-number" aria-hidden="true">${index + 1}</span><div class="step-body"><span class="solution-sr-only">第 ${index + 1} 步：</span><p>${esc(step.p)}</p>${texHTML(step.t)}</div>`;
+    row.innerHTML = `<span class="step-number" aria-hidden="true">${index + 1}</span><div class="step-body"><span class="solution-sr-only">${esc(tr(`第 ${index + 1} 步：`, `Step ${index + 1}:`))}</span><p>${esc(step.p)}</p>${texHTML(step.t)}</div>`;
     renderMathIn(row);
     return row;
   }
@@ -1870,9 +2039,8 @@ const animatedSolutionController = (() => {
     if (state.refs.result || !state.data) return;
     const result = document.createElement('div');
     result.className = 'solution-result' + (animate ? ' solution-enter' : '');
-    // solutionFor 的中文描述附有英文譯名；顯示時保留完整中文描述。
     const description = state.data.desc;
-    result.innerHTML = `<div class="answer-box"><div class="answer-label">軌跡方程</div>${texHTML(state.data.answer)}<p><strong>標準描述：</strong>${esc(description)}</p></div>` +
+    result.innerHTML = `<div class="answer-box"><div class="answer-label">${esc(tr('軌跡方程', 'Locus equation'))}</div>${texHTML(state.data.answer)}<p><strong>${esc(tr('標準描述：', 'Geometric description: '))}</strong>${esc(description)}</p></div>` +
       (state.data.extra ? `<div class="answer-extra">${esc(state.data.extra)}</div>` : '');
     renderMathIn(result);
     state.refs.working.append(result);
@@ -1956,19 +2124,29 @@ const animatedSolutionController = (() => {
 
     const wasVisible = state.visible;
     const wasQuiz = state.quiz;
+    const wasLang = state.lang;
+    const previousSignature = state.signature;
+    const previousShown = state.shown;
+    const previousWasPlaying = state.playing;
+    const previouslyAll = !!state.refs.steps && state.refs.steps.querySelectorAll('.working-step').length > 1;
+    // 僅語言改變時保留推導進度；題目條件改變時仍由第一步開始。
+    const languageOnly = !!previousSignature && wasLang !== S.lang &&
+      wasVisible === nextVisible && wasQuiz === nextQuiz &&
+      JSON.stringify(JSON.parse(previousSignature).slice(0, 2)) === JSON.stringify([S.id, S.cfg]);
     stop();
     state.signature = nextSignature;
     state.visible = nextVisible;
     state.quiz = nextQuiz;
+    state.lang = S.lang;
 
     if (!nextVisible) {
       state.data = null;
       state.shown = 0;
       state.refs.steps = null;
       state.refs.result = null;
-      // 小測拖曳條件時只更新簽名，不重建已顯示的提示。
-      if (wasVisible !== false || !state.refs.working.querySelector('.hidden-answer')) {
-        state.refs.working.innerHTML = '<div class="hidden-answer">答案暫時隱藏<br>先思考幾何形狀和 P(x, y) 的方程，再點擊上方按鈕揭曉。</div>';
+      // 拖曳條件時保留提示；切換語言時更新提示，但絕不揭曉答案。
+      if (wasVisible !== false || wasLang !== S.lang || !state.refs.working.querySelector('.hidden-answer')) {
+        state.refs.working.innerHTML = `<div class="hidden-answer">${esc(tr('答案暫時隱藏', 'The answer is hidden for now'))}<br>${esc(tr('先思考幾何形狀和 P(x, y) 的方程，再點擊上方按鈕揭曉。', 'First consider the geometric shape and the equation for P(x, y), then click the button above to reveal the answer.'))}</div>`;
       }
       updateControls();
       return;
@@ -1983,12 +2161,24 @@ const animatedSolutionController = (() => {
 
     // 僅在小測「揭曉」的轉換顯示全部；之後改條件一律回第一步。
     const quizReveal = nextQuiz && (wasVisible !== true || wasQuiz !== true);
-    if (quizReveal) {
+    if (languageOnly && previousShown > 0) {
+      state.shown = Math.min(previousShown, state.data.steps.length);
+      if (previouslyAll) {
+        state.refs.steps.replaceChildren(...state.data.steps.slice(0, state.shown).map((step,index)=>makeStep(step,index,false)));
+      } else {
+        const index = state.shown - 1;
+        state.refs.steps.replaceChildren(makeStep(state.data.steps[index], index, false));
+      }
+    } else if (quizReveal) {
       state.refs.steps.replaceChildren(...state.data.steps.map((step,index)=>makeStep(step,index,false)));
       state.shown=state.data.steps.length;
     } else if (state.data.steps.length) advanceOne(false);
     // 保留即時軌跡方程，同時讓推導步驟循序出現。
     showResult(false);
+    if (languageOnly && previousWasPlaying && state.shown < state.data.steps.length) {
+      state.playing = true;
+      schedule();
+    }
     updateControls();
   }
 
@@ -2031,9 +2221,19 @@ function rightAngle(vertex,a,b,color='#efc991'){const p=scr(vertex),q=scr(a),r=s
 function footMarks(P,L,name,equal,color){const foot=Geo.foot(L,P),d=Math.abs(Geo.signed(L,P));segment(P,foot,S.id===3?`d = ${num(S.cfg.d)}`:`${name} ≈ ${fixed(d)}`,color,equal);const tang={x:foot.x-L.b,y:foot.y+L.a};rightAngle(foot,P,tang,color);}
 function marker(p,label,color,opts={}){const q=scr(p);if(q.x<-30||q.x>S.view.w+30||q.y<-30||q.y>S.view.h+30)return;ctx.save();if(opts.glow){ctx.shadowColor=color;ctx.shadowBlur=17;}ctx.beginPath();ctx.arc(q.x,q.y,opts.p?6.5:5.4,0,Math.PI*2);ctx.fillStyle=opts.open?'#0d1d2c':color;ctx.fill();ctx.lineWidth=opts.open?2:1.5;ctx.strokeStyle=opts.open?color:'#eef8f5';ctx.stroke();ctx.shadowBlur=0;const x=Math.max(8,Math.min(S.view.w-55,q.x+9));const y=Math.max(14,Math.min(S.view.h-7,q.y-10));ctx.font='700 12px system-ui,sans-serif';ctx.fillStyle='#0d1d2cdd';const text=label;const tw=ctx.measureText(text).width;ctx.fillRect(x-3,y-12,tw+7,17);ctx.fillStyle=color;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(text,x,y);ctx.restore();}
 function getPaths(){if(!S.cachedPaths){S.cachedPaths=S.model.paths.map(p=>Geo.pathPoints(p,S.bounds));}return S.cachedPaths;}
+const canvasWarnings={
+ offscreen:['目前軌跡不在可見範圍，請重設視野或調整定點、直線條件。','The locus is outside the current view. Reset the view or adjust the fixed points or lines.'],
+ degenerate:['此設定會令題目退化，請選擇其他位置。','This position makes the configuration degenerate. Please choose another position.']
+};
+function canvasWarning(key){warning(tr(...canvasWarnings[key]));}
+function refreshCanvasWarning(){
+ if(!S.notice)return;
+ const pair=Object.values(canvasWarnings).find(messages=>messages.includes(S.notice));
+ if(pair)warning(tr(...pair));
+}
 // 盡可能保持動點可見；只選取實際軌跡上的點，不以夾坐標破壞約束。
 function inside(p,b=S.bounds,margin=0){return p.x>=b.xmin+margin-1e-9&&p.x<=b.xmax-margin+1e-9&&p.y>=b.ymin+margin-1e-9&&p.y<=b.ymax-margin+1e-9;}
-function keepPVisible(){if(!S.bounds||!S.model||S.model.error)return true;if(inside(S.P,S.bounds,.05))return true;const b={xmin:S.bounds.xmin+.08,xmax:S.bounds.xmax-.08,ymin:S.bounds.ymin+.08,ymax:S.bounds.ymax-.08};let best=null;S.model.paths.forEach((path,index)=>{const pts=Geo.pathPoints(path,b);let candidates=pts;if(path.kind==='line'&&pts.length>=2){const a=pts[0],z=pts[pts.length-1],dx=z.x-a.x,dy=z.y-a.y,dd=dx*dx+dy*dy,u=dd?Math.max(0,Math.min(1,((S.P.x-a.x)*dx+(S.P.y-a.y)*dy)/dd)):0;candidates=[{x:a.x+u*dx,y:a.y+u*dy}];}for(const q of candidates){if(!inside(q,b))continue;const d=(q.x-S.P.x)**2+(q.y-S.P.y)**2;if(!best||d<best.d)best={q,index,d};}});if(!best){warning('目前軌跡不在可見範圍，請重設視野或調整定點、直線條件。');return false;}S.path=best.index;S.P=Geo.project(S.model.paths[best.index],best.q);return true;}
+function keepPVisible(){if(!S.bounds||!S.model||S.model.error)return true;if(inside(S.P,S.bounds,.05))return true;const b={xmin:S.bounds.xmin+.08,xmax:S.bounds.xmax-.08,ymin:S.bounds.ymin+.08,ymax:S.bounds.ymax-.08};let best=null;S.model.paths.forEach((path,index)=>{const pts=Geo.pathPoints(path,b);let candidates=pts;if(path.kind==='line'&&pts.length>=2){const a=pts[0],z=pts[pts.length-1],dx=z.x-a.x,dy=z.y-a.y,dd=dx*dx+dy*dy,u=dd?Math.max(0,Math.min(1,((S.P.x-a.x)*dx+(S.P.y-a.y)*dy)/dd)):0;candidates=[{x:a.x+u*dx,y:a.y+u*dy}];}for(const q of candidates){if(!inside(q,b))continue;const d=(q.x-S.P.x)**2+(q.y-S.P.y)**2;if(!best||d<best.d)best={q,index,d};}});if(!best){canvasWarning('offscreen');return false;}S.path=best.index;S.P=Geo.project(S.model.paths[best.index],best.q);return true;}
 
 function drawScene(){drawGrid();if(!S.model||S.model.error)return;const c=S.cfg,id=S.id,P=S.P;
  if([3,4,5,7].includes(id))lineVisual(Geo.line(c.L1),'#e5b974',id===4||id===5?'L₁':'L');
@@ -2052,7 +2252,7 @@ function drawScene(){drawGrid();if(!S.model||S.model.error)return;const c=S.cfg,
 function syncProgress(){if(!S.model||S.model.error)return;const pts=getPaths()[S.path]||[];let best=Infinity,tBest=0;for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],dx=b.x-a.x,dy=b.y-a.y,den=dx*dx+dy*dy,u=den?Math.max(0,Math.min(1,((S.P.x-a.x)*dx+(S.P.y-a.y)*dy)/den)):0,x=a.x+u*dx,y=a.y+u*dy,d=(x-S.P.x)**2+(y-S.P.y)**2;if(d<best){best=d;tBest=(i+u)/(pts.length-1);}}if(pts.length>1)S.progress=S.path+Math.min(tBest,.999999);}
 function advance(dt){if(!S.playing||!S.model||S.model.error)return;const paths=getPaths(),count=paths.length,old=Math.floor(S.progress),prev=S.progress;S.progress=(S.progress+Math.min(dt,80)/11000)%count;let index=Math.floor(S.progress),points=paths[index],jump=false;
  const usable=pts=>pts&&pts.length>=2&&pts.some(p=>inside(p));
- if(!usable(points)){let found=-1;for(let n=1;n<=count;n++){const j=(index+n)%count;if(usable(paths[j])){found=j;break;}}if(found<0){setPlaying(false);warning('目前軌跡不在可見範圍，請重設視野或調整定點、直線條件。');return;}index=found;points=paths[index];S.progress=index;jump=true;}
+ if(!usable(points)){let found=-1;for(let n=1;n<=count;n++){const j=(index+n)%count;if(usable(paths[j])){found=j;break;}}if(found<0){setPlaying(false);canvasWarning('offscreen');return;}index=found;points=paths[index];S.progress=index;jump=true;}
  let t=S.progress-index,f=t*(points.length-1),i=Math.min(points.length-2,Math.floor(f)),v=f-i;let raw={x:points[i].x*(1-v)+points[i+1].x*v,y:points[i].y*(1-v)+points[i+1].y*v};
  if(!inside(raw)){let j=Math.ceil(f);while(j<points.length&&!inside(points[j]))j++;if(j>=points.length){j=0;while(j<points.length&&!inside(points[j]))j++;}if(j>=points.length)return;raw=points[j];S.progress=index+Math.min(j/(points.length-1),.999999);jump=true;}
  let p=Geo.project(S.model.paths[index],raw);if(!Number.isFinite(p.x)||!Number.isFinite(p.y))return;const distance=Math.hypot(p.x-S.P.x,p.y-S.P.y);S.path=index;S.P=p;const isClosed=S.model.paths[index].kind==='circle',wrapped=S.progress<prev;addTrail(p,jump||old!==index||(wrapped&&!isClosed)||distance>1);}
@@ -2102,7 +2302,7 @@ canvas.addEventListener('pointermove',e=>{
   return;
  }
  const raw=pointFromEvent(e);if(S.drag==='P'){const best=pathProjection(raw);if(best){const switched=best.index!==S.path;S.path=best.index;S.P=best.point;warning('');keepPVisible();addTrail(S.P,switched);}}
- else if(S.drag){const cfg=copyCfg(),b=S.bounds;cfg[S.drag]={x:Math.round(Math.max(b.xmin+.2,Math.min(b.xmax-.2,raw.x))*10)/10,y:Math.round(Math.max(b.ymin+.2,Math.min(b.ymax-.2,raw.y))*10)/10};const err=validateCfg(cfg);if(err){warning('此設定會令題目退化，請選擇其他位置。');return;}warning('');S.cfg=cfg;build();const best=pathProjection(S.P);if(best){S.P=best.point;S.path=best.index;}keepPVisible();clearTrail();renderControls();renderContent();}
+ else if(S.drag){const cfg=copyCfg(),b=S.bounds;cfg[S.drag]={x:Math.round(Math.max(b.xmin+.2,Math.min(b.xmax-.2,raw.x))*10)/10,y:Math.round(Math.max(b.ymin+.2,Math.min(b.ymax-.2,raw.y))*10)/10};const err=validateCfg(cfg);if(err){canvasWarning('degenerate');return;}warning('');S.cfg=cfg;build();const best=pathProjection(S.P);if(best){S.P=best.point;S.path=best.index;}keepPVisible();clearTrail();renderControls();renderContent();}
 });
 function stopDrag(e){
  if(e.pointerId!==activePointer)return;
