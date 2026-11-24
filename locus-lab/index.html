@@ -1341,15 +1341,16 @@ function renderControls(){
  * 精確軌跡推導；此檔接在 base.js 後、原 solutionFor 被移除後，
  * 與其餘程式位於同一個 closure。只依賴 S.cfg 和 S.id。
  *
- * 數學邏輯：非水平、非垂直的 L: y=mx+k，設垂足 H=(t,mt+k)。
- * 過 P=(x,y) 的垂線斜率是 -1/m，代入 H 得
- * t=(x+my-mk)/(1+m²)，H_y=(mx+m²y+k)/(1+m²)。
+ * 數學邏輯：非水平、非垂直的 L: y=mx+k，設垂足 H=(a,b)，
+ * 其中 a、b 是未知的垂足橫、縱坐標。由 H 在 L 及過 P=(x,y) 的
+ * 垂線上，聯立 b=ma+k 和 b-y=(-1/m)(a-x)，得
+ * a=(x+my-mk)/(1+m²)，b=(mx+m²y+k)/(1+m²)。
  * 再由兩點距離得到 PH²=(y-mx-k)²/(1+m²)。此結果在本檔中
  * 每次都由垂足及兩點距離推得，並非引用點到直線的距離公式。
  * 水平 L: H=(x,k)；垂直 L: H=(k,y)，兩者都不使用不存在的斜率。
  * 所有設定值先轉成約分後的 BigInt 有理數；根式提出完全平方因數。
  * 介面的坐標為一位小數、斜率及截距為 0.25 的倍數，因此可精確
- * 表示；容忍常見 JavaScript 浮點誤差，不把動點測量用作精確參數。
+ * 表示；容忍常見 JavaScript 浮點誤差，不把動點測量用作精確設定值。
  *
  * 執行內建測試：node /home/ubuntu/locus-app/exact_solutions.js
  */
@@ -1460,7 +1461,11 @@ const exactLocus = (() => {
   }
   function footSteps(steps, L, index, tr) {
     const suffix = index ? '_{' + index + '}' : '';
-    const H = 'H' + suffix, lineName = 'L' + suffix, t = 't' + suffix;
+    const H = 'H' + suffix, lineName = 'L' + suffix;
+    const a = 'a' + suffix, b = 'b' + suffix;
+    const subscript = index ? (index === 1 ? '₁' : '₂') : '';
+    const HName = 'H' + subscript, LName = 'L' + subscript;
+    const aName = 'a' + subscript, bName = 'b' + subscript;
     const PH = 'PH' + suffix;
     const addStep = (p, math) => steps.push({p, t: math});
     if (L.vertical) {
@@ -1481,19 +1486,25 @@ const exactLocus = (() => {
         PH + '^{2}=' + sqExpr(shift('y', L.k)));
       return;
     }
-    const ht = expr([[L.m, t], [L.k, '']]);
-    addStep(tr('寫出定直線，設垂足在直線上，並以參數表示其坐標。',
-      'Write the fixed line and express the coordinates of the foot on the line using a parameter.'),
-      lineName + ':' + lineEq(L) + '\\quad ' + H + '=(' + t + ',' + ht + ')');
+    const onLine = expr([[L.m, a], [L.k, '']]);
+    addStep(tr('設 ' + HName + ' 為 P 在 ' + LName + ' 上的垂足；' + aName + ' 及 ' + bName + ' 分別是垂足未知的橫坐標及縱坐標。因垂足在定直線上，其坐標滿足直線方程。',
+      'Let ' + HName + ' be the foot of the perpendicular from P to ' + LName + '. Its unknown x-coordinate is ' + aName + ' and its unknown y-coordinate is ' + bName + '. Because the foot lies on the fixed line, its coordinates satisfy the line equation.'),
+      lineName + ':' + lineEq(L) + '\\quad ' + H + '=(' + a + ',' + b + ')\\quad ' + b + '=' + onLine);
     const slope = neg(div(ONE, L.m));
-    addStep(tr('過 P 的垂線斜率是直線斜率的負倒數；將垂足坐標代入該垂線的方程。即使 P 在線上，過 P 的垂線仍然存在。',
-      'The slope of the perpendicular through P is the negative reciprocal of the line’s slope. Substitute the foot’s coordinates into the equation of that perpendicular. The perpendicular through P still exists when P lies on the line.'),
-      'm_{\\text{' + tr('垂線', 'perpendicular') + '}}=' + tex(slope) + '\\quad (' + ht + ')-y=' + tex(slope) + '(' + t + '-x)');
+    addStep(tr('過 P 的垂線斜率是定直線斜率的負倒數。垂足亦在這條垂線上，將其坐標代入垂線方程；即使 P 在定直線上，這條垂線仍然存在。',
+      'The slope of the perpendicular through P is the negative reciprocal of the fixed line’s slope. The foot also lies on this perpendicular, so substitute its coordinates into the perpendicular’s equation. The perpendicular still exists when P lies on the fixed line.'),
+      'm_{\\text{' + tr('垂線', 'perpendicular') + '}}=' + tex(slope) + '\\quad ' + b + '-y=' + tex(slope) + '(' + a + '-x)');
+    addStep(tr('把定直線上的 ' + bName + ' 表達式代入垂線方程，消去 ' + bName + '。',
+      'Substitute the expression for ' + bName + ' from the fixed line equation into the perpendicular equation, eliminating ' + bName + '.'),
+      onLine + '-y=' + tex(slope) + '(' + a + '-x)');
     const hx = expr([[div(ONE, L.q), 'x'], [div(L.m, L.q), 'y'], [neg(div(mul(L.m, L.k), L.q)), '']]);
     const hy = expr([[div(L.m, L.q), 'x'], [div(sq(L.m), L.q), 'y'], [div(L.k, L.q), '']]);
-    addStep(tr('解上式得到垂足的橫坐標，再代回直線方程，求出垂足坐標。',
-      'Solve the equation for the x-coordinate of the foot, then substitute back into the line equation to find both coordinates.'),
-      t + '=' + hx + '\\quad ' + H + '=(' + hx + ',' + hy + ')');
+    addStep(tr('聯立垂足滿足的兩條直線方程，消去 ' + bName + '，解出 ' + aName + '。',
+      'Solve the two line equations satisfied by the foot simultaneously: eliminate ' + bName + ' and solve for ' + aName + '.'),
+      tex(L.q) + a + '=' + expr([[ONE, 'x'], [L.m, 'y'], [neg(mul(L.m, L.k)), '']]) + '\\quad ' + a + '=' + hx);
+    addStep(tr('把求得的 ' + aName + ' 代回定直線方程，求出 ' + bName + '，得到垂足坐標。',
+      'Substitute ' + aName + ' back into the fixed line equation to find ' + bName + ', giving the coordinates of the foot.'),
+      b + '=' + hy + '\\quad ' + H + '=(' + hx + ',' + hy + ')');
     addStep(tr('把垂足坐標代入兩點距離公式，平方後整理。',
       'Substitute the foot’s coordinates into the distance formula, square and simplify.'),
       PH + '^{2}=(x-(' + hx + '))^{2}+(y-(' + hy + '))^{2}=' + distanceSq(L));
@@ -1689,8 +1700,8 @@ const exactLocus = (() => {
     function signed(L,p) {return L.vertical ? p.x-L.k : (p.y-L.m*p.x-L.k)/Math.hypot(1,L.m);}
     function foot(L,p) {
       if(L.vertical) return {x:L.k,y:p.y};
-      const t=(p.x+L.m*p.y-L.m*L.k)/(1+L.m*L.m);
-      return {x:t,y:L.m*t+L.k};
+      const a=(p.x+L.m*p.y-L.m*L.k)/(1+L.m*L.m);
+      return {x:a,y:L.m*a+L.k};
     }
     function verifyFoot(result,L,index,p) {
       const suffix=index?'_{'+index+'}':'', mark='H'+suffix+'=(';
@@ -1706,6 +1717,39 @@ const exactLocus = (() => {
       const parts=distance.t.split('=').slice(1);
       const expectedDistance=(p.x-expectedFoot.x)**2+(p.y-expectedFoot.y)**2;
       for(const part of parts) assert.ok(Math.abs(value(part,p.x,p.y)-expectedDistance)<1e-8,'PH² '+distance.t);
+      if(!L.vertical && L.m!==0) {
+        const a='a'+suffix, b='b'+suffix, H='H'+suffix, lineName='L'+suffix;
+        const converted=line(L), onLine=expr([[converted.m,a],[converted.k,'']]);
+        const slope=neg(div(ONE,converted.m));
+        const declaration=result.steps.findIndex(s=>s.t===lineName+':'+lineEq(converted)+'\\quad '+H+'=('+a+','+b+')\\quad '+b+'='+onLine);
+        const perpendicular=result.steps.findIndex(s=>s.t.endsWith('\\quad '+b+'-y='+tex(slope)+'('+a+'-x)'));
+        const substitution=result.steps.findIndex(s=>s.t===onLine+'-y='+tex(slope)+'('+a+'-x)');
+        const elimination=result.steps.findIndex(s=>s.t.startsWith(tex(converted.q)+a+'=') && s.t.includes('\\quad '+a+'='));
+        const coordinates=result.steps.findIndex(s=>s.t.startsWith(b+'=') && s.t.includes('\\quad '+mark));
+        const distanceIndex=result.steps.indexOf(distance);
+        assert.ok(declaration>=0 && declaration<perpendicular && perpendicular<substitution && substitution<elimination && elimination<coordinates && coordinates<distanceIndex,
+          'missing or out-of-order line, perpendicular, substitution, elimination, coordinates or distance for '+H);
+        const description=result.steps[declaration].p;
+        assert.ok(/未知/.test(description) || /unknown/.test(description),'foot coordinates must be described as unknown');
+        assert.ok(/橫坐標/.test(description) || /x-coordinate/.test(description),'missing x-coordinate meaning');
+        assert.ok(/縱坐標/.test(description) || /y-coordinate/.test(description),'missing y-coordinate meaning');
+        assert.ok(/聯立/.test(result.steps[elimination].p) || /simultaneously/.test(result.steps[elimination].p),'missing simultaneous-solving explanation');
+        assert.ok(/代入/.test(result.steps[substitution].p) || /Substitute/.test(result.steps[substitution].p),'missing substitution explanation');
+        // Evaluate every displayed line equation at independently calculated H.
+        // Preserve TeX commands such as \\frac while replacing coordinate names.
+        const putCoordinates=s=>s.replace(/\\[A-Za-z]+|[ab](?:_\{[12]\})?/g, token=>
+          token===a ? '('+expectedFoot.x.toFixed(12)+')' : token===b ? '('+expectedFoot.y.toFixed(12)+')' : token);
+        const checkEquation=s=>{
+          const sides=putCoordinates(s).split('=');
+          assert.equal(sides.length,2,'bad intermediate equation '+s);
+          assert.ok(Math.abs(value(sides[0],p.x,p.y)-value(sides[1],p.x,p.y))<1e-8,'incorrect intermediate equation '+s);
+        };
+        checkEquation(result.steps[declaration].t.split('\\quad ').pop());
+        checkEquation(result.steps[perpendicular].t.split('\\quad ').pop());
+        checkEquation(result.steps[substitution].t);
+        for(const equation of result.steps[elimination].t.split('\\quad ')) checkEquation(equation);
+        checkEquation(result.steps[coordinates].t.split('\\quad ')[0]);
+      }
     }
     // Translation changes prose and the perpendicular label only, never the
     // number/order of steps, equations, restrictions, or the final answer.
@@ -1713,6 +1757,7 @@ const exactLocus = (() => {
       const en=solve({id,cfg,lang:'en'});
       const label='case '+id;
       assert.ok(!/\p{Script=Han}/u.test(JSON.stringify(en)), label+' English output contains Chinese');
+      assert.ok(!/參數|\bparamet(?:er|ric)/i.test(JSON.stringify([zh,en])),label+' output contains a forbidden method');
       assert.equal(en.answer,zh.answer,label+' answer differs');
       assert.equal(en.steps.length,zh.steps.length,label+' step count differs');
       assert.ok(en.desc && (!!en.extra === !!zh.extra),label+' description or extra differs');
@@ -1751,9 +1796,11 @@ const exactLocus = (() => {
       for(const id of [3,4,7]) {
         const cfg=defaultCfg(id);
         cfg.L1={...L}; cfg.L2={...L,k:2}; cfg.F={x:3,y:4};
-        const en=assertBilingual(id,cfg);
-        verifyFoot(en,cfg.L1,id===4?1:'',probe);
-        if(id===4) verifyFoot(en,cfg.L2,2,probe);
+        const zh=solve({id,cfg}), en=assertBilingual(id,cfg,zh);
+        for(const result of [zh,en]) {
+          verifyFoot(result,cfg.L1,id===4?1:'',probe);
+          if(id===4) verifyFoot(result,cfg.L2,2,probe);
+        }
         const labelCount=en.steps.filter(s=>s.t.includes('m_{\\text{perpendicular}}')).length;
         assert.equal(labelCount,!L.vertical && L.m!==0?(id===4?2:1):0,'perpendicular label case '+id);
       }
@@ -1762,10 +1809,51 @@ const exactLocus = (() => {
         const cfg=defaultCfg(5);
         cfg.L1={...L}; cfg.L2={...R,k:1};
         if(!L.vertical && !R.vertical && L.m===R.m) cfg.L2.m=1.25;
-        const en=assertBilingual(5,cfg);
-        verifyFoot(en,cfg.L1,1,probe); verifyFoot(en,cfg.L2,2,probe);
+        const zh=solve({id:5,cfg}), en=assertBilingual(5,cfg,zh);
+        for(const result of [zh,en]) {
+          verifyFoot(result,cfg.L1,1,probe); verifyFoot(result,cfg.L2,2,probe);
+        }
         const expectedLabels=[cfg.L1,cfg.L2].filter(line=>!line.vertical && line.m!==0).length;
         assert.equal(en.steps.filter(s=>s.t.includes('m_{\\text{perpendicular}}')).length,expectedLabels,'case 5 perpendicular labels');
+      }
+    }
+    // Named examples: oblique lines with non-zero intercepts, P on/off a line,
+    // and separate H1/H2 coordinates for parallel and intersecting lines.
+    const example=defaultCfg(3);
+    example.L1={m:2,k:1,vertical:false}; example.d=2;
+    for(const lang of ['zh','en']) {
+      const one=solve({id:3,cfg:example,lang});
+      assert.equal(one.answer,'y-2x-1=\\pm 2\\sqrt{5}');
+      assert.ok(one.steps.some(s=>s.t==='L:y=2x+1\\quad H=(a,b)\\quad b=2a+1'));
+      assert.ok(one.steps.some(s=>s.t==='2a+1-y=-\\frac{1}{2}(a-x)'));
+      assert.ok(one.steps.some(s=>s.t==='5a=x+2y-2\\quad a=\\frac{1}{5}x+\\frac{2}{5}y-\\frac{2}{5}'));
+      verifyFoot(one,example.L1,'',{x:1,y:0});
+      verifyFoot(one,example.L1,'',{x:1,y:3}); // P lies on L.
+      const d1=one.steps.find(s=>s.t.startsWith('PH^{2}=')).t.split('=').pop();
+      assert.ok(Math.abs(value(d1,1,0)-9/5)<1e-10,'specific oblique PH²');
+      const parallel={...example,L2:{m:2,k:-4,vertical:false}};
+      const four=solve({id:4,cfg:parallel,lang});
+      assert.equal(four.answer,'y=2x-\\frac{3}{2}');
+      assert.ok(four.steps.some(s=>s.t==='2a_{1}+1-y=-\\frac{1}{2}(a_{1}-x)'));
+      assert.ok(four.steps.some(s=>s.t==='2a_{2}-4-y=-\\frac{1}{2}(a_{2}-x)'));
+      verifyFoot(four,parallel.L1,1,{x:1,y:0}); verifyFoot(four,parallel.L2,2,{x:1,y:0});
+      const d4=four.steps.find(s=>s.t.startsWith('PH_{2}^{2}=')).t.split('=').pop();
+      assert.ok(Math.abs(value(d4,1,0)-4/5)<1e-10,'specific parallel PH2²');
+      const intersecting={...example,L2:{m:-1,k:2,vertical:false}};
+      const five=solve({id:5,cfg:intersecting,lang});
+      assert.equal(five.answer,'\\frac{\\sqrt{5}}{5}(y-2x-1)=\\pm \\frac{\\sqrt{2}}{2}(y+x-2)');
+      assert.ok(five.steps.some(s=>s.t==='-a_{2}+2-y=1(a_{2}-x)'));
+      verifyFoot(five,intersecting.L1,1,{x:1,y:0}); verifyFoot(five,intersecting.L2,2,{x:1,y:0});
+      verifyFoot(five,intersecting.L1,1,{x:1/3,y:5/3}); verifyFoot(five,intersecting.L2,2,{x:1/3,y:5/3});
+      const d5=five.steps.find(s=>s.t.startsWith('PH_{2}^{2}=')).t.split('=').pop();
+      assert.ok(Math.abs(value(d5,1,0)-1/2)<1e-10,'specific intersecting PH2²');
+      for(const L of [{m:0,k:-2,vertical:false},{m:0,k:-2,vertical:true}]) {
+        const axis=solve({id:3,cfg:{...example,L1:L},lang});
+        verifyFoot(axis,L,'',{x:1,y:-3});
+        assert.ok(!axis.steps.some(s=>s.t.includes('m_{\\text{')),'axis case must not use a perpendicular slope');
+        assert.ok(axis.steps.some(s=>s.t.includes(L.vertical?'H=(-2,y)':'H=(x,-2)')),'direct axis foot');
+        const d=axis.steps.find(s=>s.t.startsWith('PH^{2}=')).t.split('=').pop();
+        assert.equal(value(d,1,-3),L.vertical?9:1,'specific axis PH²');
       }
     }
     // Exact rational reduction and removal of ordinary binary-float noise.
@@ -1827,9 +1915,9 @@ const exactLocus = (() => {
       const d=(Math.floor(rand()*16)+1)/4;
       const cfg=defaultCfg(3); cfg.L1=L; cfg.d=d;
       const result3=solve({id:3,cfg}), a3=result3.answer;
-      assertBilingual(3,cfg,result3);
+      const en3=assertBilingual(3,cfg,result3);
       const u=(rand()-.5)*10;
-      verifyFoot(result3,L,'',{x:u,y:u+.73});
+      for(const result of [result3,en3]) verifyFoot(result,L,'',{x:u,y:u+.73});
       for(const sign of [-1,1]) {
         const p=vertical ? {x:k+sign*d,y:u} : {x:u,y:m*u+k+sign*d*Math.hypot(1,m)};
         assertOn(a3,p,'case 3'); assert.ok(Math.abs(Math.abs(signed(L,p))-d)<1e-8);
@@ -1838,8 +1926,10 @@ const exactLocus = (() => {
       const k2=k+pick([-2,-1.25,.25,1,2]);
       cfg.L2={m,k:k2,vertical};
       const result4=solve({id:4,cfg}), a4=result4.answer, mid=(k+k2)/2;
-      assertBilingual(4,cfg,result4);
-      verifyFoot(result4,L,1,{x:u,y:u+.73}); verifyFoot(result4,cfg.L2,2,{x:u,y:u+.73});
+      const en4=assertBilingual(4,cfg,result4);
+      for(const result of [result4,en4]) {
+        verifyFoot(result,L,1,{x:u,y:u+.73}); verifyFoot(result,cfg.L2,2,{x:u,y:u+.73});
+      }
       assertOn(a4,vertical?{x:mid,y:u}:{x:u,y:m*u+mid},'case 4');
       let R;
       if(vertical) R={m:pick(slopes),k:k2,vertical:false};
@@ -1847,8 +1937,10 @@ const exactLocus = (() => {
       else {let m2=pick(slopes); if(m2===m) m2=m+0.25; R={m:m2,k:k2,vertical:false};}
       cfg.L2=R;
       const result5=solve({id:5,cfg}), a5=result5.answer;
-      assertBilingual(5,cfg,result5);
-      verifyFoot(result5,L,1,{x:u,y:u+.73}); verifyFoot(result5,R,2,{x:u,y:u+.73});
+      const en5=assertBilingual(5,cfg,result5);
+      for(const result of [result5,en5]) {
+        verifyFoot(result,L,1,{x:u,y:u+.73}); verifyFoot(result,R,2,{x:u,y:u+.73});
+      }
       // Intersection plus points in each bisector's direction, using independently normalized normals.
       const n1=vertical?{x:1,y:0}: {x:-m/Math.hypot(1,m),y:1/Math.hypot(1,m)};
       const n2=R.vertical?{x:1,y:0}: {x:-R.m/Math.hypot(1,R.m),y:1/Math.hypot(1,R.m)};
@@ -1867,8 +1959,8 @@ const exactLocus = (() => {
       if(Math.abs(signed(L,F))<.1) F=vertical?{x:k+1.2,y:-.7}:{x:-.7,y:m*(-.7)+k+1.2};
       cfg.F=F;
       const result7=solve({id:7,cfg}), a7=result7.answer, hf=foot(L,F), D=signed(L,F);
-      assertBilingual(7,cfg,result7);
-      verifyFoot(result7,L,'',{x:u,y:u+.73});
+      const en7=assertBilingual(7,cfg,result7);
+      for(const result of [result7,en7]) verifyFoot(result,L,'',{x:u,y:u+.73});
       const n=vertical?{x:1,y:0}:{x:-m/Math.hypot(1,m),y:1/Math.hypot(1,m)};
       const tangent={x:n.y,y:-n.x};
       const h=(u*u+D*D)/(2*D), p={x:hf.x+u*tangent.x+h*n.x,y:hf.y+u*tangent.y+h*n.y};
@@ -1883,7 +1975,7 @@ const exactLocus = (() => {
         }
       }
     }
-    console.log('PASS: 7 bilingual defaults; horizontal, vertical and oblique English steps; exact fractions/radicals; excluded endpoints; 250 randomized bilingual configurations for every case.');
+    console.log('PASS: 7 bilingual defaults; named simultaneous-equation and two-foot examples; horizontal/vertical direct-foot tests; exact fractions/radicals; excluded endpoints; 250 randomized bilingual configurations per case; intermediate-equation checks for line-based cases.');
   }
   return {solve, runTests};
 })();
