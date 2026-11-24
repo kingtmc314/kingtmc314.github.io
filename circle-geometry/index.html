@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f6f0">
+<title>圓的幾何性質 | Circle Geometry Lab</title>
+<style>
+:root{color-scheme:light;--bg:#f4f5ef;--paper:#fff;--ink:#172b2a;--muted:#657772;--faint:#8b9a95;--border:#e3e9e1;--green:#126e63;--green-dark:#0b5a50;--mint:#e6f3ed;--orange:#ca683d;--orange-soft:#fff0e6;--blue:#526fa9;--shadow:0 18px 50px rgba(35,60,49,.07);--canvas:#fbfcf8;--grid:#eaf0e9;--line:#253c39;--canvas-border:#e6ede4;--radius:20px}
+:root[data-theme=dark]{color-scheme:dark;--bg:#0e1716;--paper:#182422;--ink:#f0f8f1;--muted:#b1c6ba;--faint:#8da99b;--border:#344a40;--green:#79e6c5;--green-dark:#9ef4d9;--mint:#203c32;--orange:#ffb077;--orange-soft:#462f23;--blue:#a6bbff;--shadow:0 18px 50px rgba(0,0,0,.18);--canvas:#111d1a;--grid:#24382e;--line:#e8f4ed;--canvas-border:#31483b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang HK","Microsoft JhengHei",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}button,select,input{font:inherit}button,select{color:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #e99c50;outline-offset:3px}
+.topbar{background:var(--paper);border-bottom:1px solid var(--border)}.nav{max-width:1540px;margin:auto;min-height:76px;padding:13px 34px;display:flex;align-items:center;gap:22px;justify-content:space-between}.brand{display:flex;gap:12px;align-items:center;min-width:0}.brand-mark{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;background:var(--green);color:var(--paper);border-radius:13px}.brand-mark svg{width:27px;height:27px}.brand-text{font-size:15px;font-weight:800;letter-spacing:-.015em;line-height:1.22}.brand-sub{font-size:10px;font-weight:750;color:var(--muted);letter-spacing:.09em;text-transform:uppercase;margin-top:3px}.nav-actions{display:flex;align-items:center;gap:9px}.nav-button,.language-wrap{height:42px;border:1px solid var(--border);border-radius:10px;background:var(--paper);display:flex;align-items:center;justify-content:center;gap:7px;padding:0 13px;font-size:12px;font-weight:750;white-space:nowrap}.nav-button:hover,.language-wrap:hover{border-color:var(--green);background:var(--mint)}.nav-button svg,.language-wrap svg{width:16px;height:16px;flex-shrink:0}.language-wrap select{border:0;background:transparent;max-width:200px;font-size:12px;font-weight:750;outline:0;cursor:pointer}.language-wrap select:focus-visible{outline:2px solid var(--green)}
+.shell{max-width:1540px;margin:0 auto;padding:33px 34px 38px}.hero{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:25px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--green);font-weight:850;display:flex;align-items:center;gap:9px}.eyebrow:before{content:"";width:20px;height:2px;background:var(--green)}h1{font-size:clamp(26px,3vw,42px);line-height:1.15;letter-spacing:-.04em;margin:8px 0 7px;font-weight:850}.hero p{margin:0;color:var(--muted);font-size:13px}.hero-stamp{border:1px solid var(--border);border-radius:99px;padding:8px 13px;color:var(--muted);font-size:11px;font-weight:700;white-space:nowrap;background:var(--paper)}.hero-stamp:before{content:"";display:inline-block;width:7px;height:7px;background:#6abf96;border-radius:50%;margin-right:7px}
+.layout{display:grid;grid-template-columns:minmax(0,1.48fr) minmax(350px,.85fr);gap:19px;align-items:start}.card{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;min-width:0}.visual-card{padding:23px}.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}.overline{font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:850;color:var(--muted)}.card-head h2{font-size:17px;letter-spacing:-.02em;margin:4px 0 0}.live-pill{color:var(--green);background:var(--mint);border-radius:99px;padding:6px 10px;font-size:10px;font-weight:800;white-space:nowrap}.live-pill:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px}.canvas-frame{position:relative;border:1px solid var(--canvas-border);border-radius:14px;background:var(--canvas);overflow:hidden}.canvas-frame canvas{width:100%;height:auto;aspect-ratio:4 / 3;display:block;touch-action:none;cursor:grab}.canvas-frame canvas.dragging{cursor:grabbing}.canvas-tag{position:absolute;top:13px;left:14px;pointer-events:none;font-size:10px;font-weight:800;letter-spacing:.04em;color:var(--muted);background:var(--paper);border:1px solid var(--border);border-radius:7px;padding:5px 8px;max-width:75%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.visual-footer{display:flex;gap:15px;align-items:flex-start;justify-content:space-between;padding:16px 2px 0}.visual-footer p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}.visual-footer strong{color:var(--ink)}.legend{display:flex;gap:11px;flex-wrap:wrap;justify-content:flex-end;font-size:10px;color:var(--muted);white-space:nowrap}.legend span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:var(--green)}.legend span:last-child:before{background:var(--orange)}
+.side{display:grid;gap:15px}.side-card{padding:21px}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}.section-heading h2{margin:0;font-size:14px;letter-spacing:-.01em}.section-index{font-size:11px;font-weight:800;color:var(--faint)}.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:12px}.tab{border:1px solid var(--border);border-radius:10px;background:var(--paper);padding:9px 10px;text-align:left;color:var(--muted);font-size:11px;font-weight:800;line-height:1.35;min-height:43px}.tab:hover{border-color:var(--green)}.tab.active{color:var(--green-dark);border-color:var(--green);background:var(--mint)}.select-label{display:block;color:var(--muted);font-size:11px;font-weight:750;margin-bottom:5px}.theorem-select{display:block;width:100%;border-radius:10px;border:1px solid var(--border);padding:11px 35px 11px 11px;background:var(--paper);font-size:12px;font-weight:700;min-height:43px}.mode-note{font-size:11px;line-height:1.55;margin:10px 1px 0;color:var(--muted)}
+.insight-title{font-size:15px;font-weight:800;margin:0;line-height:1.4}.insight-description{font-size:11px;color:var(--muted);margin:5px 0 14px}.equation-box{background:var(--mint);border-radius:12px;padding:13px 14px;margin-bottom:13px;min-width:0}.equation-label{font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:5px}.equation{font-size:17px;font-weight:750;color:var(--green-dark);line-height:1.5;overflow-x:auto;white-space:nowrap}.equation math{font-family:Cambria,"Times New Roman",serif}.metrics{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:11px;overflow:hidden}.metric{min-width:0;padding:10px 11px;border-bottom:1px solid var(--border)}.metric:nth-child(odd){border-right:1px solid var(--border)}.metric:nth-last-child(-n+2){border-bottom:0}.metric:last-child:nth-child(odd){grid-column:1/-1;border-right:0}.metric-label{font-size:10px;font-weight:700;color:var(--muted);line-height:1.35;overflow-wrap:anywhere}.metric-value{font-family:Georgia,"Times New Roman",serif;font-size:18px;font-weight:700;line-height:1.25;margin-top:4px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.metric-value.hidden-value{color:var(--orange)}.measure-note{font-size:10px;color:var(--muted);line-height:1.45;margin:9px 1px 0}.status{font-size:11px;line-height:1.55;color:var(--green-dark);padding:10px 11px;border-radius:9px;background:var(--mint);margin-top:10px}.status.warning{background:var(--orange-soft);color:var(--orange)}.reason{border-top:1px solid var(--border);margin-top:15px;padding-top:13px}.reason-title{display:flex;gap:8px;align-items:center;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:850}.reason-title:before{content:"";width:5px;height:5px;border-radius:50%;background:var(--orange)}.reason p{font-size:12px;line-height:1.65;margin:6px 0 0}.reason small{display:block;color:var(--muted);line-height:1.6;font-size:11px;margin-top:6px}
+.controls{display:grid;gap:9px}.control{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 12px;border:1px solid var(--border);border-radius:10px}.control-copy{font-size:12px;font-weight:750;line-height:1.4}.control-copy small{display:block;color:var(--muted);font-size:10px;font-weight:500;margin-top:2px}.switch{position:relative;display:inline-flex;flex:0 0 37px;height:22px}.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;z-index:2;cursor:pointer}.switch i{width:37px;height:22px;border-radius:20px;background:#bdc9c2;transition:.18s}.switch i:after{content:"";position:absolute;top:3px;left:3px;background:#fff;width:16px;height:16px;border-radius:50%;transition:.18s}.switch input:checked+i{background:var(--green)}.switch input:checked+i:after{transform:translateX(15px)}.switch input:focus-visible+i{outline:3px solid #e99c50;outline-offset:3px}.reveal{width:100%;border:0;border-radius:10px;padding:11px 14px;background:var(--green);color:var(--paper);font-size:12px;font-weight:850}.reveal:hover{filter:brightness(1.1)}.reveal:disabled{opacity:.45;cursor:not-allowed}.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.preset{border:1px solid var(--border);background:var(--paper);padding:6px 9px;border-radius:7px;color:var(--muted);font-weight:750;font-size:10px}.preset:hover{background:var(--mint);color:var(--green-dark);border-color:var(--green)}.bottom-note{font-size:10px;color:var(--faint);line-height:1.6;text-align:center;padding:23px 0 0}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1000px){.layout{grid-template-columns:minmax(0,1.1fr) minmax(310px,.9fr)}.shell{padding:27px 22px}.nav{padding-left:22px;padding-right:22px}.visual-card,.side-card{padding:17px}.nav{gap:10px}.nav-button{padding:0 10px}.nav-button .button-text{display:none}.hero-stamp{display:none}}
+@media(max-width:720px){.nav{padding:11px 15px;min-height:64px;flex-wrap:wrap}.brand-mark{width:36px;height:36px;flex-basis:36px}.brand-text{font-size:13px}.brand-sub{font-size:9px}.nav-actions{gap:6px}.nav-button{height:38px;width:38px;padding:0}.language-wrap{height:38px;padding:0 8px;gap:4px}.language-wrap select{max-width:132px;font-size:11px}.shell{padding:23px 14px 28px}.hero{margin-bottom:18px}.hero p{font-size:12px}.layout{grid-template-columns:minmax(0,1fr);gap:13px}.visual-card{padding:15px}.visual-footer{flex-direction:column;gap:8px}.legend{justify-content:flex-start}.side{gap:12px}.card-head h2{font-size:15px}.canvas-tag{font-size:9px}.hero h1{font-size:28px}}
+@media(max-width:390px){.brand-sub{display:none}.brand-text{max-width:110px}.language-wrap select{max-width:105px}.nav{gap:5px}.nav-actions{gap:4px}.nav-button{width:34px}.nav-button svg{width:15px}.nav{padding-left:10px;padding-right:10px}}
+</style>
+</head>
+<body>
+<header class="topbar"><nav class="nav" aria-label="Main navigation">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.8"/><path d="M7 22L23 8M16 16L25 21" stroke="currentColor" stroke-width="1.8"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg></span><div><div class="brand-text" id="brand"></div><div class="brand-sub" id="brandSub"></div></div></div>
+  <div class="nav-actions"><label class="language-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9c-3-3-4-6-4-9s1-6 4-9z"/></svg><span class="sr-only" id="languageLabel"></span><select id="language" aria-labelledby="languageLabel"></select></label>
+    <button class="nav-button" id="theme" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg><span class="button-text" id="themeText"></span></button>
+    <button class="nav-button" id="reset" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11a8 8 0 1 1 2.4 6M4 5v6h6"/></svg><span class="button-text" id="resetText"></span></button>
+  </div></nav></header>
+<main class="shell"><div class="hero"><div><div class="eyebrow" id="eyebrow"></div><h1 id="heroTitle"></h1><p id="heroDesc"></p></div><div class="hero-stamp" id="heroStamp"></div></div>
+<div class="layout"><section class="card visual-card"><div class="card-head"><div><div class="overline" id="canvasOverline"></div><h2 id="canvasTitle"></h2></div><span class="live-pill" id="live"></span></div><div class="canvas-frame"><canvas id="canvas" width="800" height="600" tabindex="0"></canvas><div class="canvas-tag" id="canvasTag"></div></div><div class="visual-footer"><p><strong id="dragTitle"></strong><br><span id="dragDesc"></span></p><div class="legend"><span id="legend1"></span><span id="legend2"></span></div></div></section>
+<div class="side"><section class="card side-card"><div class="section-heading"><h2 id="selectorHeading"></h2><span class="section-index">01</span></div><div class="tabs" id="tabs"></div><label class="select-label" id="theoremLabel" for="theorem"></label><select class="theorem-select" id="theorem"></select><p class="mode-note" id="modeNote"></p><div class="presets" id="presets"></div></section>
+<section class="card side-card"><div class="section-heading"><h2 id="insightHeading"></h2><span class="section-index">02</span></div><h3 class="insight-title" id="insightTitle"></h3><p class="insight-description" id="insightDesc"></p><div class="equation-box"><div class="equation-label" id="equationLabel"></div><div class="equation" id="equation"></div></div><div class="metrics" id="metrics"></div><p class="measure-note" id="measureNote"></p><div class="status" id="status" hidden></div><div class="reason"><div class="reason-title" id="reasonHeading"></div><p id="reasonText"></p><small id="reasonSteps"></small></div></section>
+<section class="card side-card"><div class="section-heading"><h2 id="controlsHeading"></h2><span class="section-index">03</span></div><div class="controls"><label class="control"><span class="control-copy"><span id="quizTitle"></span><small id="quizDesc"></small></span><span class="switch"><input type="checkbox" id="quiz"><i></i></span></label><button id="reveal" class="reveal" type="button" disabled></button><label class="control"><span class="control-copy"><span id="auxTitle"></span><small id="auxDesc"></small></span><span class="switch"><input type="checkbox" id="aux"><i></i></span></label></div></section></div></div><footer class="bottom-note" id="footer"></footer></main>
+<script>
+'use strict';
+const Z=(zh,en)=>({zh,en});
+const UI={
+ brand:Z('圓幾何實驗室','Circle Geometry Lab'),brandSub:Z('香港中學數學 · 必修部分','HKDSE MATHEMATICS · COMPULSORY PART'),
+ lang:Z('語言','Language'),bi:Z('中英雙語','Bilingual'),en:Z('全英文','English only'),zh:Z('繁體中文','Traditional Chinese'),
+ theme:Z('深色／高對比','Dark / high contrast'),light:Z('淺色模式','Light mode'),reset:Z('重置狀態','Reset'),
+ eyebrow:Z('互動數學教室','INTERACTIVE MATHEMATICS'),hero:Z('看見圓的幾何','See the geometry of a circle'),
+ heroDesc:Z('拖動、觀察、推理——把圓的性質變成看得見的關係。','Drag, observe and reason. Make circle theorems visible.'),stamp:Z('必修部分 · 互動探索','COMPULSORY PART · EXPLORE'),
+ canvasOverline:Z('動態幾何畫布','DYNAMIC GEOMETRY CANVAS'),canvasTitle:Z('動手探索','Explore the diagram'),live:Z('即時更新','LIVE'),
+ dragTitle:Z('拖動圓點探索','Drag the points to explore'),dragDesc:Z('圓周點會吸附在圓周上；部分構造會為保持定理條件而受限制。','Points snap to the circle; some movements are constrained to preserve the theorem’s conditions.'),
+ legend1:Z('可拖動點','Draggable point'),legend2:Z('重點角','Highlighted angle'),select:Z('選擇定理','Choose a theorem'),theoremLabel:Z('定理及互動模型','Theorem and interactive model'),
+ insight:Z('即時觀察','Live observations'),exact:Z('精確關係','EXACT RELATIONSHIP'),measureNote:Z('數值為近似值（四捨五入至小數點後兩位）；長度以單位計。上方關係式為精確關係。','Numerical measurements are approximate (rounded to 2 decimal places); lengths are in units. The relationship above is exact.'),
+ reason:Z('幾何理由','GEOMETRIC REASON'),controls:Z('課堂控制','Classroom controls'),quiz:Z('考考你：隱藏角度','Quiz: hide an angle'),quizDesc:Z('隨機隱藏一個關鍵角，先思考再揭曉。','A key angle is chosen at random. Think before revealing.'),
+ reveal:Z('揭曉答案與理由','Reveal answer and reason'),revealed:Z('答案已揭曉','Answer revealed'),aux:Z('顯示證明輔助線','Show auxiliary lines'),auxDesc:Z('以虛線呈現額外連線，協助理解。','Dashed lines add useful construction lines.'),
+ footer:Z('獨立單頁應用程式 · 可離線使用 · 使用幾何關係而非四捨五入的數值作判斷','Single-file application · Works offline · Judgements use geometry, not rounded values'),
+ lockedReason:Z('先嘗試求出問號所代表的角，再按「揭曉答案與理由」。','Find the angle represented by the question mark, then select “Reveal answer and reason”.'),
+ hiddenEquation:Z('先求出問號所代表的角。','Find the angle represented by the question mark.'),
+ aboutChord:Z('拖動 A、B 改變弦；拖動 O 改變圓心，或拖動 R 改變半徑。為避免退化，弦不會變成直徑。','Drag A and B to change the chord, O to move the centre, and R to change the radius. The chord is kept away from a diameter to prevent degeneration.'),
+ aboutEqual:Z('拖動 A、B 改變弦，拖動 C 轉動第二條弦；構造會保持等弦及等距。亦可拖動 O 或 R。','Drag A and B to change the chord and C to rotate the second chord. The construction preserves equal lengths and distances. O and R can also be dragged.'),
+ aboutCentral:Z('拖動 A、B、C。圓心角選取 C 所對的弧，可以是反角。','Drag A, B and C. The centre angle is measured along the arc intercepted by C and may be reflex.'),
+ aboutSemi:Z('拖動直徑端點 A 或 B，以及圓周上的 C。','Drag diameter endpoint A or B, and point C on the circumference.'),
+ aboutSame:Z('拖動 A、B、C、D。C、D 在弦 AB 同側時兩角相等；在異側時兩角互補。','Drag A, B, C and D. The angles are equal on the same side of AB and supplementary on opposite sides.'),
+ aboutArcs:Z('拖動 A、B、C 及 P。點的順序及弧 AC 小於半圓的條件會保持，以便比較對應弧。','Drag A, B, C and P. Their order and the condition that arc AC is shorter than a semicircle are preserved.'),
+ aboutCyclic:Z('拖動四個頂點；它們會保持圓周上的次序，避免四邊形自交。','Drag the four vertices; their cyclic order is maintained to prevent a crossed quadrilateral.'),
+ aboutConcyclic:Z('自由拖動 D 到圓內、圓外或圓周；靠近圓周時會磁吸。A、B、C 保持在圓周上。','Drag D freely inside, outside or onto the circle; it snaps near the circumference. A, B and C remain on the circle.'),
+ aboutTangent:Z('拖動切點 T；切線自動保持垂直半徑 OT。','Drag the point of contact T; the tangent remains perpendicular to radius OT.'),
+ aboutTwo:Z('拖動圓外點 P；A、B 是由 P 引出的兩個切點。','Drag the external point P. A and B are the resulting points of contact.'),
+ aboutAlt:Z('拖動切點 T、弦端點 A 或圓周點 C；相應的切線射線會自動切換。','Drag T, A or C. The corresponding tangent ray changes automatically.'),
+ same:Z('C、D 在弦 AB 的同一側：兩角相等。','C and D are on the same side of chord AB: the angles are equal.'),opposite:Z('C、D 在弦 AB 的相反側：兩角互補。','C and D are on opposite sides of chord AB: the angles are supplementary.'),
+ onCircle:Z('D 在圓周上：四點共圓，對角互補。','D is on the circle: the four points are concyclic, and opposite angles are supplementary.'),
+ offCircle:Z('D 不在圓周上：四點不共圓。即使數值四捨五入後似乎等於 180°，也不代表精確相等。','D is not on the circle: the points are not concyclic. Values that round to 180° are not necessarily exactly equal.'),
+ nonConvex:Z('目前 ABCD 非嚴格凸四邊形；不能以這對內角之和套用凸四邊形的共圓判別法。','ABCD is not a strictly convex quadrilateral. The opposite-interior-angle test for a convex quadrilateral does not apply.'),
+ reflex:Z('反角；對應不含 C 的優弧。','Reflex angle; it corresponds to the major arc not containing C.'),
+ centralMinor:Z('圓心角對應不含 C 的弧。','The centre angle corresponds to the arc not containing C.'),
+ radius:Z('半徑','Radius'),distance:Z('與圓心的距離','Distance from centre'),acute:Z('銳角','Acute'),obtuse:Z('鈍角','Obtuse'),reflexPreset:Z('反角','Reflex'),straight:Z('平角','Straight'),
+ nonapp:Z('不適用','Not applicable'),on:Z('在圓周上','On circle'),off:Z('不在圓周上','Off circle')
+};
+const GROUPS=[Z('弦與圓心','Chords & centre'),Z('角與弧','Angles & arcs'),Z('圓內接四邊形','Cyclic quadrilaterals'),Z('切線與交錯弓形','Tangents & alternate segment')];
+const M=[
+{id:'chord',g:0,title:Z('圓心至弦的垂線平分弦','Perpendicular from centre bisects chord'),desc:Z('垂線、弦的中點與半徑','A perpendicular, chord midpoint and radius'),note:'aboutChord',reason:Z('圓心至弦的垂線平分該弦。','The perpendicular from the centre to a chord bisects the chord.'),steps:Z('OM ⟂ AB，所以 M 是弦 AB 的中點；因此 AM = MB。','OM ⟂ AB, so M is the midpoint of chord AB; hence AM = MB.'),eq:'OM ⟂ AB  ⟹  AM = MB',tex:'OM\\perp AB\\implies AM=MB'},
+{id:'chordConverse',g:0,title:Z('圓心與弦中點連線垂直弦','Centre-to-midpoint line is perpendicular to chord'),desc:Z('弦的垂直平分性質的逆定理','Converse of the perpendicular-bisector property'),note:'aboutChord',reason:Z('圓心與非直徑弦中點的連線垂直該弦。','The line joining the centre to the midpoint of a non-diameter chord is perpendicular to the chord.'),steps:Z('AM = MB 且 OA = OB；由全等三角形可得 OM ⟂ AB。','AM = MB and OA = OB; congruent triangles imply OM ⟂ AB.'),eq:'AM = MB  ⟹  OM ⟂ AB',tex:'AM=MB\\implies OM\\perp AB'},
+{id:'equalChords',g:0,title:Z('等弦與圓心等距','Equal chords are equidistant from centre'),desc:Z('比較兩條等弦及其垂直距離','Compare equal chords and their perpendicular distances'),note:'aboutEqual',reason:Z('同一圓內的等弦與圓心等距。','Equal chords of the same circle are equidistant from the centre.'),steps:Z('構造保持 AB = CD；OM 和 ON 為垂直距離，所以 OM = ON。','The construction keeps AB = CD; OM and ON are perpendicular distances, so OM = ON.'),eq:'AB = CD  ⟹  OM = ON',tex:'AB=CD\\implies OM=ON'},
+{id:'equalConverse',g:0,title:Z('與圓心等距的弦相等','Chords equidistant from centre are equal'),desc:Z('等弦與圓心等距的逆定理','Converse of the equal-chord distance property'),note:'aboutEqual',reason:Z('同一圓內，與圓心等距的弦相等。','Chords equidistant from the centre of the same circle are equal.'),steps:Z('構造保持 OM = ON；兩條垂直距離相等，因此 AB = CD。','The construction keeps OM = ON; equal perpendicular distances imply AB = CD.'),eq:'OM = ON  ⟹  AB = CD',tex:'OM=ON\\implies AB=CD'},
+{id:'central',g:1,title:Z('圓心角是同弧圓周角的兩倍','Angle at centre is twice angle at circumference'),desc:Z('同一條弧：銳角、鈍角、平角及反角','The same arc: acute, obtuse, straight and reflex angles'),note:'aboutCentral',reason:Z('同一弧所對的圓心角等於其圓周角的兩倍。','The angle at the centre is twice the angle at the circumference subtended by the same arc.'),steps:Z('找出不包含 C 的弧 AB，再選取該弧所對的圓心角；必要時須取反角。','Identify arc AB not containing C. Use the centre angle subtended by that arc; it may be reflex.'),eq:'∠AOB（所對弧）= 2∠ACB',tex:'\\angle AOB_{\\mathrm{intercepted}}=2\\angle ACB'},
+{id:'semicircle',g:1,title:Z('半圓上的圓周角','Angle in a semicircle'),desc:Z('直徑所對的圓周角是直角','The angle subtended by a diameter is a right angle'),note:'aboutSemi',reason:Z('半圓內的圓周角為直角。','The angle in a semicircle is a right angle.'),steps:Z('AB 是直徑，對應圓心角為 180°；圓周角是它的一半。','AB is a diameter, so the corresponding centre angle is 180°; the inscribed angle is half of this.'),eq:'∠ACB = 90°',tex:'\\angle ACB=90^\\circ'},
+{id:'sameSegment',g:1,title:Z('同弓形內的圓周角','Angles in the same segment'),desc:Z('比較弦同側及異側的圓周角','Compare inscribed angles on the same or opposite sides of a chord'),note:'aboutSame',reason:Z('同弓形內的圓周角相等；異側圓周角互補。','Angles in the same segment are equal; angles on opposite sides of a chord are supplementary.'),steps:Z('兩角若同對一條弧便相等；若對互補的兩段弧，兩角和為 180°。','Angles intercepting the same arc are equal. Angles intercepting the two complementary arcs add to 180°.'),eq:'∠ACB = ∠ADB',tex:'\\angle ACB=\\angle ADB'},
+{id:'arcs',g:1,title:Z('弧長與圓心角及圓周角成比例','Arc lengths and their corresponding angles'),desc:Z('比較同一圓內的弧 AB 和 AC','Compare arcs AB and AC in the same circle'),note:'aboutArcs',reason:Z('同圓內弧長與其所對的圓心角及圓周角成正比。','In the same circle, arc lengths are proportional to their corresponding centre and circumference angles.'),steps:Z('弧長 s = rθ（θ 以弧度計）；同一圓的 r 相同，故弧長比等於對應角的比。','Arc length s = rθ, where θ is in radians. The radius is common, so arc lengths have the same ratio as their corresponding angles.'),eq:'弧 AB / 弧 AC = ∠AOB / ∠AOC = ∠APB / ∠APC',tex:'\\frac{\\overset{\\frown}{AB}}{\\overset{\\frown}{AC}}=\\frac{\\angle AOB}{\\angle AOC}=\\frac{\\angle APB}{\\angle APC}'},
+{id:'cyclic',g:2,title:Z('圓內接四邊形的對角互補','Opposite angles of a cyclic quadrilateral'),desc:Z('兩對內對角各相加為 180°','Each pair of opposite interior angles sums to 180°'),note:'aboutCyclic',reason:Z('圓內接四邊形的對角互補。','Opposite angles of a cyclic quadrilateral are supplementary.'),steps:Z('∠A 與 ∠C 對應兩段合成全圓的弧；∠B 與 ∠D 亦然。','∠A and ∠C intercept arcs forming a full circle; the same is true for ∠B and ∠D.'),eq:'∠A + ∠C = ∠B + ∠D = 180°',tex:'\\angle A+\\angle C=\\angle B+\\angle D=180^\\circ'},
+{id:'exterior',g:2,title:Z('圓內接四邊形的外角','Exterior angle of a cyclic quadrilateral'),desc:Z('外角等於內對角','The exterior angle equals the interior opposite angle'),note:'aboutCyclic',reason:Z('圓內接四邊形的外角等於其內對角。','An exterior angle of a cyclic quadrilateral equals the interior opposite angle.'),steps:Z('延長 AB 至 E；∠CBE 與 ∠ABC 互補，而 ∠ADC 與 ∠ABC 亦互補。','Extend AB to E. ∠CBE and ∠ABC are supplementary, as are ∠ADC and ∠ABC.'),eq:'∠CBE = ∠ADC',tex:'\\angle CBE=\\angle ADC'},
+{id:'concyclic',g:2,title:Z('共圓測試','Concyclic point test'),desc:Z('自由移動 D，檢驗凸四邊形對角之和','Move D freely and test opposite angles of a convex quadrilateral'),note:'aboutConcyclic',reason:Z('凸四邊形若有一對對角互補，則四個頂點共圓。','If a pair of opposite angles of a convex quadrilateral is supplementary, its vertices are concyclic.'),steps:Z('A、B、C 決定此圓。對嚴格凸四邊形，∠A + ∠C = 180° 當且僅當 D 位於此圓周。','A, B and C determine this circle. For a strictly convex quadrilateral, ∠A + ∠C = 180° if and only if D lies on it.'),eq:'∠A + ∠C = 180°  ⇔  A, B, C, D 共圓',tex:'\\angle A+\\angle C=180^\\circ\\iff A,B,C,D\\text{ are concyclic}'},
+{id:'tangent',g:3,title:Z('切線垂直於半徑','Tangent perpendicular to radius'),desc:Z('在切點形成直角','A right angle at the point of contact'),note:'aboutTangent',reason:Z('圓的切線垂直於過切點的半徑。','A tangent to a circle is perpendicular to the radius at the point of contact.'),steps:Z('T 在圓周上；過 T 的切線與半徑 OT 成 90°。','T lies on the circle; its tangent makes a 90° angle with radius OT.'),eq:'OT ⟂ 切線',tex:'OT\\perp\\text{tangent at }T'},
+{id:'twoTangents',g:3,title:Z('從外點引出的兩條切線','Two tangents from an external point'),desc:Z('切線段相等，並有兩個角平分關係','Equal tangent segments and two angle bisectors'),note:'aboutTwo',reason:Z('從同一圓外點引出的兩條切線段相等；圓心與外點的連線平分切線夾角及兩半徑夾角。','Tangents from the same external point are equal; the line joining the centre to that point bisects the angle between the tangents and the angle between the radii.'),steps:Z('OA ⟂ PA、OB ⟂ PB，且 OA = OB，OP 公共；兩直角三角形全等。','OA ⟂ PA, OB ⟂ PB, OA = OB and OP is common; the right triangles are congruent.'),eq:'PA = PB；∠APO = ∠OPB；∠AOP = ∠POB',tex:'PA=PB,\\quad\\angle APO=\\angle OPB,\\quad\\angle AOP=\\angle POB'},
+{id:'alternate',g:3,title:Z('交錯弓形定理','Alternate segment theorem'),desc:Z('弦切角等於交錯弓形的圓周角','The tangent–chord angle equals the angle in the alternate segment'),note:'aboutAlt',reason:Z('弦切角等於交錯弓形內的圓周角。','The angle between a tangent and a chord equals the angle in the alternate segment.'),steps:Z('選取與 C 位於弦 TA 相反側的切線射線 TE；則 ∠ETA = ∠TCA。','Choose tangent ray TE on the opposite side of chord TA from C; then ∠ETA = ∠TCA.'),eq:'∠ETA = ∠TCA',tex:'\\angle ETA=\\angle TCA'}
+];
+const W=800,H=600,TAU=2*Math.PI,SCALE=36,EPS=.10;
+const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
+const state={lang:'bi',theme:'light',id:'chord',quiz:false,revealed:false,quizKey:null,aux:false,points:{},O:{x:400,y:300},R:185,drag:null,handles:[],scene:null};
+const wrap=a=>(a%TAU+TAU)%TAU;
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y), add=(a,b)=>({x:a.x+b.x,y:a.y+b.y}), sub=(a,b)=>({x:a.x-b.x,y:a.y-b.y}), mul=(a,k)=>({x:a.x*k,y:a.y*k}), dot=(a,b)=>a.x*b.x+a.y*b.y, cross=(a,b)=>a.x*b.y-a.y*b.x;
+const mid=(a,b)=>mul(add(a,b),.5), unit=v=>{let d=Math.hypot(v.x,v.y);return d>1e-10?mul(v,1/d):{x:0,y:0}}, perp=v=>({x:-v.y,y:v.x});
+const point=(O,r,a)=>({x:O.x+r*Math.cos(a),y:O.y+r*Math.sin(a)});
+const ang=(a,v,b)=>{let x=sub(a,v),y=sub(b,v);if(Math.hypot(x.x,x.y)<1e-8||Math.hypot(y.x,y.y)<1e-8)return NaN;return Math.atan2(Math.abs(cross(x,y)),dot(x,y))*180/Math.PI};
+const gap=(a,b)=>Math.min(wrap(a-b),wrap(b-a));
+const fmt=x=>Number.isFinite(x)?(Math.abs(x)<.0000001?0:x).toFixed(2):'—';
+const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+const t=v=>typeof v==='string'?t(UI[v]):v.zh===v.en?v.zh:state.lang==='zh'?v.zh:state.lang==='en'?v.en:v.zh+' / '+v.en;
+const text=(id,v)=>$(id).textContent=typeof v==='string'&&UI[v]?t(UI[v]):t(v);
+function definition(){return M.find(x=>x.id===state.id)}
+function resetPoints(){
+ state.O={x:400,y:300};state.R=185;
+ const p={a:3.86,b:5.57,c:1.35,d:2.18,phi:2.15};
+ if(state.id==='central'){p.a=3.65;p.b=5.75;p.c=1.4}
+ if(state.id==='semicircle'){p.a=3.55;p.b=wrap(p.a+Math.PI);p.c=1.35}
+ if(state.id==='sameSegment'){p.a=3.6;p.b=5.8;p.c=1.2;p.d=2.12}
+ if(state.id==='arcs'){p.a=3.65;p.b=4.33;p.c=5.40;p.p=1.30}
+ if(['cyclic','exterior','concyclic'].includes(state.id)){p.a=3.6;p.b=5.3;p.c=.6;p.d=2.1}
+ if(state.id==='concyclic')p.freeD=point(state.O,state.R*.84,p.d);
+ if(state.id==='tangent')p.t=5.55;
+ if(state.id==='twoTangents'){state.O={x:325,y:300};state.R=150;p.external={x:625,y:300}}
+ if(state.id==='alternate'){p.t=5.45;p.a=2.9;p.c=1.45}
+ state.points=p;state.quizKey=null;state.revealed=false;
+}
+function changeTheorem(id){if(!M.some(m=>m.id===id))return;state.id=id;resetPoints();renderAll()}
+function isConvex(pts){let signs=[];for(let i=0;i<4;i++){let a=pts[i],b=pts[(i+1)%4],c=pts[(i+2)%4],v=cross(sub(b,a),sub(c,b));if(Math.abs(v)<1.0)return false;signs.push(Math.sign(v))}return signs.every(x=>x===signs[0])}
+function ordered(p){let x=[p.a,p.b,p.c,p.d],g=x.map((v,i)=>wrap(x[(i+1)%4]-v));return g.every(v=>v>EPS)&&Math.abs(g.reduce((a,b)=>a+b,0)-TAU)<1e-5}
+function validArcs(p){let ab=wrap(p.b-p.a),ac=wrap(p.c-p.a),ap=wrap(p.p-p.a);return ab>EPS&&ac-ab>EPS&&ac<Math.PI-EPS&&ap>ac+EPS&&ap<TAU-EPS}
+function allSeparated(keys,p){for(let i=0;i<keys.length;i++)for(let j=i+1;j<keys.length;j++)if(gap(p[keys[i]],p[keys[j]])<EPS)return false;return true}
+function chordOK(p){let d=gap(p.a,p.b);return d>EPS&&Math.abs(d-Math.PI)>.06}
+function pts(){let p=state.points,o=state.O,r=state.R;return {O:o,A:point(o,r,p.a),B:point(o,r,p.b),C:point(o,r,p.c),D:p.freeD||point(o,r,p.d),T:point(o,r,p.t||0),P:p.p!==undefined?point(o,r,p.p):p.external,R:point(o,r,0)}}
+function metric(key,label,value,unitName='°',quiz=true){return{key,label,value,unit:unitName,quiz:quiz&&unitName==='°'&&Number.isFinite(value)}}
+function exactText(s){
+ if(state.id==='central')return t(Z('∠AOB（對應弧）= 2∠ACB','∠AOB (intercepted arc) = 2∠ACB'));
+ if(state.id==='arcs')return t(Z('弧 AB / 弧 AC = ∠AOB / ∠AOC = ∠APB / ∠APC','arc AB / arc AC = ∠AOB / ∠AOC = ∠APB / ∠APC'));
+ if(state.id==='concyclic')return s.valid?t(Z('∠A + ∠C = 180° ⇔ A、B、C、D 共圓','∠A + ∠C = 180° ⇔ A, B, C, D are concyclic')):t(Z('須為嚴格凸四邊形 ABCD','ABCD must be strictly convex'));
+ if(state.id==='tangent')return t(Z('OT ⟂ T 點的切線','OT ⟂ tangent at T'));
+ if(state.id==='sameSegment'&&!s.same)return '∠ACB + ∠ADB = 180°';
+ return definition().eq;
+}
+function createScene(){
+ const id=state.id,p=state.points,o=state.O,r=state.R,P=pts(),A=P.A,B=P.B,C=P.C,D=P.D,O=P.O,T=P.T;
+ const s={metrics:[],status:null,warning:false,valid:true,same:true,draw:null,handles:[]};
+ const m=(...args)=>s.metrics.push(metric(...args));
+ const handle=(name,pos,kind='circle')=>s.handles.push({name,pos,kind});
+ const hm=(...names)=>names.forEach(n=>handle(n,P[n]));
+ if(['chord','chordConverse','equalChords','equalConverse'].includes(id)){
+  const M0=mid(A,B),om=dist(O,M0),ab=dist(A,B);hm('A','B');handle('O',O,'centre');handle('R',P.R,'radius');
+  m('am',Z('AM','AM'),dist(A,M0)/SCALE,'',false);m('mb',Z('MB','MB'),dist(M0,B)/SCALE,'',false);m('om',Z('OM','OM'),om/SCALE,'',false);m('mang',Z('∠OMA','∠OMA'),90);
+  let C0,D0,N0;
+  if(id==='equalChords'||id==='equalConverse'){
+   C0=point(O,r,p.a+p.phi);D0=point(O,r,p.b+p.phi);N0=mid(C0,D0);handle('C',C0,'equal');
+   m('ab',Z('弦 AB','Chord AB'),ab/SCALE,'',false);m('cd',Z('弦 CD','Chord CD'),dist(C0,D0)/SCALE,'',false);m('on',Z('ON','ON'),dist(O,N0)/SCALE,'',false);
+  }
+  s.draw=()=>{circle(O,r);if(state.aux){segment(O,A,'aux');segment(O,B,'aux');if(C0){segment(O,C0,'aux');segment(O,D0,'aux')}}
+   segment(A,B,'main');segment(O,M0,'green');rightMark(M0,A,O,'green');tinyPoint(M0,'M');
+   if(C0){segment(C0,D0,'orange');segment(O,N0,'orange');rightMark(N0,C0,O,'orange');tinyPoint(N0,'N');tinyPoint(D0,'D');drawHandle('C',C0);}
+   segment(O,P.R,'aux');drawHandle('R',P.R,'radius');drawHandle('A',A);drawHandle('B',B);drawHandle('O',O,'centre');angleText(M0,add(M0,mul(unit(sub(A,M0)),30)),add(M0,mul(unit(sub(O,M0)),30)),'mang',90,'green',30);
+  };
+ } else if(id==='central'||id==='semicircle'){
+  let ab=wrap(p.b-p.a),ac=wrap(p.c-p.a),inArc=ac<ab,span=inArc?TAU-ab:ab,start=inArc?p.b:p.a;
+  const centre=span*180/Math.PI,ins=ang(A,C,B);hm('A','B','C');m('centre',Z('∠AOB（所對弧）','∠AOB (intercepted arc)'),centre);m('ins',Z('∠ACB','∠ACB'),ins);
+  s.status=id==='central'?(centre>180+1e-7?UI.reflex:UI.centralMinor):null;
+  s.draw=()=>{circle(O,r);if(state.aux){segment(C,point(O,r,wrap(p.c+Math.PI)),'aux')}
+   segment(O,A,'green');segment(O,B,'green');segment(C,A,'main');segment(C,B,'main');arcStroke(O,r+8,start,span,'green',3);centreAngle(O,start,span,'centre',centre,'green');angleMark(C,A,B,'ins',ins,'orange',33);tinyPoint(O,'O');hmDraw(['A','B','C'],P)};
+ } else if(id==='sameSegment'){
+  const a1=ang(A,C,B),a2=ang(A,D,B);let c1=cross(sub(B,A),sub(C,A)),c2=cross(sub(B,A),sub(D,A));s.same=c1*c2>0;hm('A','B','C','D');m('i1',Z('∠ACB','∠ACB'),a1);m('i2',Z('∠ADB','∠ADB'),a2);m('sum',Z('∠ACB + ∠ADB','∠ACB + ∠ADB'),a1+a2,'°',false);s.status=s.same?UI.same:UI.opposite;
+  s.draw=()=>{circle(O,r);if(state.aux){segment(O,A,'aux');segment(O,B,'aux')}segment(A,B,'main');segment(A,C,'main');segment(C,B,'main');segment(A,D,'main');segment(D,B,'main');angleMark(C,A,B,'i1',a1,'orange',31);angleMark(D,A,B,'i2',a2,s.same?'orange':'blue',31);tinyPoint(O,'O');hmDraw(['A','B','C','D'],P)};
+ } else if(id==='arcs'){
+  let Q=P.P,ab=wrap(p.b-p.a),ac=wrap(p.c-p.a);let abdeg=ab*180/Math.PI,acdeg=ac*180/Math.PI,apb=ang(A,Q,B),apc=ang(A,Q,C);hm('A','B','C','P');
+  m('arcAB',Z('弧 AB 的長度','Length of arc AB'),r*ab/SCALE,'',false);m('arcAC',Z('弧 AC 的長度','Length of arc AC'),r*ac/SCALE,'',false);m('c1',Z('∠AOB','∠AOB'),abdeg);m('c2',Z('∠AOC','∠AOC'),acdeg);m('p1',Z('∠APB','∠APB'),apb);m('p2',Z('∠APC','∠APC'),apc);
+  s.draw=()=>{circle(O,r);if(state.aux)segment(O,Q,'aux');segment(O,A,'green');segment(O,B,'green');segment(O,C,'blue');segment(Q,A,'main');segment(Q,B,'main');segment(Q,C,'main');arcStroke(O,r+8,p.a,ab,'orange',5);arcStroke(O,r+17,p.a,ac,'blue',4);angleMark(O,A,B,'c1',abdeg,'orange',32);angleMark(O,A,C,'c2',acdeg,'blue',51);angleMark(Q,A,B,'p1',apb,'orange',30);angleMark(Q,A,C,'p2',apc,'blue',49);tinyPoint(O,'O');hmDraw(['A','B','C','P'],P)};
+ } else if(id==='cyclic'||id==='exterior'||id==='concyclic'){
+  let valid=isConvex([A,B,C,D]);s.valid=valid;
+  let a=valid?ang(D,A,B):NaN,b=valid?ang(A,B,C):NaN,c=valid?ang(B,C,D):NaN,d=valid?ang(C,D,A):NaN;
+  if(id==='concyclic'){handle('A',A);handle('B',B);handle('C',C);handle('D',D,'free');let on=Math.abs(dist(D,O)-r)<1e-6;s.status=valid?(on?UI.onCircle:UI.offCircle):UI.nonConvex;s.warning=!valid||!on;}
+  else hm('A','B','C','D');
+  if(id==='exterior'){
+   const E=add(B,mul(unit(sub(B,A)),110));let e=ang(C,B,E);m('ext',Z('外角 ∠CBE','Exterior ∠CBE'),e);m('opp',Z('內對角 ∠ADC','Opposite interior ∠ADC'),d);
+   s.draw=()=>{circle(O,r);if(state.aux)segment(A,C,'aux');polygon([A,B,C,D]);segment(B,E,'orange');tinyPoint(E,'E');angleMark(B,C,E,'ext',e,'orange',34);angleMark(D,A,C,'opp',d,'orange',34);tinyPoint(O,'O');hmDraw(['A','B','C','D'],P)};
+  }else{
+   m('a',Z('∠DAB（∠A）','∠DAB (∠A)'),a);m('c',Z('∠BCD（∠C）','∠BCD (∠C)'),c);m('ac',Z('∠A + ∠C','∠A + ∠C'),a+c,'°',false);
+   if(id==='cyclic'){m('b',Z('∠ABC（∠B）','∠ABC (∠B)'),b);m('d',Z('∠CDA（∠D）','∠CDA (∠D)'),d);m('bd',Z('∠B + ∠D','∠B + ∠D'),b+d,'°',false)}
+   if(id==='concyclic')m('od',Z('OD','OD'),dist(O,D)/SCALE,'',false);
+   s.draw=()=>{circle(O,r);if(state.aux){segment(A,C,'aux');segment(B,D,'aux')}polygon([A,B,C,D]);if(valid){angleMark(A,D,B,'a',a,'orange',30);angleMark(C,B,D,'c',c,'orange',30);if(id==='cyclic'){angleMark(B,A,C,'b',b,'blue',25);angleMark(D,C,A,'d',d,'blue',25)}}tinyPoint(O,'O');hmDraw(['A','B','C','D'],P)};
+  }
+ } else if(id==='tangent'){
+  let u=unit(sub(T,O)),v=perp(u),E=add(T,mul(v,120)),F=add(T,mul(v,-120));handle('T',T);m('right',Z('半徑與切線的夾角','Angle between radius and tangent'),90);
+  s.draw=()=>{circle(O,r);if(state.aux)segment(O,point(O,r,wrap(p.t+Math.PI)),'aux');segment(F,E,'main');segment(O,T,'green');rightMark(T,O,E,'orange');angleText(T,O,E,'right',90,'orange',36);tinyPoint(O,'O');drawHandle('T',T)};
+ } else if(id==='twoTangents'){
+  let Q=p.external,ov=sub(Q,O),d=dist(Q,O),e=unit(ov),n=perp(e),base=add(O,mul(e,r*r/d)),offset=r*Math.sqrt(Math.max(0,1-r*r/(d*d))),A0=add(base,mul(n,offset)),B0=add(base,mul(n,-offset));
+  let ap=ang(A0,Q,O),bp=ang(O,Q,B0),ao=ang(A0,O,Q),bo=ang(Q,O,B0);handle('P',Q,'external');m('pa',Z('PA','PA'),dist(Q,A0)/SCALE,'',false);m('pb',Z('PB','PB'),dist(Q,B0)/SCALE,'',false);m('ap',Z('∠APO','∠APO'),ap);m('bp',Z('∠OPB','∠OPB'),bp);m('ao',Z('∠AOP','∠AOP'),ao);m('bo',Z('∠POB','∠POB'),bo);
+  s.draw=()=>{circle(O,r);if(state.aux)segment(A0,B0,'aux');segment(Q,A0,'main');segment(Q,B0,'main');segment(O,A0,'green');segment(O,B0,'green');segment(O,Q,'aux');rightMark(A0,O,Q,'green');rightMark(B0,O,Q,'green');angleMark(Q,A0,O,'ap',ap,'orange',38);angleMark(Q,O,B0,'bp',bp,'orange',55);angleMark(O,A0,Q,'ao',ao,'blue',30);angleMark(O,Q,B0,'bo',bo,'blue',46);tinyPoint(A0,'A');tinyPoint(B0,'B');tinyPoint(O,'O');drawHandle('P',Q)};
+ } else if(id==='alternate'){
+  let u=unit(sub(T,O)),v=perp(u),target=ang(T,C,A),Eplus=add(T,mul(v,115)),Eminus=add(T,mul(v,-115)),chosen=Math.abs(ang(Eplus,T,A)-target)<Math.abs(ang(Eminus,T,A)-target)?Eplus:Eminus,other=chosen===Eplus?Eminus:Eplus;let ext=ang(chosen,T,A);hm('T','A','C');m('tanChord',Z('弦切角 ∠ETA','Tangent–chord angle ∠ETA'),ext);m('circ',Z('圓周角 ∠TCA','Angle at circumference ∠TCA'),target);
+  s.draw=()=>{circle(O,r);if(state.aux){let U=point(O,r,wrap(p.t+Math.PI));segment(T,U,'aux');segment(A,U,'aux');tinyPoint(U,'U')}segment(other,chosen,'main');segment(T,chosen,'orange');segment(T,A,'main');segment(C,T,'main');segment(C,A,'main');angleMark(T,chosen,A,'tanChord',ext,'orange',32);angleMark(C,T,A,'circ',target,'orange',32);tinyPoint(chosen,'E');tinyPoint(O,'O');hmDraw(['T','A','C'],P)};
+ }
+ return s;
+}
+function colors(){let c=getComputedStyle(document.documentElement);return{main:c.getPropertyValue('--line').trim(),green:c.getPropertyValue('--green').trim(),orange:c.getPropertyValue('--orange').trim(),blue:c.getPropertyValue('--blue').trim(),aux:c.getPropertyValue('--faint').trim(),grid:c.getPropertyValue('--grid').trim(),paper:c.getPropertyValue('--canvas').trim(),ink:c.getPropertyValue('--ink').trim(),fill:c.getPropertyValue('--paper').trim()}}
+let col=colors(),labelScale=1;
+function segment(a,b,kind='main',width){ctx.save();ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineWidth=width||((kind==='aux')?1.6:2.7);ctx.strokeStyle=col[kind]||kind;ctx.lineCap='round';if(kind==='aux')ctx.setLineDash([6,6]);ctx.stroke();ctx.restore()}
+function polygon(ps){for(let i=0;i<ps.length;i++)segment(ps[i],ps[(i+1)%ps.length],'main')}
+function circle(o,r){ctx.save();ctx.beginPath();ctx.arc(o.x,o.y,r,0,TAU);ctx.lineWidth=2.3;ctx.strokeStyle=col.main;ctx.stroke();ctx.restore()}
+function arcStroke(o,r,start,span,kind,width=3){ctx.save();ctx.beginPath();ctx.arc(o.x,o.y,r,start,start+span);ctx.lineWidth=width;ctx.lineCap='round';ctx.strokeStyle=col[kind];ctx.stroke();ctx.restore()}
+function haloText(value,x,y,color=col.ink,font='bold 16px system-ui',align='center'){ctx.save();font=font.replace(/(\d+)px/,(_,n)=>`${Number(n)*labelScale}px`);ctx.font=font;ctx.textAlign=align;ctx.textBaseline='middle';ctx.lineWidth=5;ctx.lineJoin='round';ctx.strokeStyle=col.paper;ctx.strokeText(value,x,y);ctx.fillStyle=color;ctx.fillText(value,x,y);ctx.restore()}
+function drawHandle(name,p,kind='circle'){
+ ctx.save();ctx.beginPath();ctx.arc(p.x,p.y,11.5*labelScale,0,TAU);ctx.fillStyle=col.fill;ctx.fill();ctx.lineWidth=1.5;ctx.strokeStyle=col.green;ctx.stroke();ctx.beginPath();ctx.arc(p.x,p.y,(kind==='centre'?4:5.5)*labelScale,0,TAU);ctx.fillStyle=kind==='free'?col.orange:col.green;ctx.fill();ctx.restore();
+ let dx=13,dy=-16;if(name==='R'){dx=17;dy=15}if(name==='O'){dx=-15;dy=15}if(name==='P'){dx=16;dy=-16}
+ haloText(name,p.x+dx*labelScale,p.y+dy*labelScale,col.ink,'bold 17px system-ui');
+}
+function tinyPoint(p,name){ctx.save();ctx.beginPath();ctx.arc(p.x,p.y,3.6,0,TAU);ctx.fillStyle=col.ink;ctx.fill();ctx.restore();let dx=11,dy=-13;if(name==='O'){dx=-13;dy=13}if(name==='M'||name==='N'){dx=12;dy=13}haloText(name,p.x+dx*labelScale,p.y+dy*labelScale,col.ink,'bold 16px system-ui')}
+function hmDraw(names,p){for(const n of names)drawHandle(n,p[n],n==='D'&&state.id==='concyclic'?'free':'circle')}
+function rightMark(v,a,b,kind='green'){
+ let u=unit(sub(a,v)),w=unit(sub(b,v)),L=13;if(Math.hypot(u.x,u.y)<.1||Math.hypot(w.x,w.y)<.1)return;
+ ctx.save();ctx.beginPath();ctx.moveTo(v.x+u.x*L,v.y+u.y*L);ctx.lineTo(v.x+(u.x+w.x)*L,v.y+(u.y+w.y)*L);ctx.lineTo(v.x+w.x*L,v.y+w.y*L);ctx.lineWidth=1.8;ctx.strokeStyle=col[kind];ctx.stroke();ctx.restore();
+}
+const isHidden=k=>state.quiz&&!state.revealed&&state.quizKey===k;
+function displayAngle(k,value){return isHidden(k)?'?':`${fmt(value)}°`}
+function angleGeometry(v,a,b){let sa=Math.atan2(a.y-v.y,a.x-v.x),ea=Math.atan2(b.y-v.y,b.x-v.x),delta=wrap(ea-sa);if(delta>Math.PI)delta-=TAU;return{sa,delta}}
+function angleText(v,a,b,key,value,kind='orange',radius=28){let {sa,delta}=angleGeometry(v,a,b),midang=sa+delta/2,rr=radius+23*labelScale;haloText(displayAngle(key,value),v.x+rr*Math.cos(midang),v.y+rr*Math.sin(midang),col[kind],'bold 15px system-ui')}
+function angleMark(v,a,b,key,value,kind='orange',radius=30){if(!Number.isFinite(value))return;let {sa,delta}=angleGeometry(v,a,b);ctx.save();ctx.beginPath();ctx.arc(v.x,v.y,radius,sa,sa+delta,delta<0);ctx.lineWidth=3;ctx.strokeStyle=col[kind];ctx.stroke();ctx.restore();angleText(v,a,b,key,value,kind,radius)}
+function centreAngle(v,start,span,key,value,kind='green'){ctx.save();ctx.beginPath();ctx.arc(v.x,v.y,38,start,start+span);ctx.lineWidth=3;ctx.strokeStyle=col[kind];ctx.stroke();ctx.restore();let a=start+span/2;haloText(displayAngle(key,value),v.x+61*Math.cos(a),v.y+61*Math.sin(a),col[kind],'bold 15px system-ui')}
+function drawBackground(){ctx.clearRect(0,0,W,H);ctx.fillStyle=col.paper;ctx.fillRect(0,0,W,H);ctx.save();ctx.lineWidth=1;ctx.strokeStyle=col.grid;for(let x=0;x<=W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<=H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}ctx.restore()}
+function setupCanvas(){const r=canvas.getBoundingClientRect();labelScale=clamp(590/r.width,1,1.8);let d=Math.min(window.devicePixelRatio||1,3);let w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}ctx.setTransform(w/W,0,0,h/H,0,0)}
+function latexEquation(unicode,latex){const ns='http://www.w3.org/1998/Math/MathML',math=document.createElementNS(ns,'math'),sem=document.createElementNS(ns,'semantics'),mtext=document.createElementNS(ns,'mtext'),ann=document.createElementNS(ns,'annotation');mtext.textContent=unicode;ann.setAttribute('encoding','application/x-tex');ann.textContent=latex;sem.append(mtext,ann);math.append(sem);math.setAttribute('aria-label',unicode);$('equation').replaceChildren(math)}
+function updateStatic(){
+ const idMap={brand:'brand',brandSub:'brandSub',languageLabel:'lang',resetText:'reset',eyebrow:'eyebrow',heroTitle:'hero',heroDesc:'heroDesc',heroStamp:'stamp',canvasOverline:'canvasOverline',canvasTitle:'canvasTitle',live:'live',dragTitle:'dragTitle',dragDesc:'dragDesc',legend1:'legend1',legend2:'legend2',selectorHeading:'select',theoremLabel:'theoremLabel',insightHeading:'insight',equationLabel:'exact',measureNote:'measureNote',reasonHeading:'reason',controlsHeading:'controls',quizTitle:'quiz',quizDesc:'quizDesc',auxTitle:'aux',auxDesc:'auxDesc',footer:'footer'};
+ for(let [id,key] of Object.entries(idMap))text(id,key);
+ text('themeText',state.theme==='dark'?'light':'theme');$('theme').title=t(state.theme==='dark'?UI.light:UI.theme);$('theme').setAttribute('aria-label',t(state.theme==='dark'?UI.light:UI.theme));$('reset').title=t(UI.reset);$('reset').setAttribute('aria-label',t(UI.reset));
+ canvas.setAttribute('aria-label',t(Z('圓幾何互動畫布。拖動圓點探索所選定理。','Interactive circle geometry canvas. Drag the points to explore the selected theorem.')));
+ document.documentElement.lang=state.lang==='en'?'en':'zh-Hant';document.title=t(Z('圓的幾何性質','Circle Geometry Lab'));
+ $('language').replaceChildren();for(let [v,key] of [['bi','bi'],['en','en'],['zh','zh']]){let opt=document.createElement('option');opt.value=v;opt.textContent=t(UI[key]);$('language').append(opt)}$('language').value=state.lang;
+ $('tabs').replaceChildren();GROUPS.forEach((g,i)=>{let b=document.createElement('button');b.type='button';b.className='tab'+(definition().g===i?' active':'');b.textContent=t(g);b.setAttribute('aria-pressed',definition().g===i?'true':'false');b.addEventListener('click',()=>changeTheorem(M.find(x=>x.g===i).id));$('tabs').append(b)});
+ $('theorem').replaceChildren();GROUPS.forEach((g,i)=>{let group=document.createElement('optgroup');group.label=t(g);M.filter(x=>x.g===i).forEach(x=>{let opt=document.createElement('option');opt.value=x.id;opt.textContent=t(x.title);group.append(opt)});$('theorem').append(group)});$('theorem').value=state.id;
+ text('insightTitle',definition().title);text('insightDesc',definition().desc);text('modeNote',definition().note);text('canvasTag',GROUPS[definition().g]);$('quiz').checked=state.quiz;$('aux').checked=state.aux;
+ const reveal=$('reveal');reveal.disabled=!state.quiz||state.revealed;reveal.textContent=t(state.revealed?UI.revealed:UI.reveal);
+ $('presets').replaceChildren();if(state.id==='central'){
+  [['acute','acute'],['obtuse','obtuse'],['reflex','reflexPreset'],['straight','straight']].forEach(([value,label])=>{let b=document.createElement('button');b.className='preset';b.type='button';b.textContent=t(UI[label]);b.addEventListener('click',()=>{centralPreset(value);state.quizKey=null;state.revealed=false;renderAll()});$('presets').append(b)})
+ }
+}
+function centralPreset(which){let p=state.points;if(which==='acute'){p.a=3.95;p.b=5.15;p.c=1.45}else if(which==='obtuse'){p.a=3.5;p.b=5.8;p.c=1.5}else if(which==='reflex'){p.a=3.8;p.b=5.4;p.c=4.6}else{p.a=Math.PI;p.b=0;p.c=Math.PI/2}}
+function updateDynamic(s){
+ const hide=state.quiz&&!state.revealed;
+ if(hide)latexEquation(t(UI.hiddenEquation),'?');else latexEquation(exactText(s),definition().tex);
+ $('metrics').replaceChildren();s.metrics.forEach(m=>{let box=document.createElement('div');box.className='metric';let label=document.createElement('div');label.className='metric-label';label.textContent=t(m.label);let val=document.createElement('div');val.className='metric-value'+(isHidden(m.key)?' hidden-value':'');val.textContent=isHidden(m.key)?'?':Number.isFinite(m.value)?'≈ '+fmt(m.value)+m.unit:'—';box.append(label,val);$('metrics').append(box)});
+ let status=$('status');status.hidden=!s.status;if(s.status){status.className='status'+(s.warning?' warning':'');status.textContent=t(s.status)}
+ $('reasonText').textContent=hide?t(UI.lockedReason):t(definition().reason);$('reasonSteps').textContent=hide?'':t(definition().steps);
+ let btn=$('reveal');btn.disabled=!state.quiz||state.revealed;btn.textContent=t(state.revealed?UI.revealed:UI.reveal);
+}
+let queued=false;
+function render(){queued=false;col=colors();setupCanvas();const s=createScene();state.scene=s;state.handles=s.handles;let candidates=s.metrics.filter(x=>x.quiz);if(state.quiz&&(!state.quizKey||!candidates.some(x=>x.key===state.quizKey))){state.quizKey=candidates.length?candidates[Math.floor(Math.random()*candidates.length)].key:null}drawBackground();s.draw();updateDynamic(s)}
+function requestRender(){if(!queued){queued=true;requestAnimationFrame(render)}}
+function renderAll(){updateStatic();render()}
+function canvasPosition(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+function angleFrom(pos){return wrap(Math.atan2(pos.y-state.O.y,pos.x-state.O.x))}
+function moveHandle(h,pos){
+ let p=state.points,id=state.id,O=state.O,r=state.R,key=h.name.toLowerCase();
+ if(h.kind==='centre'){let x=clamp(pos.x,r+23,W-r-23),y=clamp(pos.y,r+23,H-r-23);state.O={x,y};return}
+ if(h.kind==='radius'){let max=Math.min(220,O.x-23,W-O.x-23,O.y-23,H-O.y-23);state.R=clamp(dist(pos,O),90,max);return}
+ if(h.kind==='external'){let q={x:clamp(pos.x,20,W-20),y:clamp(pos.y,20,H-20)},v=sub(q,O),d=dist(q,O),minimum=r+18;if(d<minimum){let old=unit(sub(p.external,O));v=d>1e-8?unit(v):old;q=add(O,mul(v,minimum))}p.external=q;return}
+ if(h.kind==='free'){let q={x:clamp(pos.x,15,W-15),y:clamp(pos.y,15,H-15)},d=dist(q,O);if(Math.abs(d-r)<10&&d>0)q=add(O,mul(sub(q,O),r/d));if([P('a'),P('b'),P('c')].some(x=>dist(q,x)<7))return;p.freeD=q;return}
+ const theta=angleFrom(pos),candidate={...p};
+ if(h.kind==='equal'){candidate.phi=wrap(theta-p.a);if(gap(candidate.a,candidate.a+candidate.phi)<EPS||gap(candidate.b,candidate.b+candidate.phi)<EPS)return;p.phi=candidate.phi;return}
+ if(id==='semicircle'&&(key==='a'||key==='b')){candidate[key]=theta;candidate[key==='a'?'b':'a']=wrap(theta+Math.PI);if(!allSeparated(['a','b','c'],candidate))return;Object.assign(p,candidate);return}
+ candidate[key]=theta;
+ if(['chord','chordConverse','equalChords','equalConverse'].includes(id)&&!chordOK(candidate))return;
+ if(['central','semicircle'].includes(id)&&!allSeparated(['a','b','c'],candidate))return;
+ if(id==='sameSegment'&&!allSeparated(['a','b','c','d'],candidate))return;
+ if(id==='arcs'&&!validArcs(candidate))return;
+ if(['cyclic','exterior'].includes(id)&&!ordered(candidate))return;
+ if(id==='concyclic'&&!allSeparated(['a','b','c'],candidate))return;
+ if(id==='alternate'&&!allSeparated(['t','a','c'],candidate))return;
+ p[key]=theta;
+ function P(a){return point(O,r,p[a])}
+}
+canvas.addEventListener('pointerdown',e=>{let pos=canvasPosition(e),rect=canvas.getBoundingClientRect(),threshold=Math.max(15,23*W/rect.width);let best=null,bestDist=Infinity;for(let h of state.handles){let d=dist(pos,h.pos);if(d<threshold&&d<bestDist){best=h;bestDist=d}}if(!best)return;e.preventDefault();state.drag=best;canvas.classList.add('dragging');canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointermove',e=>{if(!state.drag)return;e.preventDefault();moveHandle(state.drag,canvasPosition(e));requestRender()});
+function endDrag(e){if(!state.drag)return;state.drag=null;canvas.classList.remove('dragging');if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId)}
+canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
+$('language').addEventListener('change',e=>{state.lang=e.target.value;renderAll()});$('theorem').addEventListener('change',e=>changeTheorem(e.target.value));
+$('theme').addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=state.theme;renderAll()});
+$('reset').addEventListener('click',()=>{state.quiz=false;state.aux=false;resetPoints();renderAll()});
+$('quiz').addEventListener('change',e=>{state.quiz=e.target.checked;state.quizKey=null;state.revealed=false;renderAll()});
+$('aux').addEventListener('change',e=>{state.aux=e.target.checked;renderAll()});$('reveal').addEventListener('click',()=>{state.revealed=true;renderAll()});
+window.addEventListener('resize',requestRender);if('ResizeObserver'in window)new ResizeObserver(requestRender).observe(canvas);
+window.circleLabTest=()=>({mode:state.id,language:state.lang,theme:state.theme,quiz:state.quiz,revealed:state.revealed,quizKey:state.quizKey,aux:state.aux,handles:state.handles.map(h=>({name:h.name,x:h.pos.x,y:h.pos.y,kind:h.kind})),metrics:state.scene?state.scene.metrics.map(m=>({key:m.key,value:Number.isFinite(m.value)?m.value:null,unit:m.unit})):[],valid:state.scene?state.scene.valid:null,state:JSON.parse(JSON.stringify({O:state.O,R:state.R,points:state.points}))});
+resetPoints();renderAll();
+</script>
+</body>
+</html>
