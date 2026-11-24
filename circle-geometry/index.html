@@ -18,6 +18,13 @@
 @media(max-width:1000px){.layout{grid-template-columns:minmax(0,1.1fr) minmax(310px,.9fr)}.shell{padding:27px 22px}.nav{padding-left:22px;padding-right:22px}.visual-card,.side-card{padding:17px}.nav{gap:10px}.nav-button{padding:0 10px}.nav-button .button-text{display:none}.hero-stamp{display:none}}
 @media(max-width:720px){.nav{padding:11px 15px;min-height:64px;flex-wrap:wrap}.brand-mark{width:36px;height:36px;flex-basis:36px}.brand-text{font-size:13px}.brand-sub{font-size:9px}.nav-actions{gap:6px}.nav-button{height:38px;width:38px;padding:0}.language-wrap{height:38px;padding:0 8px;gap:4px}.language-wrap select{max-width:132px;font-size:11px}.shell{padding:23px 14px 28px}.hero{margin-bottom:18px}.hero p{font-size:12px}.layout{grid-template-columns:minmax(0,1fr);gap:13px}.visual-card{padding:15px}.visual-footer{flex-direction:column;gap:8px}.legend{justify-content:flex-start}.side{gap:12px}.card-head h2{font-size:15px}.canvas-tag{font-size:9px}.hero h1{font-size:28px}}
 @media(max-width:390px){.brand-sub{display:none}.brand-text{max-width:110px}.language-wrap select{max-width:105px}.nav{gap:5px}.nav-actions{gap:4px}.nav-button{width:34px}.nav-button svg{width:15px}.nav{padding-left:10px;padding-right:10px}}
+
+[hidden]{display:none!important}.unit-switcher{display:flex;align-items:center;gap:7px;margin:0 0 26px;flex-wrap:wrap}.unit-caption{color:var(--muted);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;margin-right:7px}.unit-button{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:10px;padding:9px 12px;background:var(--paper);font-size:12px;font-weight:800;color:var(--muted)}.unit-button .unit-number{font-size:10px;color:var(--faint)}.unit-button[aria-pressed=true]{background:var(--mint);border-color:var(--green);color:var(--green-dark)}.unit-button:hover{border-color:var(--green)}
+.vector-camera-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 2px 0;color:var(--muted);font-size:10px}.vector-input-note{margin:-4px 0 14px}.vector-block+.vector-block{border-top:1px solid var(--border);margin-top:13px;padding-top:12px}.vector-block-title{font-size:11px;font-weight:850;margin-bottom:7px;color:var(--ink)}.vector-field{display:grid;grid-template-columns:31px minmax(55px,1fr) 55px;align-items:center;gap:9px;margin:7px 0}.vector-field label{font-size:11px;font-weight:800;color:var(--muted);font-family:Georgia,serif}.vector-field input[type=range]{width:100%;accent-color:var(--green);cursor:pointer}.vector-field input[type=number]{width:100%;height:31px;border:1px solid var(--border);border-radius:7px;background:var(--paper);color:var(--ink);font-size:12px;font-weight:750;text-align:center;padding:3px}.vector-extra{border-top:1px solid var(--border);padding-top:10px;margin-top:11px}.vector-extra-title{font-size:11px;font-weight:800;color:var(--ink)}.vector-steps{font-size:11px;color:var(--muted);line-height:1.65}.vector-step{display:flex;gap:9px;margin-top:8px}.vector-step-number{flex:0 0 18px;height:18px;border-radius:50%;background:var(--mint);color:var(--green-dark);display:grid;place-items:center;font-size:9px;font-weight:850}.vector-step-text{overflow-wrap:anywhere}.vector-metrics .metric-value{font-size:16px;line-height:1.45}.vector-metrics .approx{font-size:11px;color:var(--muted);margin-top:2px;font-family:system-ui,sans-serif;font-weight:500}.vector-undefined{font-size:13px!important;font-family:system-ui,sans-serif!important;color:var(--orange)}
+@media(max-width:720px){.unit-switcher{margin-bottom:18px;gap:6px}.unit-caption{width:100%;margin-bottom:1px}.unit-button{font-size:11px;padding:8px 9px;flex:1;justify-content:center}.vector-camera-row{font-size:9px}.vector-metrics .metric-value{font-size:15px}}
+
+#vectorView .legend span:last-child:before{background:var(--blue)}
+
 </style>
 </head>
 <body>
@@ -27,11 +34,26 @@
     <button class="nav-button" id="theme" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg><span class="button-text" id="themeText"></span></button>
     <button class="nav-button" id="reset" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11a8 8 0 1 1 2.4 6M4 5v6h6"/></svg><span class="button-text" id="resetText"></span></button>
   </div></nav></header>
-<main class="shell"><div class="hero"><div><div class="eyebrow" id="eyebrow"></div><h1 id="heroTitle"></h1><p id="heroDesc"></p></div><div class="hero-stamp" id="heroStamp"></div></div>
+<main class="shell"><div class="unit-switcher" role="group" aria-labelledby="unitCaption"><span class="unit-caption" id="unitCaption"></span><button class="unit-button" id="unitCircle" type="button" aria-pressed="true"><span class="unit-number">01</span><span id="unitCircleText"></span></button><button class="unit-button" id="unitVectors" type="button" aria-pressed="false"><span class="unit-number">02</span><span id="unitVectorText"></span></button></div><section id="circleView"><div class="hero"><div><div class="eyebrow" id="eyebrow"></div><h1 id="heroTitle"></h1><p id="heroDesc"></p></div><div class="hero-stamp" id="heroStamp"></div></div>
 <div class="layout"><section class="card visual-card"><div class="card-head"><div><div class="overline" id="canvasOverline"></div><h2 id="canvasTitle"></h2></div><span class="live-pill" id="live"></span></div><div class="canvas-frame"><canvas id="canvas" width="800" height="600" tabindex="0"></canvas><div class="canvas-tag" id="canvasTag"></div></div><div class="visual-footer"><p><strong id="dragTitle"></strong><br><span id="dragDesc"></span></p><div class="legend"><span id="legend1"></span><span id="legend2"></span></div></div></section>
 <div class="side"><section class="card side-card"><div class="section-heading"><h2 id="selectorHeading"></h2><span class="section-index">01</span></div><div class="tabs" id="tabs"></div><label class="select-label" id="theoremLabel" for="theorem"></label><select class="theorem-select" id="theorem"></select><p class="mode-note" id="modeNote"></p><div class="presets" id="presets"></div></section>
 <section class="card side-card"><div class="section-heading"><h2 id="insightHeading"></h2><span class="section-index">02</span></div><h3 class="insight-title" id="insightTitle"></h3><p class="insight-description" id="insightDesc"></p><div class="equation-box"><div class="equation-label" id="equationLabel"></div><div class="equation" id="equation"></div></div><div class="metrics" id="metrics"></div><p class="measure-note" id="measureNote"></p><div class="status" id="status" hidden></div><div class="reason"><div class="reason-title" id="reasonHeading"></div><p id="reasonText"></p><small id="reasonSteps"></small></div></section>
-<section class="card side-card"><div class="section-heading"><h2 id="controlsHeading"></h2><span class="section-index">03</span></div><div class="controls"><label class="control"><span class="control-copy"><span id="quizTitle"></span><small id="quizDesc"></small></span><span class="switch"><input type="checkbox" id="quiz"><i></i></span></label><button id="reveal" class="reveal" type="button" disabled></button><label class="control"><span class="control-copy"><span id="auxTitle"></span><small id="auxDesc"></small></span><span class="switch"><input type="checkbox" id="aux"><i></i></span></label></div></section></div></div><footer class="bottom-note" id="footer"></footer></main>
+<section class="card side-card"><div class="section-heading"><h2 id="controlsHeading"></h2><span class="section-index">03</span></div><div class="controls"><label class="control"><span class="control-copy"><span id="quizTitle"></span><small id="quizDesc"></small></span><span class="switch"><input type="checkbox" id="quiz"><i></i></span></label><button id="reveal" class="reveal" type="button" disabled></button><label class="control"><span class="control-copy"><span id="auxTitle"></span><small id="auxDesc"></small></span><span class="switch"><input type="checkbox" id="aux"><i></i></span></label></div></section></div></div><footer class="bottom-note" id="footer"></footer></section>
+<section id="vectorView" hidden>
+  <div class="hero"><div><div class="eyebrow" id="vEyebrow"></div><h1 id="vHero"></h1><p id="vHeroDesc"></p></div><div class="hero-stamp" id="vStamp"></div></div>
+  <div class="layout"><section class="card visual-card"><div class="card-head"><div><div class="overline" id="vCanvasOverline"></div><h2 id="vCanvasTitle"></h2></div><span class="live-pill" id="vLive"></span></div>
+    <div class="canvas-frame"><canvas id="vectorCanvas" width="800" height="600" tabindex="0"></canvas><div class="canvas-tag" id="vCanvasTag"></div></div>
+    <div class="vector-camera-row"><button class="preset" id="vCameraReset" type="button"></button><span id="vCameraNote"></span></div>
+    <div class="visual-footer"><p><strong id="vDragTitle"></strong><br><span id="vDragDesc"></span></p><div class="legend"><span id="vLegendA"></span><span id="vLegendB"></span></div></div>
+  </section><div class="side">
+    <section class="card side-card"><div class="section-heading"><h2 id="vSelectorHeading"></h2><span class="section-index">01</span></div><div class="tabs" id="vTabs"></div><label class="select-label" id="vModeLabel" for="vMode"></label><select class="theorem-select" id="vMode"></select><p class="mode-note" id="vModeNote"></p></section>
+    <section class="card side-card"><div class="section-heading"><h2 id="vInputHeading"></h2><span class="section-index">02</span></div><p class="mode-note vector-input-note" id="vInputNote"></p><div id="vInputs"></div><div id="vExtraInputs"></div></section>
+    <section class="card side-card"><div class="section-heading"><h2 id="vInsightHeading"></h2><span class="section-index">03</span></div><h3 class="insight-title" id="vInsightTitle"></h3><p class="insight-description" id="vInsightDesc"></p><div class="equation-box"><div class="equation-label" id="vEquationLabel"></div><div class="equation" id="vEquation"></div></div><div class="metrics vector-metrics" id="vMetrics"></div><p class="measure-note" id="vMeasureNote"></p><div class="status" id="vStatus" hidden></div><div class="reason"><div class="reason-title" id="vReasonHeading"></div><p id="vReasonText"></p><div class="vector-steps" id="vSteps"></div></div></section>
+    <section class="card side-card"><div class="section-heading"><h2 id="vControlsHeading"></h2><span class="section-index">04</span></div><div class="controls"><label class="control"><span class="control-copy"><span id="vQuizTitle"></span><small id="vQuizDesc"></small></span><span class="switch"><input type="checkbox" id="vQuiz"><i></i></span></label><button id="vReveal" class="reveal" type="button" disabled></button><label class="control"><span class="control-copy"><span id="vAuxTitle"></span><small id="vAuxDesc"></small></span><span class="switch"><input type="checkbox" id="vAux"><i></i></span></label></div></section>
+  </div></div><footer class="bottom-note"><span id="vFooter"></span><br><a id="vSource" href="https://www.edb.gov.hk/attachment/tc/curriculum-development/kla/ma/curr/EN_M2_tc.pdf" target="_blank" rel="noopener noreferrer"></a></footer>
+</section>
+
+</main>
 <script>
 'use strict';
 const Z=(zh,en)=>({zh,en});
@@ -277,12 +299,1031 @@ function endDrag(e){if(!state.drag)return;state.drag=null;canvas.classList.remov
 canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
 $('language').addEventListener('change',e=>{state.lang=e.target.value;renderAll()});$('theorem').addEventListener('change',e=>changeTheorem(e.target.value));
 $('theme').addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=state.theme;renderAll()});
-$('reset').addEventListener('click',()=>{state.quiz=false;state.aux=false;resetPoints();renderAll()});
+$('reset').addEventListener('click',()=>{if(window.VectorApp&&window.VectorApp.active()){window.VectorApp.reset();return}state.quiz=false;state.aux=false;resetPoints();renderAll()});
 $('quiz').addEventListener('change',e=>{state.quiz=e.target.checked;state.quizKey=null;state.revealed=false;renderAll()});
 $('aux').addEventListener('change',e=>{state.aux=e.target.checked;renderAll()});$('reveal').addEventListener('click',()=>{state.revealed=true;renderAll()});
 window.addEventListener('resize',requestRender);if('ResizeObserver'in window)new ResizeObserver(requestRender).observe(canvas);
 window.circleLabTest=()=>({mode:state.id,language:state.lang,theme:state.theme,quiz:state.quiz,revealed:state.revealed,quizKey:state.quizKey,aux:state.aux,handles:state.handles.map(h=>({name:h.name,x:h.pos.x,y:h.pos.y,kind:h.kind})),metrics:state.scene?state.scene.metrics.map(m=>({key:m.key,value:Number.isFinite(m.value)?m.value:null,unit:m.unit})):[],valid:state.scene?state.scene.valid:null,state:JSON.parse(JSON.stringify({O:state.O,R:state.R,points:state.points}))});
 resetPoints();renderAll();
+</script>
+<script>
+/*
+ * VectorCore API（可直接貼進 HTML 的 <script>；只建立 window.VectorCore）
+ *
+ * 向量為長度 3 的整數陣列 [x, y, z]，輸入 Number 必須是安全整數；亦接受
+ * BigInt 整數。整數向量輸出為 Number 陣列，若結果超過安全整數範圍則拋出
+ * RangeError，避免默默失準。精確分數與根式以 BigInt 做整數運算。
+ *
+ * add(u,v), sub(u,v), scale(u,k), dot(u,v), cross(u,v), norm2(u)
+ *   -> 整數向量或整數；cross(u,v) 的順序是 u × v，遵循右手定則。
+ * fraction(p,q=1), sqrtFraction(n,d=1)
+ *   -> {plain, tex, value}；分別為最簡 p/q 和 √n/d（n 非負，分母非零）。
+ *   plain 和 tex 為精確表示，value 為 Number 近似值。負號置於分子前。
+ * vectorFraction([p,q,r],d=1)
+ *   -> {plain, tex, value:[x,y,z], components:[{plain,tex,value}, ...]}。
+ * position(P) -> {vector:[x,y,z], magnitude}；magnitude(v) 和 distance(A,B)
+ *   -> 精確根式物件；displacement(A,B) -> B-A。
+ * unit(v) / unitVector(v) -> 含 defined 的向量表示物件；零向量時
+ *   {defined:false, reason:'zero-vector', plain:'undefined', tex, value:null}。
+ * angle(u,v) -> {defined, plain, tex, value, radians, degrees, cos}；value
+ *   和 radians 均為弧度近似值，cos 是精確分數／根式物件。非特殊角以
+ *   arccos(dot/sqrt(norm2(u)*norm2(v))) 精確表示；同向、垂直、反向分別
+ *   為 0°、90°、180°。任一零向量時 defined:false、value:null。
+ * projection(u,v) -> {defined, coefficient, vector, scalar}：u 在 v 上的
+ *   向量投影是 coefficient·v，scalar 是帶符號標量投影；v 為零時
+ *   defined:false、reason:'zero-target-vector'，其三項皆為 null。
+ * crossInfo(u,v) -> {vector, magnitude, parallelogramArea, triangleArea}；
+ *   magnitude 與 parallelogramArea 均為 |u × v|，triangleArea 為其一半。
+ * section(A,B,m,n) -> 向量分數物件；AP:PB=m:n，P=(nA+mB)/(m+n)，
+ *   m,n 必須為正整數。
+ * classify(u,v) -> 'parallel'（包括反向）、'perpendicular'、'neither'；
+ *   任一零向量回傳字串 'undefined'。
+ *
+ * 無效型別、非整數、非法分母等會拋出 TypeError 或 RangeError；以上
+ * undefined 是幾何定義域結果，不會靜默轉成零向量或 NaN。
+ */
+window.VectorCore = (() => {
+  'use strict';
+
+  const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
+
+  function integer(value, name) {
+    if (typeof value === 'bigint') return value;
+    if (typeof value !== 'number' || !Number.isSafeInteger(value)) {
+      throw new TypeError(`${name} must be a safe integer or BigInt`);
+    }
+    return BigInt(value);
+  }
+
+  function vector(v, name = 'vector') {
+    if (!Array.isArray(v) || v.length !== 3) {
+      throw new TypeError(`${name} must be a three-component integer array`);
+    }
+    return v.map((x, i) => integer(x, `${name}[${i}]`));
+  }
+
+  function safeNumber(n, name = 'result') {
+    if (n > MAX_SAFE || n < -MAX_SAFE) {
+      throw new RangeError(`${name} exceeds the safe integer range`);
+    }
+    return Number(n);
+  }
+
+  function vectorNumbers(v) {
+    return v.map((x, i) => safeNumber(x, `result[${i}]`));
+  }
+
+  function gcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b !== 0n) [a, b] = [b, a % b];
+    return a;
+  }
+
+  // 避免極大 BigInt 的分子分母各自變成 Infinity 而得到 NaN。
+  function approximateRatio(n, d) {
+    const a = Number(n);
+    const b = Number(d);
+    if (Number.isFinite(a) && Number.isFinite(b)) return a / b;
+    if (n === 0n) return 0;
+    const negative = (n < 0n) !== (d < 0n);
+    const ns = (n < 0n ? -n : n).toString();
+    const ds = (d < 0n ? -d : d).toString();
+    const leading = s => Number(s.slice(0, 16)) / 10 ** (Math.min(16, s.length) - 1);
+    return (negative ? -1 : 1) * (leading(ns) / leading(ds)) * 10 ** (ns.length - ds.length);
+  }
+
+  function rational(p, q) {
+    if (q === 0n) throw new RangeError('denominator must be nonzero');
+    if (q < 0n) { p = -p; q = -q; }
+    const divisor = gcd(p, q);
+    p /= divisor;
+    q /= divisor;
+    const neg = p < 0n;
+    const a = neg ? -p : p;
+    const sign = neg ? '-' : '';
+    const plain = q === 1n ? `${p}` : `${sign}${a}/${q}`;
+    const tex = q === 1n ? `${p}` : `${sign}\\frac{${a}}{${q}}`;
+    return { plain, tex, value: approximateRatio(p, q) };
+  }
+
+  function fraction(p, q = 1) {
+    return rational(integer(p, 'numerator'), integer(q, 'denominator'));
+  }
+
+  // n = outside² * inside；inside 不含平方因子。
+  function squareParts(n) {
+    let outside = 1n;
+    let inside = 1n;
+    function removeFactor(p) {
+      let count = 0;
+      while (n % p === 0n) {
+        n /= p;
+        count++;
+      }
+      if (count >= 2) outside *= p ** BigInt(Math.floor(count / 2));
+      if (count % 2) inside *= p;
+    }
+    removeFactor(2n);
+    removeFactor(3n);
+    // 除 2 和 3 外，質因數必為 6k±1。
+    for (let p = 5n, step = 2n; p * p <= n; p += step, step = 6n - step) {
+      if (n % p === 0n) removeFactor(p);
+    }
+    if (n > 1n) inside *= n;
+    return { outside, inside };
+  }
+
+  // coefficient * sqrt(n) / d，作為根式、單位向量及投影的共同實作。
+  function radical(coefficient, n, d) {
+    if (n < 0n) throw new RangeError('radicand must be nonnegative');
+    if (d === 0n) throw new RangeError('denominator must be nonzero');
+    if (n === 0n || coefficient === 0n) return rational(0n, 1n);
+    if (d < 0n) { coefficient = -coefficient; d = -d; }
+    const { outside, inside } = squareParts(n);
+    coefficient *= outside;
+    const divisor = gcd(coefficient, d);
+    coefficient /= divisor;
+    d /= divisor;
+    if (inside === 1n) return rational(coefficient, d);
+    const negative = coefficient < 0n;
+    const magnitude = negative ? -coefficient : coefficient;
+    const sign = negative ? '-' : '';
+    const plainNumerator = `${magnitude === 1n ? '' : `${magnitude}*`}sqrt(${inside})`;
+    const texNumerator = `${magnitude === 1n ? '' : magnitude}\\sqrt{${inside}}`;
+    return {
+      plain: d === 1n ? `${sign}${plainNumerator}` : `${sign}${plainNumerator}/${d}`,
+      tex: d === 1n ? `${sign}${texNumerator}` : `${sign}\\frac{${texNumerator}}{${d}}`,
+      value: approximateRatio(coefficient, d) * Math.sqrt(Number(inside))
+    };
+  }
+
+  function sqrtFraction(n, d = 1) {
+    return radical(1n, integer(n, 'radicand'), integer(d, 'denominator'));
+  }
+
+  function vectorExpression(components) {
+    return {
+      plain: `(${components.map(c => c.plain).join(', ')})`,
+      tex: `\\left(${components.map(c => c.tex).join(', ')}\\right)`,
+      value: components.map(c => c.value),
+      components
+    };
+  }
+
+  function vectorFraction(numerators, denominator = 1) {
+    const nums = vector(numerators, 'numerators');
+    const d = integer(denominator, 'denominator');
+    if (d === 0n) throw new RangeError('denominator must be nonzero');
+    return vectorExpression(nums.map(n => rational(n, d)));
+  }
+
+  function add(u, v) {
+    const a = vector(u, 'u'), b = vector(v, 'v');
+    return vectorNumbers(a.map((x, i) => x + b[i]));
+  }
+
+  function sub(u, v) {
+    const a = vector(u, 'u'), b = vector(v, 'v');
+    return vectorNumbers(a.map((x, i) => x - b[i]));
+  }
+
+  function scale(u, k) {
+    const a = vector(u, 'u'), factor = integer(k, 'scalar');
+    return vectorNumbers(a.map(x => x * factor));
+  }
+
+  function dotBig(a, b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
+
+  function dot(u, v) {
+    return safeNumber(dotBig(vector(u, 'u'), vector(v, 'v')));
+  }
+
+  function crossBig(a, b) {
+    return [a[1] * b[2] - a[2] * b[1],
+            a[2] * b[0] - a[0] * b[2],
+            a[0] * b[1] - a[1] * b[0]];
+  }
+
+  function cross(u, v) {
+    return vectorNumbers(crossBig(vector(u, 'u'), vector(v, 'v')));
+  }
+
+  function norm2(u) {
+    const a = vector(u, 'u');
+    return safeNumber(dotBig(a, a));
+  }
+
+  function magnitude(u) {
+    const a = vector(u, 'u');
+    return radical(1n, dotBig(a, a), 1n);
+  }
+
+  function position(p) {
+    const a = vector(p, 'position');
+    return { vector: vectorNumbers(a), magnitude: radical(1n, dotBig(a, a), 1n) };
+  }
+
+  function displacement(a, b) {
+    return sub(b, a);
+  }
+
+  function distance(a, b) {
+    const start = vector(a, 'A'), end = vector(b, 'B');
+    const delta = end.map((x, i) => x - start[i]);
+    return radical(1n, dotBig(delta, delta), 1n);
+  }
+
+  function unit(u) {
+    const a = vector(u, 'u');
+    const squared = dotBig(a, a);
+    if (squared === 0n) {
+      return { defined: false, reason: 'zero-vector', plain: 'undefined',
+               tex: '\\text{undefined}', value: null, components: null };
+    }
+    // a/√s = a√s/s；每一分量各自化簡。
+    const result = vectorExpression(a.map(x => radical(x, squared, squared)));
+    return { defined: true, ...result };
+  }
+
+  function angle(u, v) {
+    const a = vector(u, 'u'), b = vector(v, 'v');
+    const aa = dotBig(a, a), bb = dotBig(b, b);
+    if (aa === 0n || bb === 0n) {
+      return { defined: false, reason: 'zero-vector', plain: 'undefined',
+               tex: '\\text{undefined}', value: null, radians: null, degrees: null, cos: null };
+    }
+    const product = aa * bb;
+    const productDot = dotBig(a, b);
+    const cos = radical(productDot, product, product);
+    const crossVector = crossBig(a, b);
+    const parallel = crossVector.every(x => x === 0n);
+    let radians, degrees, plain, tex;
+    if (parallel && productDot > 0n) {
+      radians = 0; degrees = 0; plain = '0°'; tex = '0^\\circ';
+    } else if (parallel && productDot < 0n) {
+      radians = Math.PI; degrees = 180; plain = '180°'; tex = '180^\\circ';
+    } else if (productDot === 0n) {
+      radians = Math.PI / 2; degrees = 90; plain = '90°'; tex = '90^\\circ';
+    } else {
+      radians = Math.acos(Math.max(-1, Math.min(1, cos.value)));
+      degrees = radians * 180 / Math.PI;
+      plain = `arccos(${productDot}/sqrt(${product}))`;
+      tex = `\\arccos\\left(\\frac{${productDot}}{\\sqrt{${product}}}\\right)`;
+    }
+    return { defined: true, plain, tex, value: radians, radians, degrees, cos };
+  }
+
+  function projection(u, v) {
+    const a = vector(u, 'u'), b = vector(v, 'v');
+    const targetSquared = dotBig(b, b);
+    if (targetSquared === 0n) {
+      return { defined: false, reason: 'zero-target-vector',
+               coefficient: null, vector: null, scalar: null };
+    }
+    const productDot = dotBig(a, b);
+    const coefficient = rational(productDot, targetSquared);
+    const projected = vectorExpression(b.map(x => rational(productDot * x, targetSquared)));
+    const scalar = radical(productDot, targetSquared, targetSquared);
+    return { defined: true, coefficient, vector: projected, scalar };
+  }
+
+  function crossInfo(u, v) {
+    const a = vector(u, 'u'), b = vector(v, 'v');
+    const c = crossBig(a, b);
+    const squared = dotBig(c, c);
+    const area = radical(1n, squared, 1n);
+    return { vector: vectorNumbers(c), magnitude: area, parallelogramArea: area,
+             triangleArea: radical(1n, squared, 2n) };
+  }
+
+  function section(a, b, m, n) {
+    const start = vector(a, 'A'), end = vector(b, 'B');
+    const mm = integer(m, 'm'), nn = integer(n, 'n');
+    if (mm <= 0n || nn <= 0n) throw new RangeError('m and n must be positive');
+    const d = mm + nn;
+    return vectorExpression(start.map((x, i) => rational(nn * x + mm * end[i], d)));
+  }
+
+  function classify(u, v) {
+    const a = vector(u, 'u'), b = vector(v, 'v');
+    if (dotBig(a, a) === 0n || dotBig(b, b) === 0n) return 'undefined';
+    if (crossBig(a, b).every(x => x === 0n)) return 'parallel';
+    if (dotBig(a, b) === 0n) return 'perpendicular';
+    return 'neither';
+  }
+
+  return {
+    add, sub, scale, dot, cross, norm2,
+    fraction, sqrtFraction, vectorFraction,
+    position, magnitude, displacement, distance,
+    unit, unitVector: unit, angle, projection, crossInfo, section, classify
+  };
+})();
+
+/*
+ * Standalone Canvas 2D orthographic vector renderer.
+ * Embed this file's contents in a script element; it has no dependencies.
+ */
+(function () {
+  'use strict';
+
+  var ZERO = [0, 0, 0];
+  var EPS = 1e-9;
+  var DEFAULT_VIEW = { yaw: 0.2, pitch: 0.63 };
+  var MIN_PITCH = 0.25;
+  var MAX_PITCH = 1.32;
+  var MODES = ['position', 'displacement', 'addition', 'dot', 'projection', 'cross', 'division', 'relations'];
+
+  function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+  function add(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
+  function sub(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
+  function mul(a, k) { return [a[0] * k, a[1] * k, a[2] * k]; }
+  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  function cross(a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+  function norm(a) { return Math.sqrt(dot(a, a)); }
+  function unit(a) { var n = norm(a); return n > EPS ? mul(a, 1 / n) : ZERO.slice(); }
+  function num(x) {
+    if (!Number.isFinite(x)) return '?';
+    if (x !== 0 && (Math.abs(x) >= 1e7 || Math.abs(x) < 0.005)) return x.toExponential(2).replace('-', '−');
+    var y = Math.abs(x) < 0.0005 ? 0 : Math.round(x * 100) / 100;
+    return String(y).replace('-', '−');
+  }
+  function vecText(a) { return '(' + a.map(num).join(', ') + ')'; }
+  function vector(value) {
+    var v = Array.isArray(value) ? value : ZERO;
+    return [0, 1, 2].map(function (i) { var x = Number(v[i]); return Number.isFinite(x) ? x : 0; });
+  }
+  function number(value, fallback) { var n = Number(value); return Number.isFinite(n) ? n : fallback; }
+  function tr(lang, zh, en) { return lang === 'zh' ? zh : lang === 'en' ? en : zh + ' / ' + en; }
+
+  function snapshot(source) {
+    var s = source || {};
+    return {
+      mode: MODES.indexOf(s.mode) >= 0 ? s.mode : 'position',
+      a: vector(s.a), b: vector(s.b), k: number(s.k, 0),
+      m: number(s.m, 1), n: number(s.n, 1),
+      aux: !!s.aux, quizHidden: !!s.quizHidden, lang: s.lang === 'zh' || s.lang === 'en' ? s.lang : 'bi'
+    };
+  }
+
+  function basis(view) {
+    var cy = Math.cos(view.yaw), sy = Math.sin(view.yaw);
+    var cp = Math.cos(view.pitch), sp = Math.sin(view.pitch);
+    // These are orthonormal screen-right and screen-down vectors in world space.
+    return { right: [cy, -sy, 0], down: [sp * sy, sp * cy, -cp] };
+  }
+  function rawPoint(p, b) { return { x: dot(p, b.right), y: dot(p, b.down) }; }
+  function project(p, transform) {
+    var q = rawPoint(p, transform.basis);
+    return { x: transform.origin.x + q.x * transform.scale, y: transform.origin.y + q.y * transform.scale };
+  }
+  function inverseXY(point, z, transform) {
+    var b = transform.basis, scale = transform.scale;
+    var sx = (point.x - transform.origin.x) / scale;
+    var sy = (point.y - transform.origin.y) / scale - b.down[2] * z;
+    var det = b.right[0] * b.down[1] - b.right[1] * b.down[0];
+    if (Math.abs(det) < EPS || !Number.isFinite(sx) || !Number.isFinite(sy)) return null;
+    return [(sx * b.down[1] - b.right[1] * sy) / det,
+      (b.right[0] * sy - sx * b.down[0]) / det, z];
+  }
+
+  function geometry(state) {
+    var a = state.a, b = state.b;
+    var aa = norm(a), bb = norm(b), product = dot(a, b);
+    var c = cross(a, b), cn = norm(c), sum = add(a, b);
+    var angle = aa > EPS && bb > EPS ? Math.acos(clamp(product / (aa * bb), -1, 1)) : null;
+    var foot = bb > EPS ? mul(b, product / (bb * bb)) : null;
+    var denominator = state.m + state.n;
+    var division = null;
+    if (denominator !== 0) {
+      // Divide the weights first to avoid underflow for very small ratios.
+      var weightA, weightB;
+      if (Number.isFinite(denominator)) {
+        weightA = state.n / denominator; weightB = state.m / denominator;
+      } else {
+        var scale = Math.max(Math.abs(state.m), Math.abs(state.n));
+        var m = state.m / scale, n = state.n / scale;
+        weightA = n / (m + n); weightB = m / (m + n);
+      }
+      var candidate = add(mul(a, weightA), mul(b, weightB));
+      if (candidate.every(Number.isFinite)) division = candidate;
+    }
+    return { a: a, b: b, sum: sum, c: c, cn: cn, product: product,
+      aa: aa, bb: bb, angle: angle, foot: foot, division: division };
+  }
+
+  function angleArc(g) {
+    if (g.angle === null || g.angle < 1e-5) return null;
+    var e1 = unit(g.a), e2 = sub(unit(g.b), mul(e1, Math.cos(g.angle)));
+    if (norm(e2) < 1e-6) {
+      // Antiparallel vectors do not determine a unique plane; choose a stable one.
+      var reference = Math.abs(e1[2]) < 0.8 ? [0, 0, 1] : [1, 0, 0];
+      e2 = cross(reference, e1);
+    }
+    e2 = unit(e2);
+    var radius = Math.min(1.35, g.aa * 0.36, g.bb * 0.36);
+    if (radius < EPS) return null;
+    var points = [], count = Math.max(12, Math.ceil(g.angle * 14));
+    for (var i = 0; i <= count; i++) {
+      var t = g.angle * i / count;
+      points.push(mul(add(mul(e1, Math.cos(t)), mul(e2, Math.sin(t))), radius));
+    }
+    return points;
+  }
+
+  var TITLES = {
+    position: ['位置向量', 'Position vector'],
+    displacement: ['位移向量', 'Displacement vector'],
+    addition: ['向量加法', 'Vector addition'],
+    dot: ['內積與夾角', 'Dot product and angle'],
+    projection: ['向量投影', 'Vector projection'],
+    cross: ['叉積與面積', 'Cross product and area'],
+    division: ['線段內分', 'Section of a segment'],
+    relations: ['向量關係', 'Vector relations']
+  };
+
+  function infoText(s, g) {
+    var T = function (zh, en) { return tr(s.lang, zh, en); };
+    if (s.quizHidden) return T('先求出隱藏的結果', 'Find the hidden result first');
+    var angle = g.angle === null ? T('零向量沒有夾角', 'Zero vectors have no angle') : 'θ ≈ ' + num(g.angle * 180 / Math.PI) + '°';
+    switch (s.mode) {
+      case 'position': return T('拖曳 A 改變位置', 'Drag A to change its position');
+      case 'displacement': return T('拖曳 A、B', 'Drag A or B');
+      case 'addition': return T('拖曳 a、b', 'Drag a or b');
+      case 'dot': return 'a · b = ' + num(g.product) + '    ' + angle;
+      case 'projection':
+        return g.foot ? T('投影', 'Projection') + ': projᵦ a ≈ ' + vecText(g.foot)
+          : T('b 為零向量，投影不存在', 'Projection is undefined: b is zero');
+      case 'cross': return '|a × b| ≈ ' + num(g.cn) + '    ' + T('採用實際比例', 'True-length scale');
+      case 'division':
+        if (!g.division) return s.m + s.n === 0
+          ? T('m + n = 0，分點不存在', 'm + n = 0; the division point is undefined')
+          : T('分點超出可計算範圍', 'Division point is out of numerical range');
+        return (s.m < 0 || s.n < 0 ? T('有向比', 'Directed ratio') + ': ' : '') + 'AP : PB = ' + num(s.m) + ' : ' + num(s.n);
+      case 'relations':
+        if (g.angle === null) return angle;
+        var relation = g.cn < EPS ? T('平行', 'Parallel') : Math.abs(g.product) < EPS ? T('垂直', 'Perpendicular') : T('既不平行也不垂直', 'Neither parallel nor perpendicular');
+        return relation + '    ' + angle;
+      default: return '';
+    }
+  }
+
+  function create(canvas, opts) {
+    if (!canvas || typeof canvas.getContext !== 'function' || !opts || typeof opts.getState !== 'function' || typeof opts.onChange !== 'function') {
+      throw new TypeError('VectorRenderer.create requires a canvas, getState, and onChange.');
+    }
+    var ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('VectorRenderer requires a Canvas 2D context.');
+    var view = { yaw: DEFAULT_VIEW.yaw, pitch: DEFAULT_VIEW.pitch };
+    var destroyed = false, drag = null, last = null, raf = 0, observer = null;
+    var previousStyle = { touchAction: canvas.style.touchAction, cursor: canvas.style.cursor,
+      width: canvas.style.width, height: canvas.style.height };
+    var previousDimensions = { width: canvas.width, height: canvas.height };
+    var intrinsicStyleFix = false;
+    canvas.style.touchAction = 'none';
+    canvas.style.cursor = 'grab';
+
+    function colors() {
+      var css = window.getComputedStyle(canvas);
+      function read(name, fallback) { var x = css.getPropertyValue(name).trim(); return x || fallback; }
+      return { canvas: read('--canvas', '#f8fbf8'), grid: read('--grid', '#dce9e2'),
+        line: read('--line', '#263d37'), green: read('--green', '#147c67'),
+        orange: read('--orange', '#c96231'), blue: read('--blue', '#4a6eaf'), paper: read('--paper', '#ffffff') };
+    }
+    function schedule() {
+      if (destroyed || raf) return;
+      raf = window.requestAnimationFrame(function () { raf = 0; render(); });
+    }
+    function fitText(text, maxWidth) {
+      if (maxWidth <= 0) return '';
+      if (ctx.measureText(text).width <= maxWidth) return text;
+      var out = text;
+      while (out.length && ctx.measureText(out + '…').width > maxWidth) out = out.slice(0, -1);
+      return out ? out + '…' : '';
+    }
+    function wrapText(text, maxWidth, maxLines) {
+      var out = [], remaining = text.trim();
+      while (remaining && out.length < maxLines) {
+        if (ctx.measureText(remaining).width <= maxWidth) { out.push(remaining); break; }
+        var i = 0, lastSpace = -1;
+        while (i < remaining.length && ctx.measureText(remaining.slice(0, i + 1)).width <= maxWidth) {
+          if (remaining[i] === ' ') lastSpace = i;
+          i++;
+        }
+        if (i === 0) i = 1;
+        var cut = lastSpace > 0 && lastSpace > i * 0.5 ? lastSpace : i;
+        if (out.length === maxLines - 1) { out.push(fitText(remaining, maxWidth)); break; }
+        out.push(remaining.slice(0, cut).trim());
+        remaining = remaining.slice(cut).trim();
+      }
+      return out;
+    }
+    function setFont(size, weight) {
+      ctx.font = (weight || 500) + ' ' + size + 'px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif';
+      ctx.textBaseline = 'middle';
+    }
+    function line(p, q, color, width, dash) {
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+      ctx.strokeStyle = color; ctx.lineWidth = width || 1; ctx.setLineDash(dash || []); ctx.stroke(); ctx.setLineDash([]);
+    }
+    function path3(points, transform, color, width, dash) {
+      if (!points || points.length < 2) return;
+      var p = project(points[0], transform); ctx.beginPath(); ctx.moveTo(p.x, p.y);
+      for (var i = 1; i < points.length; i++) { p = project(points[i], transform); ctx.lineTo(p.x, p.y); }
+      ctx.strokeStyle = color; ctx.lineWidth = width || 1; ctx.setLineDash(dash || []); ctx.stroke(); ctx.setLineDash([]);
+    }
+    function arrow(a, b, transform, color, width) {
+      var p = project(a, transform), q = project(b, transform);
+      var dx = q.x - p.x, dy = q.y - p.y, length = Math.hypot(dx, dy);
+      if (length < 2.5) {
+        ctx.beginPath(); ctx.arc(q.x, q.y, 3.3, 0, Math.PI * 2);
+        ctx.strokeStyle = color; ctx.lineWidth = width || 2; ctx.stroke();
+        return;
+      }
+      line(p, q, color, width || 2.7);
+      var head = Math.min(11, Math.max(5, length * 0.32));
+      var ux = dx / length, uy = dy / length;
+      ctx.beginPath(); ctx.moveTo(q.x, q.y);
+      ctx.lineTo(q.x - head * ux + head * 0.43 * uy, q.y - head * uy - head * 0.43 * ux);
+      ctx.lineTo(q.x - head * ux - head * 0.43 * uy, q.y - head * uy + head * 0.43 * ux);
+      ctx.closePath(); ctx.fillStyle = color; ctx.fill();
+    }
+    function fillPolygon(points, transform, color, alpha) {
+      if (!points || points.length < 3) return;
+      var p = project(points[0], transform); ctx.beginPath(); ctx.moveTo(p.x, p.y);
+      for (var i = 1; i < points.length; i++) { p = project(points[i], transform); ctx.lineTo(p.x, p.y); }
+      ctx.closePath(); ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = color; ctx.fill(); ctx.restore();
+    }
+    function makeLabeler(width, height, top, bottom, colorSet, fontSize) {
+      var occupied = [];
+      function overlap(a, b) {
+        return Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) *
+          Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+      }
+      return function (text, p, color, preferred) {
+        setFont(fontSize, 600);
+        text = fitText(text, Math.max(0, width - 18));
+        if (!text) return;
+        var tw = ctx.measureText(text).width, w = tw + 10, h = fontSize + 8;
+        var offsets = preferred || [[9, -h - 5], [9, 6], [-w - 9, -h - 5], [-w - 9, 6], [-w / 2, -h - 11], [-w / 2, 11]];
+        var best, bestScore = Infinity;
+        for (var i = 0; i < offsets.length; i++) {
+          var x = clamp(p.x + offsets[i][0], 4, Math.max(4, width - w - 4));
+          var y = clamp(p.y + offsets[i][1], top, Math.max(top, height - bottom - h));
+          var box = { x: x, y: y, w: w, h: h };
+          var score = Math.abs(x - (p.x + offsets[i][0])) + Math.abs(y - (p.y + offsets[i][1]));
+          for (var j = 0; j < occupied.length; j++) score += overlap(box, occupied[j]) * 3;
+          if (score < bestScore) { bestScore = score; best = box; }
+        }
+        occupied.push(best);
+        ctx.save(); ctx.globalAlpha = 0.91; ctx.fillStyle = colorSet.canvas;
+        ctx.fillRect(best.x, best.y, best.w, best.h); ctx.restore();
+        ctx.fillStyle = color || colorSet.line; ctx.fillText(text, best.x + 5, best.y + best.h / 2);
+      };
+    }
+    function dataPoints(s, g) {
+      var points = [[-6, -6, 0], [-6, 6, 0], [6, -6, 0], [6, 6, 0],
+        [-6.5, 0, 0], [6.5, 0, 0], [0, -6.5, 0], [0, 6.5, 0], [0, 0, -6.5], [0, 0, 6.5], ZERO, g.a];
+      if (s.mode !== 'position') points.push(g.b);
+      if (s.mode === 'cross' || (s.mode === 'addition' && !s.quizHidden)) points.push(g.sum);
+      if (s.mode === 'projection' && g.foot && !s.quizHidden) points.push(g.foot);
+      if (s.mode === 'cross' && !s.quizHidden) points.push(g.c);
+      if (s.mode === 'division' && g.division && !s.quizHidden) points.push(g.division);
+      return points;
+    }
+    function fitTransform(s, g, width, height, top, bottom) {
+      var b = basis(view), pts = dataPoints(s, g), minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      pts.forEach(function (p) { var q = rawPoint(p, b); minX = Math.min(minX, q.x); maxX = Math.max(maxX, q.x); minY = Math.min(minY, q.y); maxY = Math.max(maxY, q.y); });
+      var padding = Math.min(34, Math.max(15, width * 0.085));
+      var innerW = Math.max(1, width - padding * 2), innerH = Math.max(1, height - top - bottom - padding * 2);
+      var scale = Math.min(innerW / Math.max(EPS, maxX - minX), innerH / Math.max(EPS, maxY - minY));
+      var cx = width / 2, cy = top + (height - top - bottom) / 2;
+      return { basis: b, scale: scale, origin: { x: cx - (minX + maxX) * scale / 2, y: cy - (minY + maxY) * scale / 2 } };
+    }
+    function pointMarker(p, color, radius, palette) {
+      ctx.beginPath(); ctx.arc(p.x, p.y, radius + 2, 0, Math.PI * 2); ctx.fillStyle = palette.canvas; ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x, p.y, radius, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
+      ctx.lineWidth = 1.5; ctx.strokeStyle = palette.paper; ctx.stroke();
+    }
+    function handles(s, g, transform) {
+      var descriptors = [{ key: 'a', world: g.a.slice(), name: s.mode === 'position' ? 'A' : s.mode === 'displacement' || s.mode === 'division' ? 'A' : 'a' }];
+      if (s.mode !== 'position') descriptors.push({ key: 'b', world: g.b.slice(), name: s.mode === 'displacement' || s.mode === 'division' ? 'B' : 'b' });
+      descriptors.forEach(function (h) { h.actual = project(h.world, transform); h.screen = { x: h.actual.x, y: h.actual.y }; });
+      // Separate coincident projected handles; short leaders still identify the exact endpoint.
+      if (descriptors.length === 2) {
+        var a = descriptors[0], b = descriptors[1], dx = b.screen.x - a.screen.x, dy = b.screen.y - a.screen.y;
+        var d = Math.hypot(dx, dy), minDist = 22;
+        if (d < minDist) {
+          var ux = d > 0.01 ? dx / d : 1, uy = d > 0.01 ? dy / d : 0, extra = (minDist - d) / 2;
+          a.screen.x -= ux * extra; a.screen.y -= uy * extra;
+          b.screen.x += ux * extra; b.screen.y += uy * extra;
+        }
+      }
+      return descriptors;
+    }
+
+    function render() {
+      if (destroyed) return;
+      var s = snapshot(opts.getState()), g = geometry(s), rect = canvas.getBoundingClientRect();
+      var width = rect.width, height = rect.height;
+      if (!(width > 0 && height > 0)) {
+        last = { hidden: true, view: { yaw: view.yaw, pitch: view.pitch }, state: s, points: {} };
+        return;
+      }
+      var dpr = Math.min(3, Math.max(1, window.devicePixelRatio || 1));
+      var bw = Math.max(1, Math.round(width * dpr)), bh = Math.max(1, Math.round(height * dpr));
+      if (canvas.width !== bw || canvas.height !== bh) {
+        canvas.width = bw; canvas.height = bh;
+        // A canvas with no CSS sizing otherwise changes its layout when its backing store changes.
+        if (!intrinsicStyleFix) {
+          var after = canvas.getBoundingClientRect();
+          if (Math.abs(after.width - width) > 1 || Math.abs(after.height - height) > 1) {
+            canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; intrinsicStyleFix = true;
+          }
+        }
+      }
+      ctx.setTransform(bw / width, 0, 0, bh / height, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      var palette = colors(); ctx.fillStyle = palette.canvas; ctx.fillRect(0, 0, width, height);
+      if (width < 30 || height < 40) {
+        last = { hidden: false, tooSmall: true, view: { yaw: view.yaw, pitch: view.pitch }, state: s, points: {} };
+        return;
+      }
+      var fontSize = width < 420 ? 12.5 : 13.5, lineHeight = fontSize + 5;
+      setFont(fontSize, 700);
+      var title = TITLES[s.mode], titleLines = wrapText(tr(s.lang, title[0], title[1]), width - 24, 2);
+      setFont(fontSize, 500);
+      var footerLines = wrapText(infoText(s, g), width - 24, 2);
+      var top = 12 + titleLines.length * lineHeight, bottom = 10 + footerLines.length * lineHeight;
+      // Existing single-file pages may put a non-interactive badge over the top-left
+      // corner. Do not paint a second title underneath it; reserve its footprint.
+      if (canvas.parentElement && titleLines.length) {
+        setFont(fontSize, 700);
+        var titleWidth = Math.max.apply(null, titleLines.map(function (text) { return ctx.measureText(text).width; }));
+        Array.prototype.forEach.call(canvas.parentElement.children, function (element) {
+          if (element === canvas || !element.getBoundingClientRect) return;
+          var style = window.getComputedStyle(element);
+          if ((style.position !== 'absolute' && style.position !== 'fixed') || style.pointerEvents !== 'none' || style.visibility === 'hidden' || style.display === 'none') return;
+          var box = element.getBoundingClientRect();
+          if (box.width > 0 && box.height > 0 && box.left < rect.left + 12 + titleWidth && box.right > rect.left + 12 && box.top < rect.top + top && box.bottom > rect.top) {
+            titleLines = [];
+            top = Math.max(top, Math.min(height * 0.35, box.bottom - rect.top + 5));
+          }
+        });
+      }
+      if (top + bottom > height * 0.6) { top = 5; bottom = 5; titleLines = []; footerLines = []; }
+      var transform = drag && drag.kind === 'point' && drag.transform ? drag.transform : fitTransform(s, g, width, height, top, bottom);
+      var label = makeLabeler(width, height, top, bottom, palette, fontSize);
+
+      ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      // Grid is the actual world XY plane, not a flat background decoration.
+      ctx.globalAlpha = 0.9;
+      for (var k = -6; k <= 6; k++) {
+        path3([[k, -6, 0], [k, 6, 0]], transform, palette.grid, 1);
+        path3([[-6, k, 0], [6, k, 0]], transform, palette.grid, 1);
+      }
+      ctx.globalAlpha = 1;
+      var axes = [[[-6.5, 0, 0], [6.5, 0, 0], 'x'], [[0, -6.5, 0], [0, 6.5, 0], 'y'], [[0, 0, -6.5], [0, 0, 6.5], 'z']];
+      axes.forEach(function (axis) {
+        ctx.save(); ctx.globalAlpha = 0.58; arrow(axis[0], axis[1], transform, palette.line, 1.2); ctx.restore();
+        label(axis[2], project(axis[1], transform), palette.line);
+      });
+
+      var sum = g.sum;
+      if (s.mode === 'addition' && s.aux && !s.quizHidden) {
+        fillPolygon([ZERO, g.a, sum, g.b], transform, palette.green, 0.075);
+        path3([g.a, sum, g.b], transform, palette.line, 1.4, [5, 5]);
+      }
+      if (s.mode === 'cross') {
+        // The area is an essential part of this mode even with auxiliary lines off.
+        fillPolygon([ZERO, g.a, sum, g.b], transform, palette.orange, 0.19);
+        if (s.aux) path3([g.a, sum, g.b], transform, palette.orange, 1.5, [5, 5]);
+      }
+      if (s.mode === 'position') {
+        arrow(ZERO, g.a, transform, palette.green, 3);
+        label('OA', project(mul(g.a, 0.55), transform), palette.green);
+      } else if (s.mode === 'displacement') {
+        if (s.aux) { path3([ZERO, g.a], transform, palette.grid, 1.7, [5, 5]); path3([ZERO, g.b], transform, palette.grid, 1.7, [5, 5]); }
+        arrow(g.a, g.b, transform, palette.orange, 3);
+        label('AB', project(mul(add(g.a, g.b), 0.5), transform), palette.orange);
+      } else if (s.mode === 'division') {
+        path3([g.a, g.b], transform, palette.line, 2.4);
+        if (s.aux) { path3([ZERO, g.a], transform, palette.grid, 1.5, [5, 5]); path3([ZERO, g.b], transform, palette.grid, 1.5, [5, 5]); }
+        if (g.division && !s.quizHidden) {
+          var pp = project(g.division, transform);
+          pointMarker(pp, palette.orange, 5, palette);
+          label('P', pp, palette.orange);
+        }
+      } else {
+        arrow(ZERO, g.a, transform, palette.green, 3);
+        arrow(ZERO, g.b, transform, palette.blue, 3);
+        if (s.mode === 'addition' && !s.quizHidden) {
+          arrow(ZERO, sum, transform, palette.orange, 3.2);
+          label('a + b', project(sum, transform), palette.orange);
+        } else if (s.mode === 'dot' || s.mode === 'relations') {
+          var arc = angleArc(g);
+          if (arc) { path3(arc, transform, palette.orange, 2); label('θ', project(arc[Math.floor(arc.length / 2)], transform), palette.orange); }
+          else if (g.angle !== null) label(s.quizHidden ? 'θ' : 'θ = 0°', project(ZERO, transform), palette.orange);
+        } else if (s.mode === 'projection' && g.foot && !s.quizHidden) {
+          arrow(ZERO, g.foot, transform, palette.orange, 3.5);
+          // The perpendicular is intrinsic to projection, so it remains visible when aux is off.
+          path3([g.foot, g.a], transform, palette.orange, 1.7, s.aux ? [5, 4] : []);
+          var footScreen = project(g.foot, transform);
+          pointMarker(footScreen, palette.orange, 4, palette);
+          label('H', footScreen, palette.orange);
+          var leg = sub(g.a, g.foot), legLen = norm(leg);
+          if (legLen > EPS && norm(g.foot) > EPS) {
+            var r = Math.min(0.35, legLen * 0.25, norm(g.foot) * 0.25);
+            var x = mul(unit(g.foot), -r), y = mul(unit(leg), r);
+            path3([add(g.foot, x), add(add(g.foot, x), y), add(g.foot, y)], transform, palette.orange, 1.4);
+          }
+        } else if (s.mode === 'cross' && !s.quizHidden) {
+          // No separate arrow scaling: all geometry uses the same world-to-screen scale.
+          arrow(ZERO, g.c, transform, palette.orange, 3.4);
+          label('a × b', project(g.c, transform), palette.orange);
+        }
+      }
+      var origin = project(ZERO, transform);
+      pointMarker(origin, palette.line, 3, palette);
+      label('O', origin, palette.line);
+      var hs = handles(s, g, transform);
+      var points = { origin: { x: origin.x, y: origin.y } };
+      hs.forEach(function (h, index) {
+        var color = index === 0 ? palette.green : palette.blue;
+        if (Math.hypot(h.screen.x - h.actual.x, h.screen.y - h.actual.y) > 1) line(h.actual, h.screen, color, 1);
+        pointMarker(h.screen, color, width < 420 ? 6 : 5, palette);
+        label(h.name + ' ' + vecText(h.world), h.screen, color);
+        points[h.key] = { x: h.screen.x, y: h.screen.y, actualX: h.actual.x, actualY: h.actual.y, world: h.world.slice(), name: h.name };
+      });
+      if (g.division && s.mode === 'division') { var ps = project(g.division, transform); points.p = { x: ps.x, y: ps.y, world: g.division.slice() }; }
+      if (g.foot && s.mode === 'projection') { var fs = project(g.foot, transform); points.projection = { x: fs.x, y: fs.y, world: g.foot.slice() }; }
+      if (s.mode === 'cross') { var cs = project(g.c, transform); points.cross = { x: cs.x, y: cs.y, world: g.c.slice() }; }
+      if (s.mode === 'addition') { var ss = project(sum, transform); points.sum = { x: ss.x, y: ss.y, world: sum.slice() }; }
+      ctx.restore();
+      setFont(fontSize, 700); ctx.fillStyle = palette.line;
+      titleLines.forEach(function (text, i) { ctx.fillText(text, 12, 12 + lineHeight * (i + 0.5)); });
+      setFont(fontSize, 500); ctx.fillStyle = palette.line;
+      footerLines.forEach(function (text, i) { ctx.fillText(text, 12, height - bottom + 5 + lineHeight * (i + 0.5)); });
+      last = { hidden: false, view: { yaw: view.yaw, pitch: view.pitch }, state: s, points: points,
+        viewport: { width: width, height: height, dpr: dpr, scale: transform.scale,
+          origin: { x: transform.origin.x, y: transform.origin.y },
+          right: transform.basis.right.slice(), down: transform.basis.down.slice() },
+        angle: g.angle, labels: { title: titleLines.join(' '), info: footerLines.join(' ') } };
+    }
+
+    function localPoint(event) {
+      var rect = canvas.getBoundingClientRect();
+      return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    }
+    function onDown(event) {
+      if (destroyed || drag || (event.pointerType === 'mouse' && event.button !== 0)) return;
+      if (!last || last.hidden || !last.viewport) render();
+      if (!last || last.hidden || !last.viewport) return;
+      var p = localPoint(event), nearest = null, best = Infinity;
+      ['a', 'b'].forEach(function (key) {
+        var h = last.points[key]; if (!h) return;
+        var d = Math.hypot(p.x - h.x, p.y - h.y), hit = event.pointerType === 'touch' ? 26 : 19;
+        if (d <= hit && d < best) { best = d; nearest = { key: key, point: h }; }
+      });
+      if (nearest) {
+        var vp = last.viewport;
+        drag = { kind: 'point', pointerId: event.pointerId, key: nearest.key,
+          z: nearest.point.world[2], offsetX: p.x - nearest.point.actualX, offsetY: p.y - nearest.point.actualY,
+          lastXYZ: nearest.point.world.slice(),
+          transform: { scale: vp.scale, origin: { x: vp.origin.x, y: vp.origin.y },
+            basis: { right: vp.right.slice(), down: vp.down.slice() } } };
+      } else {
+        drag = { kind: 'view', pointerId: event.pointerId, x: p.x, y: p.y, yaw: view.yaw, pitch: view.pitch };
+      }
+      canvas.style.cursor = 'grabbing';
+      if (canvas.setPointerCapture) { try { canvas.setPointerCapture(event.pointerId); } catch (e) { /* Window listeners provide a fallback. */ } }
+      event.preventDefault();
+    }
+    function onMove(event) {
+      if (!drag || drag.pointerId !== event.pointerId || destroyed) return;
+      var p = localPoint(event);
+      if (drag.kind === 'view') {
+        view.yaw = drag.yaw + (p.x - drag.x) * 0.009;
+        view.pitch = clamp(drag.pitch + (p.y - drag.y) * 0.009, MIN_PITCH, MAX_PITCH);
+        render();
+      } else {
+        var xy = inverseXY({ x: p.x - drag.offsetX, y: p.y - drag.offsetY }, drag.z, drag.transform);
+        if (xy) {
+          var xyz = [clamp(Math.round(xy[0]), -6, 6), clamp(Math.round(xy[1]), -6, 6), drag.z];
+          if (xyz[0] !== drag.lastXYZ[0] || xyz[1] !== drag.lastXYZ[1]) {
+            drag.lastXYZ = xyz.slice(); opts.onChange(drag.key, xyz); render();
+          }
+        }
+      }
+      event.preventDefault();
+    }
+    function endDrag(event) {
+      if (!drag || (event && drag.pointerId !== event.pointerId)) return;
+      var id = drag.pointerId; drag = null; canvas.style.cursor = 'grab';
+      if (canvas.releasePointerCapture) { try { if (!canvas.hasPointerCapture || canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id); } catch (e) { /* Capture may already have been lost. */ } }
+      if (!destroyed) render();
+    }
+    function onLostCapture(event) { if (drag && drag.pointerId === event.pointerId) endDrag(event); }
+    function resetView() { if (destroyed) return; endDrag(); view.yaw = DEFAULT_VIEW.yaw; view.pitch = DEFAULT_VIEW.pitch; render(); }
+    function debug() {
+      if (!last) return { hidden: true, view: { yaw: view.yaw, pitch: view.pitch }, points: {} };
+      var copy = JSON.parse(JSON.stringify(last));
+      if (copy.state && copy.state.quizHidden) {
+        delete copy.angle;
+        ['p', 'projection', 'cross', 'sum'].forEach(function (key) { delete copy.points[key]; });
+      }
+      copy.drag = drag ? { kind: drag.kind, key: drag.key || null, pointerId: drag.pointerId } : null;
+      return copy;
+    }
+    function destroy() {
+      if (destroyed) return;
+      endDrag(); destroyed = true;
+      if (raf) window.cancelAnimationFrame(raf);
+      if (observer) observer.disconnect();
+      canvas.removeEventListener('pointerdown', onDown);
+      canvas.removeEventListener('lostpointercapture', onLostCapture);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', endDrag);
+      window.removeEventListener('pointercancel', endDrag);
+      window.removeEventListener('resize', schedule);
+      canvas.style.touchAction = previousStyle.touchAction; canvas.style.cursor = previousStyle.cursor;
+      if (intrinsicStyleFix) {
+        canvas.width = previousDimensions.width; canvas.height = previousDimensions.height;
+        canvas.style.width = previousStyle.width; canvas.style.height = previousStyle.height;
+      }
+    }
+    canvas.addEventListener('pointerdown', onDown);
+    canvas.addEventListener('lostpointercapture', onLostCapture);
+    window.addEventListener('pointermove', onMove, { passive: false });
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    window.addEventListener('resize', schedule);
+    if (typeof window.ResizeObserver === 'function') { observer = new window.ResizeObserver(schedule); observer.observe(canvas); }
+    render();
+    return { render: render, resetView: resetView, destroy: destroy, debug: debug };
+  }
+
+  window.VectorRenderer = { create: create };
+}());
+
+(function(){
+'use strict';
+const VZ=(zh,en)=>({zh,en});
+const L={
+ units:VZ('單元切換','CHOOSE A UNIT'),circle:VZ('圓的幾何性質','Circle geometry'),vectors:VZ('三維向量與幾何','Vectors in 3D'),
+ brand:VZ('香港中學數學實驗室','HKDSE Mathematics Lab'),brandSub:VZ('三維向量 · 延伸部分單元二','3D VECTORS · EXTENDED PART MODULE 2'),
+ eyebrow:VZ('延伸部分單元二 · 互動數學','EXTENDED PART MODULE 2 · INTERACTIVE MATHEMATICS'),hero:VZ('看見三維向量','See vectors in three dimensions'),
+ heroDesc:VZ('旋轉視角、改變座標，從幾何圖像理解向量運算。','Rotate the view and change coordinates to explore vector geometry.'),stamp:VZ('M2 · 向量與幾何','M2 · VECTORS & GEOMETRY'),
+ canvasOverline:VZ('三維動態幾何畫布','INTERACTIVE 3D CANVAS'),canvasTitle:VZ('旋轉與探索','Rotate and explore'),live:VZ('即時更新','LIVE'),
+ cameraReset:VZ('重置視角','Reset view'),cameraNote:VZ('正交投影；畫面方向不影響計算','Orthographic projection; camera rotation does not change calculations'),
+ dragTitle:VZ('拖動以探索三維空間','Drag to explore in 3D'),dragDesc:VZ('拖動空白處旋轉；拖動向量端點可改變 x、y，z 保持不變。所有座標可在右側精確設定。','Drag empty space to rotate. Drag an endpoint to change x and y while keeping z fixed. Set all coordinates in the controls.'),
+ legendA:VZ('向量 a／點 A','Vector a / point A'),legendB:VZ('向量 b／點 B','Vector b / point B'),
+ selector:VZ('選擇向量課題','Choose a vector topic'),modeLabel:VZ('互動模型','Interactive model'),inputHeading:VZ('編輯座標','Edit coordinates'),
+ inputNote:VZ('座標以整數變動，確保可展示精確值；拖動端點也會更新 x、y。','Integer coordinates keep results exact. Dragging an endpoint also updates x and y.'),
+ inputA:VZ('向量 a 的分量','Components of vector a'),inputB:VZ('向量 b 的分量','Components of vector b'),pointA:VZ('點 A 的座標','Coordinates of point A'),pointB:VZ('點 B 的座標','Coordinates of point B'),
+ k:VZ('純量倍數 k','Scalar multiplier k'),ratio:VZ('內分比例 AP : PB = m : n','Internal division ratio AP : PB = m : n'),
+ insight:VZ('即時計算','Live calculations'),exact:VZ('精確公式','EXACT FORMULA'),
+ measure:VZ('根式、分數和反餘弦表示精確值；如有小數，僅供近似參考。','Radicals, fractions and inverse cosines are exact; any decimals are approximations.'),
+ reason:VZ('概念與推導','CONCEPT & WORKING'),controls:VZ('課堂控制','Classroom controls'),quiz:VZ('考考你：隱藏結果','Quiz: hide a result'),quizDesc:VZ('隨機隱藏一個結果；揭曉前不顯示其他運算結果。','Hide a randomly selected result; other computed results remain hidden until reveal.'),
+ reveal:VZ('揭曉答案與推導','Reveal answer and working'),revealed:VZ('答案已揭曉','Answer revealed'),aux:VZ('顯示輔助線','Show auxiliary lines'),auxDesc:VZ('以輔助線顯示分量或幾何關係。','Show construction lines and geometric relationships.'),
+ locked:VZ('先按圖和座標求出問號所代表的結果，再揭曉答案與推導。','Use the diagram and coordinates to find the hidden result, then reveal the answer and working.'),
+ undefined:VZ('未定義','Undefined'),zeroWarning:VZ('零向量沒有方向；夾角、單位向量及以它為目標的投影均未定義。','The zero vector has no direction; its angle, unit vector and projections onto it are undefined.'),
+ zeroNormal:VZ('叉積為零；面積為零，但零向量不能作為法向方向。','The cross product is zero. The area is zero, but the zero vector cannot give a normal direction.'),
+ equalPoints:VZ('A、B 重合；內分點仍為該點，但分段長度比不能由 0 : 0 表示。','A and B coincide. The division point is still that point, but the segment-length ratio 0 : 0 is undefined.'),
+ parallel:VZ('平行','Parallel'),perpendicular:VZ('垂直','Perpendicular'),neither:VZ('既不平行也不垂直','Neither parallel nor perpendicular'),
+ footer:VZ('按教育局 M2 單元 15–17 編排 · 所有圖像及運算在瀏覽器中完成 · 離線可用','Based on EDB M2 learning units 15–17 · Diagrams and calculations run locally · Works offline'),
+ source:VZ('教育局單元二課程闡釋','EDB Module 2 curriculum notes'),equals:VZ('等於','equals'),score:VZ('向量關係','Vector relation')
+};
+const VG=[VZ('座標與運算','Coordinates & operations'),VZ('點積與投影','Dot product & projection'),VZ('叉積與面積','Cross product & area'),VZ('分點與方向','Division & directions')];
+const VM=[
+ {id:'position',g:0,title:VZ('位置向量、長度與單位向量','Position vector, magnitude & unit vector'),desc:VZ('由三維座標建立向量','Build a vector from 3D coordinates'),note:VZ('設定點 A 的 x、y、z，觀察 OA 的分量、長度與方向。','Set the x, y and z coordinates of A to observe the components, magnitude and direction of OA.'),eq:'|a| = √(a₁² + a₂² + a₃²)',tex:'\\lVert\\mathbf a\\rVert=\\sqrt{a_1^2+a_2^2+a_3^2}',reason:VZ('向量長度可由三維畢氏定理求得；非零向量除以其長度得到單位向量。','The 3D Pythagorean theorem gives the magnitude; a non-zero vector divided by its magnitude gives a unit vector.')},
+ {id:'displacement',g:0,title:VZ('兩點間的向量與距離','Vector and distance between two points'),desc:VZ('以終點減起點求位移','Subtract the starting point from the endpoint'),note:VZ('改變點 A、B 的座標，觀察從 A 到 B 的位移及距離。','Change A and B to see the displacement from A to B and the distance.'),eq:'AB⃗ = OB⃗ − OA⃗',tex:'\\overrightarrow{AB}=\\overrightarrow{OB}-\\overrightarrow{OA}',reason:VZ('向量 AB 等於終點的位置向量減去起點的位置向量；其模為兩點距離。','Vector AB is the position vector of the endpoint minus that of the starting point; its magnitude is the distance.')},
+ {id:'addition',g:0,title:VZ('向量加減與純量乘法','Vector addition, subtraction & scalar multiplication'),desc:VZ('以分量及平行四邊形理解運算','Use components and a parallelogram to understand operations'),note:VZ('改變 a、b 及整數 k，觀察 a + b、a − b 和 ka。','Change a, b and integer k to observe a + b, a − b and ka.'),eq:'a + b = (a₁ + b₁, a₂ + b₂, a₃ + b₃)',tex:'\\mathbf a+\\mathbf b=(a_1+b_1,a_2+b_2,a_3+b_3)',reason:VZ('向量加減及純量乘法可逐個分量計算；加法亦符合平行四邊形法則。','Add, subtract and scale corresponding components; addition also follows the parallelogram rule.')},
+ {id:'dot',g:1,title:VZ('點積、夾角與垂直','Dot product, angle & perpendicularity'),desc:VZ('由代數運算連結到幾何夾角','Connect an algebraic operation with the geometric angle'),note:VZ('設定兩個向量，觀察點積、夾角及正交條件。','Set two vectors to observe their dot product, included angle and orthogonality.'),eq:'a · b = |a||b| cos θ',tex:'\\mathbf a\\cdot\\mathbf b=\\lVert\\mathbf a\\rVert\\lVert\\mathbf b\\rVert\\cos\\theta',reason:VZ('非零向量的夾角由點積公式求得；兩非零向量垂直當且僅當點積為零。','Use the dot-product formula for the angle of two non-zero vectors. They are perpendicular if and only if the dot product is zero.')},
+ {id:'projection',g:1,title:VZ('向量投影','Vector projection'),desc:VZ('將 a 投影到 b 的方向','Project a onto the direction of b'),note:VZ('投影目標 b 必須非零；有向純量投影可為負。','The target b must be non-zero; the signed scalar projection may be negative.'),eq:'projᵦ a = [(a · b) / (b · b)] b',tex:'\\operatorname{proj}_{\\mathbf b}\\mathbf a=\\frac{\\mathbf a\\cdot\\mathbf b}{\\mathbf b\\cdot\\mathbf b}\\mathbf b',reason:VZ('a 在非零 b 上的向量投影，是 b 的倍數；a 與投影之差垂直 b。','The projection of a onto non-zero b is a scalar multiple of b; the difference between a and its projection is perpendicular to b.')},
+ {id:'cross',g:2,title:VZ('叉積、法向量與面積','Cross product, normal & area'),desc:VZ('右手定則與三角形面積','The right-hand rule and triangle area'),note:VZ('改變 a、b，觀察 a × b、平行四邊形及三角形的面積。','Change a and b to observe a × b and the areas of the parallelogram and triangle.'),eq:'平行四邊形面積 = |a × b|；三角形面積 = ½|a × b|',tex:'A_{\\rm parallelogram}=\\lVert\\mathbf a\\times\\mathbf b\\rVert,\\quad A_{\\triangle}=\\tfrac12\\lVert\\mathbf a\\times\\mathbf b\\rVert',reason:VZ('叉積的方向依右手定則，並垂直兩個原向量；其模為平行四邊形面積。叉積為零時沒有法向方向。','The cross product follows the right-hand rule and is perpendicular to both vectors; its magnitude is the parallelogram area. A zero cross product has no normal direction.')},
+ {id:'division',g:3,title:VZ('線段的內分點','Internal division of a line segment'),desc:VZ('按指定比例求內分點的位置向量','Find the position vector of an internal division point'),note:VZ('設定 A、B 及正整數 m、n，令 AP : PB = m : n。','Set A, B and positive integers m and n, with AP : PB = m : n.'),eq:'OP⃗ = (n OA⃗ + m OB⃗) / (m + n)',tex:'\\overrightarrow{OP}=\\frac{n\\overrightarrow{OA}+m\\overrightarrow{OB}}{m+n}',reason:VZ('若 AP : PB = m : n，則 AP = m/(m+n) AB；P 的位置可由 A 加上此位移求得。','If AP : PB = m : n, then AP = m/(m+n) AB. Add that displacement to A to obtain P.')},
+ {id:'relations',g:3,title:VZ('平行與正交的判別','Testing parallel and orthogonal vectors'),desc:VZ('以點積和叉積判斷方向關係','Use the dot and cross products to test directions'),note:VZ('觀察非零向量的平行、垂直或其他關係。','Observe whether two non-zero vectors are parallel, perpendicular or neither.'),eq:'a ⟂ b ⇔ a · b = 0；a ∥ b ⇔ a × b = 0',tex:'\\mathbf a\\perp\\mathbf b\\iff\\mathbf a\\cdot\\mathbf b=0,\\quad\\mathbf a\\parallel\\mathbf b\\iff\\mathbf a\\times\\mathbf b=\\mathbf0',reason:VZ('兩個非零向量的點積為零當且僅當它們垂直；叉積為零當且僅當它們平行。','For two non-zero vectors, a zero dot product is equivalent to perpendicularity, and a zero cross product to parallelism.')}
+];
+const D=id=>document.getElementById(id);
+const T=v=>v.zh===v.en?v.zh:state.lang==='zh'?v.zh:state.lang==='en'?v.en:v.zh+' / '+v.en;
+const TX=(id,v)=>{D(id).textContent=T(typeof v==='string'?L[v]:v)};
+const S={active:false,mode:'position',a:[3,2,2],b:[-1,3,1],k:2,m:1,n:2,quiz:false,revealed:false,quizKey:null,aux:false,renderer:null,metrics:[]};
+const def=()=>VM.find(x=>x.id===S.mode),C=window.VectorCore;
+function initMath(plain,latex){const ns='http://www.w3.org/1998/Math/MathML',math=document.createElementNS(ns,'math'),sem=document.createElementNS(ns,'semantics'),mtext=document.createElementNS(ns,'mtext'),ann=document.createElementNS(ns,'annotation');mtext.textContent=plain;ann.setAttribute('encoding','application/x-tex');ann.textContent=latex;sem.append(mtext,ann);math.append(sem);math.setAttribute('aria-label',plain);return math}
+function vTextMath(id,plain,latex){D(id).replaceChildren(initMath(plain,latex))}
+function isPoints(){return S.mode==='displacement'||S.mode==='division'}
+function coordName(key){return T(isPoints()?(key==='a'?L.pointA:L.pointB):(key==='a'?L.inputA:L.inputB))}
+function updateInputValue(key,idx,val){for(const el of document.querySelectorAll(`[data-vkey="${key}"][data-vidx="${idx}"]`))el.value=val}
+function syncInputs(){for(let key of ['a','b'])for(let i=0;i<3;i++)updateInputValue(key,i,S[key][i]);for(const key of ['k','m','n'])for(let el of document.querySelectorAll(`[data-vextra="${key}"]`))el.value=S[key]}
+function buildVectorBlock(key){
+ let block=document.createElement('div');block.className='vector-block';let heading=document.createElement('div');heading.className='vector-block-title';heading.textContent=coordName(key);block.append(heading);
+ ['x','y','z'].forEach((axis,i)=>{let row=document.createElement('div');row.className='vector-field';let label=document.createElement('label');let base=(isPoints()?key.toUpperCase():key)+'_'+axis;label.textContent=base;label.htmlFor=`v-${key}-${i}-number`;
+ let range=document.createElement('input');range.type='range';range.min='-6';range.max='6';range.step='1';range.value=S[key][i];range.dataset.vkey=key;range.dataset.vidx=i;range.setAttribute('aria-label',coordName(key)+' '+axis);
+ let num=document.createElement('input');num.type='number';num.min='-6';num.max='6';num.step='1';num.id=`v-${key}-${i}-number`;num.value=S[key][i];num.dataset.vkey=key;num.dataset.vidx=i;num.setAttribute('aria-label',coordName(key)+' '+axis);
+ const apply=(value)=>{let n=Number(value);if(!Number.isFinite(n))n=S[key][i];S[key][i]=Math.max(-6,Math.min(6,Math.round(n)));updateInputValue(key,i,S[key][i]);refreshResults()};
+ range.addEventListener('input',()=>apply(range.value));num.addEventListener('change',()=>apply(num.value));row.append(label,range,num);block.append(row)});return block;
+}
+function extraField(key,min,max){let row=document.createElement('div');row.className='vector-field';let label=document.createElement('label');label.textContent=key;label.htmlFor='v-extra-'+key;let range=document.createElement('input');range.type='range';range.min=String(min);range.max=String(max);range.step='1';range.value=S[key];range.dataset.vextra=key;range.setAttribute('aria-label',T(key==='k'?L.k:L.ratio)+' '+key);let num=document.createElement('input');num.type='number';num.min=String(min);num.max=String(max);num.step='1';num.value=S[key];num.id='v-extra-'+key;num.dataset.vextra=key;num.setAttribute('aria-label',T(key==='k'?L.k:L.ratio)+' '+key);const apply=v=>{let n=Number(v);if(!Number.isFinite(n))n=S[key];S[key]=Math.max(min,Math.min(max,Math.round(n)));syncInputs();refreshResults()};range.addEventListener('input',()=>apply(range.value));num.addEventListener('change',()=>apply(num.value));row.append(label,range,num);return row}
+function buildInputs(){let box=D('vInputs');box.replaceChildren(buildVectorBlock('a'));if(S.mode!=='position')box.append(buildVectorBlock('b'));let extra=D('vExtraInputs');extra.replaceChildren();if(S.mode==='addition'||S.mode==='division'){extra.className='vector-extra';let title=document.createElement('div');title.className='vector-extra-title';title.textContent=T(S.mode==='addition'?L.k:L.ratio);extra.append(title);if(S.mode==='addition')extra.append(extraField('k',-4,4));else{extra.append(extraField('m',1,5));extra.append(extraField('n',1,5))}}else extra.className=''}
+function paintSwitcher(){TX('unitCaption','units');TX('unitCircleText','circle');TX('unitVectorText','vectors');D('unitCircle').setAttribute('aria-pressed',String(!S.active));D('unitVectors').setAttribute('aria-pressed',String(S.active))}
+function unitSwitch(on,updateHash=true){S.active=on;D('circleView').hidden=on;D('vectorView').hidden=!on;paintSwitcher();if(on){refreshStatic();refreshResults();requestAnimationFrame(()=>S.renderer.render())}else{renderAll();paintSwitcher();requestAnimationFrame(requestRender)}if(updateHash){try{history.replaceState(null,'',on?'#vectors':location.pathname+location.search)}catch(e){}}}
+function refreshStatic(){
+ paintSwitcher();if(!S.active)return;TX('brand','brand');TX('brandSub','brandSub');document.title=T(VZ('三維向量與幾何','Vectors in 3D Space'));
+ let map={vEyebrow:'eyebrow',vHero:'hero',vHeroDesc:'heroDesc',vStamp:'stamp',vCanvasOverline:'canvasOverline',vCanvasTitle:'canvasTitle',vLive:'live',vCameraReset:'cameraReset',vCameraNote:'cameraNote',vDragTitle:'dragTitle',vDragDesc:'dragDesc',vLegendA:'legendA',vLegendB:'legendB',vSelectorHeading:'selector',vModeLabel:'modeLabel',vInputHeading:'inputHeading',vInputNote:'inputNote',vInsightHeading:'insight',vEquationLabel:'exact',vMeasureNote:'measure',vReasonHeading:'reason',vControlsHeading:'controls',vQuizTitle:'quiz',vQuizDesc:'quizDesc',vAuxTitle:'aux',vAuxDesc:'auxDesc',vFooter:'footer',vSource:'source'};for(const [id,key] of Object.entries(map))TX(id,key);D('vSource').href=state.lang==='en'?'https://www.edb.gov.hk/attachment/en/curriculum-development/kla/ma/curr/EN_M2_e.pdf':'https://www.edb.gov.hk/attachment/tc/curriculum-development/kla/ma/curr/EN_M2_tc.pdf';
+ D('vectorCanvas').setAttribute('aria-label',T(VZ('可旋轉的三維向量畫布；拖動端點改變橫縱座標。','Rotatable 3D vector canvas; drag an endpoint to change its x and y coordinates.')));
+ D('vTabs').replaceChildren();VG.forEach((group,i)=>{let b=document.createElement('button');b.type='button';b.className='tab'+(def().g===i?' active':'');b.textContent=T(group);b.setAttribute('aria-pressed',String(def().g===i));b.addEventListener('click',()=>changeMode(VM.find(x=>x.g===i).id));D('vTabs').append(b)});
+ let select=D('vMode');select.replaceChildren();VG.forEach((group,i)=>{let og=document.createElement('optgroup');og.label=T(group);for(const item of VM.filter(x=>x.g===i)){let o=document.createElement('option');o.value=item.id;o.textContent=T(item.title);og.append(o)}select.append(og)});select.value=S.mode;
+ TX('vModeNote',def().note);TX('vCanvasTag',VG[def().g]);TX('vInsightTitle',def().title);TX('vInsightDesc',def().desc);D('vLegendB').hidden=S.mode==='position';D('vQuiz').checked=S.quiz;D('vAux').checked=S.aux;D('vReveal').disabled=!S.quiz||S.revealed;TX('vReveal',S.revealed?'revealed':'reveal');buildInputs();
+}
+function changeMode(mode){if(!VM.some(x=>x.id===mode))return;S.mode=mode;S.quizKey=null;S.revealed=false;refreshStatic();refreshResults()}
+function reset(){S.a=[3,2,2];S.b=[-1,3,1];S.k=2;S.m=1;S.n=2;S.quiz=false;S.revealed=false;S.quizKey=null;S.aux=false;S.renderer.resetView();refreshStatic();refreshResults()}
+function pretty(x){return String(x).replace(/sqrt\((\d+)\)/g,'√$1').replace(/\*/g,'·')}
+function exact(obj,approx=''){return {plain:pretty(obj.plain),tex:obj.tex,approx,defined:obj.defined!==false}}
+function intVal(n){return exact(C.fraction(n))}
+function vecVal(v){return exact(C.vectorFraction(v))}
+function undef(){return{plain:T(L.undefined),tex:'\\text{undefined}',approx:'',defined:false}}
+function dec(n,suffix=''){return Number.isFinite(n)?'≈ '+(Math.abs(n)<1e-12?0:n).toFixed(2)+suffix:''}
+function normVal(v,den=1){let r=C.sqrtFraction(C.norm2(v),den),x=exact(r);if(r.plain.includes('sqrt'))x.approx=dec(r.value);return x}
+function angleVal(a,b){let r=C.angle(a,b);if(!r.defined)return undef();let prod=C.norm2(a)*C.norm2(b),dp=C.dot(a,b),sq=dp*dp,special=null;if(dp!==0){if(4*sq===prod)special=dp>0?60:120;else if(2*sq===prod)special=dp>0?45:135;else if(4*sq===3*prod)special=dp>0?30:150}if(special!==null)return {plain:special+'°',tex:special+'^\\circ',defined:true,approx:''};if(r.plain.startsWith('arccos'))return {plain:'arccos('+pretty(r.cos.plain)+')',tex:'\\arccos\\left('+r.cos.tex+'\\right)',defined:true,approx:dec(r.degrees,'°')};return exact(r)}
+function scalarExact(r){let x=exact(r);if(r.plain.includes('sqrt'))x.approx=dec(r.value);return x}
+function formatVec(v){return '('+v.join(', ')+')'}
+function squares(v){return v.map(x=>`(${x})²`).join(' + ')}
+function terms(a,b){return a.map((x,i)=>`(${x})(${b[i]})`).join(' + ')}
+function makeScene(){
+ const a=S.a,b=S.b,mode=S.mode,dp=C.dot(a,b),aa=C.norm2(a),bb=C.norm2(b),cross=C.cross(a,b),relation=C.classify(a,b),angle=angleVal(a,b),s={metrics:[],steps:[],status:null,warning:false};
+ const metric=(key,label,value,canQuiz=true)=>s.metrics.push({key,label,value,canQuiz:canQuiz&&value.defined});
+ const step=(zh,en)=>s.steps.push(VZ(zh,en));
+ if(mode==='position'){
+  let mag=normVal(a),u=C.unit(a);metric('position',VZ('位置向量 OA⃗','Position vector OA⃗'),vecVal(a),false);metric('magnitude',VZ('|a|','|a|'),mag);metric('unit',VZ('a 的單位向量','Unit vector of a'),u.defined?exact(u):undef());
+  step(`令 a = OA⃗ = ${formatVec(a)}，它表示由 O 指向 A 的位移。`,`Let a = OA⃗ = ${formatVec(a)}; it represents the displacement from O to A.`);
+  step(`|a|² = ${squares(a)} = ${aa}，因此 |a| = ${mag.plain}。`,`|a|² = ${squares(a)} = ${aa}, hence |a| = ${mag.plain}.`);
+  step(u.defined?`由 â = a / |a|，單位向量為 ${pretty(u.plain)}。`:'a 是零向量，沒有可定義的單位方向。',u.defined?`Using â = a / |a|, the unit vector is ${pretty(u.plain)}.`:'a is the zero vector and has no defined unit direction.');if(!aa){s.status=L.zeroWarning;s.warning=true}
+ } else if(mode==='displacement'){
+  let delta=C.displacement(a,b),mag=normVal(delta);metric('delta',VZ('位移 AB⃗','Displacement AB⃗'),vecVal(delta));metric('distance',VZ('距離 AB','Distance AB'),mag);
+  step(`設 A = ${formatVec(a)}、B = ${formatVec(b)}，位移是終點減起點。`,`Let A = ${formatVec(a)} and B = ${formatVec(b)}. Displacement is endpoint minus start point.`);
+  step(`AB⃗ = OB⃗ − OA⃗ = ${formatVec(delta)}。`,`AB⃗ = OB⃗ − OA⃗ = ${formatVec(delta)}.`);
+  step(`AB² = ${squares(delta)} = ${C.norm2(delta)}，所以 AB = ${mag.plain}。`,`AB² = ${squares(delta)} = ${C.norm2(delta)}, so AB = ${mag.plain}.`);
+ } else if(mode==='addition'){
+  let sum=C.add(a,b),diff=C.sub(a,b),scaled=C.scale(a,S.k);metric('sum',VZ('a + b','a + b'),vecVal(sum));metric('difference',VZ('a − b','a − b'),vecVal(diff));metric('scalar',VZ('ka','ka'),vecVal(scaled));
+  step(`令 a = ${formatVec(a)}、b = ${formatVec(b)}、k = ${S.k}。`,`Let a = ${formatVec(a)}, b = ${formatVec(b)} and k = ${S.k}.`);
+  step(`逐個分量相加及相減：a + b = ${formatVec(sum)}，a − b = ${formatVec(diff)}。`,`Add and subtract componentwise: a + b = ${formatVec(sum)}, a − b = ${formatVec(diff)}.`);
+  step(`每一分量乘以 k = ${S.k}，得 ka = ${formatVec(scaled)}。`,`Multiply each component by k = ${S.k}, giving ka = ${formatVec(scaled)}.`);
+ } else if(mode==='dot'){
+  metric('dot',VZ('點積 a · b','Dot product a · b'),intVal(dp));metric('angle',VZ('夾角 θ','Included angle θ'),angle);metric('lenA',VZ('|a|','|a|'),normVal(a),false);metric('lenB',VZ('|b|','|b|'),normVal(b),false);
+  step(`將對應分量相乘後相加：a · b = ${terms(a,b)} = ${dp}。`,`Multiply corresponding components and add: a · b = ${terms(a,b)} = ${dp}.`);
+  step(aa&&bb?`|a| = ${normVal(a).plain}，|b| = ${normVal(b).plain}；cos θ = (a · b) / (|a||b|)。`:'至少一個向量為零，不能用長度作除數求夾角。',aa&&bb?`|a| = ${normVal(a).plain}, |b| = ${normVal(b).plain}; cos θ = (a · b) / (|a||b|).`:'At least one vector is zero, so division by the magnitudes cannot define an angle.');
+  step(aa&&bb?`因此 θ = ${angle.plain}。若點積為零，兩個非零向量垂直。`:'點積仍有定義，但夾角和方向關係未定義。',aa&&bb?`Thus θ = ${angle.plain}. If the dot product is zero, the non-zero vectors are perpendicular.`:'The dot product is still defined, but the angle and direction relation are undefined.');if(!aa||!bb){s.status=L.zeroWarning;s.warning=true}
+ } else if(mode==='projection'){
+  let proj=C.projection(a,b);metric('dot',VZ('a · b','a · b'),intVal(dp));metric('targetNorm',VZ('b · b','b · b'),intVal(bb),false);metric('projection',VZ('a 在 b 上的向量投影','Vector projection of a onto b'),proj.defined?exact(proj.vector):undef());metric('signed',VZ('有向純量投影','Signed scalar projection'),proj.defined?scalarExact(proj.scalar):undef());
+  step(`計算 a · b = ${terms(a,b)} = ${dp}；b · b = ${squares(b)} = ${bb}。`,`Compute a · b = ${terms(a,b)} = ${dp}, and b · b = ${squares(b)} = ${bb}.`);
+  step(proj.defined?`投影係數 = (a · b) / (b · b) = ${pretty(proj.coefficient.plain)}。`:'b 是零向量，投影方向不存在。',proj.defined?`Projection coefficient = (a · b) / (b · b) = ${pretty(proj.coefficient.plain)}.`:'b is the zero vector, so the projection direction is undefined.');
+  step(proj.defined?`將係數乘以 b，向量投影為 ${pretty(proj.vector.plain)}；有向純量投影為 ${pretty(proj.scalar.plain)}。`:'不能以零作為投影公式的分母。',proj.defined?`Multiply b by the coefficient: the vector projection is ${pretty(proj.vector.plain)}; the signed scalar projection is ${pretty(proj.scalar.plain)}.`:'The projection formula cannot have a zero denominator.');if(!proj.defined){s.status=L.zeroWarning;s.warning=true}
+ } else if(mode==='cross'){
+  let info=C.crossInfo(a,b);metric('cross',VZ('叉積 a × b','Cross product a × b'),vecVal(info.vector));metric('para',VZ('平行四邊形面積','Parallelogram area'),scalarExact(info.parallelogramArea));metric('tri',VZ('三角形面積','Triangle area'),scalarExact(info.triangleArea));
+  step(`按順序計算 a × b = (a₂b₃ − a₃b₂, a₃b₁ − a₁b₃, a₁b₂ − a₂b₁) = ${formatVec(cross)}。`,`In order, a × b = (a₂b₃ − a₃b₂, a₃b₁ − a₁b₃, a₁b₂ − a₂b₁) = ${formatVec(cross)}.`);
+  step(`|a × b|² = ${squares(cross)} = ${C.norm2(cross)}，平行四邊形面積 = ${pretty(info.parallelogramArea.plain)}。`,`|a × b|² = ${squares(cross)} = ${C.norm2(cross)}, so the parallelogram area is ${pretty(info.parallelogramArea.plain)}.`);
+  step(`三角形面積是其一半，即 ${pretty(info.triangleArea.plain)}。交換 a、b 的次序會反轉叉積方向。`,`The triangle has half that area, ${pretty(info.triangleArea.plain)}. Swapping a and b reverses the cross-product direction.`);if(!C.norm2(cross)){s.status=L.zeroNormal;s.warning=true}
+ } else if(mode==='division'){
+  let part=C.section(a,b,S.m,S.n),delta=C.displacement(a,b);metric('division',VZ('內分點 P 的座標','Coordinates of division point P'),exact(part));metric('ratio',VZ('AP : PB','AP : PB'),{plain:`${S.m} : ${S.n}`,tex:`${S.m}:${S.n}`,defined:C.norm2(delta)!==0,approx:''},false);
+  step(`令 A = ${formatVec(a)}、B = ${formatVec(b)}，且 AP : PB = ${S.m} : ${S.n}。`,`Let A = ${formatVec(a)}, B = ${formatVec(b)}, and AP : PB = ${S.m} : ${S.n}.`);
+  step(`AP⃗ = ${S.m}/(${S.m}+${S.n}) AB⃗，其中 AB⃗ = ${formatVec(delta)}。`,`AP⃗ = ${S.m}/(${S.m}+${S.n}) AB⃗, where AB⃗ = ${formatVec(delta)}.`);
+  step(`因此 OP⃗ = (${S.n} OA⃗ + ${S.m} OB⃗)/(${S.m}+${S.n}) = ${pretty(part.plain)}。`,`Hence OP⃗ = (${S.n} OA⃗ + ${S.m} OB⃗)/(${S.m}+${S.n}) = ${pretty(part.plain)}.`);if(!C.norm2(delta)){s.status=L.equalPoints;s.warning=true;s.metrics[1].value=undef()}
+ } else if(mode==='relations'){
+  let value=relation==='undefined'?undef():{plain:T(L[relation]),tex:`\\text{${relation}}`,defined:true,approx:''};metric('relation',VZ('方向關係','Direction relation'),value);metric('dot',VZ('點積 a · b','Dot product a · b'),intVal(dp));metric('cross',VZ('叉積 a × b','Cross product a × b'),vecVal(cross));metric('angle',VZ('夾角 θ','Included angle θ'),angle);
+  step(`a · b = ${terms(a,b)} = ${dp}；a × b = ${formatVec(cross)}。`,`a · b = ${terms(a,b)} = ${dp}; a × b = ${formatVec(cross)}.`);
+  step(aa&&bb?'兩個向量均非零：點積為零表示垂直；叉積為零表示平行。':'至少一個向量是零向量，不能依點積或叉積判定方向。',aa&&bb?'Both vectors are non-zero: a zero dot product means perpendicular and a zero cross product means parallel.':'At least one vector is zero, so dot and cross products do not determine a direction relation.');
+  step(aa&&bb?`此例的方向關係為「${L[relation].zh}」。`:'此例的方向關係未定義。',aa&&bb?`In this example the direction relation is “${L[relation].en}”.`:'The direction relation is undefined in this example.');if(!aa||!bb){s.status=L.zeroWarning;s.warning=true}
+ }
+ return s;
+}
+function formulaPlain(){if(S.mode==='cross')return 'A▱ = |a × b|；A△ = ½|a × b|';if(S.mode==='relations')return T(VZ('a、b ≠ 0：a ⟂ b ⇔ a · b = 0；a ∥ b ⇔ a × b = 0','a, b ≠ 0: a ⟂ b ⇔ a · b = 0; a ∥ b ⇔ a × b = 0'));return def().eq}
+function formulaTex(){if(S.mode==='relations')return '\\mathbf a,\\mathbf b\\ne\\mathbf0:\\quad\\mathbf a\\perp\\mathbf b\\iff\\mathbf a\\cdot\\mathbf b=0,\\quad\\mathbf a\\parallel\\mathbf b\\iff\\mathbf a\\times\\mathbf b=\\mathbf0';return def().tex}
+function metricNode(m,hidden){let box=document.createElement('div');box.className='metric';let lab=document.createElement('div');lab.className='metric-label';lab.textContent=T(m.label);let val=document.createElement('div');val.className='metric-value'+(hidden?' hidden-value':m.value.defined===false?' vector-undefined':'');if(hidden)val.textContent='?';else if(m.value.defined===false)val.textContent=T(L.undefined);else val.append(initMath(m.value.plain,m.value.tex));box.append(lab,val);if(!hidden&&m.value.approx){let approx=document.createElement('div');approx.className='approx';approx.textContent=m.value.approx;box.append(approx)}return box}
+function refreshResults(){
+ if(!S.active)return;const sc=makeScene();S.metrics=sc.metrics;let hide=S.quiz&&!S.revealed,available=sc.metrics.filter(m=>m.canQuiz);
+ if(hide&&(!S.quizKey||!available.some(m=>m.key===S.quizKey)))S.quizKey=available.length?available[Math.floor(Math.random()*available.length)].key:null;
+ vTextMath('vEquation',formulaPlain(),formulaTex());let metrics=D('vMetrics');metrics.replaceChildren();
+ if(hide&&S.quizKey){let picked=sc.metrics.find(x=>x.key===S.quizKey);metrics.append(metricNode(picked,true))}else sc.metrics.forEach(m=>metrics.append(metricNode(m,false)));
+ let status=D('vStatus');status.hidden=hide||!sc.status;if(sc.status){status.className='status'+(sc.warning?' warning':'');status.textContent=T(sc.status)}
+ D('vReasonText').textContent=hide?T(L.locked):T(def().reason);D('vSteps').replaceChildren();if(!hide)sc.steps.forEach((step,i)=>{let row=document.createElement('div');row.className='vector-step';let n=document.createElement('span');n.className='vector-step-number';n.textContent=String(i+1);let txt=document.createElement('span');txt.className='vector-step-text';txt.textContent=T(step);row.append(n,txt);D('vSteps').append(row)});
+ D('vReveal').disabled=!S.quiz||S.revealed;TX('vReveal',S.revealed?'revealed':'reveal');S.renderer.render();
+}
+S.renderer=window.VectorRenderer.create(D('vectorCanvas'),{getState:()=>({mode:S.mode,a:S.a.slice(),b:S.b.slice(),k:S.k,m:S.m,n:S.n,aux:S.aux,quizHidden:S.quiz&&!S.revealed,lang:state.lang}),onChange:(key,v)=>{if(key!=='a'&&key!=='b')return;S[key]=v.map(n=>Math.max(-6,Math.min(6,Math.round(n))));syncInputs();refreshResults()}});
+D('unitCircle').addEventListener('click',()=>unitSwitch(false));D('unitVectors').addEventListener('click',()=>unitSwitch(true));
+D('vMode').addEventListener('change',e=>changeMode(e.target.value));D('vCameraReset').addEventListener('click',()=>{S.renderer.resetView();S.renderer.render()});
+D('vQuiz').addEventListener('change',e=>{S.quiz=e.target.checked;S.revealed=false;S.quizKey=null;refreshStatic();refreshResults()});
+D('vReveal').addEventListener('click',()=>{S.revealed=true;refreshStatic();refreshResults()});D('vAux').addEventListener('change',e=>{S.aux=e.target.checked;refreshResults()});
+D('language').addEventListener('change',()=>{paintSwitcher();if(S.active){refreshStatic();refreshResults()}});D('theme').addEventListener('click',()=>{if(S.active){refreshStatic();refreshResults()}});
+window.addEventListener('resize',()=>{if(S.active)S.renderer.render()});window.addEventListener('hashchange',()=>unitSwitch(location.hash==='#vectors',false));
+window.VectorApp={active:()=>S.active,reset,refresh:()=>{refreshStatic();refreshResults()},switchTo:unitSwitch};
+window.vectorLabTest=()=>({active:S.active,mode:S.mode,a:S.a.slice(),b:S.b.slice(),k:S.k,m:S.m,n:S.n,quiz:S.quiz,revealed:S.revealed,quizKey:S.quizKey,metrics:S.metrics.map(x=>({key:x.key,defined:x.value.defined,plain:S.quiz&&!S.revealed?null:x.value.plain})),renderer:S.renderer.debug()});
+paintSwitcher();if(location.hash==='#vectors')unitSwitch(true,false);
+})();
+
 </script>
 </body>
 </html>
