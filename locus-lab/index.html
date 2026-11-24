@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#122337">
+<title>軌跡實驗室 Locus Lab | HKDSE 數學</title>
+<style>*{box-sizing:border-box}html{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Noto Sans TC","Microsoft JhengHei",sans-serif;color:#172b3d;background:#e9eef0}body{margin:0}button,input,select{font:inherit}button,select{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:3px solid #e0aa55;outline-offset:3px}.topbar{height:72px;padding:0 4%;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #e8edef}.brand{display:flex;align-items:center;gap:11px}.brand-icon{width:41px;height:41px;display:grid;place-items:center;border-radius:12px;background:#15384a;color:#65ddbc}.brand strong{display:block;line-height:1.15;font-size:17px;letter-spacing:.04em}.brand div>span{display:block;font-size:9px;letter-spacing:.22em;color:#80919b;margin-top:3px;font-weight:700}.header-right{display:flex;gap:12px;align-items:center;color:#71838d;font-size:11px;font-weight:650;letter-spacing:.04em}.header-right i{width:3px;height:3px;border-radius:50%;background:#b7c2c7}.header-right b{font-weight:600;color:#9cabaf}.app-layout{max-width:1920px;margin:auto;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(425px,.91fr);min-height:calc(100vh - 72px);box-shadow:0 12px 50px #1d354011}.visual-column{background:#102335;color:#edf7f5;padding:36px clamp(24px,4vw,66px) 32px;min-width:0}.visual-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:23px}.eyebrow{font-size:9px;font-weight:800;letter-spacing:.18em}.eyebrow.light{color:#79b5ab}.visual-heading h1{margin:8px 0 0;font-size:clamp(22px,2vw,30px);letter-spacing:.03em}.visual-heading h1 span{font-weight:400;color:#9cb3bd}.case-chip{border:1px solid #426078;border-radius:20px;padding:8px 11px;color:#b6c8d0;font-size:10px;letter-spacing:.13em;font-weight:750;white-space:nowrap}.chip-dot,.live-dot,.live-pill i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#66d8b4;margin-right:7px;box-shadow:0 0 10px #66d8b499}.canvas-card{overflow:hidden;border:1px solid #31485b;border-radius:15px;background:#10202f;box-shadow:0 16px 45px #06131d32}.canvas-head{height:48px;border-bottom:1px solid #2c4152;display:flex;align-items:center;justify-content:space-between;padding:0 19px;font-size:12px;color:#d5e7e4;font-weight:650}.canvas-sub{font-size:9px;color:#688495;font-weight:700;letter-spacing:.08em;margin-left:8px}#statusTag{color:#87a1ac;font-size:10px;font-weight:500}.canvas-wrap{position:relative;width:100%;height:clamp(390px,52vw,690px);max-height:calc(100vh - 270px);min-height:375px;background:#0d1d2c}canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}.canvas-tip{position:absolute;bottom:13px;left:15px;pointer-events:none;background:#182d3edb;border:1px solid #324c5b;border-radius:7px;padding:7px 10px;color:#91a9b2;font-size:10px}.canvas-tip b{color:#8ae7c9}.canvas-foot{height:46px;padding:0 19px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #2c4152}.legend{display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:10px;color:#9ab0b9}.legend>span{white-space:nowrap;display:flex;align-items:center;gap:6px}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block}.p-dot{background:#83f0c9;box-shadow:0 0 7px #72e5c5}.fixed-dot{background:#f2bd76}.legend-line{width:16px;height:2px;display:inline-block;background:#64ddc2}.point-coords{white-space:nowrap;color:#a5e9d8;font-size:11px;font-variant-numeric:tabular-nums}.playbar{padding-top:19px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.play-group,.switches{display:flex;align-items:center;gap:12px}.play-button,.icon-button{border:0;border-radius:8px;min-height:38px;padding:0 15px;font-size:12px;font-weight:700}.play-button{color:#0d3c36;background:#8ae7c7;min-width:96px}.play-button:hover{background:#a7f3d9}.play-button span:first-child{font-size:14px;margin-right:7px}.icon-button{color:#b6cad0;background:#21384a}.icon-button:hover{background:#2c4859}.icon-button span{font-size:16px}.switches{gap:18px}.switch-label{display:flex;align-items:center;gap:7px;color:#a8bdc6;font-size:11px;white-space:nowrap;cursor:pointer}.switch-label input{position:absolute;opacity:0}.switch{width:29px;height:16px;border-radius:12px;background:#526b78;position:relative;transition:background .15s}.switch:after{content:"";position:absolute;top:3px;left:3px;width:10px;height:10px;border-radius:50%;background:white;transition:transform .15s}.switch-label input:checked+.switch{background:#54caaa}.switch-label input:checked+.switch:after{transform:translateX(13px)}.switch-label input:focus-visible+.switch{outline:3px solid #e0aa55;outline-offset:3px}.visual-note{display:flex;align-items:flex-start;gap:9px;color:#7995a2;margin-top:25px;font-size:11px;line-height:1.6}.note-icon{color:#75cbb5;font-size:14px}.panel{min-width:0;background:#f9fbf9}.panel-inner{padding:32px clamp(25px,3vw,48px) 22px;max-width:720px;margin:0 auto}.panel-section{padding-bottom:23px;margin-bottom:23px;border-bottom:1px solid #e2e9e5}.section-label{display:flex;gap:8px;align-items:center;color:#223d49;font-size:13px;font-weight:800;letter-spacing:.02em;margin-bottom:15px}.section-label>span:first-child{color:#56a992;font-size:10px;font-weight:800}.section-label small{font-size:9px;letter-spacing:.13em;color:#a0b1b0;margin-left:auto}.select-wrap{position:relative}.select-wrap select{appearance:none;width:100%;border:1px solid #d7e3de;border-radius:9px;padding:13px 40px 13px 14px;background:#fff;color:#213c45;font-size:13px;font-weight:700}.select-wrap>span{position:absolute;right:14px;top:7px;font-size:22px;color:#75918a;pointer-events:none}.case-intro{background:#edf6f1;border:1px solid #e1eee7;border-radius:10px;padding:17px 18px;margin-top:12px}.case-kicker{font-size:9px;letter-spacing:.15em;color:#55a48a;font-weight:850}.case-intro h2{font-size:16px;margin:6px 0 6px;color:#183e3b;letter-spacing:.02em}.case-intro p{font-size:12px;line-height:1.7;color:#5f7973;margin:0}.condition-line{margin-top:10px;color:#16866a;font-size:14px;font-weight:700;overflow-x:auto}.control-row{display:grid;grid-template-columns:minmax(95px,1fr) minmax(100px,1.3fr) 50px;gap:11px;align-items:center;margin:11px 0;font-size:11px;color:#526e6a}.control-row strong{font-weight:700;color:#36554f}.control-row output{font-weight:700;color:#17846b;text-align:right;font-variant-numeric:tabular-nums}.control-row input[type=range]{accent-color:#37a88a;width:100%;height:18px}.line-box{border:1px solid #e0eae5;border-radius:9px;background:#fff;padding:10px 12px;margin:9px 0}.line-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;color:#36544f}.line-title .swatch{width:8px;height:8px;border-radius:50%;background:#edb96c}.line-title .swatch.alt{background:#eb8c80}.line-title label{margin-left:auto;color:#708a82;font-size:10px;font-weight:600;display:flex;align-items:center;gap:4px}.line-title input{accent-color:#36a98a}.line-box .control-row:last-child{margin-bottom:2px}.control-help{font-size:10px;line-height:1.7;color:#82958f;margin:7px 0 0}.control-help b{color:#568879}.inline-warning{padding:9px 10px;margin-top:9px;background:#fff4e9;border-radius:7px;color:#a55f26;font-size:11px;line-height:1.6}.measure-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.measure-card{padding:11px 12px;background:#fff;border:1px solid #e7eeea;border-radius:8px;min-width:0}.measure-card .measure-name{font-size:10px;color:#8c9f98;margin-bottom:5px}.measure-card .measure-value{font-size:14px;font-weight:700;color:#285c50;overflow:auto;white-space:nowrap;font-variant-numeric:tabular-nums}.measure-card .measure-value math{font-size:1em}.quiz-section{border-radius:10px;padding:15px;background:#f0f5f9;border:1px solid #dce8ee}.quiz-copy,.quiz-copy>div{display:flex;align-items:center;gap:10px}.quiz-copy{justify-content:space-between}.quiz-copy strong{font-size:12px;color:#284559}.quiz-copy p{font-size:10px;color:#79909e;margin:4px 0 0}.quiz-icon{width:31px;height:31px;border-radius:9px;display:grid;place-items:center;background:#dcebf0;color:#50839a;font-weight:800}.quiz-tag{font-size:9px;font-weight:800;letter-spacing:.13em;color:#9cb5bf}.quiz-actions{display:flex;gap:8px;margin-top:13px}.quiz-actions button{border-radius:7px;padding:10px;font-size:11px;font-weight:750}.quiz-btn{border:1px solid #cadce3;background:white;color:#416779;flex:1}.reveal-btn{border:1px solid #287b71;color:white;background:#287b71;flex:1.6}.reveal-btn span{margin-left:4px}.quiz-hint{font-size:10px;line-height:1.6;margin:9px 1px 0;color:#628293}.solution-section{margin-top:0}.working-step{display:flex;gap:9px;margin:13px 0}.step-number{flex:none;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:#eaf3ee;color:#69a78e;font-size:9px;font-weight:800;margin-top:1px}.step-body{min-width:0;flex:1}.step-body p{font-size:11px;color:#6c827a;line-height:1.65;margin:0 0 5px}.math-block{font-family:Cambria,"Times New Roman",serif;color:#203d37;font-size:14px;overflow-x:auto;overflow-y:hidden;padding:4px 0;white-space:nowrap;min-height:24px}.math-block math{font-size:1em}.answer-box{border-left:3px solid #58bd9d;background:#edf7f1;border-radius:0 8px 8px 0;padding:12px 14px;margin-top:15px}.answer-box .answer-label{font-size:9px;color:#61a791;letter-spacing:.12em;font-weight:850}.answer-box .math-block{font-size:15px;color:#145e4f;font-weight:700;margin-top:4px}.answer-box p{color:#507367;font-size:11px;line-height:1.7;margin:6px 0 0}.answer-extra{font-size:10px;color:#7e958b;line-height:1.6;margin-top:9px}.hidden-answer{border:1px dashed #cdded6;border-radius:9px;padding:16px;text-align:center;color:#839990;font-size:11px;line-height:1.7}.panel-footer{font-size:9px;letter-spacing:.12em;color:#acbdb6;font-weight:700}.panel-footer span{margin:0 5px}math{font-family:Cambria,"STIX Two Math","Times New Roman",serif} [hidden]{display:none!important}
+@media(max-width:1050px){.app-layout{grid-template-columns:minmax(0,1fr) minmax(355px,.9fr)}.visual-column{padding-left:25px;padding-right:25px}.canvas-sub{display:none}.legend{gap:10px}.panel-inner{padding-left:24px;padding-right:24px}}@media(max-width:760px){.topbar{height:62px;padding:0 19px}.brand-icon{width:36px;height:36px}.brand strong{font-size:15px}.header-right{font-size:9px;gap:7px}.app-layout{display:flex;flex-direction:column}.visual-column{padding:24px 18px 22px}.visual-heading{margin-bottom:16px}.visual-heading h1{font-size:22px}.case-chip{font-size:9px}.canvas-wrap{height:clamp(320px,92vw,480px);max-height:none;min-height:320px}.canvas-head{height:42px;padding:0 13px}.canvas-foot{height:auto;min-height:45px;padding:8px 12px}.legend{gap:8px;font-size:9px}.point-coords{font-size:10px}.playbar{padding-top:14px}.switches{gap:13px}.visual-note{margin-top:15px}.panel-inner{padding:26px 19px 25px}.panel-section{padding-bottom:20px;margin-bottom:20px}.quiz-section{padding:14px}.canvas-tip{font-size:9px;bottom:8px;left:8px}}@media(max-width:390px){.header-right b{display:none}.visual-column{padding-left:12px;padding-right:12px}.playbar{align-items:flex-start}.switches{width:100%;justify-content:flex-start}.legend{gap:7px}.legend>span{font-size:9px}.quiz-actions{flex-direction:column}.canvas-wrap{height:340px}.case-intro h2{font-size:15px}}
+
+.play-button:disabled{opacity:.45;cursor:not-allowed}.switch-label input:disabled+.switch{opacity:.4;cursor:not-allowed}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-icon" aria-hidden="true"><svg width="27" height="27" viewBox="0 0 27 27" fill="none"><circle cx="13.5" cy="13.5" r="9" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/><circle cx="19.9" cy="7.1" r="3" fill="currentColor"/><path d="M4 22.8h19M13.5 4v19" stroke="currentColor" stroke-width="1" opacity=".55"/></svg></span><div><strong>軌跡實驗室</strong><span>LOCUS LAB</span></div></div>
+  <div class="header-right"><span>HKDSE 數學</span><i></i><span>必修部分 <b>＋ 延伸</b></span></div>
+</header>
+<main class="app-layout">
+  <section class="visual-column" aria-label="互動直角坐標系">
+    <div class="visual-heading"><div><div class="eyebrow light">INTERACTIVE COORDINATE PLANE</div><h1>直角坐標系 <span>動態畫布</span></h1></div><div class="case-chip"><span class="chip-dot"></span><span id="caseCounter">01 / 07</span></div></div>
+    <div class="canvas-card">
+      <div class="canvas-head"><div><span class="live-dot"></span>互動畫布 <span class="canvas-sub">COORDINATE PLANE</span></div><span id="statusTag">自動播放中</span></div>
+      <div class="canvas-wrap"><canvas id="canvas" tabindex="0" aria-label="直角坐標系畫布。可以拖動動點 P 及定點。">你的瀏覽器不支援 HTML5 Canvas。</canvas><div class="canvas-tip" id="canvasTip">拖曳 <b>P</b> 或定點，探索軌跡</div></div>
+      <div class="canvas-foot"><div class="legend"><span><i class="legend-dot p-dot"></i>動點 P</span><span><i class="legend-dot fixed-dot"></i>定點／定線</span><span><i class="legend-line"></i>軌跡</span></div><div id="pointCoords" class="point-coords">P (0, 0)</div></div>
+    </div>
+    <div class="playbar"><div class="play-group"><button class="play-button" id="playBtn" type="button"><span id="playIcon" aria-hidden="true">Ⅱ</span><span id="playText">暫停</span></button><button class="icon-button" id="clearBtn" type="button" title="清除殘影"><span aria-hidden="true">↺</span> 清除殘影</button></div><div class="switches"><label class="switch-label"><input type="checkbox" id="gridToggle" checked><span class="switch"></span>坐標網格</label><label class="switch-label"><input type="checkbox" id="locusToggle" checked><span class="switch"></span>完整軌跡</label></div></div>
+    <div class="visual-note"><span class="note-icon">✳</span><span>拖曳定點改變條件；拖曳動點時，P 會自動貼合可行軌跡。</span></div>
+  </section>
+  <aside class="panel" aria-label="條件選擇器、控制面板與代數推導">
+    <div class="panel-inner">
+      <section class="panel-section chooser">
+        <div class="section-label"><span>01</span> 選擇軌跡條件 <small>LOCUS CASE</small></div>
+        <div class="select-wrap"><select id="caseSelect" aria-label="選擇軌跡條件"></select><span aria-hidden="true">⌄</span></div>
+        <div class="case-intro"><div class="case-kicker" id="caseKicker">CASE 01</div><h2 id="caseTitle"></h2><p id="caseDescription"></p><div class="condition-line" id="conditionFormula"></div></div>
+      </section>
+      <section class="panel-section"><div class="section-label"><span>02</span> 調整幾何條件 <small>CONTROLS</small></div><div id="controls"></div><p class="control-help" id="controlHelp"></p><div class="inline-warning" id="warning" role="status" hidden></div></section>
+      <section class="panel-section measurements"><div class="section-label"><span>03</span> 即時數值 <small>LIVE MEASUREMENTS</small><span class="live-pill"><i></i> LIVE</span></div><div class="measure-grid" id="measurements"></div></section>
+      <section class="panel-section quiz-section"><div class="quiz-copy"><div><span class="quiz-icon">?</span><div><strong>課堂小測試</strong><p>隨機出題，先猜形狀及方程。</p></div></div><span class="quiz-tag">TRY IT</span></div><div class="quiz-actions"><button id="quizBtn" class="quiz-btn" type="button">↻ &nbsp; 隨機出題</button><button id="revealBtn" class="reveal-btn" type="button">顯示答案與圖像驗證 <span>↗</span></button></div><p id="quizHint" class="quiz-hint" hidden>答案及完整軌跡已隱藏。請先根據條件思考，再揭曉答案。</p></section>
+      <section class="panel-section solution-section" id="solutionSection"><div class="section-label"><span>04</span> 代數方程與幾何描述 <small>WORKING</small></div><div id="solution"></div></section>
+      <div class="panel-footer">HKDSE MATHEMATICS <span>·</span> 由條件出發，理解軌跡</div>
+    </div>
+  </aside>
+</main>
+<script>/*
+ * Offline Cartesian locus geometry. No dependencies.
+ *
+ * Geo.line({m, k, vertical}) -> unit-normal {a,b,c}, for ax+by+c=0.
+ * Geo.signed(line, point), Geo.foot(line, point), Geo.distance(line, point)
+ *   accept a unit-normal line (such as the result of Geo.line).
+ * Geo.build(id, cfg) -> {paths, error}; IDs 1 through 7.
+ * Geo.project(path, point) -> a closest point on the path. For a circle with
+ *   excluded points, a 1e-5-radian exclusion margin makes the otherwise
+ *   unattainable closest point practical and well-defined.
+ * Geo.pathPoints(path, {xmin,xmax,ymin,ymax}) -> ordered points. Lines are
+ *   clipped exactly; circles have 240 intervals. A parabola may leave the box
+ *   between two visible branches, so its ordered polyline can include points
+ *   outside the box. Clip the drawing to the viewport to avoid stray pixels.
+ */
+const Geo = (() => {
+  'use strict';
+
+  const ANGLE_EPS = 8 * Number.EPSILON;
+  const ANGULAR_MARGIN = 1e-5;
+  const TAU = 2 * Math.PI;
+  const finite = Number.isFinite;
+
+  function pointOK(p) {
+    return !!p && finite(p.x) && finite(p.y);
+  }
+
+  function requirePoint(p, name) {
+    if (!pointOK(p)) throw new Error(name + ' must be a finite point {x,y}');
+    return p;
+  }
+
+  function line(L) {
+    if (!L || !finite(L.k)) throw new Error('Line k must be finite');
+    if (L.vertical) return { a: 1, b: 0, c: -L.k };
+    if (!finite(L.m)) throw new Error('Line m must be finite');
+    const h = Math.hypot(L.m, 1);
+    return { a: -L.m / h, b: 1 / h, c: -L.k / h };
+  }
+
+  function signed(l, pt) {
+    requirePoint(pt, 'Point');
+    if (!l || !finite(l.a) || !finite(l.b) || !finite(l.c)) {
+      throw new Error('Expected a line {a,b,c}');
+    }
+    return l.a * pt.x + l.b * pt.y + l.c;
+  }
+
+  function foot(l, pt) {
+    const s = signed(l, pt);
+    return { x: pt.x - s * l.a, y: pt.y - s * l.b };
+  }
+
+  function distance(l, pt) {
+    return Math.abs(signed(l, pt));
+  }
+
+  function normalizeLine(a, b, c) {
+    const h = Math.hypot(a, b);
+    if (!(h > 0) || !finite(h) || !finite(c)) throw new Error('Degenerate line');
+    return { kind: 'line', a: a / h, b: b / h, c: c / h };
+  }
+
+  function areParallel(l1, l2) {
+    return Math.abs(l1.a * l2.b - l1.b * l2.a) <= ANGLE_EPS;
+  }
+
+  // Align unit normals before comparing offsets; the same geometric line can
+  // have coefficients of either sign.
+  function align(l1, l2) {
+    const s = l1.a * l2.a + l1.b * l2.b < 0 ? -1 : 1;
+    return { a: s * l2.a, b: s * l2.b, c: s * l2.c };
+  }
+
+  function build(id, cfg) {
+    try {
+      if (!Number.isInteger(id) || id < 1 || id > 7) {
+        throw new Error('Locus id must be an integer from 1 to 7');
+      }
+      if (!cfg || typeof cfg !== 'object') throw new Error('Missing configuration');
+      let a, b, l1, l2, l2a, mid, dx, dy, len, s, h, v, n, p;
+      switch (id) {
+        case 1:
+          a = requirePoint(cfg.A, 'A');
+          if (!finite(cfg.r) || cfg.r <= 0) throw new Error('Radius r must be positive');
+          return { paths: [{ kind: 'circle', cx: a.x, cy: a.y, r: cfg.r }], error: null };
+        case 2:
+          a = requirePoint(cfg.A, 'A');
+          b = requirePoint(cfg.B, 'B');
+          dx = b.x - a.x;
+          dy = b.y - a.y;
+          len = Math.hypot(dx, dy);
+          if (!(len > 0)) throw new Error('A and B must be distinct');
+          if (!finite(len)) throw new Error('Coordinates are too large');
+          mid = { x: a.x + dx / 2, y: a.y + dy / 2 };
+          dx /= len;
+          dy /= len;
+          return { paths: [normalizeLine(dx, dy, -(dx * mid.x + dy * mid.y))], error: null };
+        case 3:
+          l1 = line(cfg.L1);
+          if (!finite(cfg.d) || cfg.d <= 0) throw new Error('Distance d must be positive');
+          return {
+            paths: [
+              { kind: 'line', a: l1.a, b: l1.b, c: l1.c - cfg.d },
+              { kind: 'line', a: l1.a, b: l1.b, c: l1.c + cfg.d }
+            ], error: null
+          };
+        case 4:
+          l1 = line(cfg.L1);
+          l2 = line(cfg.L2);
+          if (!areParallel(l1, l2)) throw new Error('The two lines must be parallel');
+          l2a = align(l1, l2);
+          if (l1.c === l2a.c) throw new Error('The two lines must be distinct');
+          return { paths: [normalizeLine(l1.a, l1.b, (l1.c + l2a.c) / 2)], error: null };
+        case 5:
+          l1 = line(cfg.L1);
+          l2 = line(cfg.L2);
+          if (areParallel(l1, l2)) throw new Error('The two lines must intersect; parallel or coincident lines are degenerate');
+          return {
+            paths: [
+              normalizeLine(l1.a + l2.a, l1.b + l2.b, l1.c + l2.c),
+              normalizeLine(l1.a - l2.a, l1.b - l2.b, l1.c - l2.c)
+            ], error: null
+          };
+        case 6:
+          a = requirePoint(cfg.A, 'A');
+          b = requirePoint(cfg.B, 'B');
+          dx = b.x - a.x;
+          dy = b.y - a.y;
+          len = Math.hypot(dx, dy);
+          if (!(len > 0)) throw new Error('A and B must be distinct');
+          if (!finite(len)) throw new Error('Coordinates are too large');
+          return {
+            paths: [{
+              kind: 'circle', cx: a.x + dx / 2, cy: a.y + dy / 2,
+              r: len / 2, exclude: [{ x: a.x, y: a.y }, { x: b.x, y: b.y }]
+            }], error: null
+          };
+        case 7:
+          a = requirePoint(cfg.F, 'F');
+          l1 = line(cfg.L1);
+          s = signed(l1, a);
+          // Error bound scales with the arithmetic involved, not with an
+          // arbitrary absolute distance: small but valid diagrams still work.
+          if (Math.abs(s) <= 4 * Number.EPSILON *
+              (Math.abs(l1.a * a.x) + Math.abs(l1.b * a.y) + Math.abs(l1.c))) {
+            throw new Error('Focus F must not lie on the directrix');
+          }
+          h = foot(l1, a);
+          v = { x: h.x + (a.x - h.x) / 2, y: h.y + (a.y - h.y) / 2 };
+          n = { x: Math.sign(s) * l1.a, y: Math.sign(s) * l1.b };
+          p = Math.abs(s) / 2;
+          return { paths: [{ kind: 'parabola', v, t: { x: -n.y, y: n.x }, n, p }], error: null };
+      }
+    } catch (err) {
+      return { paths: [], error: err instanceof Error ? err.message : String(err) };
+    }
+  }
+
+  function wrapAngle(x) {
+    return Math.atan2(Math.sin(x), Math.cos(x));
+  }
+
+  function circleProject(path, pt) {
+    if (!finite(path.cx) || !finite(path.cy) || !finite(path.r) || path.r <= 0) {
+      throw new Error('Invalid circle');
+    }
+    const target = Math.atan2(pt.y - path.cy, pt.x - path.cx);
+    const excluded = Array.isArray(path.exclude) ? path.exclude.filter(pointOK).map(q =>
+      Math.atan2(q.y - path.cy, q.x - path.cx)) : [];
+    // The small addition makes the measured angular separation at least the
+    // requested margin despite floating-point rounding at the boundary.
+    const safeMargin = ANGULAR_MARGIN + 1e-12;
+    const allowed = angle => excluded.every(e => Math.abs(wrapAngle(angle - e)) >= ANGULAR_MARGIN);
+    let angle = target;
+    if (!allowed(angle)) {
+      const candidates = [];
+      for (const e of excluded) candidates.push(e - safeMargin, e + safeMargin);
+      let best = Infinity;
+      for (const candidate of candidates) {
+        if (!allowed(candidate)) continue;
+        const delta = Math.abs(wrapAngle(candidate - target));
+        if (delta < best) { best = delta; angle = candidate; }
+      }
+      if (!finite(best)) throw new Error('Exclusion margins cover the entire circle');
+    }
+    return { x: path.cx + path.r * Math.cos(angle), y: path.cy + path.r * Math.sin(angle) };
+  }
+
+  function parabolaPoint(path, u) {
+    const w = (u / (4 * path.p)) * u;
+    return { x: path.v.x + u * path.t.x + w * path.n.x,
+             y: path.v.y + u * path.t.y + w * path.n.y };
+  }
+
+  function checkParabola(path) {
+    if (!pointOK(path.v) || !pointOK(path.t) || !pointOK(path.n) || !finite(path.p) || path.p <= 0) {
+      throw new Error('Invalid parabola');
+    }
+  }
+
+  // Minimize (u-x)^2 + (u^2/(4p)-y)^2. The stationary equation is
+  // u^3 + (8p^2-4py)u - 8p^2*x = 0. The global minimizer must have
+  // the same sign as x: reflecting u to -u strictly improves the objective
+  // otherwise. There is exactly one positive cubic root when |x| > 0.
+  // At x=0, if the cubic has two symmetric global minima, choose the
+  // negative-u one deterministically. Scaled, bracketed Newton iteration
+  // is used rather than relying on a single local projection or seed.
+  function nearestParabolaU(path, pt) {
+    const dx = pt.x - path.v.x, dy = pt.y - path.v.y;
+    const x = dx * path.t.x + dy * path.t.y;
+    const y = dx * path.n.x + dy * path.n.y;
+    const p = path.p;
+    const A = 8 * p * p - 4 * p * y;
+    if (x === 0) return A < 0 ? -Math.sqrt(-A) : 0;
+    const C = 8 * p * p * Math.abs(x);
+    if (!finite(A) || !finite(C)) throw new Error('Coordinates too large for parabola projection');
+    if (C === 0) return A < 0 ? Math.sign(x) * Math.sqrt(-A) : 0;
+    const scale = Math.max(1, Math.sqrt(Math.abs(A)), Math.cbrt(C));
+    const aa = (A / scale) / scale;
+    const cc = ((C / scale) / scale) / scale;
+    let lo = aa < 0 ? Math.sqrt(-aa) : 0;
+    let hi = 2;
+    let z;
+    if (aa >= 0) {
+      z = aa > 0 ? Math.min(Math.cbrt(cc), cc / aa) : Math.cbrt(cc);
+    } else {
+      z = Math.max(lo, Math.cbrt(cc));
+    }
+    z = Math.max(lo, Math.min(hi, z));
+    for (let i = 0; i < 100; i++) {
+      const f = z * z * z + aa * z - cc;
+      if (f === 0) break;
+      if (f > 0) hi = z; else lo = z;
+      const deriv = 3 * z * z + aa;
+      let next = deriv > 0 ? z - f / deriv : NaN;
+      if (!finite(next) || next <= lo || next >= hi) next = lo + (hi - lo) / 2;
+      if (next === z) break;
+      z = next;
+    }
+    return Math.sign(x) * z * scale;
+  }
+
+  function project(path, pt) {
+    requirePoint(pt, 'Point');
+    if (!path || typeof path !== 'object') throw new Error('Missing path');
+    if (path.kind === 'line') return foot(path, pt);
+    if (path.kind === 'circle') return circleProject(path, pt);
+    if (path.kind === 'parabola') {
+      checkParabola(path);
+      return parabolaPoint(path, nearestParabolaU(path, pt));
+    }
+    throw new Error('Unknown path kind');
+  }
+
+  function checkBounds(bounds) {
+    if (!bounds || !finite(bounds.xmin) || !finite(bounds.xmax) ||
+        !finite(bounds.ymin) || !finite(bounds.ymax) ||
+        bounds.xmin > bounds.xmax || bounds.ymin > bounds.ymax) {
+      throw new Error('Invalid bounds');
+    }
+  }
+
+  function clipLine(path, bounds) {
+    if (!finite(path.a) || !finite(path.b) || !finite(path.c)) throw new Error('Invalid line');
+    const h = Math.hypot(path.a, path.b);
+    if (!(h > 0)) throw new Error('Invalid line');
+    const a = path.a / h, b = path.b / h, c = path.c / h;
+    const x0 = -a * c, y0 = -b * c;
+    const vx = -b, vy = a;
+    let lo = -Infinity, hi = Infinity;
+    function slab(origin, velocity, min, max) {
+      if (velocity === 0) return origin >= min && origin <= max;
+      let t1 = (min - origin) / velocity;
+      let t2 = (max - origin) / velocity;
+      if (t1 > t2) [t1, t2] = [t2, t1];
+      lo = Math.max(lo, t1);
+      hi = Math.min(hi, t2);
+      return lo <= hi;
+    }
+    if (!slab(x0, vx, bounds.xmin, bounds.xmax) ||
+        !slab(y0, vy, bounds.ymin, bounds.ymax)) return [];
+    // Clamp microscopic floating error at the box edges.
+    const pointAt = t => ({
+      x: Math.min(bounds.xmax, Math.max(bounds.xmin, x0 + t * vx)),
+      y: Math.min(bounds.ymax, Math.max(bounds.ymin, y0 + t * vy))
+    });
+    const first = pointAt(lo), last = pointAt(hi);
+    return lo === hi ? [first] : [first, last];
+  }
+
+  // Stable real roots of a quadratic; an exactly zero leading coefficient
+  // is treated as linear, important for horizontal/vertical orientations.
+  function quadraticRoots(a, b, c) {
+    if (a === 0) return b === 0 ? [] : [-c / b];
+    const scale = Math.max(Math.abs(a), Math.abs(b), Math.abs(c));
+    a /= scale; b /= scale; c /= scale;
+    let disc = b * b - 4 * a * c;
+    const err = 32 * Number.EPSILON * (b * b + Math.abs(4 * a * c));
+    if (disc < -err) return [];
+    if (disc < 0) disc = 0;
+    const root = Math.sqrt(disc);
+    if (root === 0) return [-b / (2 * a)];
+    const q = -0.5 * (b + (b >= 0 ? root : -root));
+    return [q / a, c / q];
+  }
+
+  function parabolaPoints(path, bounds) {
+    checkParabola(path);
+    const width = bounds.xmax - bounds.xmin;
+    const height = bounds.ymax - bounds.ymin;
+    const magnitude = Math.max(1, Math.abs(bounds.xmin), Math.abs(bounds.xmax),
+      Math.abs(bounds.ymin), Math.abs(bounds.ymax), width, height);
+    const tolerance = 64 * Number.EPSILON * magnitude;
+    const hits = [];
+    function edge(axis, value) {
+      const other = axis === 'x' ? 'y' : 'x';
+      const min = axis === 'x' ? bounds.ymin : bounds.xmin;
+      const max = axis === 'x' ? bounds.ymax : bounds.xmax;
+      const qa = path.n[axis] / (4 * path.p);
+      const qb = path.t[axis];
+      const qc = path.v[axis] - value;
+      for (const u of quadraticRoots(qa, qb, qc)) {
+        if (!finite(u)) continue;
+        const pt = parabolaPoint(path, u);
+        if (!pointOK(pt) || pt[other] < min - tolerance || pt[other] > max + tolerance) continue;
+        pt[axis] = value;
+        if (Math.abs(pt[other] - min) <= tolerance) pt[other] = min;
+        if (Math.abs(pt[other] - max) <= tolerance) pt[other] = max;
+        hits.push({ u, pt });
+      }
+    }
+    edge('x', bounds.xmin);
+    edge('x', bounds.xmax);
+    edge('y', bounds.ymin);
+    edge('y', bounds.ymax);
+    hits.sort((a, b) => a.u - b.u);
+    const unique = [];
+    for (const hit of hits) {
+      const prev = unique[unique.length - 1];
+      if (prev && Math.abs(hit.u - prev.u) <= 64 * Number.EPSILON * Math.max(1, Math.abs(hit.u), Math.abs(prev.u))) {
+        // A corner belongs to two edges; retain the coordinate snapped to both.
+        if (hit.pt.x === bounds.xmin || hit.pt.x === bounds.xmax) prev.pt.x = hit.pt.x;
+        if (hit.pt.y === bounds.ymin || hit.pt.y === bounds.ymax) prev.pt.y = hit.pt.y;
+      } else unique.push(hit);
+    }
+    if (unique.length === 0) return [];
+    const points = [unique[0].pt];
+    // Sample every interval between exact edge hits, including exterior gaps:
+    // this keeps both disconnected visible branches of a parabola in order.
+    // A quadratic's midpoint chord error is du^2/(16p); use it to refine.
+    const chordTolerance = Math.max(width, height, 1e-12) / 4000;
+    for (let i = 1; i < unique.length; i++) {
+      const u0 = unique[i - 1].u, u1 = unique[i].u;
+      const span = u1 - u0;
+      const estimate = Math.sqrt((span / (4 * path.p)) * span / chordTolerance);
+      const steps = Math.min(4096, Math.max(240, finite(estimate) ? Math.ceil(estimate) : 4096));
+      for (let j = 1; j < steps; j++) {
+        points.push(parabolaPoint(path, u0 + span * (j / steps)));
+      }
+      points.push(unique[i].pt);
+    }
+    return points;
+  }
+
+  function pathPoints(path, bounds) {
+    checkBounds(bounds);
+    if (!path || typeof path !== 'object') throw new Error('Missing path');
+    if (path.kind === 'line') return clipLine(path, bounds);
+    if (path.kind === 'circle') {
+      if (!finite(path.cx) || !finite(path.cy) || !finite(path.r) || path.r <= 0) throw new Error('Invalid circle');
+      const points = [];
+      for (let i = 0; i <= 240; i++) {
+        const angle = TAU * i / 240;
+        points.push({ x: path.cx + path.r * Math.cos(angle), y: path.cy + path.r * Math.sin(angle) });
+      }
+      return points;
+    }
+    if (path.kind === 'parabola') return parabolaPoints(path, bounds);
+    throw new Error('Unknown path kind');
+  }
+
+  return { line, signed, foot, distance, build, project, pathPoints };
+})();
+
+// A classic browser script gets both the lexical const and window.Geo. This
+// export also makes the exact same dependency-free core convenient in Node.
+if (typeof globalThis !== 'undefined') globalThis.Geo = Geo;
+if (typeof module !== 'undefined' && module.exports) module.exports = Geo;
+
+'use strict';
+(() => {
+const $=id=>document.getElementById(id);
+const MATH_NS='http://www.w3.org/1998/Math/MathML';
+// 把本工具使用的 LaTeX 語法轉成瀏覽器原生 MathML，完全不需 CDN。
+function math(tex){let i=0;const el=(name,text)=>{const n=document.createElementNS(MATH_NS,name);if(text!==undefined)n.textContent=text;return n;};const spaces=()=>{while(i<tex.length&&/\s/.test(tex[i]))i++;};
+ const group=()=>{spaces();if(tex[i]==='{'){i++;const r=row('}');if(tex[i]==='}')i++;return r;}return atom();};
+ const atom=()=>{spaces();if(i>=tex.length)return el('mrow');let n;const ch=tex[i++];
+  if(ch==='{'){n=row('}');if(tex[i]==='}')i++;}
+  else if(ch==='\\'){let command='';while(i<tex.length&&/[A-Za-z]/.test(tex[i]))command+=tex[i++];if(!command&&i<tex.length)command=tex[i++];
+   if(command==='frac'){n=el('mfrac');n.append(group(),group());}
+   else if(command==='sqrt'){n=el('msqrt');n.append(group());}
+   else if(command==='overline'){n=el('mover');n.setAttribute('accent','true');n.append(group(),el('mo','¯'));}
+   else if(command==='left'||command==='right')return atom();
+   else if(command==='quad'||command===','){n=el('mspace');n.setAttribute('width',command==='quad'?'1em':'.2em');}
+   else if(command==='text'||command==='mathrm'){spaces();let s='';if(tex[i]==='{'){i++;while(i<tex.length&&tex[i]!=='}')s+=tex[i++];if(tex[i]==='}')i++;}n=el(command==='text'?'mtext':'mi',s);}
+   else{const symbols={pm:'±',neq:'≠',ne:'≠',perp:'⊥',cdot:'·',times:'×',approx:'≈',le:'≤',ge:'≥',angle:'∠',infty:'∞',Rightarrow:'⇒',Longleftrightarrow:'⇔',circ:'∘',pi:'π'};n=el('mo',symbols[command]||command);}}
+  else if(/[0-9.]/.test(ch)){let s=ch;while(i<tex.length&&/[0-9.]/.test(tex[i]))s+=tex[i++];n=el('mn',s);}
+  else if(/[A-Za-z]/.test(ch))n=el('mi',ch);else n=el('mo',ch==='-'?'−':ch);return n;};
+ const scripted=()=>{let base=atom();spaces();let sub=null,sup=null;while(tex[i]==='^'||tex[i]==='_'){const c=tex[i++],v=group();if(c==='^')sup=v;else sub=v;spaces();}if(sub&&sup){const n=el('msubsup');n.append(base,sub,sup);base=n;}else if(sub||sup){const n=el(sub?'msub':'msup');n.append(base,sub||sup);base=n;}return base;};
+ const row=stop=>{const r=el('mrow');while(i<tex.length){spaces();if(i>=tex.length||tex[i]===stop)break;r.append(scripted());}return r;};const root=el('math');root.setAttribute('aria-label',tex);root.append(row());return root;}
+function setMath(node,tex){node.replaceChildren(math(tex));}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function texHTML(tex,cls='math-block'){return `<div class="${cls}" data-tex="${esc(tex)}"></div>`;}
+function renderMathIn(node){node.querySelectorAll('[data-tex]').forEach(n=>setMath(n,n.dataset.tex));}
+const clean=n=>Math.abs(n)<1e-9?0:n;
+const num=(n,d=2)=>Number(clean(n).toFixed(d)).toString();
+const fixed=(n,d=2)=>clean(n).toFixed(d);
+const pt=p=>`(${num(p.x)},\\,${num(p.y)})`;
+const dist=(p,q)=>Math.hypot(p.x-q.x,p.y-q.y);
+function signedTerm(coef,variable,first=false){coef=clean(coef);if(!coef)return '';const abs=Math.abs(coef),c=(abs===1&&variable)?'':num(abs,4),term=c+variable;return first?(coef<0?'-':'')+term:(coef<0?' - ':' + ')+term;}
+function linear(a,b,c){let s='';for(const [v,k] of [[a,'x'],[b,'y'],[c,'']])if(clean(v))s+=signedTerm(v,k,!s);return s||'0';}
+function shifted(variable,v){return clean(v)===0?variable:`${variable} ${v<0?'+':'-'} ${num(Math.abs(v),4)}`;}
+function sqdist(p){return `(${shifted('x',p.x)})^{2}+(${shifted('y',p.y)})^{2}`;}
+function lineExpr(L){return L.vertical?linear(1,0,-L.k):linear(-L.m,1,-L.k);}
+function lineEq(L){return L.vertical?`x=${num(L.k,4)}`:`y=${linear(L.m,0,L.k)}`;}
+function lineDen(L){return L.vertical?'1':`\\sqrt{1+(${num(L.m)})^{2}}`;}
+function fracDistance(L){return L.vertical?`|${lineExpr(L)}|`:`\\frac{|${lineExpr(L)}|}{${lineDen(L)}}`;}
+function randomInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+const cases={
+ 1:{label:'與一點保持固定距離',title:'與一點保持固定距離',desc:'動點 P 到定點 A 的距離恆等於固定長度 r。',condition:'PA=r',hint:'拖曳畫布上的定點 A；亦可調整半徑 r。'},
+ 2:{label:'與兩定點保持等距',title:'與兩定點保持等距',desc:'動點 P 到兩個不同定點 A、B 的距離相等。',condition:'PA=PB',hint:'拖曳定點 A 或 B，觀察等距位置如何改變。'},
+ 3:{label:'與一直線保持固定距離',title:'與一直線保持固定距離',desc:'動點 P 到定直線 L 的最短距離恆等於 d。',condition:'d(P,L)=d',hint:'直線可切換為垂直線；距離以垂線段量度。'},
+ 4:{label:'與兩平行線保持等距',title:'與兩平行線保持等距',desc:'動點 P 到兩條不同平行直線的最短距離相等。',condition:'d(P,L_{1})=d(P,L_{2})',hint:'兩線共用斜率；拖動截距控制兩線的位置。'},
+ 5:{label:'與兩相交直線保持等距',title:'與兩相交直線保持等距',desc:'動點 P 到兩條相交直線的最短距離相等。',condition:'d(P,L_{1})=d(P,L_{2})',hint:'兩線必須相交；可分別調整斜率及截距。'},
+ 6:{label:'與兩定點形成直角',title:'以兩定點形成直角',desc:'動點 P 與定點 A、B 形成直角，即 ∠APB = 90°。',condition:'PA\\perp PB',hint:'拖曳定點 A 或 B；A、B 必須不同，亦不屬於軌跡。'},
+ 7:{label:'與定點及定直線保持等距（延伸）',title:'與定點及定直線保持等距（延伸）',desc:'動點 P 到焦點 F 和準線 L 的最短距離相等。',condition:'PF=d(P,L)',hint:'拖曳焦點 F 或調整準線；焦點不可位於準線上。'}
+};
+function defaults(id){const d={A:{x:-3,y:0},B:{x:3,y:0},F:{x:0,y:2},r:3,d:2,L1:{m:0,k:0,vertical:false},L2:{m:-1,k:1,vertical:false}};
+ if(id===1)d.A={x:-1,y:0};if(id===2){d.A={x:-3,y:-1};d.B={x:3,y:1};}if(id===3)d.L1={m:.5,k:0,vertical:false};if(id===4){d.L1={m:.5,k:-2,vertical:false};d.L2={m:.5,k:2,vertical:false};}if(id===5){d.L1={m:.5,k:0,vertical:false};d.L2={m:-1,k:0,vertical:false};}if(id===7){d.F={x:0,y:2};d.L1={m:0,k:-2,vertical:false};}return d;}
+const S={id:1,cfg:defaults(1),model:null,P:{x:0,y:0},path:0,playing:true,showGrid:true,showLocus:true,showAnswer:true,quiz:false,trail:[],drag:null,progress:0,lastFrame:0,uiFrame:0,notice:'',bounds:null,view:null,cachedPaths:null};
+const canvas=$('canvas'),ctx=canvas.getContext('2d');
+for(let i=1;i<=7;i++){const o=document.createElement('option');o.value=i;o.textContent=`0${i}  ${cases[i].label}`;$('caseSelect').append(o);}
+function build(){S.model=Geo.build(S.id,S.cfg);S.cachedPaths=null;return !S.model.error&&S.model.paths.length>0;}
+function warning(message){S.notice=message||'';const el=$('warning');el.hidden=!S.notice;el.textContent=S.notice;}
+function setPlaying(v){S.playing=!!v;S.lastFrame=0;$('playText').textContent=v?'暫停':'自動播放';$('playIcon').textContent=v?'Ⅱ':'▶';$('statusTag').textContent=v?'自動播放中':'已暫停 · 可拖曳';}
+function clearTrail(){S.trail=[];}
+function addTrail(p,breakBefore=false){if(S.quiz&&!S.showAnswer)return;const last=S.trail[S.trail.length-1];if(!last||breakBefore||Math.hypot(last.x-p.x,last.y-p.y)>.025){S.trail.push({x:p.x,y:p.y,path:S.path,breakBefore});if(S.trail.length>1900)S.trail.shift();}}
+function pathProjection(p){let best=null;S.model.paths.forEach((path,i)=>{const q=Geo.project(path,p),d=(q.x-p.x)**2+(q.y-p.y)**2;if(!best||d<best.d)best={point:q,index:i,d};});return best;}
+function initP(){if(!S.model||S.model.error)return;const b=S.bounds||{xmin:-9,xmax:9,ymin:-7,ymax:7};let points=Geo.pathPoints(S.model.paths[0],b),p={x:0,y:0};if(points.length===1)p=points[0];else if(points.length>1){const f=(points.length-1)*.3,j=Math.floor(f),u=f-j;p={x:points[j].x*(1-u)+points[j+1].x*u,y:points[j].y*(1-u)+points[j+1].y*u};}S.P=Geo.project(S.model.paths[0],p);S.path=0;}
+function resetCase(id){S.id=id;S.cfg=defaults(id);S.showAnswer=true;S.showLocus=true;S.quiz=false;S.path=0;S.progress=.3;clearTrail();warning('');build();setPlaying(true);$('locusToggle').checked=true;initP();renderAll();syncProgress();}
+function validateCfg(cfg){return Geo.build(S.id,cfg).error||null;}
+const copyCfg=()=>JSON.parse(JSON.stringify(S.cfg));
+function changedConfig(next,rerender=false){const err=validateCfg(next);if(err){warning('此設定會令題目退化，請選擇其他數值。');if(rerender)renderControls();return false;}warning('');S.cfg=next;build();const q=pathProjection(S.P);if(q){S.P=q.point;S.path=q.index;}keepPVisible();clearTrail();if(rerender)renderControls();renderContent();syncProgress();return true;}
+function sliderRow(key,label,value,min,max,step){return `<div class="control-row"><strong>${label}</strong><input type="range" data-control="${key}" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}"><output>${num(value)}</output></div>`;}
+function lineBox(name,line,allowSlope=true,lockVertical=false){const n=name==='L1'?'L₁':'L₂',single=S.id===3||S.id===7;return `<div class="line-box"><div class="line-title"><span class="swatch ${name==='L2'?'alt':''}"></span> ${single?'定直線 L':`定直線 ${n}`} <label><input data-vertical="${name}" type="checkbox" ${line.vertical?'checked':''} ${lockVertical?'disabled':''}> 垂直線 x = k</label></div>${allowSlope&&!line.vertical?sliderRow(`${name}.m`,'斜率 m',line.m,-3,3,.25):''}${sliderRow(`${name}.k`,line.vertical?'位置 k（x = k）':'截距 k',line.k,-5,5,.25)}</div>`;}
+function renderControls(){let html='';const c=S.cfg;if(S.id===1)html=sliderRow('r','半徑 r',c.r,.5,5,.25);if(S.id===3)html=sliderRow('d','距離 d',c.d,.5,4,.25);if([3,4,5,7].includes(S.id))html+=lineBox('L1',c.L1,true,false);if(S.id===4)html+=lineBox('L2',c.L2,false,true);if(S.id===5)html+=lineBox('L2',c.L2,true,false);
+ if([1,2,6,7].includes(S.id)){const ps=S.id===7?`焦點 Focus F (${num(c.F.x)}, ${num(c.F.y)})`:S.id===1?`定點 Fixed Point A (${num(c.A.x)}, ${num(c.A.y)})`:`定點 Fixed Point A (${num(c.A.x)}, ${num(c.A.y)})　 ·　 定點 B (${num(c.B.x)}, ${num(c.B.y)})`;html+=`<div class="control-help"><b>${esc(ps)}</b></div>`;}
+ $('controls').innerHTML=html;$('controlHelp').textContent=cases[S.id].hint;
+ $('controls').querySelectorAll('[data-control]').forEach(input=>input.addEventListener('input',e=>{let cfg=copyCfg();let [key,prop]=e.target.dataset.control.split('.');const v=Number(e.target.value);if(prop)cfg[key][prop]=v;else cfg[key]=v;if(S.id===4&&key==='L1'&&prop==='m')cfg.L2.m=v;const ok=changedConfig(cfg);if(ok)e.target.nextElementSibling.textContent=num(v);else{const old=prop?S.cfg[key][prop]:S.cfg[key];e.target.value=old;e.target.nextElementSibling.textContent=num(old);}}));
+ $('controls').querySelectorAll('[data-vertical]').forEach(input=>input.addEventListener('change',e=>{let cfg=copyCfg();const key=e.target.dataset.vertical;cfg[key].vertical=e.target.checked;if(S.id===4&&key==='L1')cfg.L2.vertical=e.target.checked;changedConfig(cfg,true);}));}
+
+function solutionFor(){const c=S.cfg,id=S.id,A=c.A,B=c.B,F=c.F;let steps=[],answer='',desc='',extra='';const add=(p,t)=>steps.push({p,t});
+ if(id===1){add(`設動點 P 的坐標為 (x, y)，定點 A = (${num(A.x)}, ${num(A.y)})，固定距離 r = ${num(c.r)}。由兩點距離公式：`,`\\sqrt{${sqdist(A)}}=${num(c.r)}`);add('兩邊平方，得到圓的標準方程。',`${sqdist(A)}=${num(c.r*c.r,4)}`);answer=`${sqdist(A)}=${num(c.r*c.r,4)}`;desc=`P 的軌跡是以 A 為圓心、${num(c.r)} 為半徑的圓（Circle）。`;}
+ if(id===2){add(`設 P = (x, y)，A = (${num(A.x)}, ${num(A.y)})，B = (${num(B.x)}, ${num(B.y)})。由 PA = PB，可將兩點距離平方：`,`${sqdist(A)}=${sqdist(B)}`);const a=2*(B.x-A.x),b=2*(B.y-A.y),v=B.x**2+B.y**2-A.x**2-A.y**2;add('展開並約去兩邊的 x² 和 y²，得到一次方程。',`${linear(a,b,0)}=${num(v,4)}`);answer=`${linear(a,b,0)}=${num(v,4)}`;desc='P 的軌跡是線段 AB 的垂直平分線（Perpendicular Bisector）。';extra='線上的點到 A、B 的距離相等；垂直平分線亦經過 AB 的中點。';}
+ if(id===3){const L=c.L1;add(`設 P = (x, y)，定直線 L 的方程見「即時數值」，固定距離 d = ${num(c.d)}。由點到直線的最短距離公式：`,`${fracDistance(L)}=${num(c.d)}`);let ans=L.vertical?`${lineExpr(L)}=\\pm ${num(c.d)}`:`${lineExpr(L)}=\\pm ${num(c.d)}\\sqrt{1+(${num(L.m)})^{2}}`;add('移去絕對值時須同時保留正、負兩種情況。',ans);answer=ans;desc='P 的軌跡是 L 兩側各一條與 L 平行、距離為 d 的直線。';extra='一個「±」代表兩條不同直線，而不是只取其中一邊。';}
+ if(id===4){const L=c.L1,R=c.L2,mid=(L.k+R.k)/2;add('設 P = (x, y)。兩條平行直線有相同法向量，因此點到兩線的距離相等。',`${fracDistance(L)}=${fracDistance(R)}`);add('兩線分母相同；取位於兩線正中間的位置。',`${lineEq({...L,k:mid})}`);answer=lineEq({...L,k:mid});desc='P 的軌跡是位於 L₁、L₂ 正中間且與兩線平行的一條直線。';extra='題目要求 L₁、L₂ 是兩條不同的平行線。';}
+ if(id===5){const L=c.L1,R=c.L2;add('設 P = (x, y)。先以垂直距離公式表達 P 到兩條直線的距離。',`${fracDistance(L)}=${fracDistance(R)}`);const s1=L.vertical?`(${lineExpr(L)})`:`\\frac{${lineExpr(L)}}{${lineDen(L)}}`,s2=R.vertical?`(${lineExpr(R)})`:`\\frac{${lineExpr(R)}}{${lineDen(R)}}`;answer=`${s1}=\\pm ${s2}`;add('去除絕對值後分成正、負兩個一次方程。',answer);desc='P 的軌跡是兩條相交直線所形成的兩條角平分線（Angle Bisectors）。';extra='兩條角平分線互相垂直，交點亦在軌跡上。必須保留 ± 兩個分支。';}
+ if(id===6){const mx=(A.x+B.x)/2,my=(A.y+B.y)/2,r2=((B.x-A.x)**2+(B.y-A.y)**2)/4;add('設 P = (x, y)。由 PA ⟂ PB，兩個向量的內積等於零。',`(${shifted('x',A.x)})(${shifted('x',B.x)})+(${shifted('y',A.y)})(${shifted('y',B.y)})=0`);add(`配方：圓心是 AB 的中點 M = (${num(mx)}, ${num(my)})，半徑是 AB 的一半。`,`${sqdist({x:mx,y:my})}=${num(r2,4)}`);answer=`${sqdist({x:mx,y:my})}=${num(r2,4)}\\quad P\\neq A,\\quad P\\neq B`;desc='P 的軌跡是以 AB 為直徑的圓，但不包括 A、B 兩點。';extra='在 A 或 B，PA 或 PB 的長度為零，∠APB 無法定義；所以端點必須排除。';}
+ if(id===7){const L=c.L1;const rhs=L.vertical?`(${lineExpr(L)})^{2}`:`\\frac{(${lineExpr(L)})^{2}}{1+(${num(L.m)})^{2}}`;add(`設 P = (x, y)，焦點 F = (${num(F.x)}, ${num(F.y)})。P 到 F 的距離等於 P 到準線的垂直距離。`,`\\sqrt{${sqdist(F)}}=${fracDistance(L)}`);answer=`${sqdist(F)}=${rhs}`;add('兩邊非負，可平方並消去絕對值，得到拋物線方程。',answer);desc='P 的軌跡是以 F 為焦點、L 為準線，向焦點一側開口的拋物線（Parabola）。';extra='焦點不可在準線上；頂點位於焦點與其在準線上的垂足之間的中點。';}
+ return {steps,answer,desc,extra};}
+function renderSolution(){const target=$('solution');if(!S.showAnswer){target.innerHTML='<div class="hidden-answer">答案暫時隱藏<br>先思考幾何形狀和 P(x, y) 的方程，再點擊上方按鈕揭曉。</div>';return;}const s=solutionFor();target.innerHTML=s.steps.map((step,i)=>`<div class="working-step"><span class="step-number">${i+1}</span><div class="step-body"><p>${esc(step.p)}</p>${texHTML(step.t)}</div></div>`).join('')+`<div class="answer-box"><div class="answer-label">LOCUS EQUATION · 軌跡方程</div>${texHTML(s.answer)}<p><strong>標準描述：</strong>${esc(s.desc)}</p></div><div class="answer-extra">${esc(s.extra)}</div>`;renderMathIn(target);}
+function renderMeasurements(){if(!S.model||S.model.error)return;const P=S.P,c=S.cfg,L=Geo.line(c.L1),L2=Geo.line(c.L2);const d1=Math.abs(Geo.signed(L,P)),d2=Math.abs(Geo.signed(L2,P));let cards=[['動點 Moving Point',`P\\approx ${pt(P)}`]];
+ if(S.id===1)cards.push(['動點至定點',`PA\\approx ${fixed(dist(P,c.A))}`],['固定半徑',`r=${num(c.r)}`]);
+ if(S.id===2)cards.push(['動點至定點 A',`PA\\approx ${fixed(dist(P,c.A))}`],['動點至定點 B',`PB\\approx ${fixed(dist(P,c.B))}`]);
+ if(S.id===3)cards.push(['動點至直線',`d(P,L)\\approx ${fixed(d1)}`],['固定距離',`d=${num(c.d)}`],['定直線 Fixed Line',lineEq(c.L1)]);
+ if(S.id===4||S.id===5)cards.push(['動點至直線 L₁',`d(P,L_{1})\\approx ${fixed(d1)}`],['動點至直線 L₂',`d(P,L_{2})\\approx ${fixed(d2)}`],['定直線 L₁',lineEq(c.L1)],['定直線 L₂',lineEq(c.L2)]);
+ if(S.id===6){const ux=c.A.x-P.x,uy=c.A.y-P.y,vx=c.B.x-P.x,vy=c.B.y-P.y,den=Math.hypot(ux,uy)*Math.hypot(vx,vy),a=den?Math.acos(Math.max(-1,Math.min(1,(ux*vx+uy*vy)/den)))*180/Math.PI:NaN;cards.push(['動點至定點 A',`PA\\approx ${fixed(dist(P,c.A))}`],['動點至定點 B',`PB\\approx ${fixed(dist(P,c.B))}`],['夾角 Angle',`\\angle APB\\approx ${fixed(a,1)}^{\\circ}`]);}
+ if(S.id===7)cards.push(['動點至焦點 F',`PF\\approx ${fixed(dist(P,c.F))}`],['動點至準線 L',`d(P,L)\\approx ${fixed(d1)}`],['準線 Directrix',lineEq(c.L1)]);
+ const root=$('measurements');root.innerHTML=cards.map(([name,val])=>`<div class="measure-card"><div class="measure-name">${esc(name)}</div>${texHTML(val,'measure-value')}</div>`).join('');renderMathIn(root);$('pointCoords').textContent=`P (${fixed(P.x)}, ${fixed(P.y)})`;}
+function renderContent(){const item=cases[S.id];$('caseSelect').value=S.id;$('caseCounter').textContent=`0${S.id} / 07`;$('caseKicker').textContent=`CASE 0${S.id}　/　07`;$('caseTitle').textContent=item.title;$('caseDescription').textContent=item.desc;setMath($('conditionFormula'),item.condition);const locked=S.quiz&&!S.showAnswer;$('quizHint').hidden=!locked;$('quizHint').textContent='答案和完整軌跡已隱藏；揭曉前可拖曳 P，但播放、殘影及完整軌跡暫停。';$('playBtn').disabled=locked;$('locusToggle').disabled=locked;$('playBtn').title=locked?'揭曉答案後可播放':'';$('locusToggle').title=locked?'揭曉答案後可顯示完整軌跡':'';$('revealBtn').textContent=S.showAnswer?'答案及圖像已顯示 ✓':'顯示答案與圖像驗證 ↗';$('revealBtn').setAttribute('aria-pressed',String(S.showAnswer));renderMeasurements();renderSolution();}
+function renderAll(){renderControls();renderContent();}
+function newQuiz(){const c=defaults(S.id),ri=()=>randomInt(-3,3),ms=[-1,-.5,0,.5,1];c.A={x:ri(),y:ri()};do{c.B={x:ri(),y:ri()};}while(dist(c.A,c.B)<1.4);c.F={x:ri(),y:ri()};c.r=randomInt(1,4);c.d=randomInt(1,3);c.L1={m:ms[randomInt(0,ms.length-1)],k:randomInt(-2,2),vertical:false};c.L2={m:S.id===4?c.L1.m:ms[randomInt(0,ms.length-1)],k:randomInt(-2,2),vertical:false};if(S.id===4)while(c.L2.k===c.L1.k)c.L2.k=randomInt(-2,2);if(S.id===5)while(c.L2.m===c.L1.m)c.L2.m=ms[randomInt(0,ms.length-1)];if(S.id===7)while(Math.abs(Geo.signed(Geo.line(c.L1),c.F))<.7)c.F={x:ri(),y:ri()};S.cfg=c;build();S.showAnswer=false;S.showLocus=false;S.quiz=true;$('locusToggle').checked=false;S.progress=.3;clearTrail();warning('');setPlaying(false);initP();renderAll();}
+
+function resize(){const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);let w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;S.view=null;S.cachedPaths=null;}ctx.setTransform(dpr,0,0,dpr,0,0);const W=rect.width,H=rect.height,scale=Math.min(W/17,H/14);S.view={w:W,h:H,s:scale,ox:W/2,oy:H/2};S.bounds={xmin:-W/(2*scale),xmax:W/(2*scale),ymin:-H/(2*scale),ymax:H/(2*scale)};}
+function scr(p){const v=S.view;return {x:v.ox+p.x*v.s,y:v.oy-p.y*v.s};}
+function world(x,y){const v=S.view;return{x:(x-v.ox)/v.s,y:(v.oy-y)/v.s};}
+function polyline(points,color,width=2,dash=[],glow=false){if(!points||points.length<2)return;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.lineJoin='round';ctx.lineCap='round';if(glow){ctx.shadowColor=color;ctx.shadowBlur=11;}ctx.beginPath();points.forEach((p,i)=>{const s=scr(p);if(i===0)ctx.moveTo(s.x,s.y);else ctx.lineTo(s.x,s.y);});ctx.stroke();ctx.restore();}
+function drawGrid(){const {w,h,s,ox,oy}=S.view,b=S.bounds;ctx.fillStyle='#0d1d2c';ctx.fillRect(0,0,w,h);ctx.save();if(S.showGrid){ctx.strokeStyle='#21374a';ctx.lineWidth=1;ctx.beginPath();for(let x=Math.ceil(b.xmin);x<=b.xmax;x++){let sx=ox+x*s;ctx.moveTo(Math.round(sx)+.5,0);ctx.lineTo(Math.round(sx)+.5,h);}for(let y=Math.ceil(b.ymin);y<=b.ymax;y++){let sy=oy-y*s;ctx.moveTo(0,Math.round(sy)+.5);ctx.lineTo(w,Math.round(sy)+.5);}ctx.stroke();}ctx.strokeStyle='#4b6373';ctx.lineWidth=1.15;ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(w,oy);ctx.moveTo(ox,0);ctx.lineTo(ox,h);ctx.stroke();ctx.fillStyle='#6e8995';ctx.font='10px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';for(let x=Math.ceil(b.xmin);x<=b.xmax;x++){if(x===0)continue;const sx=ox+x*s;ctx.fillText(String(x),sx,oy+5);}ctx.textAlign='right';ctx.textBaseline='middle';for(let y=Math.ceil(b.ymin);y<=b.ymax;y++){if(y===0)continue;ctx.fillText(String(y),ox-6,oy-y*s);}ctx.textAlign='left';ctx.fillText('O',ox+6,oy+10);ctx.fillText('x',w-13,oy-12);ctx.fillText('y',ox+8,10);ctx.restore();}
+function lineVisual(line,color,name){let path={kind:'line',...line};const points=Geo.pathPoints(path,S.bounds);polyline(points,color,1.6,[7,5]);if(points.length){const a=scr(points[points.length-1]);ctx.save();ctx.fillStyle=color;ctx.font='600 11px system-ui,sans-serif';ctx.textAlign=a.x>S.view.w-45?'right':'left';ctx.textBaseline='middle';ctx.fillText(name,Math.max(14,Math.min(S.view.w-14,a.x+(a.x>S.view.w-45?-5:5))),Math.max(14,Math.min(S.view.h-14,a.y-9)));ctx.restore();}}
+function segment(a,b,label,color='#d9c59c',equal=false){polyline([a,b],color,1.4,[4,4]);const p=scr(a),q=scr(b),dx=q.x-p.x,dy=q.y-p.y,le=Math.hypot(dx,dy);if(le<2)return;if(equal){const mx=(p.x+q.x)/2,my=(p.y+q.y)/2;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=1.7;ctx.beginPath();ctx.moveTo(mx-dy/le*5,my+dx/le*5);ctx.lineTo(mx+dy/le*5,my-dx/le*5);ctx.stroke();ctx.restore();}if(label&&le>24){let x=(p.x+q.x)/2-dy/le*11,y=(p.y+q.y)/2+dx/le*11;ctx.save();ctx.font='600 10px system-ui,sans-serif';const width=ctx.measureText(label).width+8;ctx.fillStyle='#102335dd';ctx.fillRect(x-width/2,y-7,width,14);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,x,y);ctx.restore();}}
+function rightAngle(vertex,a,b,color='#efc991'){const p=scr(vertex),q=scr(a),r=scr(b),l1=Math.hypot(q.x-p.x,q.y-p.y),l2=Math.hypot(r.x-p.x,r.y-p.y);if(l1<3||l2<3)return;const z=Math.min(11,l1*.32,l2*.32),u={x:(q.x-p.x)/l1*z,y:(q.y-p.y)/l1*z},v={x:(r.x-p.x)/l2*z,y:(r.y-p.y)/l2*z};ctx.save();ctx.strokeStyle=color;ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(p.x+u.x,p.y+u.y);ctx.lineTo(p.x+u.x+v.x,p.y+u.y+v.y);ctx.lineTo(p.x+v.x,p.y+v.y);ctx.stroke();ctx.restore();}
+function footMarks(P,L,name,equal,color){const foot=Geo.foot(L,P),d=Math.abs(Geo.signed(L,P));segment(P,foot,`${name} ${fixed(d)}`,color,equal);const tang={x:foot.x-L.b,y:foot.y+L.a};rightAngle(foot,P,tang,color);}
+function marker(p,label,color,opts={}){const q=scr(p);if(q.x<-30||q.x>S.view.w+30||q.y<-30||q.y>S.view.h+30)return;ctx.save();if(opts.glow){ctx.shadowColor=color;ctx.shadowBlur=17;}ctx.beginPath();ctx.arc(q.x,q.y,opts.p?6.5:5.4,0,Math.PI*2);ctx.fillStyle=opts.open?'#0d1d2c':color;ctx.fill();ctx.lineWidth=opts.open?2:1.5;ctx.strokeStyle=opts.open?color:'#eef8f5';ctx.stroke();ctx.shadowBlur=0;const x=Math.max(8,Math.min(S.view.w-55,q.x+9));const y=Math.max(14,Math.min(S.view.h-7,q.y-10));ctx.font='700 12px system-ui,sans-serif';ctx.fillStyle='#0d1d2cdd';const text=label;const tw=ctx.measureText(text).width;ctx.fillRect(x-3,y-12,tw+7,17);ctx.fillStyle=color;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(text,x,y);ctx.restore();}
+function getPaths(){if(!S.cachedPaths){S.cachedPaths=S.model.paths.map(p=>Geo.pathPoints(p,S.bounds));}return S.cachedPaths;}
+// 盡可能保持動點可見；只選取實際軌跡上的點，不以夾坐標破壞約束。
+function inside(p,b=S.bounds,margin=0){return p.x>=b.xmin+margin-1e-9&&p.x<=b.xmax-margin+1e-9&&p.y>=b.ymin+margin-1e-9&&p.y<=b.ymax-margin+1e-9;}
+function keepPVisible(){if(!S.bounds||!S.model||S.model.error)return true;if(inside(S.P,S.bounds,.05))return true;const b={xmin:S.bounds.xmin+.08,xmax:S.bounds.xmax-.08,ymin:S.bounds.ymin+.08,ymax:S.bounds.ymax-.08};let best=null;S.model.paths.forEach((path,index)=>{const pts=Geo.pathPoints(path,b);let candidates=pts;if(path.kind==='line'&&pts.length>=2){const a=pts[0],z=pts[pts.length-1],dx=z.x-a.x,dy=z.y-a.y,dd=dx*dx+dy*dy,u=dd?Math.max(0,Math.min(1,((S.P.x-a.x)*dx+(S.P.y-a.y)*dy)/dd)):0;candidates=[{x:a.x+u*dx,y:a.y+u*dy}];}for(const q of candidates){if(!inside(q,b))continue;const d=(q.x-S.P.x)**2+(q.y-S.P.y)**2;if(!best||d<best.d)best={q,index,d};}});if(!best){warning('目前軌跡不在可見範圍，請調整定點或直線條件。');return false;}S.path=best.index;S.P=Geo.project(S.model.paths[best.index],best.q);return true;}
+
+function drawScene(){drawGrid();if(!S.model||S.model.error)return;const c=S.cfg,id=S.id,P=S.P;
+ if([3,4,5,7].includes(id))lineVisual(Geo.line(c.L1),'#e5b974',id===4||id===5?'L₁':'L');
+ if([4,5].includes(id))lineVisual(Geo.line(c.L2),'#e58d82','L₂');
+ if(S.showLocus)getPaths().forEach(points=>polyline(points,'#6de0c1',2.2,[],true));
+ if(S.trail.length){ctx.save();ctx.strokeStyle='#9af5d9';ctx.lineWidth=2.7;ctx.shadowColor='#54d9b7';ctx.shadowBlur=10;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();S.trail.forEach((p,i)=>{const a=scr(p);if(i===0||p.breakBefore||p.path!==S.trail[i-1].path)ctx.moveTo(a.x,a.y);else ctx.lineTo(a.x,a.y);});ctx.stroke();ctx.restore();}
+ const amber='#f0c482',rose='#e99e91';
+ if(id===1)segment(P,c.A,`r ${fixed(dist(P,c.A))}`,amber,false);
+ if(id===2){segment(c.A,c.B,'','#778d95',false);segment(P,c.A,`PA ${fixed(dist(P,c.A))}`,amber,true);segment(P,c.B,`PB ${fixed(dist(P,c.B))}`,amber,true);}
+ if(id===3)footMarks(P,Geo.line(c.L1),'d',false,amber);
+ if(id===4||id===5){footMarks(P,Geo.line(c.L1),'d₁',true,amber);footMarks(P,Geo.line(c.L2),'d₂',true,rose);}
+ if(id===6){segment(P,c.A,'PA',amber,false);segment(P,c.B,'PB',amber,false);rightAngle(P,c.A,c.B,amber);}
+ if(id===7){segment(P,c.F,`PF ${fixed(dist(P,c.F))}`,amber,true);footMarks(P,Geo.line(c.L1),'d',true,amber);}
+ if([1,2,6].includes(id))marker(c.A,'A',amber,{open:id===6});if([2,6].includes(id))marker(c.B,'B',amber,{open:id===6});if(id===7)marker(c.F,'F',amber);marker(P,'P','#a0f4d5',{p:true,glow:true});
+}
+function syncProgress(){if(!S.model||S.model.error)return;const pts=getPaths()[S.path]||[];let best=Infinity,tBest=0;for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],dx=b.x-a.x,dy=b.y-a.y,den=dx*dx+dy*dy,u=den?Math.max(0,Math.min(1,((S.P.x-a.x)*dx+(S.P.y-a.y)*dy)/den)):0,x=a.x+u*dx,y=a.y+u*dy,d=(x-S.P.x)**2+(y-S.P.y)**2;if(d<best){best=d;tBest=(i+u)/(pts.length-1);}}if(pts.length>1)S.progress=S.path+Math.min(tBest,.999999);}
+function advance(dt){if(!S.playing||!S.model||S.model.error)return;const paths=getPaths(),count=paths.length,old=Math.floor(S.progress),prev=S.progress;S.progress=(S.progress+Math.min(dt,80)/11000)%count;let index=Math.floor(S.progress),points=paths[index],jump=false;
+ const usable=pts=>pts&&pts.length>=2&&pts.some(p=>inside(p));
+ if(!usable(points)){let found=-1;for(let n=1;n<=count;n++){const j=(index+n)%count;if(usable(paths[j])){found=j;break;}}if(found<0){setPlaying(false);warning('目前軌跡不在可見範圍，請調整定點或直線條件。');return;}index=found;points=paths[index];S.progress=index;jump=true;}
+ let t=S.progress-index,f=t*(points.length-1),i=Math.min(points.length-2,Math.floor(f)),v=f-i;let raw={x:points[i].x*(1-v)+points[i+1].x*v,y:points[i].y*(1-v)+points[i+1].y*v};
+ if(!inside(raw)){let j=Math.ceil(f);while(j<points.length&&!inside(points[j]))j++;if(j>=points.length){j=0;while(j<points.length&&!inside(points[j]))j++;}if(j>=points.length)return;raw=points[j];S.progress=index+Math.min(j/(points.length-1),.999999);jump=true;}
+ let p=Geo.project(S.model.paths[index],raw);if(!Number.isFinite(p.x)||!Number.isFinite(p.y))return;const distance=Math.hypot(p.x-S.P.x,p.y-S.P.y);S.path=index;S.P=p;const isClosed=S.model.paths[index].kind==='circle',wrapped=S.progress<prev;addTrail(p,jump||old!==index||(wrapped&&!isClosed)||distance>1);}
+let rafId;function frame(now){resize();if(!S.lastFrame)S.lastFrame=now;const dt=now-S.lastFrame;S.lastFrame=now;advance(dt);drawScene();if(now-S.uiFrame>120&&(S.playing||S.drag)){renderMeasurements();S.uiFrame=now;}rafId=requestAnimationFrame(frame);}
+function hitPoint(clientX,clientY){const r=canvas.getBoundingClientRect(),x=clientX-r.left,y=clientY-r.top;const candidates=[{key:'P',p:S.P}];if([1,2,6].includes(S.id))candidates.push({key:'A',p:S.cfg.A});if([2,6].includes(S.id))candidates.push({key:'B',p:S.cfg.B});if(S.id===7)candidates.push({key:'F',p:S.cfg.F});let best=null;for(const o of candidates){const s=scr(o.p),d=Math.hypot(x-s.x,y-s.y);if(d<25&&(!best||d<best.d))best={key:o.key,d};}return best?.key||null;}
+function pointFromEvent(e){const r=canvas.getBoundingClientRect();return world(e.clientX-r.left,e.clientY-r.top);}
+canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;const key=hitPoint(e.clientX,e.clientY);if(!key)return;e.preventDefault();S.drag=key;canvas.setPointerCapture(e.pointerId);setPlaying(false);canvas.style.cursor='grabbing';});
+canvas.addEventListener('pointermove',e=>{if(!S.drag){canvas.style.cursor=hitPoint(e.clientX,e.clientY)?'grab':'crosshair';return;}e.preventDefault();const raw=pointFromEvent(e);if(S.drag==='P'){const best=pathProjection(raw);if(best){const switched=best.index!==S.path;S.path=best.index;S.P=best.point;warning('');keepPVisible();addTrail(S.P,switched);}}
+ else {const cfg=copyCfg(),b=S.bounds;cfg[S.drag]={x:Math.round(Math.max(b.xmin+.2,Math.min(b.xmax-.2,raw.x))*10)/10,y:Math.round(Math.max(b.ymin+.2,Math.min(b.ymax-.2,raw.y))*10)/10};const err=validateCfg(cfg);if(err){warning('此設定會令題目退化，請選擇其他位置。');return;}warning('');S.cfg=cfg;build();const best=pathProjection(S.P);if(best){S.P=best.point;S.path=best.index;}keepPVisible();clearTrail();renderControls();renderContent();}});
+function stopDrag(e){if(S.drag){S.drag=null;canvas.style.cursor='crosshair';if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);syncProgress();renderMeasurements();}}
+canvas.addEventListener('pointerup',stopDrag);canvas.addEventListener('pointercancel',stopDrag);canvas.addEventListener('lostpointercapture',()=>{S.drag=null;});
+canvas.addEventListener('keydown',e=>{const moves={ArrowLeft:[-.25,0],ArrowRight:[.25,0],ArrowUp:[0,.25],ArrowDown:[0,-.25]};if(!moves[e.key])return;e.preventDefault();setPlaying(false);const [dx,dy]=moves[e.key],best=pathProjection({x:S.P.x+dx,y:S.P.y+dy});if(best){const switched=best.index!==S.path;S.path=best.index;S.P=best.point;addTrail(S.P,switched);syncProgress();renderMeasurements();}});
+$('caseSelect').addEventListener('change',e=>resetCase(Number(e.target.value)));
+$('playBtn').addEventListener('click',()=>{if(!S.playing)syncProgress();setPlaying(!S.playing);});
+$('clearBtn').addEventListener('click',clearTrail);
+$('gridToggle').addEventListener('change',e=>S.showGrid=e.target.checked);
+$('locusToggle').addEventListener('change',e=>{S.showLocus=e.target.checked;renderContent();});
+$('quizBtn').addEventListener('click',newQuiz);
+$('revealBtn').addEventListener('click',()=>{S.showAnswer=true;S.showLocus=true;$('locusToggle').checked=true;renderContent();});
+resize();resetCase(1);syncProgress();rafId=requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
