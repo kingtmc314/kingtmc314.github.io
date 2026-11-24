@@ -3,12 +3,676 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#122337">
+<meta name="theme-color" content="#302179">
 <title>軌跡實驗室 Locus Lab | HKDSE 數學</title>
-<style>*{box-sizing:border-box}html{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Noto Sans TC","Microsoft JhengHei",sans-serif;color:#172b3d;background:#e9eef0}body{margin:0}button,input,select{font:inherit}button,select{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:3px solid #e0aa55;outline-offset:3px}.topbar{height:72px;padding:0 4%;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #e8edef}.brand{display:flex;align-items:center;gap:11px}.brand-icon{width:41px;height:41px;display:grid;place-items:center;border-radius:12px;background:#15384a;color:#65ddbc}.brand strong{display:block;line-height:1.15;font-size:17px;letter-spacing:.04em}.brand div>span{display:block;font-size:9px;letter-spacing:.22em;color:#80919b;margin-top:3px;font-weight:700}.header-right{display:flex;gap:12px;align-items:center;color:#71838d;font-size:11px;font-weight:650;letter-spacing:.04em}.header-right i{width:3px;height:3px;border-radius:50%;background:#b7c2c7}.header-right b{font-weight:600;color:#9cabaf}.app-layout{max-width:1920px;margin:auto;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(425px,.91fr);min-height:calc(100vh - 72px);box-shadow:0 12px 50px #1d354011}.visual-column{background:#102335;color:#edf7f5;padding:36px clamp(24px,4vw,66px) 32px;min-width:0}.visual-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:23px}.eyebrow{font-size:9px;font-weight:800;letter-spacing:.18em}.eyebrow.light{color:#79b5ab}.visual-heading h1{margin:8px 0 0;font-size:clamp(22px,2vw,30px);letter-spacing:.03em}.visual-heading h1 span{font-weight:400;color:#9cb3bd}.case-chip{border:1px solid #426078;border-radius:20px;padding:8px 11px;color:#b6c8d0;font-size:10px;letter-spacing:.13em;font-weight:750;white-space:nowrap}.chip-dot,.live-dot,.live-pill i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#66d8b4;margin-right:7px;box-shadow:0 0 10px #66d8b499}.canvas-card{overflow:hidden;border:1px solid #31485b;border-radius:15px;background:#10202f;box-shadow:0 16px 45px #06131d32}.canvas-head{height:48px;border-bottom:1px solid #2c4152;display:flex;align-items:center;justify-content:space-between;padding:0 19px;font-size:12px;color:#d5e7e4;font-weight:650}.canvas-sub{font-size:9px;color:#688495;font-weight:700;letter-spacing:.08em;margin-left:8px}#statusTag{color:#87a1ac;font-size:10px;font-weight:500}.canvas-wrap{position:relative;width:100%;height:clamp(390px,52vw,690px);max-height:calc(100vh - 270px);min-height:375px;background:#0d1d2c}canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}.canvas-tip{position:absolute;bottom:13px;left:15px;pointer-events:none;background:#182d3edb;border:1px solid #324c5b;border-radius:7px;padding:7px 10px;color:#91a9b2;font-size:10px}.canvas-tip b{color:#8ae7c9}.canvas-foot{height:46px;padding:0 19px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #2c4152}.legend{display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:10px;color:#9ab0b9}.legend>span{white-space:nowrap;display:flex;align-items:center;gap:6px}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block}.p-dot{background:#83f0c9;box-shadow:0 0 7px #72e5c5}.fixed-dot{background:#f2bd76}.legend-line{width:16px;height:2px;display:inline-block;background:#64ddc2}.point-coords{white-space:nowrap;color:#a5e9d8;font-size:11px;font-variant-numeric:tabular-nums}.playbar{padding-top:19px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.play-group,.switches{display:flex;align-items:center;gap:12px}.play-button,.icon-button{border:0;border-radius:8px;min-height:38px;padding:0 15px;font-size:12px;font-weight:700}.play-button{color:#0d3c36;background:#8ae7c7;min-width:96px}.play-button:hover{background:#a7f3d9}.play-button span:first-child{font-size:14px;margin-right:7px}.icon-button{color:#b6cad0;background:#21384a}.icon-button:hover{background:#2c4859}.icon-button span{font-size:16px}.switches{gap:18px}.switch-label{display:flex;align-items:center;gap:7px;color:#a8bdc6;font-size:11px;white-space:nowrap;cursor:pointer}.switch-label input{position:absolute;opacity:0}.switch{width:29px;height:16px;border-radius:12px;background:#526b78;position:relative;transition:background .15s}.switch:after{content:"";position:absolute;top:3px;left:3px;width:10px;height:10px;border-radius:50%;background:white;transition:transform .15s}.switch-label input:checked+.switch{background:#54caaa}.switch-label input:checked+.switch:after{transform:translateX(13px)}.switch-label input:focus-visible+.switch{outline:3px solid #e0aa55;outline-offset:3px}.visual-note{display:flex;align-items:flex-start;gap:9px;color:#7995a2;margin-top:25px;font-size:11px;line-height:1.6}.note-icon{color:#75cbb5;font-size:14px}.panel{min-width:0;background:#f9fbf9}.panel-inner{padding:32px clamp(25px,3vw,48px) 22px;max-width:720px;margin:0 auto}.panel-section{padding-bottom:23px;margin-bottom:23px;border-bottom:1px solid #e2e9e5}.section-label{display:flex;gap:8px;align-items:center;color:#223d49;font-size:13px;font-weight:800;letter-spacing:.02em;margin-bottom:15px}.section-label>span:first-child{color:#56a992;font-size:10px;font-weight:800}.section-label small{font-size:9px;letter-spacing:.13em;color:#a0b1b0;margin-left:auto}.select-wrap{position:relative}.select-wrap select{appearance:none;width:100%;border:1px solid #d7e3de;border-radius:9px;padding:13px 40px 13px 14px;background:#fff;color:#213c45;font-size:13px;font-weight:700}.select-wrap>span{position:absolute;right:14px;top:7px;font-size:22px;color:#75918a;pointer-events:none}.case-intro{background:#edf6f1;border:1px solid #e1eee7;border-radius:10px;padding:17px 18px;margin-top:12px}.case-kicker{font-size:9px;letter-spacing:.15em;color:#55a48a;font-weight:850}.case-intro h2{font-size:16px;margin:6px 0 6px;color:#183e3b;letter-spacing:.02em}.case-intro p{font-size:12px;line-height:1.7;color:#5f7973;margin:0}.condition-line{margin-top:10px;color:#16866a;font-size:14px;font-weight:700;overflow-x:auto}.control-row{display:grid;grid-template-columns:minmax(95px,1fr) minmax(100px,1.3fr) 50px;gap:11px;align-items:center;margin:11px 0;font-size:11px;color:#526e6a}.control-row strong{font-weight:700;color:#36554f}.control-row output{font-weight:700;color:#17846b;text-align:right;font-variant-numeric:tabular-nums}.control-row input[type=range]{accent-color:#37a88a;width:100%;height:18px}.line-box{border:1px solid #e0eae5;border-radius:9px;background:#fff;padding:10px 12px;margin:9px 0}.line-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;color:#36544f}.line-title .swatch{width:8px;height:8px;border-radius:50%;background:#edb96c}.line-title .swatch.alt{background:#eb8c80}.line-title label{margin-left:auto;color:#708a82;font-size:10px;font-weight:600;display:flex;align-items:center;gap:4px}.line-title input{accent-color:#36a98a}.line-box .control-row:last-child{margin-bottom:2px}.control-help{font-size:10px;line-height:1.7;color:#82958f;margin:7px 0 0}.control-help b{color:#568879}.inline-warning{padding:9px 10px;margin-top:9px;background:#fff4e9;border-radius:7px;color:#a55f26;font-size:11px;line-height:1.6}.measure-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.measure-card{padding:11px 12px;background:#fff;border:1px solid #e7eeea;border-radius:8px;min-width:0}.measure-card .measure-name{font-size:10px;color:#8c9f98;margin-bottom:5px}.measure-card .measure-value{font-size:14px;font-weight:700;color:#285c50;overflow:auto;white-space:nowrap;font-variant-numeric:tabular-nums}.measure-card .measure-value math{font-size:1em}.quiz-section{border-radius:10px;padding:15px;background:#f0f5f9;border:1px solid #dce8ee}.quiz-copy,.quiz-copy>div{display:flex;align-items:center;gap:10px}.quiz-copy{justify-content:space-between}.quiz-copy strong{font-size:12px;color:#284559}.quiz-copy p{font-size:10px;color:#79909e;margin:4px 0 0}.quiz-icon{width:31px;height:31px;border-radius:9px;display:grid;place-items:center;background:#dcebf0;color:#50839a;font-weight:800}.quiz-tag{font-size:9px;font-weight:800;letter-spacing:.13em;color:#9cb5bf}.quiz-actions{display:flex;gap:8px;margin-top:13px}.quiz-actions button{border-radius:7px;padding:10px;font-size:11px;font-weight:750}.quiz-btn{border:1px solid #cadce3;background:white;color:#416779;flex:1}.reveal-btn{border:1px solid #287b71;color:white;background:#287b71;flex:1.6}.reveal-btn span{margin-left:4px}.quiz-hint{font-size:10px;line-height:1.6;margin:9px 1px 0;color:#628293}.solution-section{margin-top:0}.working-step{display:flex;gap:9px;margin:13px 0}.step-number{flex:none;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:#eaf3ee;color:#69a78e;font-size:9px;font-weight:800;margin-top:1px}.step-body{min-width:0;flex:1}.step-body p{font-size:11px;color:#6c827a;line-height:1.65;margin:0 0 5px}.math-block{font-family:Cambria,"Times New Roman",serif;color:#203d37;font-size:14px;overflow-x:auto;overflow-y:hidden;padding:4px 0;white-space:nowrap;min-height:24px}.math-block math{font-size:1em}.answer-box{border-left:3px solid #58bd9d;background:#edf7f1;border-radius:0 8px 8px 0;padding:12px 14px;margin-top:15px}.answer-box .answer-label{font-size:9px;color:#61a791;letter-spacing:.12em;font-weight:850}.answer-box .math-block{font-size:15px;color:#145e4f;font-weight:700;margin-top:4px}.answer-box p{color:#507367;font-size:11px;line-height:1.7;margin:6px 0 0}.answer-extra{font-size:10px;color:#7e958b;line-height:1.6;margin-top:9px}.hidden-answer{border:1px dashed #cdded6;border-radius:9px;padding:16px;text-align:center;color:#839990;font-size:11px;line-height:1.7}.panel-footer{font-size:9px;letter-spacing:.12em;color:#acbdb6;font-weight:700}.panel-footer span{margin:0 5px}math{font-family:Cambria,"STIX Two Math","Times New Roman",serif} [hidden]{display:none!important}
-@media(max-width:1050px){.app-layout{grid-template-columns:minmax(0,1fr) minmax(355px,.9fr)}.visual-column{padding-left:25px;padding-right:25px}.canvas-sub{display:none}.legend{gap:10px}.panel-inner{padding-left:24px;padding-right:24px}}@media(max-width:760px){.topbar{height:62px;padding:0 19px}.brand-icon{width:36px;height:36px}.brand strong{font-size:15px}.header-right{font-size:9px;gap:7px}.app-layout{display:flex;flex-direction:column}.visual-column{padding:24px 18px 22px}.visual-heading{margin-bottom:16px}.visual-heading h1{font-size:22px}.case-chip{font-size:9px}.canvas-wrap{height:clamp(320px,92vw,480px);max-height:none;min-height:320px}.canvas-head{height:42px;padding:0 13px}.canvas-foot{height:auto;min-height:45px;padding:8px 12px}.legend{gap:8px;font-size:9px}.point-coords{font-size:10px}.playbar{padding-top:14px}.switches{gap:13px}.visual-note{margin-top:15px}.panel-inner{padding:26px 19px 25px}.panel-section{padding-bottom:20px;margin-bottom:20px}.quiz-section{padding:14px}.canvas-tip{font-size:9px;bottom:8px;left:8px}}@media(max-width:390px){.header-right b{display:none}.visual-column{padding-left:12px;padding-right:12px}.playbar{align-items:flex-start}.switches{width:100%;justify-content:flex-start}.legend{gap:7px}.legend>span{font-size:9px}.quiz-actions{flex-direction:column}.canvas-wrap{height:340px}.case-intro h2{font-size:15px}}
+<style>/*
+ * Locus Lab — vibrant, student-friendly skin
+ * Standalone replacement for style.css.  The geometry and MathML are unchanged.
+ */
+:root {
+  color-scheme: light;
+  --ink: #20244c;
+  --muted: #505b77;
+  --violet: #5736d5;
+  --violet-deep: #34209a;
+  --violet-pale: #eeeaff;
+  --mint: #70dfc1;
+  --coral: #e95b72;
+  --yellow: #ffdb66;
+  --paper: #f4f2ff;
+  --line: #dddaf1;
+  --canvas: #0d1d2c;
+  --shadow: 0 9px 24px rgba(49, 36, 112, .075);
+}
 
-.play-button:disabled{opacity:.45;cursor:not-allowed}.switch-label input:disabled+.switch{opacity:.4;cursor:not-allowed}
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+}
+body { margin: 0; min-width: 0; }
+button, input, select { font: inherit; }
+button, select { cursor: pointer; }
+button, select, input { max-width: 100%; }
+button:focus-visible, input:focus-visible, select:focus-visible, canvas:focus-visible {
+  outline: 3px solid #ffb62e;
+  outline-offset: 3px;
+}
+[hidden] { display: none !important; }
+math { font-family: "STIX Two Math", Cambria, "Times New Roman", serif; }
+
+/* Header */
+.topbar {
+  min-height: 76px;
+  padding: 12px clamp(20px, 3.5vw, 58px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fff;
+  border-top: 5px solid transparent;
+  border-image: linear-gradient(90deg, #6544e9 0%, #aa5be9 37%, #ff7889 72%, #ffd76b 100%) 1;
+  box-shadow: 0 2px 14px rgba(42, 30, 94, .08);
+  position: relative;
+  z-index: 1;
+}
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: #c4ffeb;
+  background: linear-gradient(145deg, #7452ee, #4123b1);
+  box-shadow: 0 5px 12px rgba(87, 54, 213, .25);
+}
+.brand strong { display: block; color: #261b63; font-size: 18px; line-height: 1.2; letter-spacing: .03em; }
+.brand div > span { display: block; margin-top: 4px; color: #6b5caf; font-size: 10px; font-weight: 800; letter-spacing: .19em; }
+.header-right { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 9px; color: #4b417e; font-size: 12px; font-weight: 750; }
+.header-right span:first-child { padding: 7px 11px; border-radius: 999px; background: #eeeaff; color: #4c2cbe; }
+.header-right i { width: 5px; height: 5px; border-radius: 50%; background: #f3788c; }
+.header-right b { color: #6b4ccb; font-weight: 750; }
+
+/* The two work areas */
+.app-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(420px, .9fr);
+  max-width: 1920px;
+  min-height: calc(100vh - 76px);
+  margin: 0 auto;
+  box-shadow: 0 15px 45px rgba(38, 27, 96, .1);
+}
+.visual-column {
+  min-width: 0;
+  padding: 36px clamp(24px, 3.6vw, 62px) 36px;
+  color: #fff;
+  background-color: #292066;
+  background-image:
+    radial-gradient(circle at 88% 7%, rgba(255, 151, 147, .2) 0 56px, transparent 57px),
+    radial-gradient(circle at 88% 7%, transparent 0 70px, rgba(255, 255, 255, .10) 71px 72px, transparent 73px),
+    radial-gradient(rgba(202, 193, 255, .13) 1px, transparent 1.5px),
+    linear-gradient(150deg, #302179 0%, #25205c 55%, #1d244d 100%);
+  background-size: auto, auto, 22px 22px, auto;
+}
+.visual-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px; margin-bottom: 22px; }
+.visual-heading > div:first-child { min-width: 0; }
+.eyebrow { font-size: 10px; font-weight: 850; letter-spacing: .15em; line-height: 1.4; }
+.eyebrow.light { color: #abf5dd; }
+.visual-heading h1 { margin: 8px 0 0; font-size: clamp(24px, 2.25vw, 34px); line-height: 1.3; letter-spacing: .025em; }
+.visual-heading h1 span { color: #d9cbff; font-weight: 500; }
+.case-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 13px;
+  border: 1px solid rgba(255,255,255,.27);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255,255,255,.11);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  white-space: nowrap;
+}
+.chip-dot, .live-dot, .live-pill i { display: inline-block; flex: none; width: 8px; height: 8px; border-radius: 50%; background: #70dfc1; }
+.chip-dot, .live-dot { margin-right: 8px; box-shadow: 0 0 0 4px rgba(112, 223, 193, .14); }
+
+/* Keep the canvas dark so the fixed JS-drawn grid and mint/amber lines remain legible. */
+.canvas-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 2px solid #7967c5;
+  border-radius: 20px;
+  background: var(--canvas);
+  box-shadow: 0 18px 40px rgba(9, 8, 42, .25), 0 3px 0 rgba(255,255,255,.07) inset;
+}
+.canvas-head {
+  min-height: 50px;
+  padding: 11px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 14px;
+  color: #fff;
+  background: #252b56;
+  border-bottom: 1px solid #454b73;
+  font-size: 13px;
+  font-weight: 800;
+}
+.canvas-head > div { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+.canvas-sub { margin-left: 8px; color: #c4c8eb; font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+#statusTag { color: #d1d4f0; font-size: 11px; font-weight: 650; }
+.canvas-wrap { position: relative; width: 100%; height: clamp(390px, 52vw, 690px); max-height: calc(100vh - 270px); min-height: 375px; background: var(--canvas); }
+canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+canvas:focus-visible { outline-offset: -5px; }
+.canvas-tip {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  max-width: calc(100% - 28px);
+  padding: 8px 11px;
+  border: 1px solid #526680;
+  border-radius: 9px;
+  color: #e1eaf4;
+  background: rgba(20, 37, 55, .94);
+  font-size: 11px;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.canvas-tip b { color: #a0f4d5; }
+.canvas-foot {
+  min-height: 50px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 12px;
+  border-top: 1px solid #3d4967;
+  background: #1b2743;
+}
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 15px; color: #e1e7f5; font-size: 11px; }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.p-dot { background: #a0f4d5; box-shadow: 0 0 7px #72e5c5; }
+.fixed-dot { background: #f0c482; }
+.legend-line { display: inline-block; width: 18px; height: 3px; border-radius: 4px; background: #6de0c1; }
+.point-coords { color: #b6f9e5; font-size: 12px; font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Playback and toggles */
+.playbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 18px; padding-top: 20px; }
+.play-group, .switches { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.play-button, .icon-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.3;
+  transition: background-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+.play-button { min-width: 102px; color: #35245b; background: var(--yellow); box-shadow: 0 4px 0 #c49732; }
+.play-button:hover:not(:disabled) { background: #ffe790; transform: translateY(-1px); }
+.play-button span:first-child { margin-right: 7px; font-size: 15px; }
+.icon-button { color: #fff; background: #50448d; border-color: #8176b3; }
+.icon-button:hover:not(:disabled) { background: #6556a5; }
+.icon-button span { font-size: 16px; }
+.switches { gap: 8px 16px; }
+.switch-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #f4f0ff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.switch-label input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.switch { position: relative; flex: none; width: 38px; height: 22px; border: 1px solid #a4a4c5; border-radius: 999px; background: #595b7c; transition: background-color .16s ease; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .16s ease; }
+.switch-label input:checked + .switch { background: #54d7b1; border-color: #77f0ca; }
+.switch-label input:checked + .switch::after { transform: translateX(16px); }
+.switch-label input:focus-visible + .switch { outline: 3px solid #ffce51; outline-offset: 3px; }
+.switch-label input:disabled { cursor: not-allowed; }
+.switch-label input:disabled + .switch { background: #6a6b7a; border-color: #8b8b9a; }
+.switch-label input:disabled + .switch::after { background: #c5c5cf; }
+.switch-label:has(input:disabled) { color: #c4c1d3; cursor: not-allowed; }
+button:disabled { color: #dddde5; background: #5b5d71; border-color: #86889b; box-shadow: none; cursor: not-allowed; transform: none; }
+.visual-note { display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; color: #ded8fa; font-size: 12px; line-height: 1.7; }
+.note-icon { flex: none; color: #ffd878; font-size: 17px; line-height: 1.15; }
+
+/* Right panel: individual, high-contrast learning cards */
+.panel { min-width: 0; background: #f3f1ff; }
+.panel-inner { max-width: 760px; min-width: 0; margin: 0 auto; padding: 27px clamp(20px, 2.5vw, 38px) 28px; }
+.panel-section {
+  min-width: 0;
+  margin: 0 0 14px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+.section-label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 15px; color: #272357; font-size: 15px; font-weight: 850; line-height: 1.35; letter-spacing: .01em; }
+.section-label > span:first-child { display: inline-grid; place-items: center; flex: none; width: 29px; height: 29px; border-radius: 9px; color: #5736c5; background: #eeeaff; font-size: 11px; font-weight: 850; letter-spacing: .02em; }
+.section-label small { margin-left: auto; color: #6d7391; font-size: 10px; font-weight: 800; letter-spacing: .09em; }
+.select-wrap { position: relative; min-width: 0; }
+.select-wrap select {
+  appearance: none;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 40px 12px 14px;
+  border: 2px solid #bcb1ee;
+  border-radius: 12px;
+  color: #302365;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 750;
+}
+.select-wrap select:hover { border-color: #7359dc; }
+.select-wrap > span { position: absolute; right: 14px; top: 50%; transform: translateY(-56%); color: #6245c4; font-size: 24px; line-height: 1; pointer-events: none; }
+.case-intro {
+  min-width: 0;
+  margin-top: 12px;
+  padding: 16px 17px;
+  border: 1px solid #d2c8ff;
+  border-left: 5px solid #7855e8;
+  border-radius: 12px;
+  background: radial-gradient(circle at 94% 12%, rgba(252, 187, 198, .38) 0 22px, transparent 23px), #f3efff;
+}
+.case-kicker { color: #6343c8; font-size: 10px; font-weight: 850; letter-spacing: .13em; }
+.case-intro h2 { margin: 6px 0 7px; color: #2c215f; font-size: 18px; line-height: 1.4; overflow-wrap: anywhere; }
+.case-intro p { margin: 0; color: #4c5370; font-size: 13px; line-height: 1.75; overflow-wrap: anywhere; }
+.condition-line { max-width: 100%; margin-top: 10px; padding: 3px 0; overflow-x: auto; overflow-y: hidden; color: #4930ab; font-size: 17px; font-weight: 700; line-height: normal; }
+.condition-line math { white-space: nowrap; }
+
+/* Controls created by JavaScript */
+.control-row { display: grid; grid-template-columns: minmax(75px, 1fr) minmax(90px, 1.5fr) minmax(35px, auto); align-items: center; gap: 10px; min-width: 0; margin: 7px 0; color: #434d6a; font-size: 13px; line-height: 1.5; }
+.control-row strong { min-width: 0; color: #30375d; font-weight: 750; overflow-wrap: anywhere; }
+.control-row output { color: #5534c1; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
+.control-row input[type="range"] { width: 100%; min-width: 0; min-height: 44px; margin: 0; accent-color: #7049e8; cursor: pointer; }
+.line-box { min-width: 0; margin: 10px 0; padding: 11px 13px; border: 1px solid #ddd9f0; border-radius: 12px; background: #faf9ff; }
+.line-title { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: #323962; font-size: 13px; font-weight: 800; line-height: 1.4; }
+.line-title .swatch { flex: none; width: 10px; height: 10px; border-radius: 50%; background: #ce8722; }
+.line-title .swatch.alt { background: #d6505a; }
+.line-title label { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-left: auto; color: #505b77; font-size: 12px; font-weight: 700; cursor: pointer; }
+.line-title input { width: 18px; height: 18px; margin: 0; accent-color: #6542d2; }
+.line-title input:disabled { cursor: not-allowed; }
+.line-title label:has(input:disabled) { color: #777c90; cursor: not-allowed; }
+.line-box .control-row:last-child { margin-bottom: 0; }
+.control-help { margin: 8px 0 0; color: #58627c; font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+.control-help b { color: #4d3aa3; }
+.inline-warning { margin-top: 10px; padding: 10px 12px; border: 1px solid #eebc78; border-radius: 10px; color: #763810; background: #fff1d8; font-size: 12px; font-weight: 650; line-height: 1.6; }
+
+/* Live values */
+.measurements .section-label > span:first-child { color: #086951; background: #d8f8eb; }
+.live-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 999px; color: #09664f; background: #d8f8eb; font-size: 10px; font-weight: 850; letter-spacing: .06em; }
+.live-pill i { width: 7px; height: 7px; background: #0b9b70; }
+.measure-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.measure-card { min-width: 0; padding: 12px 13px; border: 1px solid #cdece0; border-radius: 12px; background: #f0fcf7; }
+.measure-card .measure-name { margin-bottom: 6px; color: #476a61; font-size: 12px; font-weight: 700; line-height: 1.4; overflow-wrap: anywhere; }
+.measure-card .measure-value { max-width: 100%; padding: 2px 0 3px; overflow-x: auto; overflow-y: hidden; color: #125c4c; font-size: 16px; font-weight: 750; line-height: normal; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.measure-card .measure-value math { font-size: 1em; }
+
+/* Quiz and working */
+.quiz-section { padding: 19px; border-color: #f3c5d0; background: #fff0f2; }
+.quiz-copy, .quiz-copy > div { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.quiz-copy { justify-content: space-between; }
+.quiz-copy strong { color: #70243f; font-size: 15px; }
+.quiz-copy p { margin: 4px 0 0; color: #74485b; font-size: 12px; line-height: 1.5; }
+.quiz-icon { display: grid; place-items: center; flex: none; width: 39px; height: 39px; border-radius: 12px; color: #fff; background: #d44768; font-size: 19px; font-weight: 850; }
+.quiz-tag { flex: none; color: #a33456; font-size: 10px; font-weight: 850; letter-spacing: .1em; }
+.quiz-actions { display: flex; gap: 9px; margin-top: 14px; }
+.quiz-actions button { min-width: 0; min-height: 44px; padding: 10px 12px; border-radius: 11px; font-size: 13px; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; transition: background-color .16s ease, box-shadow .16s ease; }
+.quiz-btn { flex: 1; border: 1px solid #d995a8; color: #9b3151; background: #fff; }
+.quiz-btn:hover:not(:disabled) { background: #ffe4eb; }
+.reveal-btn { flex: 1.6; border: 1px solid #5030bb; color: #fff; background: #5736c4; }
+.reveal-btn:hover:not(:disabled) { background: #42249e; }
+.reveal-btn span { margin-left: 4px; }
+.quiz-hint { margin: 10px 0 0; color: #7d344e; font-size: 12px; line-height: 1.65; }
+.solution-section .section-label > span:first-child { color: #a04716; background: #fff0cf; }
+.working-step { display: flex; align-items: flex-start; gap: 10px; margin: 15px 0; }
+.step-number { display: grid; place-items: center; flex: none; width: 24px; height: 24px; margin-top: 1px; border-radius: 8px; color: #6244c5; background: #eeeaff; font-size: 11px; font-weight: 850; }
+.step-body { flex: 1; min-width: 0; }
+.step-body p { margin: 0 0 5px; color: #48516c; font-size: 13px; line-height: 1.75; overflow-wrap: anywhere; }
+.math-block { min-width: 0; max-width: 100%; min-height: 28px; padding: 5px 1px; overflow-x: auto; overflow-y: hidden; color: #242950; font-family: "STIX Two Math", Cambria, "Times New Roman", serif; font-size: 16px; line-height: normal; white-space: nowrap; }
+.math-block math { font-size: 1em; }
+.answer-box { min-width: 0; margin-top: 16px; padding: 14px 15px; border: 1px solid #bde7d5; border-left: 5px solid #12a982; border-radius: 12px; background: #e6faf0; }
+.answer-box .answer-label { color: #087454; font-size: 10px; font-weight: 850; letter-spacing: .09em; line-height: 1.5; }
+.answer-box .math-block { margin-top: 5px; color: #075b47; font-size: 17px; font-weight: 750; }
+.answer-box p { margin: 7px 0 0; color: #315e50; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.answer-extra { margin-top: 10px; color: #56657b; font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.hidden-answer { padding: 17px; border: 2px dashed #c3b7ec; border-radius: 12px; color: #584786; background: #f8f6ff; font-size: 13px; line-height: 1.75; text-align: center; }
+.panel-footer { padding: 5px 4px; color: #625b85; font-size: 10px; font-weight: 750; letter-spacing: .08em; line-height: 1.6; }
+.panel-footer span { margin: 0 5px; color: #e46f82; }
+
+@media (max-width: 1050px) {
+  .app-layout { grid-template-columns: minmax(0, 1fr) minmax(360px, .92fr); }
+  .visual-column { padding-left: 24px; padding-right: 24px; }
+  .panel-inner { padding-left: 20px; padding-right: 20px; }
+  .canvas-sub { display: none; }
+}
+@media (max-width: 760px) {
+  .topbar { min-height: 68px; padding: 10px 18px; }
+  .brand-icon { width: 40px; height: 40px; border-radius: 12px; }
+  .brand strong { font-size: 16px; }
+  .header-right { font-size: 11px; }
+  .app-layout { display: flex; flex-direction: column; min-height: 0; }
+  .visual-column { padding: 25px 18px 24px; }
+  .visual-heading { margin-bottom: 17px; }
+  .visual-heading h1 { font-size: clamp(22px, 5.4vw, 28px); }
+  .canvas-wrap { height: clamp(320px, 92vw, 480px); min-height: 320px; max-height: none; }
+  .canvas-head { min-height: 46px; padding: 10px 14px; }
+  .canvas-foot { padding: 10px 13px; }
+  .playbar { padding-top: 16px; }
+  .panel-inner { max-width: none; padding: 22px 18px 26px; }
+  .panel-section { padding: 18px; }
+}
+@media (max-width: 430px) {
+  .header-right i, .header-right span:last-child { display: none; }
+  .visual-column { padding-left: 14px; padding-right: 14px; }
+  .visual-heading { align-items: center; }
+  .case-chip { padding: 8px 10px; font-size: 10px; }
+  .panel-inner { padding-left: 14px; padding-right: 14px; }
+  .panel-section { padding: 16px; }
+  .section-label small { font-size: 9px; }
+  .quiz-actions { flex-direction: column; }
+  .quiz-actions button { width: 100%; }
+}
+@media (max-width: 350px) {
+  .topbar { padding-left: 14px; padding-right: 14px; }
+  .header-right span:first-child { padding: 6px 8px; }
+  .visual-heading { align-items: flex-start; }
+  .visual-heading h1 span { display: block; }
+  .canvas-wrap { height: 320px; }
+  .canvas-tip { left: 9px; bottom: 9px; }
+  .measure-grid { grid-template-columns: minmax(0, 1fr); }
+  .section-label small { display: none; }
+  .control-row { grid-template-columns: minmax(60px, .9fr) minmax(70px, 1.2fr) minmax(30px, auto); gap: 6px; }
+  .line-title label { margin-left: 0; }
+  .select-wrap select { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0s !important; animation-duration: 0s !important; animation-iteration-count: 1 !important; }
+  .play-button:hover:not(:disabled) { transform: none; }
+}
+
+/* 在 vibrant.css 後載入：緊湊但保留至少 44px 的觸控目標。 */
+#controls .control-row {
+  grid-template-columns: minmax(68px, 1fr) minmax(65px, 1.45fr) minmax(72px, 5.2em);
+  gap: 8px;
+}
+#controls .numeric-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 7px 6px;
+  border: 1.5px solid #a99be1;
+  border-radius: 9px;
+  color: #34217f;
+  background: #fff;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.25;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+#controls .numeric-input:hover { border-color: #7049e8; }
+#controls .numeric-input:focus-visible {
+  border-color: #5b37cf;
+  outline: 3px solid #ffb62e;
+  outline-offset: 2px;
+}
+#controls .point-controls { display: grid; gap: 6px; margin: 8px 0 0; }
+#controls .point-row {
+  display: grid;
+  grid-template-columns: minmax(54px, auto) repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border: 1px solid #ddd9f0;
+  border-radius: 10px;
+  color: #30375d;
+  background: #faf9ff;
+  font-size: 13px;
+}
+#controls .point-row > strong { white-space: nowrap; font-weight: 750; }
+#controls .point-axis {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  color: #5a478e;
+  font-weight: 800;
+}
+#controls .point-axis .numeric-input { padding-right: 3px; padding-left: 3px; }
+@media (max-width: 350px) {
+  #controls .control-row { grid-template-columns: minmax(58px, .9fr) minmax(55px, 1.2fr) minmax(68px, 4.5em); gap: 6px; }
+  #controls .point-row { grid-template-columns: minmax(48px, auto) repeat(2, minmax(0, 1fr)); gap: 5px; padding-right: 5px; padding-left: 5px; }
+  #controls .point-axis { gap: 3px; }
+}
+
+/* 代數推導控制：置於新版 CSS 之後。 */
+#solution .solution-progress {
+  margin: 0 0 9px;
+  color: #524192;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+#solution .solution-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  margin-bottom: 15px;
+}
+
+#solution .solution-control {
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 5px;
+  border: 1px solid #c8bdef;
+  border-radius: 10px;
+  color: #493594;
+  background: #f7f4ff;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.35;
+  white-space: nowrap;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+
+#solution .solution-control-play {
+  border-color: #5736c4;
+  color: #fff;
+  background: #5736c4;
+}
+
+#solution .solution-control:hover:not(:disabled):not([aria-disabled="true"]) {
+  border-color: #775dda;
+  background: #eee8ff;
+}
+
+#solution .solution-control-play:hover:not(:disabled):not([aria-disabled="true"]) {
+  border-color: #42249e;
+  background: #42249e;
+}
+
+#solution .solution-control:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 3px solid #d08a00;
+  outline-offset: 2px;
+}
+
+#solution .solution-control:disabled,
+#solution .solution-control[aria-disabled="true"] {
+  border-color: #d5d1df;
+  color: #666176;
+  background: #efedf2;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#solution .solution-working,
+#solution .solution-steps,
+#solution .solution-result {
+  min-width: 0;
+}
+
+#solution .solution-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#solution .solution-enter {
+  animation: solution-step-arrive .3s ease-out both;
+}
+
+@keyframes solution-step-arrive {
+  from { opacity: .15; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  #solution .solution-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #solution .solution-enter { animation: none; }
+  #solution .solution-control { transition: none; }
+}
+
+/* 大螢幕：固定畫布與獨立捲動的資料面板，令探索、數據與推導同一頁並排。 */
+@media (min-width: 1000px) and (min-height: 600px) {
+  .topbar { height: 58px; min-height: 58px; padding-top: 4px; padding-bottom: 4px; border-top-width: 3px; }
+  .brand-icon { width: 37px; height: 37px; border-radius: 11px; }
+  .brand strong { font-size: 16px; }
+  .brand div > span { margin-top: 2px; font-size: 9px; }
+  .app-layout { height: calc(100vh - 58px); height: calc(100dvh - 58px); min-height: 0; overflow: hidden; grid-template-columns: minmax(0, 1.24fr) minmax(410px, .9fr); }
+  .visual-column { min-height: 0; display: flex; flex-direction: column; padding: 14px clamp(18px,2vw,30px) 10px; }
+  .visual-heading { margin-bottom: 9px; }
+  .visual-heading h1 { margin-top: 2px; font-size: clamp(20px,1.75vw,25px); }
+  .eyebrow { font-size: 9px; }
+  .case-chip { padding: 6px 10px; }
+  .canvas-card { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; border-radius: 15px; }
+  .canvas-head { flex: 0 0 auto; min-height: 36px; padding: 6px 12px; font-size: 12px; }
+  .canvas-wrap { flex: 1 1 auto; height: auto; min-height: 0; max-height: none; }
+  .canvas-foot { flex: 0 0 auto; min-height: 36px; padding: 5px 12px; }
+  .playbar { flex: 0 0 auto; padding-top: 9px; gap: 6px 12px; }
+  .play-button,.icon-button { min-height: 36px; padding: 7px 13px; font-size: 12px; }
+  .switch-label { min-height: 36px; }
+  .visual-note { flex: 0 0 auto; margin-top: 7px; font-size: 11px; line-height: 1.4; }
+  .panel { min-height: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #ad9ee4 #f3f1ff; scrollbar-width: thin; }
+  .panel-inner { padding: 10px 14px 12px; }
+  .panel-section { margin-bottom: 8px; padding: 11px 13px; border-radius: 13px; }
+  .section-label { margin-bottom: 7px; gap: 7px; font-size: 13px; }
+  .section-label > span:first-child { width: 24px; height: 24px; border-radius: 7px; font-size: 10px; }
+  .select-wrap select { min-height: 36px; padding: 7px 35px 7px 11px; font-size: 13px; }
+  .case-intro { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 2px 8px; margin-top: 7px; padding: 8px 10px; }
+  .case-kicker { display: none; }
+  .case-intro h2 { grid-column: 1; margin: 0; font-size: 14px; }
+  .case-intro p { grid-column: 1; font-size: 11px; line-height: 1.35; }
+  .condition-line { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; font-size: 15px; }
+  .control-row { margin: 3px 0; font-size: 12px; }
+  .control-row input[type="range"] { min-height: 30px; }
+  .line-box { margin: 5px 0; padding: 5px 9px; }
+  .line-title { font-size: 12px; }
+  .line-title label { min-height: 27px; font-size: 11px; }
+  .control-help { margin-top: 4px; font-size: 11px; line-height: 1.35; }
+  .inline-warning { padding: 6px 8px; margin-top: 5px; }
+  .measure-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+  .measure-card { padding: 6px 8px; }
+  .measure-card .measure-name { margin-bottom: 2px; font-size: 11px; }
+  .measure-card .measure-value { font-size: 14px; }
+  .quiz-section { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 8px; align-items: center; }
+  .quiz-copy { gap: 5px; }.quiz-copy > div { gap: 7px; }.quiz-copy strong { font-size: 13px; }.quiz-copy p { font-size: 10px; line-height: 1.3; margin-top: 2px; }
+  .quiz-icon { width: 31px; height: 31px; font-size: 16px; }.quiz-tag { display: none; }
+  .quiz-actions { margin: 0; gap: 5px; }.quiz-actions button { min-height: 36px; padding: 6px; font-size: 11px; }
+  .quiz-hint { grid-column: 1 / -1; margin: 0; font-size: 11px; }
+  .working-step { margin: 8px 0; }.step-body p { line-height: 1.45; font-size: 12px; }.step-number { width: 21px; height: 21px; }
+  .math-block { font-size: 15px; padding-top: 3px; padding-bottom: 3px; }
+  .answer-box { margin-top: 8px; padding: 8px 10px; }.answer-box p { font-size: 12px; line-height: 1.4; }
+  .panel-footer { padding-top: 0; }
+}
+@media (max-width: 760px) {
+  .visual-column { padding-top: 15px; padding-bottom: 14px; }
+  .visual-heading { margin-bottom: 10px; }.visual-heading h1 { margin-top: 3px; }
+  .canvas-wrap { height: clamp(280px, 78vw, 390px); min-height: 280px; }
+  .canvas-head { min-height: 39px; padding: 7px 12px; }
+  .canvas-foot { min-height: 40px; padding: 6px 10px; }
+  .playbar { padding-top: 10px; gap: 6px 10px; }.visual-note { margin-top: 8px; line-height: 1.4; }
+  .panel-inner { padding-top: 12px; }.panel-section { margin-bottom: 9px; padding: 13px; }
+  .section-label { margin-bottom: 9px; }.case-intro { margin-top: 8px; padding: 11px 12px; }
+  .quiz-actions { flex-direction: row; }.quiz-actions button { width: auto; }
+}
+
+@media (min-width:1000px) and (min-height:600px) {
+  #controls .numeric-input { min-height: 34px; padding: 4px; font-size: 14px; }
+  #controls .point-controls { margin-top: 4px; gap: 4px; }
+  #controls .point-row { padding: 3px 6px; font-size: 12px; }
+  #solution .solution-progress { margin-bottom: 4px; font-size: 12px; }
+  #solution .solution-controls { margin-bottom: 7px; gap: 5px; }
+  #solution .solution-control { min-height: 34px; padding: 5px; font-size: 11px; }
+}
+@media (min-width:1000px) and (min-height:600px) {
+  #controls:has(.line-box + .line-box) { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  #controls:has(.line-box + .line-box) .line-box { margin: 0; min-width: 0; padding: 5px 7px; }
+  #controls:has(.line-box + .line-box) .control-row { grid-template-columns: minmax(39px,.7fr) minmax(40px,1.3fr) minmax(55px,4em); gap: 4px; }
+}
+</style>
+<style>/* 視野控制獨立成列，不遮蓋坐標、軌跡或可拖曳的點。 */
+.zoom-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  min-width: 0;
+  padding: 6px 10px;
+  border-bottom: 1px solid #3d4967;
+  background: #1b2743;
+}
+.zoom-label {
+  margin-right: auto;
+  color: #d1dce8;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.zoom-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 1px solid #8193a9;
+  border-radius: 9px;
+  background: #34485f;
+  color: #fff;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  touch-action: manipulation;
+}
+.zoom-button:hover:not(:disabled) { background: #47617c; }
+.zoom-button:disabled { border-color: #5d6c7d; background: #29394c; color: #9caab9; cursor: not-allowed; }
+.zoom-button:focus-visible { outline: 3px solid #ffce51; outline-offset: -4px; }
+.zoom-reset { min-width: 54px; font-size: 12px; }
+.zoom-percent {
+  flex: 0 0 50px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  white-space: nowrap;
+}
+#canvas { touch-action: none; }
+@media (max-width: 350px) {
+  .zoom-toolbar { gap: 4px; padding: 6px 8px; }
+}
 </style>
 </head>
 <body>
@@ -21,11 +685,12 @@
     <div class="visual-heading"><div><div class="eyebrow light">INTERACTIVE COORDINATE PLANE</div><h1>直角坐標系 <span>動態畫布</span></h1></div><div class="case-chip"><span class="chip-dot"></span><span id="caseCounter">01 / 07</span></div></div>
     <div class="canvas-card">
       <div class="canvas-head"><div><span class="live-dot"></span>互動畫布 <span class="canvas-sub">COORDINATE PLANE</span></div><span id="statusTag">自動播放中</span></div>
-      <div class="canvas-wrap"><canvas id="canvas" tabindex="0" aria-label="直角坐標系畫布。可以拖動動點 P 及定點。">你的瀏覽器不支援 HTML5 Canvas。</canvas><div class="canvas-tip" id="canvasTip">拖曳 <b>P</b> 或定點，探索軌跡</div></div>
+      <div class="zoom-toolbar" role="group" aria-label="畫布視野控制"><span class="zoom-label">視野</span><button class="zoom-button" id="zoomOut" type="button" aria-label="縮小視野" title="縮小視野">−</button><output class="zoom-percent" id="zoomPercent" aria-label="目前縮放比例" aria-live="polite">100%</output><button class="zoom-button" id="zoomIn" type="button" aria-label="放大視野" title="放大視野">＋</button><button class="zoom-button zoom-reset" id="zoomReset" type="button" aria-label="重設視野，回到 100% 並以原點居中" title="重設視野">重設</button></div>
+      <div class="canvas-wrap"><canvas id="canvas" tabindex="0" aria-label="直角坐標系畫布。可以拖動動點 P 及定點，拖曳空白處平移視野。">你的瀏覽器不支援 HTML5 Canvas。</canvas><div class="canvas-tip" id="canvasTip">拖曳 <b>P</b> 或定點；拖曳空白處平移視野</div></div>
       <div class="canvas-foot"><div class="legend"><span><i class="legend-dot p-dot"></i>動點 P</span><span><i class="legend-dot fixed-dot"></i>定點／定線</span><span><i class="legend-line"></i>軌跡</span></div><div id="pointCoords" class="point-coords">P (0, 0)</div></div>
     </div>
     <div class="playbar"><div class="play-group"><button class="play-button" id="playBtn" type="button"><span id="playIcon" aria-hidden="true">Ⅱ</span><span id="playText">暫停</span></button><button class="icon-button" id="clearBtn" type="button" title="清除殘影"><span aria-hidden="true">↺</span> 清除殘影</button></div><div class="switches"><label class="switch-label"><input type="checkbox" id="gridToggle" checked><span class="switch"></span>坐標網格</label><label class="switch-label"><input type="checkbox" id="locusToggle" checked><span class="switch"></span>完整軌跡</label></div></div>
-    <div class="visual-note"><span class="note-icon">✳</span><span>拖曳定點改變條件；拖曳動點時，P 會自動貼合可行軌跡。</span></div>
+    <div class="visual-note"><span class="note-icon">✳</span><span>拖曳定點改變條件；動點會自動貼合軌跡。動態量度以 ≈ 顯示近似值，推導方程採用精確值。</span></div>
   </section>
   <aside class="panel" aria-label="條件選擇器、控制面板與代數推導">
     <div class="panel-inner">
@@ -464,12 +1129,7 @@ const pt=p=>`(${num(p.x)},\\,${num(p.y)})`;
 const dist=(p,q)=>Math.hypot(p.x-q.x,p.y-q.y);
 function signedTerm(coef,variable,first=false){coef=clean(coef);if(!coef)return '';const abs=Math.abs(coef),c=(abs===1&&variable)?'':num(abs,4),term=c+variable;return first?(coef<0?'-':'')+term:(coef<0?' - ':' + ')+term;}
 function linear(a,b,c){let s='';for(const [v,k] of [[a,'x'],[b,'y'],[c,'']])if(clean(v))s+=signedTerm(v,k,!s);return s||'0';}
-function shifted(variable,v){return clean(v)===0?variable:`${variable} ${v<0?'+':'-'} ${num(Math.abs(v),4)}`;}
-function sqdist(p){return `(${shifted('x',p.x)})^{2}+(${shifted('y',p.y)})^{2}`;}
-function lineExpr(L){return L.vertical?linear(1,0,-L.k):linear(-L.m,1,-L.k);}
 function lineEq(L){return L.vertical?`x=${num(L.k,4)}`:`y=${linear(L.m,0,L.k)}`;}
-function lineDen(L){return L.vertical?'1':`\\sqrt{1+(${num(L.m)})^{2}}`;}
-function fracDistance(L){return L.vertical?`|${lineExpr(L)}|`:`\\frac{|${lineExpr(L)}|}{${lineDen(L)}}`;}
 function randomInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
 const cases={
  1:{label:'與一點保持固定距離',title:'與一點保持固定距離',desc:'動點 P 到定點 A 的距離恆等於固定長度 r。',condition:'PA=r',hint:'拖曳畫布上的定點 A；亦可調整半徑 r。'},
@@ -496,24 +1156,604 @@ function resetCase(id){S.id=id;S.cfg=defaults(id);S.showAnswer=true;S.showLocus=
 function validateCfg(cfg){return Geo.build(S.id,cfg).error||null;}
 const copyCfg=()=>JSON.parse(JSON.stringify(S.cfg));
 function changedConfig(next,rerender=false){const err=validateCfg(next);if(err){warning('此設定會令題目退化，請選擇其他數值。');if(rerender)renderControls();return false;}warning('');S.cfg=next;build();const q=pathProjection(S.P);if(q){S.P=q.point;S.path=q.index;}keepPVisible();clearTrail();if(rerender)renderControls();renderContent();syncProgress();return true;}
-function sliderRow(key,label,value,min,max,step){return `<div class="control-row"><strong>${label}</strong><input type="range" data-control="${key}" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}"><output>${num(value)}</output></div>`;}
-function lineBox(name,line,allowSlope=true,lockVertical=false){const n=name==='L1'?'L₁':'L₂',single=S.id===3||S.id===7;return `<div class="line-box"><div class="line-title"><span class="swatch ${name==='L2'?'alt':''}"></span> ${single?'定直線 L':`定直線 ${n}`} <label><input data-vertical="${name}" type="checkbox" ${line.vertical?'checked':''} ${lockVertical?'disabled':''}> 垂直線 x = k</label></div>${allowSlope&&!line.vertical?sliderRow(`${name}.m`,'斜率 m',line.m,-3,3,.25):''}${sliderRow(`${name}.k`,line.vertical?'位置 k（x = k）':'截距 k',line.k,-5,5,.25)}</div>`;}
-function renderControls(){let html='';const c=S.cfg;if(S.id===1)html=sliderRow('r','半徑 r',c.r,.5,5,.25);if(S.id===3)html=sliderRow('d','距離 d',c.d,.5,4,.25);if([3,4,5,7].includes(S.id))html+=lineBox('L1',c.L1,true,false);if(S.id===4)html+=lineBox('L2',c.L2,false,true);if(S.id===5)html+=lineBox('L2',c.L2,true,false);
- if([1,2,6,7].includes(S.id)){const ps=S.id===7?`焦點 Focus F (${num(c.F.x)}, ${num(c.F.y)})`:S.id===1?`定點 Fixed Point A (${num(c.A.x)}, ${num(c.A.y)})`:`定點 Fixed Point A (${num(c.A.x)}, ${num(c.A.y)})　 ·　 定點 B (${num(c.B.x)}, ${num(c.B.y)})`;html+=`<div class="control-help"><b>${esc(ps)}</b></div>`;}
- $('controls').innerHTML=html;$('controlHelp').textContent=cases[S.id].hint;
- $('controls').querySelectorAll('[data-control]').forEach(input=>input.addEventListener('input',e=>{let cfg=copyCfg();let [key,prop]=e.target.dataset.control.split('.');const v=Number(e.target.value);if(prop)cfg[key][prop]=v;else cfg[key]=v;if(S.id===4&&key==='L1'&&prop==='m')cfg.L2.m=v;const ok=changedConfig(cfg);if(ok)e.target.nextElementSibling.textContent=num(v);else{const old=prop?S.cfg[key][prop]:S.cfg[key];e.target.value=old;e.target.nextElementSibling.textContent=num(old);}}));
- $('controls').querySelectorAll('[data-vertical]').forEach(input=>input.addEventListener('change',e=>{let cfg=copyCfg();const key=e.target.dataset.vertical;cfg[key].vertical=e.target.checked;if(S.id===4&&key==='L1')cfg.L2.vertical=e.target.checked;changedConfig(cfg,true);}));}
+/* 數值欄位只在 Enter／blur 提交，避免播放時或輸入中失去焦點。 */
+function controlAriaLabel(key,label){
+ const [name]=key.split('.');
+ if(name==='L1'||name==='L2'){
+  const single=S.id===3||S.id===7;
+  return `${single?'定直線 L':name==='L1'?'定直線 L₁':'定直線 L₂'} ${label}`;
+ }
+ return label;
+}
+function sliderRow(key,label,value,min,max,step){
+ const aria=esc(controlAriaLabel(key,label));
+ return `<div class="control-row"><strong>${esc(label)}</strong><input type="range" data-control="${key}" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${aria} 滑桿"><input class="numeric-input" type="number" data-number-control="${key}" data-committed="${value}" min="${min}" max="${max}" step="${step}" value="${value}" inputmode="${min<0?'text':'decimal'}" aria-label="${aria} 數值"></div>`;
+}
+function lineBox(name,line,allowSlope=true,lockVertical=false){
+ const n=name==='L1'?'L₁':'L₂',single=S.id===3||S.id===7;
+ const title=single?'定直線 L':`定直線 ${n}`;
+ return `<div class="line-box"><div class="line-title"><span class="swatch ${name==='L2'?'alt':''}"></span> ${title} <label><input data-vertical="${name}" type="checkbox" ${line.vertical?'checked':''} ${lockVertical?'disabled':''} aria-label="${title} 垂直線 x = k"> 垂直線 x = k</label></div>${allowSlope&&!line.vertical?sliderRow(`${name}.m`,'斜率 m',line.m,-3,3,.25):''}${sliderRow(`${name}.k`,line.vertical?'位置 k（x = k）':'截距 k',line.k,-5,5,.25)}</div>`;
+}
+function pointRow(name,point){
+ const title=name==='F'?'焦點 F':`定點 ${name}`;
+ const axis=coordinate=>{
+  const value=point[coordinate];
+  // 畫布可拖到很寬的座標範圍；不要令既有合法拖曳結果變為無效。
+  const min=Math.min(-20,value),max=Math.max(20,value);
+  return `<label class="point-axis"><span aria-hidden="true">${coordinate}</span><input class="numeric-input" type="number" data-number-control="${name}.${coordinate}" data-committed="${value}" min="${min}" max="${max}" step="0.1" value="${value}" inputmode="text" aria-label="${title} 的 ${coordinate} 坐標"></label>`;
+ };
+ return `<div class="point-row" role="group" aria-label="${title} 坐標"><strong>${title}</strong>${axis('x')}${axis('y')}</div>`;
+}
+function controlValue(key){
+ const [name,prop]=key.split('.');
+ return prop?S.cfg[name][prop]:S.cfg[name];
+}
+function assignControl(cfg,key,value){
+ const [name,prop]=key.split('.');
+ if(prop)cfg[name][prop]=value;else cfg[name]=value;
+ if(S.id===4&&name==='L1'&&prop==='m')cfg.L2.m=value;
+}
+function syncControlValue(key){
+ const value=controlValue(key),text=String(value);
+ $('controls').querySelectorAll('[data-control]').forEach(input=>{
+  if(input.dataset.control===key)input.value=text;
+ });
+ $('controls').querySelectorAll('[data-number-control]').forEach(input=>{
+  if(input.dataset.numberControl!==key)return;
+  // 外部滑桿或其他程式不應蓋過正在編輯的中間字元。
+  if(document.activeElement!==input||input.dataset.dirty!=='true')input.value=text;
+  input.dataset.committed=text;
+ });
+}
+function numericDegenerateWarning(){
+ if(S.id===2||S.id===6)return '定點 A、B 不可重合；已恢復上次的數值。';
+ if(S.id===7)return '焦點 F 不可位於準線上；已恢復上次的數值。';
+ if(S.id===4)return '兩條平行線不可重合；已恢復上次的數值。';
+ if(S.id===5)return '兩條直線必須相交，不可平行或重合；已恢復上次的數值。';
+ return '此設定會令題目退化；已恢復上次的數值。';
+}
+function commitNumeric(input){
+ const key=input.dataset.numberControl,old=controlValue(key),raw=input.value.trim();
+ if(input.dataset.dirty!=='true'&&raw===input.dataset.committed)return;
+ const min=Number(input.min),max=Number(input.max),step=Number(input.step),value=Number(raw);
+ let message='';
+ if(!raw||input.validity.badInput||!Number.isFinite(value))message='請輸入有效數字，不可留空；已恢復上次的數值。';
+ else if(value<min||value>max)message=`請輸入 ${min} 至 ${max} 之間的數值；已恢復上次的數值。`;
+ else if(input.validity.stepMismatch)message=`請依 ${step} 的步進輸入數值；已恢復上次的數值。`;
+ if(!message){
+  const cfg=copyCfg();assignControl(cfg,key,value);
+  if(!changedConfig(cfg))message=numericDegenerateWarning();
+ }
+ if(message){
+  input.value=String(old);
+  input.dataset.committed=String(old);
+  input.dataset.dirty='false';
+  syncControlValue(key);
+  warning(message);
+  return;
+ }
+ input.value=String(controlValue(key));
+ input.dataset.committed=input.value;
+ input.dataset.dirty='false';
+ syncControlValue(key);
+}
+function renderControls(){
+ let html='';const c=S.cfg;
+ if(S.id===1)html=sliderRow('r','半徑 r',c.r,.5,5,.25);
+ if(S.id===3)html=sliderRow('d','距離 d',c.d,.5,4,.25);
+ if([3,4,5,7].includes(S.id))html+=lineBox('L1',c.L1,true,false);
+ if(S.id===4)html+=lineBox('L2',c.L2,false,true);
+ if(S.id===5)html+=lineBox('L2',c.L2,true,false);
+ if([1,2,6,7].includes(S.id)){
+  const names=S.id===7?['F']:S.id===1?['A']:['A','B'];
+  html+=`<div class="point-controls">${names.map(name=>pointRow(name,c[name])).join('')}</div>`;
+ }
+ $('controls').innerHTML=html;
+ $('controlHelp').textContent=cases[S.id].hint+' 輸入數值後按 Enter 或離開欄位套用。';
+ $('controls').querySelectorAll('[data-control]').forEach(input=>input.addEventListener('input',e=>{
+  const key=e.target.dataset.control,value=Number(e.target.value),cfg=copyCfg();
+  if(!Number.isFinite(value))return;
+  assignControl(cfg,key,value);
+  if(!changedConfig(cfg))warning(numericDegenerateWarning());
+  syncControlValue(key);
+ }));
+ $('controls').querySelectorAll('[data-number-control]').forEach(input=>{
+  input.addEventListener('input',()=>{input.dataset.dirty='true';});
+  input.addEventListener('blur',()=>commitNumeric(input));
+  input.addEventListener('keydown',e=>{
+   if(e.key==='Enter'&&!e.isComposing){e.preventDefault();commitNumeric(input);}
+  });
+ });
+ $('controls').querySelectorAll('[data-vertical]').forEach(input=>input.addEventListener('change',e=>{
+  const cfg=copyCfg(),key=e.target.dataset.vertical;
+  cfg[key].vertical=e.target.checked;
+  if(S.id===4&&key==='L1')cfg.L2.vertical=e.target.checked;
+  changedConfig(cfg,true);
+ }));
+}
 
-function solutionFor(){const c=S.cfg,id=S.id,A=c.A,B=c.B,F=c.F;let steps=[],answer='',desc='',extra='';const add=(p,t)=>steps.push({p,t});
- if(id===1){add(`設動點 P 的坐標為 (x, y)，定點 A = (${num(A.x)}, ${num(A.y)})，固定距離 r = ${num(c.r)}。由兩點距離公式：`,`\\sqrt{${sqdist(A)}}=${num(c.r)}`);add('兩邊平方，得到圓的標準方程。',`${sqdist(A)}=${num(c.r*c.r,4)}`);answer=`${sqdist(A)}=${num(c.r*c.r,4)}`;desc=`P 的軌跡是以 A 為圓心、${num(c.r)} 為半徑的圓（Circle）。`;}
- if(id===2){add(`設 P = (x, y)，A = (${num(A.x)}, ${num(A.y)})，B = (${num(B.x)}, ${num(B.y)})。由 PA = PB，可將兩點距離平方：`,`${sqdist(A)}=${sqdist(B)}`);const a=2*(B.x-A.x),b=2*(B.y-A.y),v=B.x**2+B.y**2-A.x**2-A.y**2;add('展開並約去兩邊的 x² 和 y²，得到一次方程。',`${linear(a,b,0)}=${num(v,4)}`);answer=`${linear(a,b,0)}=${num(v,4)}`;desc='P 的軌跡是線段 AB 的垂直平分線（Perpendicular Bisector）。';extra='線上的點到 A、B 的距離相等；垂直平分線亦經過 AB 的中點。';}
- if(id===3){const L=c.L1;add(`設 P = (x, y)，定直線 L 的方程見「即時數值」，固定距離 d = ${num(c.d)}。由點到直線的最短距離公式：`,`${fracDistance(L)}=${num(c.d)}`);let ans=L.vertical?`${lineExpr(L)}=\\pm ${num(c.d)}`:`${lineExpr(L)}=\\pm ${num(c.d)}\\sqrt{1+(${num(L.m)})^{2}}`;add('移去絕對值時須同時保留正、負兩種情況。',ans);answer=ans;desc='P 的軌跡是 L 兩側各一條與 L 平行、距離為 d 的直線。';extra='一個「±」代表兩條不同直線，而不是只取其中一邊。';}
- if(id===4){const L=c.L1,R=c.L2,mid=(L.k+R.k)/2;add('設 P = (x, y)。兩條平行直線有相同法向量，因此點到兩線的距離相等。',`${fracDistance(L)}=${fracDistance(R)}`);add('兩線分母相同；取位於兩線正中間的位置。',`${lineEq({...L,k:mid})}`);answer=lineEq({...L,k:mid});desc='P 的軌跡是位於 L₁、L₂ 正中間且與兩線平行的一條直線。';extra='題目要求 L₁、L₂ 是兩條不同的平行線。';}
- if(id===5){const L=c.L1,R=c.L2;add('設 P = (x, y)。先以垂直距離公式表達 P 到兩條直線的距離。',`${fracDistance(L)}=${fracDistance(R)}`);const s1=L.vertical?`(${lineExpr(L)})`:`\\frac{${lineExpr(L)}}{${lineDen(L)}}`,s2=R.vertical?`(${lineExpr(R)})`:`\\frac{${lineExpr(R)}}{${lineDen(R)}}`;answer=`${s1}=\\pm ${s2}`;add('去除絕對值後分成正、負兩個一次方程。',answer);desc='P 的軌跡是兩條相交直線所形成的兩條角平分線（Angle Bisectors）。';extra='兩條角平分線互相垂直，交點亦在軌跡上。必須保留 ± 兩個分支。';}
- if(id===6){const mx=(A.x+B.x)/2,my=(A.y+B.y)/2,r2=((B.x-A.x)**2+(B.y-A.y)**2)/4;add('設 P = (x, y)。由 PA ⟂ PB，兩個向量的內積等於零。',`(${shifted('x',A.x)})(${shifted('x',B.x)})+(${shifted('y',A.y)})(${shifted('y',B.y)})=0`);add(`配方：圓心是 AB 的中點 M = (${num(mx)}, ${num(my)})，半徑是 AB 的一半。`,`${sqdist({x:mx,y:my})}=${num(r2,4)}`);answer=`${sqdist({x:mx,y:my})}=${num(r2,4)}\\quad P\\neq A,\\quad P\\neq B`;desc='P 的軌跡是以 AB 為直徑的圓，但不包括 A、B 兩點。';extra='在 A 或 B，PA 或 PB 的長度為零，∠APB 無法定義；所以端點必須排除。';}
- if(id===7){const L=c.L1;const rhs=L.vertical?`(${lineExpr(L)})^{2}`:`\\frac{(${lineExpr(L)})^{2}}{1+(${num(L.m)})^{2}}`;add(`設 P = (x, y)，焦點 F = (${num(F.x)}, ${num(F.y)})。P 到 F 的距離等於 P 到準線的垂直距離。`,`\\sqrt{${sqdist(F)}}=${fracDistance(L)}`);answer=`${sqdist(F)}=${rhs}`;add('兩邊非負，可平方並消去絕對值，得到拋物線方程。',answer);desc='P 的軌跡是以 F 為焦點、L 為準線，向焦點一側開口的拋物線（Parabola）。';extra='焦點不可在準線上；頂點位於焦點與其在準線上的垂足之間的中點。';}
- return {steps,answer,desc,extra};}
-function renderSolution(){const target=$('solution');if(!S.showAnswer){target.innerHTML='<div class="hidden-answer">答案暫時隱藏<br>先思考幾何形狀和 P(x, y) 的方程，再點擊上方按鈕揭曉。</div>';return;}const s=solutionFor();target.innerHTML=s.steps.map((step,i)=>`<div class="working-step"><span class="step-number">${i+1}</span><div class="step-body"><p>${esc(step.p)}</p>${texHTML(step.t)}</div></div>`).join('')+`<div class="answer-box"><div class="answer-label">LOCUS EQUATION · 軌跡方程</div>${texHTML(s.answer)}<p><strong>標準描述：</strong>${esc(s.desc)}</p></div><div class="answer-extra">${esc(s.extra)}</div>`;renderMathIn(target);}
+/*
+ * 精確軌跡推導；此檔接在 base.js 後、原 solutionFor 被移除後，
+ * 與其餘程式位於同一個 closure。只依賴 S.cfg 和 S.id。
+ *
+ * 數學邏輯：非水平、非垂直的 L: y=mx+k，設垂足 H=(t,mt+k)。
+ * 過 P=(x,y) 的垂線斜率是 -1/m，代入 H 得
+ * t=(x+my-mk)/(1+m²)，H_y=(mx+m²y+k)/(1+m²)。
+ * 再由兩點距離得到 PH²=(y-mx-k)²/(1+m²)。此結果在本檔中
+ * 每次都由垂足及兩點距離推得，並非引用點到直線的距離公式。
+ * 水平 L: H=(x,k)；垂直 L: H=(k,y)，兩者都不使用不存在的斜率。
+ * 所有設定值先轉成約分後的 BigInt 有理數；根式提出完全平方因數。
+ * 介面的坐標為一位小數、斜率及截距為 0.25 的倍數，因此可精確
+ * 表示；容忍常見 JavaScript 浮點誤差，不把動點測量用作精確參數。
+ *
+ * 執行內建測試：node /home/ubuntu/locus-app/exact_solutions.js
+ */
+const exactLocus = (() => {
+  const abs = n => n < 0n ? -n : n;
+  function gcd(a, b) {
+    a = abs(a); b = abs(b);
+    while (b) { const t = a % b; a = b; b = t; }
+    return a;
+  }
+  function rat(n, d = 1n) {
+    if (d === 0n) throw new Error('Zero denominator');
+    if (d < 0n) { n = -n; d = -d; }
+    const g = gcd(n, d);
+    return {n: n / g, d: d / g};
+  }
+  const ZERO = rat(0n), ONE = rat(1n), TWO = rat(2n), FOUR = rat(4n);
+  function from(v) {
+    if (v && typeof v === 'object' && typeof v.n === 'bigint') return v;
+    if (typeof v === 'bigint') return rat(v);
+    if (!Number.isFinite(v)) throw new Error('Expected finite numeric parameter');
+    // Strip only binary-float noise; app parameters have at most two decimals.
+    const s = Number(v.toPrecision(15)).toString().toLowerCase();
+    const match = /^(-?)(\d+)(?:\.(\d+))?(?:e([+-]?\d+))?$/.exec(s);
+    if (!match) throw new Error('Invalid numeric parameter: ' + s);
+    const digits = match[2] + (match[3] || '');
+    const power = Number(match[4] || 0) - (match[3] || '').length;
+    let n = BigInt(digits) * (match[1] ? -1n : 1n), d = 1n;
+    if (power >= 0) n *= 10n ** BigInt(power); else d = 10n ** BigInt(-power);
+    return rat(n, d);
+  }
+  const add = (a, b) => rat(a.n * b.d + b.n * a.d, a.d * b.d);
+  const neg = a => rat(-a.n, a.d);
+  const sub = (a, b) => add(a, neg(b));
+  const mul = (a, b) => rat(a.n * b.n, a.d * b.d);
+  const div = (a, b) => rat(a.n * b.d, a.d * b.n);
+  const sq = a => mul(a, a);
+  const eq = (a, b) => a.n === b.n && a.d === b.d;
+  function tex(a) {
+    if (a.d === 1n) return String(a.n);
+    return (a.n < 0n ? '-' : '') + '\\frac{' + abs(a.n) + '}{' + a.d + '}';
+  }
+  function expr(terms) {
+    let out = '';
+    for (const [r, symbol] of terms) {
+      if (r.n === 0n) continue;
+      const negative = r.n < 0n, a = negative ? neg(r) : r;
+      const body = (symbol && eq(a, ONE) ? '' : tex(a)) + symbol;
+      out += (out ? (negative ? '-' : '+') : (negative ? '-' : '')) + body;
+    }
+    return out || '0';
+  }
+  const shift = (v, a) => expr([[ONE, v], [neg(a), '']]);
+  const point = p => '(' + tex(p.x) + ',' + tex(p.y) + ')';
+  const pointR = p => ({x: from(p.x), y: from(p.y)});
+  const sqShift = (v,a) => a.n === 0n ? v + '^{2}' : '(' + shift(v,a) + ')^{2}';
+  const sqdist = p => sqShift('x',p.x) + '+' + sqShift('y',p.y);
+  const sqExpr = e => '(' + e + ')^{2}';
+  const multiplyBy = (a, e) => eq(a, ONE) ? e : tex(a) + e;
+  function line(L) {
+    const m = from(L.m), k = from(L.k);
+    const vertical = !!L.vertical;
+    const E = vertical ? shift('x', k) : expr([[ONE, 'y'], [neg(m), 'x'], [neg(k), '']]);
+    return {m, k, vertical, E, q: vertical ? ONE : add(ONE, sq(m))};
+  }
+  const lineEq = L => L.vertical ? 'x=' + tex(L.k) : 'y=' + expr([[L.m, 'x'], [L.k, '']]);
+  const distanceSq = L => multiplyBy(div(ONE, L.q), sqExpr(L.E));
+  function isqrt(n) {
+    if (n < 0n) throw new Error('Negative square root');
+    if (n < 2n) return n;
+    let x = 1n << BigInt(Math.ceil(n.toString(2).length / 2));
+    for (;;) { const y = (x + n / x) >> 1n; if (y >= x) return x; x = y; }
+  }
+  // Extract square factors. For app inputs radicands are tiny. The bounded
+  // trial loop avoids hanging on unusual giant external decimals; any remaining
+  // factor stays under the root, preserving exactness even in that situation.
+  function squareParts(n) {
+    let outside = 1n, inside = 1n, rem = n;
+    for (let p = 2n; p * p <= rem && p <= 100000n; p += (p === 2n ? 1n : 2n)) {
+      let count = 0;
+      while (rem % p === 0n) { rem /= p; count++; }
+      if (count) {
+        outside *= p ** BigInt(Math.floor(count / 2));
+        if (count % 2) inside *= p;
+      }
+    }
+    const r = isqrt(rem);
+    if (r * r === rem) outside *= r; else inside *= rem;
+    return {outside, inside};
+  }
+  // sqrt(a) as coefficient * sqrt(square-free integer), rationalized.
+  function radical(a) {
+    if (a.n < 0n) throw new Error('Negative radical');
+    if (a.n === 0n) return {coefficient: ZERO, inside: 1n};
+    const f = squareParts(a.n * a.d);
+    return {coefficient: rat(f.outside, a.d), inside: f.inside};
+  }
+  function radicalTex(r) {
+    if (r.coefficient.n === 0n) return '0';
+    if (r.inside === 1n) return tex(r.coefficient);
+    const c = r.coefficient, sign = c.n < 0n ? '-' : '';
+    const n = abs(c.n), root = '\\sqrt{' + r.inside + '}';
+    const top = (n === 1n ? '' : String(n)) + root;
+    return sign + (c.d === 1n ? top : '\\frac{' + top + '}{' + c.d + '}');
+  }
+  function radicalTimes(r, e) {
+    return eq(r.coefficient, ONE) && r.inside === 1n ? e : radicalTex(r) + e;
+  }
+  function footSteps(steps, L, index) {
+    const suffix = index ? '_{' + index + '}' : '';
+    const H = 'H' + suffix, lineName = 'L' + suffix, t = 't' + suffix;
+    const PH = 'PH' + suffix;
+    const addStep = (p, math) => steps.push({p, t: math});
+    if (L.vertical) {
+      addStep('定直線是垂直線。過 P 的垂線是水平線，所以垂足的橫坐標等於直線的位置，縱坐標等於 P 的縱坐標。',
+        lineName + ':' + lineEq(L) + '\\quad ' + H + '=(' + tex(L.k) + ',y)');
+      addStep('由 P 與垂足的兩點距離，求出垂直線段長度的平方。',
+        PH + '^{2}=' + sqExpr(shift('x', L.k)));
+      return;
+    }
+    if (L.m.n === 0n) {
+      addStep('定直線是水平線。過 P 的垂線是垂直線，所以垂足的橫坐標等於 P 的橫坐標，縱坐標等於直線的截距。',
+        lineName + ':' + lineEq(L) + '\\quad ' + H + '=(x,' + tex(L.k) + ')');
+      addStep('由 P 與垂足的兩點距離，求出垂直線段長度的平方。',
+        PH + '^{2}=' + sqExpr(shift('y', L.k)));
+      return;
+    }
+    const ht = expr([[L.m, t], [L.k, '']]);
+    addStep('寫出定直線，設垂足在直線上，並以參數表示其坐標。',
+      lineName + ':' + lineEq(L) + '\\quad ' + H + '=(' + t + ',' + ht + ')');
+    const slope = neg(div(ONE, L.m));
+    addStep('過 P 的垂線斜率是直線斜率的負倒數；將垂足坐標代入該垂線的方程。即使 P 在線上，過 P 的垂線仍然存在。',
+      'm_{\\text{垂線}}=' + tex(slope) + '\\quad (' + ht + ')-y=' + tex(slope) + '(' + t + '-x)');
+    const hx = expr([[div(ONE, L.q), 'x'], [div(L.m, L.q), 'y'], [neg(div(mul(L.m, L.k), L.q)), '']]);
+    const hy = expr([[div(L.m, L.q), 'x'], [div(sq(L.m), L.q), 'y'], [div(L.k, L.q), '']]);
+    addStep('解上式得到垂足的橫坐標，再代回直線方程，求出垂足坐標。',
+      t + '=' + hx + '\\quad ' + H + '=(' + hx + ',' + hy + ')');
+    addStep('把垂足坐標代入兩點距離公式，平方後整理。',
+      PH + '^{2}=(x-(' + hx + '))^{2}+(y-(' + hy + '))^{2}=' + distanceSq(L));
+  }
+  // Reduce an equation ax+by+c=0 to primitive integer coefficients.
+  function primitive(a, b, c) {
+    const lcm = (u, v) => u / gcd(u, v) * v;
+    const den = lcm(lcm(a.d, b.d), c.d);
+    let nums = [a, b, c].map(r => r.n * (den / r.d));
+    const g = gcd(gcd(nums[0], nums[1]), nums[2]) || 1n;
+    nums = nums.map(n => n / g);
+    if ((nums[0] || nums[1] || nums[2]) < 0n) nums = nums.map(n => -n);
+    return nums.map(n => rat(n));
+  }
+  // Clear denominators and common factors in a list of rational coefficients.
+  function primitiveList(vals) {
+    const lcm=(u,v)=>u/gcd(u,v)*v;
+    const den=vals.reduce((v,r)=>lcm(v,r.d),1n);
+    let ns=vals.map(r=>r.n*(den/r.d));
+    const common=ns.reduce((v,n)=>gcd(v,n),0n)||1n;
+    ns=ns.map(n=>n/common);
+    const lead=ns.find(n=>n!==0n)||0n;
+    if(lead<0n)ns=ns.map(n=>-n);
+    return ns.map(n=>rat(n));
+  }
+  function parabolaSimplified(F,L) {
+    let aa,bb,cc,dd,ee,ff;
+    const base=add(sq(F.x),sq(F.y));
+    if(L.vertical){
+      aa=ZERO;bb=ZERO;cc=ONE;
+      dd=mul(TWO,sub(L.k,F.x));ee=neg(mul(TWO,F.y));ff=sub(base,sq(L.k));
+    } else {
+      aa=div(ONE,L.q);bb=div(mul(TWO,L.m),L.q);cc=div(sq(L.m),L.q);
+      dd=sub(neg(mul(TWO,F.x)),div(mul(TWO,mul(L.m,L.k)),L.q));
+      ee=add(neg(mul(TWO,F.y)),div(mul(TWO,L.k),L.q));ff=sub(base,div(sq(L.k),L.q));
+    }
+    [aa,bb,cc,dd,ee,ff]=primitiveList([aa,bb,cc,dd,ee,ff]);
+    return expr([[aa,'x^{2}'],[bb,'xy'],[cc,'y^{2}']])+'='+expr([[neg(dd),'x'],[neg(ee),'y'],[neg(ff),'']]);
+  }
+  function solve(state) {
+    const c = state.cfg, id = state.id;
+    const steps = [], addStep = (p, t) => steps.push({p, t});
+    let answer = '', desc = '', extra = '';
+    if (id === 1) {
+      const A = pointR(c.A), r = from(c.r);
+      addStep('設動點為 P；以下列出定點及固定半徑。', 'P=(x,y)\\quad A=' + point(A) + '\\quad r=' + tex(r));
+      addStep('由兩點距離及題目條件，寫出等式。', 'PA=\\sqrt{' + sqdist(A) + '}=' + tex(r));
+      answer = sqdist(A) + '=' + tex(sq(r));
+      addStep('兩邊平方並約簡，得到圓的方程。', answer);
+      desc = 'P 的軌跡是以 A 為圓心、給定長度為半徑的圓（Circle）。';
+    } else if (id === 2) {
+      const A = pointR(c.A), B = pointR(c.B);
+      addStep('設動點為 P；兩個不同定點的坐標如下。', 'P=(x,y)\\quad A=' + point(A) + '\\quad B=' + point(B));
+      addStep('兩段距離相等；由兩點距離公式，將兩邊平方。', 'PA=PB\\quad ' + sqdist(A) + '=' + sqdist(B));
+      const a = mul(TWO, sub(B.x, A.x)), b = mul(TWO, sub(B.y, A.y));
+      const v = sub(add(sq(B.x), sq(B.y)), add(sq(A.x), sq(A.y)));
+      const [pa, pb, pc] = primitive(a, b, neg(v));
+      answer = expr([[pa, 'x'], [pb, 'y']]) + '=' + tex(neg(pc));
+      addStep('展開、約去兩邊的平方項，再約簡係數。', answer);
+      desc = 'P 的軌跡是線段 AB 的垂直平分線（Perpendicular Bisector）。';
+      extra = '直線上的點到 A、B 的距離相等，直線亦經過 AB 的中點。';
+    } else if (id === 3) {
+      const L = line(c.L1), d = from(c.d);
+      addStep('設動點為 P，並列出定直線和固定距離。', 'P=(x,y)\\quad L:' + lineEq(L) + '\\quad d=' + tex(d));
+      footSteps(steps, L, '');
+      addStep('按條件令垂直線段長度的平方等於固定距離的平方。', 'PH^{2}=' + distanceSq(L) + '=' + tex(sq(d)));
+      const offset = radical(mul(sq(d), L.q));
+      answer = L.E + '=\\pm ' + radicalTex(offset);
+      addStep('取平方根時保留正、負兩個分支，得到兩條直線。', answer);
+      desc = 'P 的軌跡是定直線兩側、與該直線平行且距離均為指定長度的兩條直線。';
+      extra = '正、負兩個分支都要保留。';
+    } else if (id === 4) {
+      const L = line(c.L1), R = line(c.L2), mid = div(add(L.k, R.k), TWO);
+      addStep('設動點為 P，列出兩條不同的平行定直線。', 'P=(x,y)\\quad L_{1}:' + lineEq(L) + '\\quad L_{2}:' + lineEq(R));
+      footSteps(steps, L, 1); footSteps(steps, R, 2);
+      addStep('兩條垂直線段長度相等，故其平方相等；同斜率使平方式的係數相同。',
+        'PH_{1}^{2}=PH_{2}^{2}\\quad ' + distanceSq(L) + '=' + distanceSq(R));
+      answer = lineEq({...L, k: mid});
+      addStep('兩線不同，消去相同係數並解平方方程，只餘兩截距的中間位置。', answer);
+      desc = 'P 的軌跡是兩條平行線正中間、與它們平行的一條直線。';
+      extra = '兩條定直線須是不同的平行線。';
+    } else if (id === 5) {
+      const L = line(c.L1), R = line(c.L2);
+      addStep('設動點為 P，列出兩條相交定直線。', 'P=(x,y)\\quad L_{1}:' + lineEq(L) + '\\quad L_{2}:' + lineEq(R));
+      footSteps(steps, L, 1); footSteps(steps, R, 2);
+      addStep('由兩段垂線長度相等，令剛才求得的平方相等。',
+        'PH_{1}^{2}=PH_{2}^{2}\\quad ' + distanceSq(L) + '=' + distanceSq(R));
+      const left = radicalTimes(radical(div(ONE, L.q)), '(' + L.E + ')');
+      const right = radicalTimes(radical(div(ONE, R.q)), '(' + R.E + ')');
+      answer = left + '=\\pm ' + right;
+      addStep('取平方根並保留正、負兩種可能；兩個分支就是兩條角平分線。', answer);
+      desc = 'P 的軌跡是兩條相交直線的兩條角平分線（Angle Bisectors）。';
+      extra = '兩條角平分線互相垂直；兩定直線的交點亦在軌跡上。';
+    } else if (id === 6) {
+      const A = pointR(c.A), B = pointR(c.B);
+      const mx = div(add(A.x, B.x), TWO), my = div(add(A.y, B.y), TWO);
+      const ab2 = add(sq(sub(A.x, B.x)), sq(sub(A.y, B.y)));
+      addStep('設動點為 P；列出兩個不同定點，並先排除無法構成夾角的端點。',
+        'P=(x,y)\\quad A=' + point(A) + '\\quad B=' + point(B) + '\\quad P\\neq A\\quad P\\neq B');
+      addStep('先考慮兩線段均非垂直線的情況。直角表示兩線段的斜率乘積為負一。',
+        'm_{AP}=\\frac{' + shift('y', A.y) + '}{' + shift('x', A.x) + '}\\quad m_{BP}=\\frac{' + shift('y', B.y) + '}{' + shift('x', B.x) + '}\\quad m_{AP}m_{BP}=-1');
+      addStep('消去分母並移項，得到不含分母的方程。',
+        '(' + shift('x', A.x) + ')(' + shift('x', B.x) + ')+(' + shift('y', A.y) + ')(' + shift('y', B.y) + ')=0');
+      addStep('若其中一段垂直，因端點已排除，上式恰好要求另一段水平；反過來亦然。因此垂直或水平情況也符合這個方程，毋須除以零。',
+        'AP\\perp BP\\quad P\\neq A\\quad P\\neq B');
+      const centre = {x: mx, y: my}, r2 = div(ab2, FOUR);
+      addStep('整理並配方；圓心為兩定點的中點，半徑為兩定點距離的一半。',
+        'M=' + point(centre) + '\\quad ' + sqdist(centre) + '=' + tex(r2));
+      answer = sqdist(centre) + '=' + tex(r2) + '\\quad P\\neq A\\quad P\\neq B';
+      desc = 'P 的軌跡是以 AB 為直徑的圓，但不包括 A、B 兩點。';
+      extra = '在 A 或 B，其中一條線段長度為零，夾角沒有定義；其餘圓上點均符合斜率垂直條件，包括一水平一垂直的情況。';
+    } else if (id === 7) {
+      const F = pointR(c.F), L = line(c.L1);
+      addStep('設動點為 P；列出焦點和準線。焦點不在準線上。',
+        'P=(x,y)\\quad F=' + point(F) + '\\quad L:' + lineEq(L));
+      footSteps(steps, L, '');
+      addStep('由兩點距離公式求焦距的平方；題目要求焦距等於垂線段長度。',
+        'PF^{2}=' + sqdist(F) + '\\quad PF=PH');
+      const rawEquation = sqdist(F) + '=' + distanceSq(L);
+      addStep('兩段長度均非負，因此等長等價於平方相等；代入垂足結果。', rawEquation);
+      answer = parabolaSimplified(F,L);
+      addStep('展開、合併同類項，並把分母及公因數約去，得到精確的拋物線方程。', answer);
+      desc = 'P 的軌跡是以 F 為焦點、L 為準線，向焦點一側開口的拋物線（Parabola）。';
+      extra = '焦點不可在準線上；頂點是焦點與它在準線上的垂足的中點。';
+    } else throw new Error('Unknown locus case: ' + id);
+    return {steps, answer, desc, extra};
+  }
+
+  /* Node-only regression tests. The small expression evaluator independently
+   * evaluates the produced TeX; geometry checks use direct coordinates. */
+  function runTests() {
+    const assert = require('node:assert/strict');
+    const defaultCfg = id => {
+      const c = {A:{x:-3,y:0}, B:{x:3,y:0}, F:{x:0,y:2}, r:3, d:2,
+        L1:{m:0,k:0,vertical:false}, L2:{m:-1,k:1,vertical:false}};
+      if (id===1) c.A={x:-1,y:0};
+      if (id===2) {c.A={x:-3,y:-1}; c.B={x:3,y:1};}
+      if (id===3) c.L1={m:.5,k:0,vertical:false};
+      if (id===4) {c.L1={m:.5,k:-2,vertical:false}; c.L2={m:.5,k:2,vertical:false};}
+      if (id===5) {c.L1={m:.5,k:0,vertical:false}; c.L2={m:-1,k:0,vertical:false};}
+      if (id===7) {c.F={x:0,y:2}; c.L1={m:0,k:-2,vertical:false};}
+      return c;
+    };
+    function value(src, x, y) {
+      const tokens = src.match(/\\(?:frac|sqrt)|\d+(?:\.\d+)?|[xy()+\-{}^]/g) || [];
+      assert.equal(tokens.join(''), src.replace(/\s/g,''), 'unsupported TeX: '+src);
+      let i = 0;
+      function group() {
+        const open = tokens[i++]; assert.ok(open==='{' || open==='(');
+        const v = sum(); assert.equal(tokens[i++], open==='{'?'}':')'); return v;
+      }
+      function atom() {
+        const t = tokens[i++];
+        if (t==='(' || t==='{') { i--; return group(); }
+        if (t==='\\frac') return group()/group();
+        if (t==='\\sqrt') return Math.sqrt(group());
+        if (t==='x') return x; if (t==='y') return y;
+        assert.ok(t && /^\d/.test(t), 'bad token '+t+' in '+src); return Number(t);
+      }
+      function power() { let v=atom(); if (tokens[i]==='^') {i++; v=Math.pow(v,atom());} return v; }
+      function unary() { if (tokens[i]==='-') {i++; return -unary();} if (tokens[i]==='+') {i++; return unary();} return power(); }
+      function product() {
+        let v=unary();
+        while (i<tokens.length && tokens[i]!==')' && tokens[i]!=='}' && tokens[i]!=='+' && tokens[i]!=='-') v*=unary();
+        return v;
+      }
+      function sum() {
+        let v=product();
+        while (tokens[i]==='+' || tokens[i]==='-') {const op=tokens[i++]; v += (op==='+'?1:-1)*product();}
+        return v;
+      }
+      const v=sum(); assert.equal(i,tokens.length,'unparsed '+src); return v;
+    }
+    function equationError(answer,x,y) {
+      const equation=answer.split('\\quad')[0];
+      const variants=equation.includes('\\pm') ? [equation.replace('\\pm','+'),equation.replace('\\pm','-')] : [equation];
+      return Math.min(...variants.map(s=>{const p=s.split('='); assert.equal(p.length,2); return Math.abs(value(p[0],x,y)-value(p[1],x,y));}));
+    }
+    function assertOn(answer,p,label) {
+      assert.ok(equationError(answer,p.x,p.y)<1e-8, label+' '+JSON.stringify(p)+' '+answer);
+    }
+    function signed(L,p) {return L.vertical ? p.x-L.k : (p.y-L.m*p.x-L.k)/Math.hypot(1,L.m);}
+    function foot(L,p) {
+      if(L.vertical) return {x:L.k,y:p.y};
+      const t=(p.x+L.m*p.y-L.m*L.k)/(1+L.m*L.m);
+      return {x:t,y:L.m*t+L.k};
+    }
+    function verifyFoot(result,L,index,p) {
+      const suffix=index?'_{'+index+'}':'', mark='H'+suffix+'=(';
+      const entry=result.steps.filter(s=>s.t.includes('\\quad '+mark)).pop();
+      assert.ok(entry, 'missing foot coordinates '+mark);
+      const match=entry.t.split('\\quad ').pop().match(/^H(?:_\{[12]\})?=\((.*),(.*)\)$/);
+      assert.ok(match, 'bad foot output '+entry.t);
+      const expectedFoot=foot(L,p);
+      assert.ok(Math.abs(value(match[1],p.x,p.y)-expectedFoot.x)<1e-8,'foot x '+entry.t);
+      assert.ok(Math.abs(value(match[2],p.x,p.y)-expectedFoot.y)<1e-8,'foot y '+entry.t);
+      const distance=result.steps.find(s=>s.t.startsWith('PH'+suffix+'^{2}='));
+      assert.ok(distance,'missing squared foot distance');
+      const parts=distance.t.split('=').slice(1);
+      const expectedDistance=(p.x-expectedFoot.x)**2+(p.y-expectedFoot.y)**2;
+      for(const part of parts) assert.ok(Math.abs(value(part,p.x,p.y)-expectedDistance)<1e-8,'PH² '+distance.t);
+    }
+    const expected = [null,'(x+1)^{2}+y^{2}=9','3x+y=0',
+      'y-\\frac{1}{2}x=\\pm \\sqrt{5}','y=\\frac{1}{2}x',
+      '\\frac{2\\sqrt{5}}{5}(y-\\frac{1}{2}x)=\\pm \\frac{\\sqrt{2}}{2}(y+x)',
+      'x^{2}+y^{2}=9\\quad P\\neq A\\quad P\\neq B',
+      'x^{2}=8y'];
+    for(let id=1;id<=7;id++) {
+      const result=solve({id,cfg:defaultCfg(id)});
+      assert.equal(result.answer,expected[id], 'default case '+id);
+      assert.ok(result.steps.length>=3 && result.steps.every(s=>typeof s.p==='string' && typeof s.t==='string'));
+      assert.ok(result.desc && typeof result.extra==='string');
+      const all=JSON.stringify(result);
+      assert.ok(!/NaN|Infinity|undefined|≈/.test(all), 'invalid or approximate exact output');
+    }
+    // Exact rational reduction and removal of ordinary binary-float noise.
+    assert.equal(tex(from(.1+.2)), '\\frac{3}{10}');
+    assert.equal(tex(from(-1.2)), '-\\frac{6}{5}');
+    assert.equal(radicalTex(radical(from(1.25))), '\\frac{\\sqrt{5}}{2}');
+    assert.equal(radicalTex(radical(from(2.25))), '\\frac{3}{2}');
+    assert.equal(radicalTex(radical(rat(8n,5n))), '\\frac{2\\sqrt{10}}{5}');
+    assert.equal(radicalTex(radical(rat(72n,25n))), '\\frac{6\\sqrt{2}}{5}');
+    const c1=defaultCfg(1); c1.A={x:-1.1,y:.7}; c1.r=.25;
+    const r1=solve({id:1,cfg:c1});
+    assert.equal(r1.answer,'(x+\\frac{11}{10})^{2}+(y-\\frac{7}{10})^{2}=\\frac{1}{16}');
+    assertOn(r1.answer,{x:-.85,y:.7},'case 1 arbitrary input');
+    const c6=defaultCfg(6); c6.A={x:-1.1,y:2.3}; c6.B={x:2.2,y:-.4};
+    const r6=solve({id:6,cfg:c6});
+    assert.ok(r6.answer.includes('P\\neq A')&&r6.answer.includes('P\\neq B'));
+    assert.ok(r6.steps[0].t.includes('A=(-\\frac{11}{10},\\frac{23}{10})'));
+    assert.ok(r6.steps.some(s=>s.t.includes('m_{AP}m_{BP}=-1')));
+    const a6={x:(c6.A.x+c6.B.x)/2,y:(c6.A.y+c6.B.y)/2};
+    assertOn(r6.answer,{x:c6.A.x,y:c6.A.y},'case 6 underlying circle');
+    assertOn(r6.answer,{x:a6.x+(c6.B.y-c6.A.y)/2,y:a6.y-(c6.B.x-c6.A.x)/2},'case 6');
+    assertOn(r6.answer,{x:c6.A.x,y:c6.B.y},'case 6 AP vertical BP horizontal');
+    assertOn(r6.answer,{x:c6.B.x,y:c6.A.y},'case 6 BP vertical AP horizontal');
+    assert.ok(equationError(r6.answer,a6.x,a6.y)>1e-5,'case 6 centre not in circle');
+    const c2=defaultCfg(2); c2.A={x:-1.1,y:2.3}; c2.B={x:2.2,y:-.4};
+    const r2=solve({id:2,cfg:c2});
+    assert.equal(r2.answer,'22x-18y=-5');
+    assertOn(r2.answer,{x:(c2.A.x+c2.B.x)/2,y:(c2.A.y+c2.B.y)/2},'case 2 midpoint');
+    let seed=123456789; const rand=()=>{seed=(1664525*seed+1013904223)>>>0; return seed/4294967296;};
+    const pick=a=>a[Math.floor(rand()*a.length)];
+    const slopes=[-3,-1.75,-1,-.5,0,.25,.5,1,2.25,3];
+    for(let test=0;test<250;test++) {
+      const coordinate=()=> (Math.floor(rand()*121)-60)/10;
+      const A={x:coordinate(),y:coordinate()};
+      let B={x:coordinate(),y:coordinate()};
+      if(A.x===B.x && A.y===B.y) B={x:B.x+1,y:B.y};
+      const cfg=defaultCfg(1); cfg.A=A; cfg.B=B; cfg.r=(Math.floor(rand()*20)+1)/4;
+      const c1answer=solve({id:1,cfg}).answer;
+      const angle=rand()*Math.PI*2;
+      assertOn(c1answer,{x:A.x+cfg.r*Math.cos(angle),y:A.y+cfg.r*Math.sin(angle)},'case 1 random');
+      const M={x:(A.x+B.x)/2,y:(A.y+B.y)/2}, dx=B.x-A.x,dy=B.y-A.y;
+      const c2answer=solve({id:2,cfg}).answer;
+      assertOn(c2answer,{x:M.x+dy*.37,y:M.y-dx*.37},'case 2 random');
+      const c6answer=solve({id:6,cfg}).answer;
+      assertOn(c6answer,{x:M.x+dy/2,y:M.y-dx/2},'case 6 random');
+      assert.ok(c6answer.includes('P\\neq A')&&c6answer.includes('P\\neq B'));
+      if(dx!==0 && dy!==0) {
+        assertOn(c6answer,{x:A.x,y:B.y},'case 6 vertical-horizontal random');
+        assertOn(c6answer,{x:B.x,y:A.y},'case 6 horizontal-vertical random');
+      }
+    }
+    for(let test=0;test<250;test++) {
+      const vertical=test%4===0, horizontal=test%4===1;
+      const m=horizontal?0:pick(slopes), k=(Math.floor(rand()*33)-16)/4;
+      const L={m,k,vertical};
+      const d=(Math.floor(rand()*16)+1)/4;
+      const cfg=defaultCfg(3); cfg.L1=L; cfg.d=d;
+      const result3=solve({id:3,cfg}), a3=result3.answer;
+      const u=(rand()-.5)*10;
+      verifyFoot(result3,L,'',{x:u,y:u+.73});
+      for(const sign of [-1,1]) {
+        const p=vertical ? {x:k+sign*d,y:u} : {x:u,y:m*u+k+sign*d*Math.hypot(1,m)};
+        assertOn(a3,p,'case 3'); assert.ok(Math.abs(Math.abs(signed(L,p))-d)<1e-8);
+      }
+      assert.ok(equationError(a3,vertical?k:u,vertical?u:m*u+k)>1e-6,'case 3 excludes directrix');
+      const k2=k+pick([-2,-1.25,.25,1,2]);
+      cfg.L2={m,k:k2,vertical};
+      const result4=solve({id:4,cfg}), a4=result4.answer, mid=(k+k2)/2;
+      verifyFoot(result4,L,1,{x:u,y:u+.73}); verifyFoot(result4,cfg.L2,2,{x:u,y:u+.73});
+      assertOn(a4,vertical?{x:mid,y:u}:{x:u,y:m*u+mid},'case 4');
+      let R;
+      if(vertical) R={m:pick(slopes),k:k2,vertical:false};
+      else if(test%3===0) R={m:0,k:k2,vertical:true};
+      else {let m2=pick(slopes); if(m2===m) m2=m+0.25; R={m:m2,k:k2,vertical:false};}
+      cfg.L2=R;
+      const result5=solve({id:5,cfg}), a5=result5.answer;
+      verifyFoot(result5,L,1,{x:u,y:u+.73}); verifyFoot(result5,R,2,{x:u,y:u+.73});
+      // Intersection plus points in each bisector's direction, using independently normalized normals.
+      const n1=vertical?{x:1,y:0}: {x:-m/Math.hypot(1,m),y:1/Math.hypot(1,m)};
+      const n2=R.vertical?{x:1,y:0}: {x:-R.m/Math.hypot(1,R.m),y:1/Math.hypot(1,R.m)};
+      let intersection;
+      if(vertical) intersection={x:k,y:R.m*k+R.k};
+      else if(R.vertical) intersection={x:R.k,y:m*R.k+k};
+      else {const xi=(R.k-k)/(m-R.m); intersection={x:xi,y:m*xi+k};}
+      for(const sign of [-1,1]) {
+        const nx=n1.x-sign*n2.x, ny=n1.y-sign*n2.y;
+        const p={x:intersection.x+ny*1.37,y:intersection.y-nx*1.37};
+        assertOn(a5,p,'case 5');
+        assert.ok(Math.abs(Math.abs(signed(L,p))-Math.abs(signed(R,p)))<1e-8);
+      }
+      // A non-degenerate focus, including one-decimal negative coordinates.
+      let F={x:(Math.floor(rand()*121)-60)/10,y:(Math.floor(rand()*121)-60)/10};
+      if(Math.abs(signed(L,F))<.1) F=vertical?{x:k+1.2,y:-.7}:{x:-.7,y:m*(-.7)+k+1.2};
+      cfg.F=F;
+      const result7=solve({id:7,cfg}), a7=result7.answer, hf=foot(L,F), D=signed(L,F);
+      verifyFoot(result7,L,'',{x:u,y:u+.73});
+      const n=vertical?{x:1,y:0}:{x:-m/Math.hypot(1,m),y:1/Math.hypot(1,m)};
+      const tangent={x:n.y,y:-n.x};
+      const h=(u*u+D*D)/(2*D), p={x:hf.x+u*tangent.x+h*n.x,y:hf.y+u*tangent.y+h*n.y};
+      assertOn(a7,p,'case 7');
+      assert.ok(Math.abs(Math.hypot(p.x-F.x,p.y-F.y)-Math.abs(signed(L,p)))<1e-8);
+      if(vertical || horizontal) {
+        for(const id of [3,4,7]) {
+          const safeCfg=id===4 ? {...cfg,L2:{m,k:k2,vertical}} : cfg;
+          const s=JSON.stringify(solve({id,cfg:safeCfg}));
+          assert.ok(!s.includes('m_{\\\\text{垂線}}'), 'no negative reciprocal for horizontal/vertical case '+id);
+          assert.ok(!/NaN|Infinity/.test(s));
+        }
+      }
+    }
+    console.log('PASS: 7 defaults; exact fractions/radicals; excluded endpoints; 250 randomized configurations for every case, including horizontal, vertical and oblique lines.');
+  }
+  return {solve, runTests};
+})();
+function solutionFor() { return exactLocus.solve(S); }
+// This guard does nothing in the browser. Run this source directly for tests.
+if (typeof module !== 'undefined' && typeof require === 'function' && require.main === module) {
+  exactLocus.runTests();
+}
+
 function renderMeasurements(){if(!S.model||S.model.error)return;const P=S.P,c=S.cfg,L=Geo.line(c.L1),L2=Geo.line(c.L2);const d1=Math.abs(Geo.signed(L,P)),d2=Math.abs(Geo.signed(L2,P));let cards=[['動點 Moving Point',`P\\approx ${pt(P)}`]];
  if(S.id===1)cards.push(['動點至定點',`PA\\approx ${fixed(dist(P,c.A))}`],['固定半徑',`r=${num(c.r)}`]);
  if(S.id===2)cards.push(['動點至定點 A',`PA\\approx ${fixed(dist(P,c.A))}`],['動點至定點 B',`PB\\approx ${fixed(dist(P,c.B))}`]);
@@ -521,12 +1761,266 @@ function renderMeasurements(){if(!S.model||S.model.error)return;const P=S.P,c=S.
  if(S.id===4||S.id===5)cards.push(['動點至直線 L₁',`d(P,L_{1})\\approx ${fixed(d1)}`],['動點至直線 L₂',`d(P,L_{2})\\approx ${fixed(d2)}`],['定直線 L₁',lineEq(c.L1)],['定直線 L₂',lineEq(c.L2)]);
  if(S.id===6){const ux=c.A.x-P.x,uy=c.A.y-P.y,vx=c.B.x-P.x,vy=c.B.y-P.y,den=Math.hypot(ux,uy)*Math.hypot(vx,vy),a=den?Math.acos(Math.max(-1,Math.min(1,(ux*vx+uy*vy)/den)))*180/Math.PI:NaN;cards.push(['動點至定點 A',`PA\\approx ${fixed(dist(P,c.A))}`],['動點至定點 B',`PB\\approx ${fixed(dist(P,c.B))}`],['夾角 Angle',`\\angle APB\\approx ${fixed(a,1)}^{\\circ}`]);}
  if(S.id===7)cards.push(['動點至焦點 F',`PF\\approx ${fixed(dist(P,c.F))}`],['動點至準線 L',`d(P,L)\\approx ${fixed(d1)}`],['準線 Directrix',lineEq(c.L1)]);
- const root=$('measurements');root.innerHTML=cards.map(([name,val])=>`<div class="measure-card"><div class="measure-name">${esc(name)}</div>${texHTML(val,'measure-value')}</div>`).join('');renderMathIn(root);$('pointCoords').textContent=`P (${fixed(P.x)}, ${fixed(P.y)})`;}
+ const root=$('measurements');root.innerHTML=cards.map(([name,val])=>`<div class="measure-card"><div class="measure-name">${esc(name)}</div>${texHTML(val,'measure-value')}</div>`).join('');renderMathIn(root);$('pointCoords').textContent=`P ≈ (${fixed(P.x)}, ${fixed(P.y)})`;}
 function renderContent(){const item=cases[S.id];$('caseSelect').value=S.id;$('caseCounter').textContent=`0${S.id} / 07`;$('caseKicker').textContent=`CASE 0${S.id}　/　07`;$('caseTitle').textContent=item.title;$('caseDescription').textContent=item.desc;setMath($('conditionFormula'),item.condition);const locked=S.quiz&&!S.showAnswer;$('quizHint').hidden=!locked;$('quizHint').textContent='答案和完整軌跡已隱藏；揭曉前可拖曳 P，但播放、殘影及完整軌跡暫停。';$('playBtn').disabled=locked;$('locusToggle').disabled=locked;$('playBtn').title=locked?'揭曉答案後可播放':'';$('locusToggle').title=locked?'揭曉答案後可顯示完整軌跡':'';$('revealBtn').textContent=S.showAnswer?'答案及圖像已顯示 ✓':'顯示答案與圖像驗證 ↗';$('revealBtn').setAttribute('aria-pressed',String(S.showAnswer));renderMeasurements();renderSolution();}
 function renderAll(){renderControls();renderContent();}
 function newQuiz(){const c=defaults(S.id),ri=()=>randomInt(-3,3),ms=[-1,-.5,0,.5,1];c.A={x:ri(),y:ri()};do{c.B={x:ri(),y:ri()};}while(dist(c.A,c.B)<1.4);c.F={x:ri(),y:ri()};c.r=randomInt(1,4);c.d=randomInt(1,3);c.L1={m:ms[randomInt(0,ms.length-1)],k:randomInt(-2,2),vertical:false};c.L2={m:S.id===4?c.L1.m:ms[randomInt(0,ms.length-1)],k:randomInt(-2,2),vertical:false};if(S.id===4)while(c.L2.k===c.L1.k)c.L2.k=randomInt(-2,2);if(S.id===5)while(c.L2.m===c.L1.m)c.L2.m=ms[randomInt(0,ms.length-1)];if(S.id===7)while(Math.abs(Geo.signed(Geo.line(c.L1),c.F))<.7)c.F={x:ri(),y:ri()};S.cfg=c;build();S.showAnswer=false;S.showLocus=false;S.quiz=true;$('locusToggle').checked=false;S.progress=.3;clearTrail();warning('');setPlaying(false);initP();renderAll();}
 
-function resize(){const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);let w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;S.view=null;S.cachedPaths=null;}ctx.setTransform(dpr,0,0,dpr,0,0);const W=rect.width,H=rect.height,scale=Math.min(W/17,H/14);S.view={w:W,h:H,s:scale,ox:W/2,oy:H/2};S.bounds={xmin:-W/(2*scale),xmax:W/(2*scale),ymin:-H/(2*scale),ymax:H/(2*scale)};}
+/*
+ * 解題步驟控制：在 base.js、solutions.js 之後及 app.js 之前，
+ * 置於同一個 closure，並移除 solutions.js 中原有的 renderSolution。
+ * 對外介面：renderSolution()；讀取 S.id、S.cfg、S.showAnswer、S.quiz
+ * 及 solutionFor()，使用 $、esc、texHTML、renderMathIn 排版。
+ * 課堂模式由第一步開始；小測從隱藏狀態揭曉時顯示全部。
+ */
+const animatedSolutionController = (() => {
+  const STEP_DELAY = 1600;
+  const state = {
+    target: null,
+    refs: null,
+    signature: null,
+    visible: null,
+    quiz: null,
+    data: null,
+    shown: 0,
+    playing: false,
+    timer: null,
+    generation: 0
+  };
+
+  function signature() {
+    // P、畫布播放狀態及軌跡殘影並不影響推導，故不納入簽名。
+    return JSON.stringify([S.id, S.cfg]);
+  }
+
+  function stop() {
+    state.generation += 1;
+    if (state.timer !== null) clearTimeout(state.timer);
+    state.timer = null;
+    state.playing = false;
+  }
+
+  function mount(target) {
+    stop();
+    state.target = target;
+    state.signature = null;
+    state.visible = null;
+    state.quiz = null;
+    state.data = null;
+    state.shown = 0;
+    target.innerHTML = `
+      <div class="solution-progress" role="status" aria-live="polite" aria-atomic="true">步驟 — / —</div>
+      <div class="solution-controls" role="group" aria-label="推導步驟控制">
+        <button type="button" class="solution-control solution-control-play" data-solution-action="play" aria-controls="solutionWorkingArea" aria-label="自動播放推導步驟">自動播放</button>
+        <button type="button" class="solution-control" data-solution-action="previous" aria-controls="solutionWorkingArea" aria-label="顯示上一步推導">上一步</button>
+        <button type="button" class="solution-control" data-solution-action="next" aria-controls="solutionWorkingArea" aria-label="顯示下一步推導">下一步</button>
+        <button type="button" class="solution-control" data-solution-action="all" aria-controls="solutionWorkingArea" aria-label="立即顯示全部推導及答案">顯示全部</button>
+      </div>
+      <div class="solution-working" id="solutionWorkingArea"></div>`;
+    state.refs = {
+      progress: target.querySelector('.solution-progress'),
+      working: target.querySelector('.solution-working'),
+      play: target.querySelector('[data-solution-action="play"]'),
+      previous: target.querySelector('[data-solution-action="previous"]'),
+      next: target.querySelector('[data-solution-action="next"]'),
+      all: target.querySelector('[data-solution-action="all"]'),
+      steps: null,
+      result: null
+    };
+    target.addEventListener('click', handleClick);
+  }
+
+  function updateControls() {
+    const refs = state.refs;
+    const available = state.visible && state.data;
+    const total = available ? state.data.steps.length : 0;
+    const complete = available && state.shown >= total;
+    const progressText = available
+      ? `步驟 ${state.shown} / ${total}${complete ? ' · 推導完成' : ''}`
+      : '步驟 — / —';
+    // 不重寫相同的文字，以免頻繁 renderContent 造成無謂的朗讀。
+    if (refs.progress.textContent !== progressText) refs.progress.textContent = progressText;
+    refs.play.textContent = state.playing ? '暫停播放' : '自動播放';
+    refs.play.setAttribute('aria-label', state.playing ? '暫停推導播放' : '自動播放推導步驟');
+
+    const controls = [
+      [refs.play, !available || (!state.playing && complete)],
+      [refs.previous, !available || state.shown <= 1],
+      [refs.next, !available || complete],
+      // 即使最後一步正進場，仍可按此鈕立即結束動畫。
+      [refs.all, !available]
+    ];
+    controls.forEach(([button, unavailable]) => {
+      // 邊界採用 aria-disabled 而非 disabled，避免操作後鍵盤焦點消失。
+      // 隱藏答案時則真正停用所有控制，並清除計時器。
+      button.disabled = !available;
+      button.setAttribute('aria-disabled', String(!!unavailable));
+    });
+  }
+
+  function makeStep(step, index, animate) {
+    const row = document.createElement('div');
+    row.className = 'working-step' + (animate ? ' solution-enter' : '');
+    row.innerHTML = `<span class="step-number" aria-hidden="true">${index + 1}</span><div class="step-body"><span class="solution-sr-only">第 ${index + 1} 步：</span><p>${esc(step.p)}</p>${texHTML(step.t)}</div>`;
+    renderMathIn(row);
+    return row;
+  }
+
+  function showResult(animate) {
+    if (state.refs.result || !state.data) return;
+    const result = document.createElement('div');
+    result.className = 'solution-result' + (animate ? ' solution-enter' : '');
+    // solutionFor 的中文描述附有英文譯名；顯示時保留完整中文描述。
+    const description = state.data.desc;
+    result.innerHTML = `<div class="answer-box"><div class="answer-label">軌跡方程</div>${texHTML(state.data.answer)}<p><strong>標準描述：</strong>${esc(description)}</p></div>` +
+      (state.data.extra ? `<div class="answer-extra">${esc(state.data.extra)}</div>` : '');
+    renderMathIn(result);
+    state.refs.working.append(result);
+    state.refs.result = result;
+  }
+
+  function advanceOne(animate) {
+    if (!state.data || state.shown >= state.data.steps.length) return;
+    const index = state.shown;
+    state.refs.steps.replaceChildren(makeStep(state.data.steps[index], index, animate));
+    state.shown += 1;
+    if (state.shown >= state.data.steps.length) showResult(animate);
+  }
+
+  function schedule() {
+    const generation = state.generation;
+    const timer = setTimeout(() => {
+      if (state.timer !== timer || generation !== state.generation || !state.playing) return;
+      state.timer = null;
+      // 即使外部狀態已變而尚未繪製，舊計時器也不能揭示舊推導。
+      if (state.target !== $('solution') || !S.showAnswer ||
+          state.signature !== signature() || state.quiz !== !!S.quiz) {
+        renderSolution();
+        return;
+      }
+      advanceOne(true);
+      if (state.shown >= state.data.steps.length) stop();
+      updateControls();
+      if (state.playing) schedule();
+    }, STEP_DELAY);
+    state.timer = timer;
+  }
+
+  function handleClick(event) {
+    const button = event.target.closest('[data-solution-action]');
+    if (!button || !state.target.contains(button)) return;
+    // 避免處理按鈕時引用未同步的幾何條件。
+    if (state.target !== $('solution') || state.signature !== signature() ||
+        state.visible !== !!S.showAnswer || state.quiz !== !!S.quiz) renderSolution();
+    if (!state.visible || !state.data || button.getAttribute('aria-disabled') === 'true') return;
+
+    const action = button.dataset.solutionAction;
+    if (action === 'play') {
+      if (state.playing) stop();
+      else {
+        state.playing = true;
+        schedule();
+      }
+    } else if (action === 'previous') {
+      stop();
+      const index=state.shown-2;
+      state.refs.steps.replaceChildren(makeStep(state.data.steps[index],index,true));
+      state.shown -= 1;
+    } else if (action === 'next') {
+      stop();
+      advanceOne(true);
+    } else if (action === 'all') {
+      stop();
+      // 取消已出現項目的入場效果，令答案可即刻閱讀。
+      state.refs.working.querySelectorAll('.solution-enter').forEach(el => el.classList.remove('solution-enter'));
+      state.refs.steps.replaceChildren(...state.data.steps.map((step,index)=>makeStep(step,index,false)));
+      state.shown=state.data.steps.length;
+      if (!state.refs.result) showResult(false);
+    }
+    updateControls();
+  }
+
+  function render() {
+    const target = $('solution');
+    if (!target) {
+      stop();
+      state.target = null;
+      return;
+    }
+    if (state.target !== target || !state.refs || !target.contains(state.refs.working)) mount(target);
+
+    const nextSignature = signature();
+    const nextVisible = !!S.showAnswer;
+    const nextQuiz = !!S.quiz;
+    if (state.signature === nextSignature && state.visible === nextVisible && state.quiz === nextQuiz) return;
+
+    const wasVisible = state.visible;
+    const wasQuiz = state.quiz;
+    stop();
+    state.signature = nextSignature;
+    state.visible = nextVisible;
+    state.quiz = nextQuiz;
+
+    if (!nextVisible) {
+      state.data = null;
+      state.shown = 0;
+      state.refs.steps = null;
+      state.refs.result = null;
+      // 小測拖曳條件時只更新簽名，不重建已顯示的提示。
+      if (wasVisible !== false || !state.refs.working.querySelector('.hidden-answer')) {
+        state.refs.working.innerHTML = '<div class="hidden-answer">答案暫時隱藏<br>先思考幾何形狀和 P(x, y) 的方程，再點擊上方按鈕揭曉。</div>';
+      }
+      updateControls();
+      return;
+    }
+
+    state.data = solutionFor();
+    state.shown = 0;
+    state.refs.result = null;
+    state.refs.steps = document.createElement('div');
+    state.refs.steps.className = 'solution-steps';
+    state.refs.working.replaceChildren(state.refs.steps);
+
+    // 僅在小測「揭曉」的轉換顯示全部；之後改條件一律回第一步。
+    const quizReveal = nextQuiz && (wasVisible !== true || wasQuiz !== true);
+    if (quizReveal) {
+      state.refs.steps.replaceChildren(...state.data.steps.map((step,index)=>makeStep(step,index,false)));
+      state.shown=state.data.steps.length;
+    } else if (state.data.steps.length) advanceOne(false);
+    // 保留即時軌跡方程，同時讓推導步驟循序出現。
+    showResult(false);
+    updateControls();
+  }
+
+  return { render };
+})();
+
+function renderSolution() {
+  animatedSolutionController.render();
+}
+
+// 視野是獨立於幾何條件的相機；縮放固定在目前的視野中心。
+const zoomLevels=[.5,.75,1,1.25,1.5,1.75,2,2.25,2.5,2.75,3];
+let zoomIndex=2;
+const cameraCenter={x:0,y:0};
+function resize(){
+ const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
+ const W=Math.max(rect.width,1),H=Math.max(rect.height,1);
+ const w=Math.max(1,Math.round(W*dpr)),h=Math.max(1,Math.round(H*dpr));
+ const pixelsChanged=canvas.width!==w||canvas.height!==h;
+ if(pixelsChanged){canvas.width=w;canvas.height=h;}
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ const s=Math.min(W/17,H/14)*zoomLevels[zoomIndex];
+ const ox=W/2-cameraCenter.x*s,oy=H/2+cameraCenter.y*s;
+ const old=S.view,viewChanged=!old||old.w!==W||old.h!==H||old.s!==s||old.ox!==ox||old.oy!==oy;
+ if(viewChanged||pixelsChanged){
+  S.view={w:W,h:H,s,ox,oy};
+  S.bounds={xmin:-ox/s,xmax:(W-ox)/s,ymin:(oy-H)/s,ymax:oy/s};
+  S.cachedPaths=null;
+  // 裁切範圍改變後重算播放參數，但不移動 P 或變更幾何。
+  if(S.model&&!S.model.error)syncProgress();
+ }
+}
 function scr(p){const v=S.view;return {x:v.ox+p.x*v.s,y:v.oy-p.y*v.s};}
 function world(x,y){const v=S.view;return{x:(x-v.ox)/v.s,y:(v.oy-y)/v.s};}
 function polyline(points,color,width=2,dash=[],glow=false){if(!points||points.length<2)return;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.lineJoin='round';ctx.lineCap='round';if(glow){ctx.shadowColor=color;ctx.shadowBlur=11;}ctx.beginPath();points.forEach((p,i)=>{const s=scr(p);if(i===0)ctx.moveTo(s.x,s.y);else ctx.lineTo(s.x,s.y);});ctx.stroke();ctx.restore();}
@@ -534,12 +2028,12 @@ function drawGrid(){const {w,h,s,ox,oy}=S.view,b=S.bounds;ctx.fillStyle='#0d1d2c
 function lineVisual(line,color,name){let path={kind:'line',...line};const points=Geo.pathPoints(path,S.bounds);polyline(points,color,1.6,[7,5]);if(points.length){const a=scr(points[points.length-1]);ctx.save();ctx.fillStyle=color;ctx.font='600 11px system-ui,sans-serif';ctx.textAlign=a.x>S.view.w-45?'right':'left';ctx.textBaseline='middle';ctx.fillText(name,Math.max(14,Math.min(S.view.w-14,a.x+(a.x>S.view.w-45?-5:5))),Math.max(14,Math.min(S.view.h-14,a.y-9)));ctx.restore();}}
 function segment(a,b,label,color='#d9c59c',equal=false){polyline([a,b],color,1.4,[4,4]);const p=scr(a),q=scr(b),dx=q.x-p.x,dy=q.y-p.y,le=Math.hypot(dx,dy);if(le<2)return;if(equal){const mx=(p.x+q.x)/2,my=(p.y+q.y)/2;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=1.7;ctx.beginPath();ctx.moveTo(mx-dy/le*5,my+dx/le*5);ctx.lineTo(mx+dy/le*5,my-dx/le*5);ctx.stroke();ctx.restore();}if(label&&le>24){let x=(p.x+q.x)/2-dy/le*11,y=(p.y+q.y)/2+dx/le*11;ctx.save();ctx.font='600 10px system-ui,sans-serif';const width=ctx.measureText(label).width+8;ctx.fillStyle='#102335dd';ctx.fillRect(x-width/2,y-7,width,14);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,x,y);ctx.restore();}}
 function rightAngle(vertex,a,b,color='#efc991'){const p=scr(vertex),q=scr(a),r=scr(b),l1=Math.hypot(q.x-p.x,q.y-p.y),l2=Math.hypot(r.x-p.x,r.y-p.y);if(l1<3||l2<3)return;const z=Math.min(11,l1*.32,l2*.32),u={x:(q.x-p.x)/l1*z,y:(q.y-p.y)/l1*z},v={x:(r.x-p.x)/l2*z,y:(r.y-p.y)/l2*z};ctx.save();ctx.strokeStyle=color;ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(p.x+u.x,p.y+u.y);ctx.lineTo(p.x+u.x+v.x,p.y+u.y+v.y);ctx.lineTo(p.x+v.x,p.y+v.y);ctx.stroke();ctx.restore();}
-function footMarks(P,L,name,equal,color){const foot=Geo.foot(L,P),d=Math.abs(Geo.signed(L,P));segment(P,foot,`${name} ${fixed(d)}`,color,equal);const tang={x:foot.x-L.b,y:foot.y+L.a};rightAngle(foot,P,tang,color);}
+function footMarks(P,L,name,equal,color){const foot=Geo.foot(L,P),d=Math.abs(Geo.signed(L,P));segment(P,foot,S.id===3?`d = ${num(S.cfg.d)}`:`${name} ≈ ${fixed(d)}`,color,equal);const tang={x:foot.x-L.b,y:foot.y+L.a};rightAngle(foot,P,tang,color);}
 function marker(p,label,color,opts={}){const q=scr(p);if(q.x<-30||q.x>S.view.w+30||q.y<-30||q.y>S.view.h+30)return;ctx.save();if(opts.glow){ctx.shadowColor=color;ctx.shadowBlur=17;}ctx.beginPath();ctx.arc(q.x,q.y,opts.p?6.5:5.4,0,Math.PI*2);ctx.fillStyle=opts.open?'#0d1d2c':color;ctx.fill();ctx.lineWidth=opts.open?2:1.5;ctx.strokeStyle=opts.open?color:'#eef8f5';ctx.stroke();ctx.shadowBlur=0;const x=Math.max(8,Math.min(S.view.w-55,q.x+9));const y=Math.max(14,Math.min(S.view.h-7,q.y-10));ctx.font='700 12px system-ui,sans-serif';ctx.fillStyle='#0d1d2cdd';const text=label;const tw=ctx.measureText(text).width;ctx.fillRect(x-3,y-12,tw+7,17);ctx.fillStyle=color;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(text,x,y);ctx.restore();}
 function getPaths(){if(!S.cachedPaths){S.cachedPaths=S.model.paths.map(p=>Geo.pathPoints(p,S.bounds));}return S.cachedPaths;}
 // 盡可能保持動點可見；只選取實際軌跡上的點，不以夾坐標破壞約束。
 function inside(p,b=S.bounds,margin=0){return p.x>=b.xmin+margin-1e-9&&p.x<=b.xmax-margin+1e-9&&p.y>=b.ymin+margin-1e-9&&p.y<=b.ymax-margin+1e-9;}
-function keepPVisible(){if(!S.bounds||!S.model||S.model.error)return true;if(inside(S.P,S.bounds,.05))return true;const b={xmin:S.bounds.xmin+.08,xmax:S.bounds.xmax-.08,ymin:S.bounds.ymin+.08,ymax:S.bounds.ymax-.08};let best=null;S.model.paths.forEach((path,index)=>{const pts=Geo.pathPoints(path,b);let candidates=pts;if(path.kind==='line'&&pts.length>=2){const a=pts[0],z=pts[pts.length-1],dx=z.x-a.x,dy=z.y-a.y,dd=dx*dx+dy*dy,u=dd?Math.max(0,Math.min(1,((S.P.x-a.x)*dx+(S.P.y-a.y)*dy)/dd)):0;candidates=[{x:a.x+u*dx,y:a.y+u*dy}];}for(const q of candidates){if(!inside(q,b))continue;const d=(q.x-S.P.x)**2+(q.y-S.P.y)**2;if(!best||d<best.d)best={q,index,d};}});if(!best){warning('目前軌跡不在可見範圍，請調整定點或直線條件。');return false;}S.path=best.index;S.P=Geo.project(S.model.paths[best.index],best.q);return true;}
+function keepPVisible(){if(!S.bounds||!S.model||S.model.error)return true;if(inside(S.P,S.bounds,.05))return true;const b={xmin:S.bounds.xmin+.08,xmax:S.bounds.xmax-.08,ymin:S.bounds.ymin+.08,ymax:S.bounds.ymax-.08};let best=null;S.model.paths.forEach((path,index)=>{const pts=Geo.pathPoints(path,b);let candidates=pts;if(path.kind==='line'&&pts.length>=2){const a=pts[0],z=pts[pts.length-1],dx=z.x-a.x,dy=z.y-a.y,dd=dx*dx+dy*dy,u=dd?Math.max(0,Math.min(1,((S.P.x-a.x)*dx+(S.P.y-a.y)*dy)/dd)):0;candidates=[{x:a.x+u*dx,y:a.y+u*dy}];}for(const q of candidates){if(!inside(q,b))continue;const d=(q.x-S.P.x)**2+(q.y-S.P.y)**2;if(!best||d<best.d)best={q,index,d};}});if(!best){warning('目前軌跡不在可見範圍，請重設視野或調整定點、直線條件。');return false;}S.path=best.index;S.P=Geo.project(S.model.paths[best.index],best.q);return true;}
 
 function drawScene(){drawGrid();if(!S.model||S.model.error)return;const c=S.cfg,id=S.id,P=S.P;
  if([3,4,5,7].includes(id))lineVisual(Geo.line(c.L1),'#e5b974',id===4||id===5?'L₁':'L');
@@ -547,30 +2041,86 @@ function drawScene(){drawGrid();if(!S.model||S.model.error)return;const c=S.cfg,
  if(S.showLocus)getPaths().forEach(points=>polyline(points,'#6de0c1',2.2,[],true));
  if(S.trail.length){ctx.save();ctx.strokeStyle='#9af5d9';ctx.lineWidth=2.7;ctx.shadowColor='#54d9b7';ctx.shadowBlur=10;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();S.trail.forEach((p,i)=>{const a=scr(p);if(i===0||p.breakBefore||p.path!==S.trail[i-1].path)ctx.moveTo(a.x,a.y);else ctx.lineTo(a.x,a.y);});ctx.stroke();ctx.restore();}
  const amber='#f0c482',rose='#e99e91';
- if(id===1)segment(P,c.A,`r ${fixed(dist(P,c.A))}`,amber,false);
- if(id===2){segment(c.A,c.B,'','#778d95',false);segment(P,c.A,`PA ${fixed(dist(P,c.A))}`,amber,true);segment(P,c.B,`PB ${fixed(dist(P,c.B))}`,amber,true);}
+ if(id===1)segment(P,c.A,`r = ${num(c.r)}`,amber,false);
+ if(id===2){segment(c.A,c.B,'','#778d95',false);segment(P,c.A,`PA ≈ ${fixed(dist(P,c.A))}`,amber,true);segment(P,c.B,`PB ≈ ${fixed(dist(P,c.B))}`,amber,true);}
  if(id===3)footMarks(P,Geo.line(c.L1),'d',false,amber);
  if(id===4||id===5){footMarks(P,Geo.line(c.L1),'d₁',true,amber);footMarks(P,Geo.line(c.L2),'d₂',true,rose);}
  if(id===6){segment(P,c.A,'PA',amber,false);segment(P,c.B,'PB',amber,false);rightAngle(P,c.A,c.B,amber);}
- if(id===7){segment(P,c.F,`PF ${fixed(dist(P,c.F))}`,amber,true);footMarks(P,Geo.line(c.L1),'d',true,amber);}
+ if(id===7){segment(P,c.F,`PF ≈ ${fixed(dist(P,c.F))}`,amber,true);footMarks(P,Geo.line(c.L1),'d',true,amber);}
  if([1,2,6].includes(id))marker(c.A,'A',amber,{open:id===6});if([2,6].includes(id))marker(c.B,'B',amber,{open:id===6});if(id===7)marker(c.F,'F',amber);marker(P,'P','#a0f4d5',{p:true,glow:true});
 }
 function syncProgress(){if(!S.model||S.model.error)return;const pts=getPaths()[S.path]||[];let best=Infinity,tBest=0;for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],dx=b.x-a.x,dy=b.y-a.y,den=dx*dx+dy*dy,u=den?Math.max(0,Math.min(1,((S.P.x-a.x)*dx+(S.P.y-a.y)*dy)/den)):0,x=a.x+u*dx,y=a.y+u*dy,d=(x-S.P.x)**2+(y-S.P.y)**2;if(d<best){best=d;tBest=(i+u)/(pts.length-1);}}if(pts.length>1)S.progress=S.path+Math.min(tBest,.999999);}
 function advance(dt){if(!S.playing||!S.model||S.model.error)return;const paths=getPaths(),count=paths.length,old=Math.floor(S.progress),prev=S.progress;S.progress=(S.progress+Math.min(dt,80)/11000)%count;let index=Math.floor(S.progress),points=paths[index],jump=false;
  const usable=pts=>pts&&pts.length>=2&&pts.some(p=>inside(p));
- if(!usable(points)){let found=-1;for(let n=1;n<=count;n++){const j=(index+n)%count;if(usable(paths[j])){found=j;break;}}if(found<0){setPlaying(false);warning('目前軌跡不在可見範圍，請調整定點或直線條件。');return;}index=found;points=paths[index];S.progress=index;jump=true;}
+ if(!usable(points)){let found=-1;for(let n=1;n<=count;n++){const j=(index+n)%count;if(usable(paths[j])){found=j;break;}}if(found<0){setPlaying(false);warning('目前軌跡不在可見範圍，請重設視野或調整定點、直線條件。');return;}index=found;points=paths[index];S.progress=index;jump=true;}
  let t=S.progress-index,f=t*(points.length-1),i=Math.min(points.length-2,Math.floor(f)),v=f-i;let raw={x:points[i].x*(1-v)+points[i+1].x*v,y:points[i].y*(1-v)+points[i+1].y*v};
  if(!inside(raw)){let j=Math.ceil(f);while(j<points.length&&!inside(points[j]))j++;if(j>=points.length){j=0;while(j<points.length&&!inside(points[j]))j++;}if(j>=points.length)return;raw=points[j];S.progress=index+Math.min(j/(points.length-1),.999999);jump=true;}
  let p=Geo.project(S.model.paths[index],raw);if(!Number.isFinite(p.x)||!Number.isFinite(p.y))return;const distance=Math.hypot(p.x-S.P.x,p.y-S.P.y);S.path=index;S.P=p;const isClosed=S.model.paths[index].kind==='circle',wrapped=S.progress<prev;addTrail(p,jump||old!==index||(wrapped&&!isClosed)||distance>1);}
 let rafId;function frame(now){resize();if(!S.lastFrame)S.lastFrame=now;const dt=now-S.lastFrame;S.lastFrame=now;advance(dt);drawScene();if(now-S.uiFrame>120&&(S.playing||S.drag)){renderMeasurements();S.uiFrame=now;}rafId=requestAnimationFrame(frame);}
 function hitPoint(clientX,clientY){const r=canvas.getBoundingClientRect(),x=clientX-r.left,y=clientY-r.top;const candidates=[{key:'P',p:S.P}];if([1,2,6].includes(S.id))candidates.push({key:'A',p:S.cfg.A});if([2,6].includes(S.id))candidates.push({key:'B',p:S.cfg.B});if(S.id===7)candidates.push({key:'F',p:S.cfg.F});let best=null;for(const o of candidates){const s=scr(o.p),d=Math.hypot(x-s.x,y-s.y);if(d<25&&(!best||d<best.d))best={key:o.key,d};}return best?.key||null;}
 function pointFromEvent(e){const r=canvas.getBoundingClientRect();return world(e.clientX-r.left,e.clientY-r.top);}
-canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;const key=hitPoint(e.clientX,e.clientY);if(!key)return;e.preventDefault();S.drag=key;canvas.setPointerCapture(e.pointerId);setPlaying(false);canvas.style.cursor='grabbing';});
-canvas.addEventListener('pointermove',e=>{if(!S.drag){canvas.style.cursor=hitPoint(e.clientX,e.clientY)?'grab':'crosshair';return;}e.preventDefault();const raw=pointFromEvent(e);if(S.drag==='P'){const best=pathProjection(raw);if(best){const switched=best.index!==S.path;S.path=best.index;S.P=best.point;warning('');keepPVisible();addTrail(S.P,switched);}}
- else {const cfg=copyCfg(),b=S.bounds;cfg[S.drag]={x:Math.round(Math.max(b.xmin+.2,Math.min(b.xmax-.2,raw.x))*10)/10,y:Math.round(Math.max(b.ymin+.2,Math.min(b.ymax-.2,raw.y))*10)/10};const err=validateCfg(cfg);if(err){warning('此設定會令題目退化，請選擇其他位置。');return;}warning('');S.cfg=cfg;build();const best=pathProjection(S.P);if(best){S.P=best.point;S.path=best.index;}keepPVisible();clearTrail();renderControls();renderContent();}});
-function stopDrag(e){if(S.drag){S.drag=null;canvas.style.cursor='crosshair';if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);syncProgress();renderMeasurements();}}
-canvas.addEventListener('pointerup',stopDrag);canvas.addEventListener('pointercancel',stopDrag);canvas.addEventListener('lostpointercapture',()=>{S.drag=null;});
+let activePointer=null,panDrag=null,multiTouch=false;
+const activeTouches=new Set();
+function cancelGesture(){
+ const wasPoint=!!S.drag;
+ S.drag=null;panDrag=null;activePointer=null;canvas.style.cursor='crosshair';
+ if(wasPoint){syncProgress();renderMeasurements();}
+}
+// 第二根手指一出現即停止本次操作，直到所有手指離開；不支援捏合。
+document.addEventListener('pointerdown',e=>{
+ if(e.pointerType!=='touch')return;
+ activeTouches.add(e.pointerId);
+ if(activeTouches.size>1){multiTouch=true;cancelGesture();}
+},true);
+function endTouch(e){
+ if(e.pointerType!=='touch')return;
+ activeTouches.delete(e.pointerId);
+ if(!activeTouches.size)multiTouch=false;
+}
+window.addEventListener('pointerup',endTouch);
+window.addEventListener('pointercancel',endTouch);
+canvas.addEventListener('pointerdown',e=>{
+ if(multiTouch||activePointer!==null||e.isPrimary===false||(e.button!==undefined&&e.button!==0))return;
+ e.preventDefault();
+ activePointer=e.pointerId;
+ const key=hitPoint(e.clientX,e.clientY);
+ if(key){S.drag=key;setPlaying(false);}
+ else panDrag={x:e.clientX,y:e.clientY};
+ canvas.setPointerCapture(e.pointerId);
+ canvas.style.cursor='grabbing';
+});
+canvas.addEventListener('pointermove',e=>{
+ if(multiTouch)return;
+ if(activePointer===null){if(e.pointerType!=='touch')canvas.style.cursor=hitPoint(e.clientX,e.clientY)?'grab':'crosshair';return;}
+ if(e.pointerId!==activePointer)return;
+ e.preventDefault();
+ if(panDrag){
+  cameraCenter.x-=(e.clientX-panDrag.x)/S.view.s;
+  cameraCenter.y+=(e.clientY-panDrag.y)/S.view.s;
+  panDrag.x=e.clientX;panDrag.y=e.clientY;
+  resize();
+  return;
+ }
+ const raw=pointFromEvent(e);if(S.drag==='P'){const best=pathProjection(raw);if(best){const switched=best.index!==S.path;S.path=best.index;S.P=best.point;warning('');keepPVisible();addTrail(S.P,switched);}}
+ else if(S.drag){const cfg=copyCfg(),b=S.bounds;cfg[S.drag]={x:Math.round(Math.max(b.xmin+.2,Math.min(b.xmax-.2,raw.x))*10)/10,y:Math.round(Math.max(b.ymin+.2,Math.min(b.ymax-.2,raw.y))*10)/10};const err=validateCfg(cfg);if(err){warning('此設定會令題目退化，請選擇其他位置。');return;}warning('');S.cfg=cfg;build();const best=pathProjection(S.P);if(best){S.P=best.point;S.path=best.index;}keepPVisible();clearTrail();renderControls();renderContent();}
+});
+function stopDrag(e){
+ if(e.pointerId!==activePointer)return;
+ cancelGesture();
+ if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+}
+canvas.addEventListener('pointerup',stopDrag);canvas.addEventListener('pointercancel',stopDrag);canvas.addEventListener('lostpointercapture',stopDrag);
 canvas.addEventListener('keydown',e=>{const moves={ArrowLeft:[-.25,0],ArrowRight:[.25,0],ArrowUp:[0,.25],ArrowDown:[0,-.25]};if(!moves[e.key])return;e.preventDefault();setPlaying(false);const [dx,dy]=moves[e.key],best=pathProjection({x:S.P.x+dx,y:S.P.y+dy});if(best){const switched=best.index!==S.path;S.path=best.index;S.P=best.point;addTrail(S.P,switched);syncProgress();renderMeasurements();}});
+function renderZoom(){
+ $('zoomPercent').textContent=`${Math.round(zoomLevels[zoomIndex]*100)}%`;
+ $('zoomOut').disabled=zoomIndex===0;
+ $('zoomIn').disabled=zoomIndex===zoomLevels.length-1;
+}
+function setZoom(index){zoomIndex=Math.max(0,Math.min(zoomLevels.length-1,index));resize();renderZoom();}
+$('zoomOut').addEventListener('click',()=>setZoom(zoomIndex-1));
+$('zoomIn').addEventListener('click',()=>setZoom(zoomIndex+1));
+$('zoomReset').addEventListener('click',()=>{cameraCenter.x=0;cameraCenter.y=0;setZoom(2);});
+renderZoom();
 $('caseSelect').addEventListener('change',e=>resetCase(Number(e.target.value)));
 $('playBtn').addEventListener('click',()=>{if(!S.playing)syncProgress();setPlaying(!S.playing);});
 $('clearBtn').addEventListener('click',clearTrail);
