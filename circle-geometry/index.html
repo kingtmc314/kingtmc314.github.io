@@ -26,6 +26,9 @@
 
 #vectorView .legend span:last-child:before{background:var(--blue)}
 
+
+#vTabs .tab:last-child:nth-child(odd){grid-column:1/-1}
+@media(max-width:720px){#spaceCanvas{aspect-ratio:1 / 1.05}}
 </style>
 </head>
 <body>
@@ -1170,6 +1173,659 @@ window.VectorCore = (() => {
   window.VectorRenderer = { create: create };
 }());
 
+/*
+ * SpaceCore: 原生 JavaScript；可在 VectorCore 之後直接貼進單一 HTML 的 <script>。
+ * 除 window.VectorCore.fraction / vectorFraction 外，不使用任何套件或 DOM。
+ *
+ * compute(mode, a, b, c, d)，每個需要的輸入都是 [-6,6] 的三元整數陣列：
+ *   line       a=A, b=u                  A + t u
+ *   plane      a=P, b=n                  n · (X - P) = 0
+ *   linePlane  a=A, b=u, c=P, d=n
+ *   planePlane a=P, b=n, c=Q, d=m
+ *   lineLine   a=A, b=u, c=B, d=v       A + t u = B + s v
+ *
+ * 每次回傳 {mode, valid, ...}。無效結果提供 reason；必要向量的長度、
+ * 範圍或型別不符時 reason='invalid-vector' 並提供 input='a'/'b'/'c'/'d'；
+ * 未知模式為 'invalid-mode'。幾何退化為 'zero-direction'、'zero-normal'、
+ * 'zero-direction-2'、'zero-normal-2'，第一個退化向量優先；VectorCore
+ * 不存在時為 'missing-vector-core'。未使用的輸入不檢查。
+ *
+ * 有效的兩物件模式以 relation 回傳 'intersect'、'parallel'、'coincident'、
+ * 'contained' 或 'skew'。不適用的欄位省略。point、point2、planePoint、
+ * direction、direction2、normal、normal2、intersection 是 VectorCore 精確
+ * 向量物件；t、s 是精確分數物件，皆有 plain、tex、value，向量還有
+ * components。value 僅供繪圖；所有判定和分子分母運算均為精確整數。
+ * line/plane 的 point 是 a；linePlane 的 point 是 A、planePoint 是 P；
+ * planePlane 的 point/point2 是 P/Q；lineLine 的 point/point2 是 A/B。
+ * planePlane 的 direction 只在相交時出現且等於 n × m（不做約分）。
+ *
+ * dot、numerator、denominator 為整數：linePlane 的 dot=denominator=n·u、
+ * numerator=n·(P-A)；planePlane 的 dot=n·m、denominator=|n×m|²；
+ * lineLine 的 dot=u·v、denominator=|u×v|²，非平行時 numerator 為 t
+ * 分子、sNumerator 為 s 分子。平面常數 constant = n·P。
+ * steps 的向量是供列式的原始整數陣列而不是顯示用精確向量：
+ * linePlane: offset=P-A；相交時 intersectionNumerators，分母為 denominator。
+ * planePlane: offset=Q-P、cross=n×m、normalOffset=n·(Q-P)、
+ *   planeConstants=[n·P,m·Q]；相交時另有 mCrossDirection、
+ *   directionCrossN、intersectionNumerators，分母為 denominator。
+ * lineLine: offset=B-A、cross=u×v、offsetCrossU、tripleProduct；非平行時
+ *   offsetCrossV；相交時另有 intersectionNumerators，分母為 denominator。
+ * lineLine 異面時亦提供 numerator/sNumerator，但不回傳 t、s 或交點，
+ * 以免誤以為兩直線相交。範圍內整數的所有運算都遠小於安全整數上限。
+ */
+window.SpaceCore = (() => {
+  'use strict';
+
+  const clean = x => x === 0 ? 0 : x; // 避免輸出 JavaScript 的 -0
+  const sub = (a, b) => a.map((x, i) => clean(x - b[i]));
+  const dot = (a, b) => clean(a[0] * b[0] + a[1] * b[1] + a[2] * b[2]);
+  const cross = (a, b) => [
+    clean(a[1] * b[2] - a[2] * b[1]),
+    clean(a[2] * b[0] - a[0] * b[2]),
+    clean(a[0] * b[1] - a[1] * b[0])
+  ];
+  const isZero = v => v[0] === 0 && v[1] === 0 && v[2] === 0;
+
+  function validVector(v) {
+    if (!Array.isArray(v) || v.length !== 3) return false;
+    for (let i = 0; i < 3; i++) {
+      if (!Number.isInteger(v[i]) || v[i] < -6 || v[i] > 6) return false;
+    }
+    return true;
+  }
+
+  function compute(mode, a, b, c, d) {
+    const names = (mode === 'line' || mode === 'plane') ? ['a', 'b'] :
+      (mode === 'linePlane' || mode === 'planePlane' || mode === 'lineLine') ?
+        ['a', 'b', 'c', 'd'] : null;
+    if (!names) return { mode, valid: false, reason: 'invalid-mode' };
+    const raw = { a, b, c, d };
+    for (const name of names) {
+      if (!validVector(raw[name])) {
+        return { mode, valid: false, reason: 'invalid-vector', input: name };
+      }
+    }
+    // Validate input first, then distinguish first and second degenerate objects.
+    if (isZero(b)) {
+      return { mode, valid: false,
+        reason: mode === 'plane' || mode === 'planePlane' ? 'zero-normal' : 'zero-direction' };
+    }
+    if (mode === 'linePlane' && isZero(d)) {
+      return { mode, valid: false, reason: 'zero-normal' };
+    }
+    if (mode === 'planePlane' && isZero(d)) {
+      return { mode, valid: false, reason: 'zero-normal-2' };
+    }
+    if (mode === 'lineLine' && isZero(d)) {
+      return { mode, valid: false, reason: 'zero-direction-2' };
+    }
+    const core = window.VectorCore;
+    if (!core || typeof core.fraction !== 'function' || typeof core.vectorFraction !== 'function') {
+      return { mode, valid: false, reason: 'missing-vector-core' };
+    }
+    // Make copies so the result does not alias the caller's mutable input arrays.
+    a = a.map(clean); b = b.map(clean);
+    if (names.length === 4) { c = c.map(clean); d = d.map(clean); }
+    const vf = (v, denominator = 1) => core.vectorFraction(v, denominator);
+    const frac = (numerator, denominator) => core.fraction(numerator, denominator);
+
+    if (mode === 'line') {
+      return { mode, valid: true, point: vf(a), direction: vf(b) };
+    }
+    if (mode === 'plane') {
+      return { mode, valid: true, point: vf(a), normal: vf(b), constant: dot(a, b) };
+    }
+    if (mode === 'linePlane') {
+      const offset = sub(c, a);
+      const denominator = dot(d, b);
+      const numerator = dot(d, offset);
+      const result = { mode, valid: true, point: vf(a), direction: vf(b),
+        planePoint: vf(c), normal: vf(d), dot: denominator, numerator, denominator,
+        steps: { offset } };
+      if (denominator === 0) {
+        result.relation = numerator === 0 ? 'contained' : 'parallel';
+        return result;
+      }
+      const intersectionNumerators = a.map((x, i) => clean(x * denominator + b[i] * numerator));
+      result.relation = 'intersect';
+      result.t = frac(numerator, denominator);
+      result.intersection = vf(intersectionNumerators, denominator);
+      result.steps.intersectionNumerators = intersectionNumerators;
+      return result;
+    }
+    if (mode === 'planePlane') {
+      const offset = sub(c, a);
+      const crossNormals = cross(b, d);
+      const denominator = dot(crossNormals, crossNormals);
+      const normalOffset = dot(b, offset);
+      const planeConstants = [dot(b, a), dot(d, c)];
+      const result = { mode, valid: true, point: vf(a), normal: vf(b),
+        point2: vf(c), normal2: vf(d), dot: dot(b, d), denominator,
+        steps: { offset, cross: crossNormals, normalOffset, planeConstants } };
+      if (denominator === 0) {
+        result.relation = normalOffset === 0 ? 'coincident' : 'parallel';
+        return result;
+      }
+      // X0 = (h1 (m × (n × m)) + h2 ((n × m) × n)) / |n × m|².
+      // This is the point of the intersection line nearest the origin.
+      const mCrossDirection = cross(d, crossNormals);
+      const directionCrossN = cross(crossNormals, b);
+      const intersectionNumerators = mCrossDirection.map((x, i) =>
+        clean(planeConstants[0] * x + planeConstants[1] * directionCrossN[i]));
+      result.relation = 'intersect';
+      result.direction = vf(crossNormals);
+      result.intersection = vf(intersectionNumerators, denominator);
+      Object.assign(result.steps, { mCrossDirection, directionCrossN, intersectionNumerators });
+      return result;
+    }
+    // lineLine: test exact parallelism and coplanarity before constructing fractions.
+    const offset = sub(c, a);
+    const crossDirections = cross(b, d);
+    const denominator = dot(crossDirections, crossDirections);
+    const offsetCrossU = cross(offset, b);
+    const tripleProduct = dot(offset, crossDirections);
+    const result = { mode, valid: true, point: vf(a), direction: vf(b),
+      point2: vf(c), direction2: vf(d), dot: dot(b, d), denominator,
+      steps: { offset, cross: crossDirections, offsetCrossU, tripleProduct } };
+    if (denominator === 0) {
+      result.relation = isZero(offsetCrossU) ? 'coincident' : 'parallel';
+      return result;
+    }
+    const offsetCrossV = cross(offset, d);
+    const numerator = dot(offsetCrossV, crossDirections);
+    const sNumerator = dot(offsetCrossU, crossDirections);
+    result.numerator = numerator;
+    result.sNumerator = sNumerator;
+    result.steps.offsetCrossV = offsetCrossV;
+    if (tripleProduct !== 0) {
+      result.relation = 'skew';
+      return result;
+    }
+    const intersectionNumerators = a.map((x, i) => clean(x * denominator + b[i] * numerator));
+    result.relation = 'intersect';
+    result.t = frac(numerator, denominator);
+    result.s = frac(sNumerator, denominator);
+    result.intersection = vf(intersectionNumerators, denominator);
+    result.steps.intersectionNumerators = intersectionNumerators;
+    return result;
+  }
+
+  return { compute };
+})();
+
+/*
+ * SpaceRenderer: standalone Canvas 2D orthographic space-geometry renderer.
+ * Can be pasted into a script element or loaded as a local script. No dependencies.
+ *
+ * SpaceRenderer.create(canvas, { getState, onChange }) returns:
+ *   render()      redraw after a state, language, or theme change;
+ *   resetView()   restore the initial camera orientation;
+ *   debug()       return a detached snapshot of the last rendered scene;
+ *   destroy()     remove listeners/observers and stop further rendering.
+ *
+ * getState() supplies {mode,a,b,c,d,lang,aux,quizHidden,result}; onChange(key,
+ * [x,y,z]) is called only for the draggable input points a and c. The caller owns
+ * state and should update it synchronously before returning from onChange.
+ * Objects are genuinely infinite; their displayed parts are clipped to a world
+ * cube. Revealed answer overlays use result from SpaceCore.compute when supplied;
+ * when absent they can be derived from the inputs. No answer is generated or
+ * exposed by debug() while quizHidden is true.
+ */
+(function () {
+  'use strict';
+
+  var EPS = 1e-9;
+  var LIMIT = 8;
+  var DEFAULT_YAW = 0.30;
+  var DEFAULT_PITCH = 0.67;
+  var MIN_PITCH = 0.24;
+  var MAX_PITCH = 1.34;
+  var MODES = ['line', 'plane', 'linePlane', 'planePlane', 'lineLine'];
+
+  function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+  function add(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
+  function sub(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
+  function mul(a, k) { return [a[0] * k, a[1] * k, a[2] * k]; }
+  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  function cross(a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+  function norm(a) { return Math.sqrt(dot(a, a)); }
+  function unit(a) { var length = norm(a); return length > EPS ? mul(a, 1 / length) : null; }
+  function finiteVec(v) { return Array.isArray(v) && v.length === 3 && v.every(Number.isFinite); }
+  function inputVec(v) {
+    if (!Array.isArray(v) || v.length !== 3) return [0, 0, 0];
+    return v.map(function (x) { return typeof x === 'number' && Number.isFinite(x) ? clamp(Math.round(x), -6, 6) : 0; });
+  }
+  function tr(lang, zh, en) { return lang === 'zh' ? zh : lang === 'en' ? en : zh + ' / ' + en; }
+  function snapshot(s) {
+    s = s || {};
+    return { mode: MODES.indexOf(s.mode) < 0 ? 'line' : s.mode,
+      a: inputVec(s.a), b: inputVec(s.b), c: inputVec(s.c), d: inputVec(s.d),
+      lang: s.lang === 'zh' || s.lang === 'en' ? s.lang : 'bi', aux: !!s.aux, quizHidden: !!s.quizHidden };
+  }
+  function basis(view) {
+    var cy = Math.cos(view.yaw), sy = Math.sin(view.yaw);
+    var cp = Math.cos(view.pitch), sp = Math.sin(view.pitch);
+    // Orthonormal world-space screen basis: no perspective distortion.
+    return { right: [cy, -sy, 0], down: [sp * sy, sp * cy, -cp] };
+  }
+  function project(p, t) { return { x: t.origin.x + dot(p, t.right) * t.scale, y: t.origin.y + dot(p, t.down) * t.scale }; }
+  function inverseXY(p, z, t) {
+    var x = (p.x - t.origin.x) / t.scale;
+    var y = (p.y - t.origin.y) / t.scale - t.down[2] * z;
+    var det = t.right[0] * t.down[1] - t.right[1] * t.down[0];
+    if (Math.abs(det) < EPS || !Number.isFinite(x) || !Number.isFinite(y)) return null;
+    var result = [(x * t.down[1] - t.right[1] * y) / det, (t.right[0] * y - x * t.down[0]) / det, z];
+    return finiteVec(result) ? result : null;
+  }
+  function inside(p) { return finiteVec(p) && p.every(function (x) { return Math.abs(x) <= LIMIT + EPS; }); }
+
+  // Clip p + t*d against the world cube using the slab method.
+  function clipLine(p, d) {
+    if (!finiteVec(p) || !finiteVec(d) || norm(d) < EPS) return null;
+    var lo = -1e100, hi = 1e100;
+    for (var i = 0; i < 3; i++) {
+      if (Math.abs(d[i]) < EPS) {
+        if (p[i] < -LIMIT - EPS || p[i] > LIMIT + EPS) return null;
+      } else {
+        var t1 = (-LIMIT - p[i]) / d[i], t2 = (LIMIT - p[i]) / d[i];
+        lo = Math.max(lo, Math.min(t1, t2)); hi = Math.min(hi, Math.max(t1, t2));
+        if (lo > hi + EPS) return null;
+      }
+    }
+    var a = add(p, mul(d, lo)), b = add(p, mul(d, hi));
+    return finiteVec(a) && finiteVec(b) ? [a, b] : null;
+  }
+
+  // The actual intersection of n·(X-p)=0 with the 12 edges of the cube.
+  function clipPlane(p, n) {
+    var normal = unit(n);
+    if (!normal) return null;
+    var points = [];
+    function insert(q) {
+      if (!finiteVec(q)) return;
+      if (!points.some(function (x) { return norm(sub(x, q)) < 1e-7; })) points.push(q);
+    }
+    for (var axis = 0; axis < 3; axis++) {
+      var other = [0, 1, 2].filter(function (x) { return x !== axis; });
+      for (var s = -1; s <= 1; s += 2) for (var t = -1; t <= 1; t += 2) {
+        var a = [0, 0, 0], b = [0, 0, 0];
+        a[axis] = -LIMIT; b[axis] = LIMIT;
+        a[other[0]] = b[other[0]] = s * LIMIT;
+        a[other[1]] = b[other[1]] = t * LIMIT;
+        var da = dot(normal, sub(a, p)), db = dot(normal, sub(b, p));
+        if (Math.abs(da) < EPS) insert(a);
+        if (Math.abs(db) < EPS) insert(b);
+        if ((da < -EPS && db > EPS) || (da > EPS && db < -EPS)) insert(add(a, mul(sub(b, a), da / (da - db))));
+      }
+    }
+    if (points.length < 3) return null;
+    var center = [0, 0, 0];
+    points.forEach(function (q) { center = add(center, q); }); center = mul(center, 1 / points.length);
+    var ref = Math.abs(normal[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0];
+    var e1 = unit(cross(normal, ref)), e2 = cross(normal, e1);
+    points.sort(function (a, b) {
+      var aa = sub(a, center), bb = sub(b, center);
+      return Math.atan2(dot(aa, e2), dot(aa, e1)) - Math.atan2(dot(bb, e2), dot(bb, e1));
+    });
+    return points;
+  }
+  function objects(s) {
+    function object(kind, p, dir, key, name, vectorName, colorIndex) {
+      var valid = norm(dir) > EPS;
+      return { kind: kind, p: p.slice(), dir: dir.slice(), key: key, name: name, vectorName: vectorName,
+        colorIndex: colorIndex, valid: valid, part: valid ? (kind === 'line' ? clipLine(p, dir) : clipPlane(p, dir)) : null };
+    }
+    if (s.mode === 'line') return [object('line', s.a, s.b, 'a', 'A', 'u', 0)];
+    if (s.mode === 'plane') return [object('plane', s.a, s.b, 'a', 'P', 'n', 0)];
+    if (s.mode === 'linePlane') return [object('line', s.a, s.b, 'a', 'A', 'u', 0), object('plane', s.c, s.d, 'c', 'P', 'n', 1)];
+    if (s.mode === 'planePlane') return [object('plane', s.a, s.b, 'a', 'P', 'n', 0), object('plane', s.c, s.d, 'c', 'Q', 'm', 1)];
+    return [object('line', s.a, s.b, 'a', 'A', 'u', 0), object('line', s.c, s.d, 'c', 'B', 'v', 1)];
+  }
+  // Answer geometry is calculated only when revealed. Parallel, coincident,
+  // skew, invalid and far-away cases never produce a fictitious overlay.
+  function answer(s, os, result) {
+    if (s.quizHidden || os.length < 2 || !os[0].valid || !os[1].valid) return null;
+    var a = os[0], b = os[1], point, dir, segment;
+    if (result != null) {
+      // SpaceCore classifies the relation exactly and supplies numeric vector
+      // values for drawing; never invent an answer for an invalid relation.
+      if (result.mode !== s.mode || !result.valid || result.relation !== 'intersect') return null;
+      point = result.intersection && result.intersection.value;
+      if (!finiteVec(point)) return null;
+      point = point.slice();
+      if (s.mode === 'planePlane') {
+        dir = result.direction && result.direction.value;
+        if (!finiteVec(dir) || norm(dir) < EPS) return null;
+        dir = dir.slice(); segment = clipLine(point, dir);
+        return { kind: 'line', point: point, direction: dir, visible: !!segment, part: segment };
+      }
+      if (s.mode === 'linePlane' || s.mode === 'lineLine') return { kind: 'point', point: point, visible: inside(point) };
+      return null;
+    }
+    if (s.mode === 'linePlane') {
+      var denom = dot(a.dir, b.dir);
+      if (Math.abs(denom) < EPS) return null;
+      point = add(a.p, mul(a.dir, dot(sub(b.p, a.p), b.dir) / denom));
+      if (!finiteVec(point)) return null;
+      return { kind: 'point', point: point, visible: inside(point) };
+    }
+    if (s.mode === 'planePlane') {
+      dir = cross(a.dir, b.dir);
+      var d2 = dot(dir, dir);
+      if (d2 < EPS) return null;
+      var h1 = dot(a.dir, a.p), h2 = dot(b.dir, b.p);
+      point = mul(add(mul(cross(b.dir, dir), h1), mul(cross(dir, a.dir), h2)), 1 / d2);
+      segment = clipLine(point, dir);
+      if (!finiteVec(point)) return null;
+      return { kind: 'line', point: point, direction: dir, visible: !!segment, part: segment };
+    }
+    if (s.mode === 'lineLine') {
+      dir = cross(a.dir, b.dir);
+      var dd = dot(dir, dir), gap = sub(b.p, a.p);
+      if (dd < EPS || Math.abs(dot(gap, dir)) > EPS) return null;
+      point = add(a.p, mul(a.dir, dot(cross(gap, b.dir), dir) / dd));
+      if (!finiteVec(point)) return null;
+      return { kind: 'point', point: point, visible: inside(point) };
+    }
+    return null;
+  }
+
+  function create(canvas, opts) {
+    if (!canvas || typeof canvas.getContext !== 'function' || !opts || typeof opts.getState !== 'function' || typeof opts.onChange !== 'function') {
+      throw new TypeError('SpaceRenderer.create requires a canvas, getState, and onChange.');
+    }
+    var ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('SpaceRenderer requires a Canvas 2D context.');
+    var view = { yaw: DEFAULT_YAW, pitch: DEFAULT_PITCH };
+    var destroyed = false, drag = null, last = null, raf = 0, observer = null, themeObserver = null;
+    var oldStyle = { touchAction: canvas.style.touchAction, cursor: canvas.style.cursor, width: canvas.style.width, height: canvas.style.height };
+    var oldSize = { width: canvas.width, height: canvas.height }, intrinsicStyleFix = false;
+    canvas.style.touchAction = 'none'; canvas.style.cursor = 'grab';
+
+    function palette() {
+      var style = window.getComputedStyle(canvas);
+      function get(name, fallback) { return style.getPropertyValue(name).trim() || fallback; }
+      return { bg: get('--canvas', '#fbfcf8'), grid: get('--grid', '#e0eae2'), ink: get('--line', '#253c39'),
+        muted: get('--muted', '#657772'), green: get('--green', '#126e63'), blue: get('--blue', '#526fa9'),
+        orange: get('--orange', '#ca683d'), paper: get('--paper', '#ffffff') };
+    }
+    function schedule() {
+      if (destroyed || raf) return;
+      raf = window.requestAnimationFrame(function () { raf = 0; render(); });
+    }
+    function font(size, weight) {
+      ctx.font = (weight || 500) + ' ' + size + 'px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif';
+      ctx.textBaseline = 'middle';
+    }
+    function wrap(text, maxWidth) {
+      var result = [], remain = text;
+      while (remain.length) {
+        if (ctx.measureText(remain).width <= maxWidth) { result.push(remain); break; }
+        var i = 0, space = -1;
+        while (i < remain.length && ctx.measureText(remain.slice(0, i + 1)).width <= maxWidth) { if (remain[i] === ' ') space = i; i++; }
+        var cut = space > i * 0.45 ? space : Math.max(i, 1);
+        result.push(remain.slice(0, cut).trim()); remain = remain.slice(cut).trim();
+      }
+      return result;
+    }
+    function legends(s, os, ans, colors) {
+      var T = function (z, e) { return tr(s.lang, z, e); };
+      var entries = os.map(function (o, i) {
+        var symbol = o.kind === 'line' ? (i ? 'ℓ₂' : 'ℓ₁') : (i ? 'π₂' : 'π₁');
+        if (os.length === 1) symbol = o.kind === 'line' ? 'ℓ' : 'π';
+        var text = o.kind === 'line' ? T('直線', 'Line') : T('平面', 'Plane');
+        // ∥ / ⟂ explicitly distinguish line direction from plane normal.
+        text = symbol + (o.kind === 'line' ? ' ∥ ' : ' ⟂ ') + o.vectorName + ' ' + text;
+        if (!o.valid) text += T('（零向量，無效）', ' (zero vector; invalid)');
+        return { color: colors[o.colorIndex], text: text };
+      });
+      if (ans) {
+        var text;
+        if (!ans.visible) text = ans.kind === 'point' ? T('交點在局部範圍外', 'Intersection outside view') : T('交線在局部範圍外', 'Intersection line outside view');
+        else text = ans.kind === 'point' ? T('交點 I', 'Intersection I') : T('交線', 'Intersection line');
+        entries.push({ color: colors[2], text: text });
+      }
+      return entries;
+    }
+    function layoutFooter(s, entries, w, h, size) {
+      var maxWidth = Math.max(20, w - 24), rowHeight = size + 6, rows = [[]], x = 0;
+      font(size, 650);
+      entries.forEach(function (entry) {
+        var pieces = wrap(entry.text, Math.max(10, maxWidth - 17));
+        pieces.forEach(function (piece, index) {
+          var ew = Math.min(maxWidth, ctx.measureText(piece).width + (index ? 0 : 16)) + 13;
+          if (x && x + ew > maxWidth) { rows.push([]); x = 0; }
+          rows[rows.length - 1].push({ x: x, text: piece, color: entry.color, dot: index === 0 });
+          x += ew;
+          if (index < pieces.length - 1) { rows.push([]); x = 0; }
+        });
+      });
+      font(size, 500);
+      var note = tr(s.lang, '局部示意；直線、平面無限延伸。', 'Partial view; lines and planes extend infinitely.');
+      if (s.lang === 'bi') note = '局部：直線、平面無限 / Partial; infinite lines & planes';
+      var notes = wrap(note, maxWidth);
+      var total = rows.length * rowHeight + notes.length * rowHeight + 12;
+      // Tiny canvases still show the important local-view qualification.
+      if (total > h * 0.52) { rows = []; total = notes.length * rowHeight + 10; }
+      return { rows: rows, notes: notes, rowHeight: rowHeight, height: total, fontSize: size };
+    }
+    function makeTransform(w, h, top, bottom) {
+      var b = basis(view), minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+      for (var x = -1; x <= 1; x += 2) for (var y = -1; y <= 1; y += 2) for (var z = -1; z <= 1; z += 2) {
+        var p = [x * LIMIT, y * LIMIT, z * LIMIT], px = dot(p, b.right), py = dot(p, b.down);
+        minX = Math.min(minX, px); maxX = Math.max(maxX, px); minY = Math.min(minY, py); maxY = Math.max(maxY, py);
+      }
+      var pad = Math.min(24, Math.max(10, w * 0.045));
+      var ph = Math.max(1, h - top - bottom), scale = Math.max(0.001, Math.min(Math.max(1, w - 2 * pad) / (maxX - minX), Math.max(1, ph - 2 * pad) / (maxY - minY)));
+      return { right: b.right, down: b.down, scale: scale, origin: { x: w / 2 - (minX + maxX) * scale / 2, y: top + ph / 2 - (minY + maxY) * scale / 2 } };
+    }
+    function path(points, t, color, width, dash, close, fillAlpha) {
+      if (!points || points.length < 2) return;
+      var q = project(points[0], t);
+      ctx.beginPath(); ctx.moveTo(q.x, q.y);
+      for (var i = 1; i < points.length; i++) { q = project(points[i], t); ctx.lineTo(q.x, q.y); }
+      if (close) ctx.closePath();
+      if (fillAlpha) { ctx.save(); ctx.globalAlpha = fillAlpha; ctx.fillStyle = color; ctx.fill(); ctx.restore(); }
+      ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash || []); ctx.stroke(); ctx.setLineDash([]);
+    }
+    function screenLine(a, b, color, width) {
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.lineWidth = width; ctx.strokeStyle = color; ctx.stroke();
+    }
+    function arrow(a, b, t, color, width) {
+      var p = project(a, t), q = project(b, t), dx = q.x - p.x, dy = q.y - p.y, length = Math.hypot(dx, dy);
+      if (length < 2) { ctx.beginPath(); ctx.arc(q.x, q.y, 3, 0, 2 * Math.PI); ctx.lineWidth = 1.6; ctx.strokeStyle = color; ctx.stroke(); return; }
+      screenLine(p, q, color, width);
+      var ux = dx / length, uy = dy / length, head = Math.min(9, Math.max(4, length * 0.38));
+      ctx.beginPath(); ctx.moveTo(q.x, q.y); ctx.lineTo(q.x - head * ux + head * 0.43 * uy, q.y - head * uy - head * 0.43 * ux);
+      ctx.lineTo(q.x - head * ux - head * 0.43 * uy, q.y - head * uy + head * 0.43 * ux); ctx.closePath(); ctx.fillStyle = color; ctx.fill();
+    }
+    function marker(p, color, bg, radius) {
+      ctx.beginPath(); ctx.arc(p.x, p.y, radius + 2, 0, 2 * Math.PI); ctx.fillStyle = bg; ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI); ctx.fillStyle = color; ctx.fill();
+      ctx.lineWidth = 1.3; ctx.strokeStyle = bg; ctx.stroke();
+    }
+    function makeLabeler(w, h, top, bottom, colors, size) {
+      var boxes = [];
+      return function (text, p, color) {
+        font(size, 750);
+        var boxWidth = ctx.measureText(text).width + 8, boxHeight = size + 6;
+        var options = [[8, -boxHeight - 2], [8, 4], [-boxWidth - 8, -boxHeight - 2], [-boxWidth - 8, 4], [-boxWidth / 2, -boxHeight - 9], [-boxWidth / 2, 9]];
+        var best = null, bestScore = 1e12;
+        options.forEach(function (offset) {
+          var x = clamp(p.x + offset[0], 3, Math.max(3, w - boxWidth - 3));
+          var y = clamp(p.y + offset[1], top, Math.max(top, h - bottom - boxHeight));
+          var score = Math.abs(x - p.x - offset[0]) + Math.abs(y - p.y - offset[1]);
+          boxes.forEach(function (b) { score += 4 * Math.max(0, Math.min(x + boxWidth, b.x + b.w) - Math.max(x, b.x)) * Math.max(0, Math.min(y + boxHeight, b.y + b.h) - Math.max(y, b.y)); });
+          if (score < bestScore) { bestScore = score; best = { x: x, y: y, w: boxWidth, h: boxHeight }; }
+        });
+        boxes.push(best); ctx.save(); ctx.globalAlpha = 0.9; ctx.fillStyle = colors.bg; ctx.fillRect(best.x, best.y, best.w, best.h); ctx.restore();
+        ctx.fillStyle = color; ctx.fillText(text, best.x + 4, best.y + best.h / 2);
+      };
+    }
+    function render() {
+      if (destroyed) return;
+      var raw = opts.getState() || {}, s = snapshot(raw), os = objects(s), ans = answer(s, os, raw.result), rect = canvas.getBoundingClientRect();
+      var w = rect.width, h = rect.height;
+      if (!(w > 0 && h > 0)) { last = { hidden: true, view: { yaw: view.yaw, pitch: view.pitch }, points: {}, state: s }; return; }
+      var dpr = Math.min(3, Math.max(1, Number(window.devicePixelRatio) || 1));
+      var bw = Math.max(1, Math.round(w * dpr)), bh = Math.max(1, Math.round(h * dpr));
+      if (canvas.width !== bw || canvas.height !== bh) {
+        canvas.width = bw; canvas.height = bh;
+        if (!intrinsicStyleFix) {
+          var after = canvas.getBoundingClientRect();
+          if (Math.abs(after.width - w) > 1 || Math.abs(after.height - h) > 1) { canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; intrinsicStyleFix = true; }
+        }
+      }
+      ctx.setTransform(bw / w, 0, 0, bh / h, 0, 0); ctx.clearRect(0, 0, w, h);
+      var pal = palette(), colors = [pal.green, pal.blue, pal.orange];
+      ctx.fillStyle = pal.bg; ctx.fillRect(0, 0, w, h);
+      if (w < 35 || h < 45) { last = { hidden: false, tooSmall: true, view: { yaw: view.yaw, pitch: view.pitch }, state: s, points: {} }; return; }
+      var size = w < 420 ? 11.5 : 13, entryList = legends(s, os, ans, colors), footer = layoutFooter(s, entryList, w, h, size);
+      var top = Math.min(26, h * 0.12), bottom = Math.min(h * 0.55, footer.height);
+      var t = drag && drag.kind === 'point' ? drag.transform : makeTransform(w, h, top, bottom);
+      var label = makeLabeler(w, h, top, bottom, pal, size), debugPoints = {};
+      ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.rect(0, top, w, Math.max(1, h - top - bottom)); ctx.clip();
+      // An optional construction grid lies in the real XY plane.
+      if (s.aux) {
+        ctx.save(); ctx.globalAlpha = 0.95;
+        for (var i = -6; i <= 6; i++) {
+          path([[i, -6, 0], [i, 6, 0]], t, pal.grid, 1);
+          path([[-6, i, 0], [6, i, 0]], t, pal.grid, 1);
+        }
+        ctx.restore();
+      }
+      // Paint both real plane sections before axes, arrows and line sections.
+      os.forEach(function (o) { if (o.kind === 'plane' && o.valid && o.part) path(o.part, t, colors[o.colorIndex], 1.25, [5, 4], true, 0.16); });
+      var axes = [ { p: [7.4, 0, 0], q: [-7.4, 0, 0], name: 'x' }, { p: [0, 7.4, 0], q: [0, -7.4, 0], name: 'y' }, { p: [0, 0, 7.4], q: [0, 0, -7.4], name: 'z' } ];
+      axes.forEach(function (axis) {
+        ctx.save(); ctx.globalAlpha = 0.55; arrow(axis.q, axis.p, t, pal.ink, 1.15); ctx.restore(); label(axis.name, project(axis.p, t), pal.ink);
+      });
+      os.forEach(function (o) { if (o.kind === 'line' && o.valid && o.part) path(o.part, t, colors[o.colorIndex], 2.4); });
+      if (ans && ans.visible && ans.kind === 'line') path(ans.part, t, pal.orange, 3.7);
+      // Direction/normal arrows are proportional in direction, not magnitude.
+      os.forEach(function (o) {
+        if (!o.valid) return;
+        var direction = unit(o.dir), end = add(o.p, mul(direction, 2.1));
+        arrow(o.p, end, t, colors[o.colorIndex], 2.7);
+        label(o.vectorName, project(end, t), colors[o.colorIndex]);
+      });
+      var origin = project([0, 0, 0], t); marker(origin, pal.ink, pal.bg, 2.5); label('O', origin, pal.ink);
+      if (ans && ans.visible && ans.kind === 'point') {
+        var ap = project(ans.point, t); marker(ap, pal.orange, pal.bg, 5); label('I', ap, pal.orange);
+      }
+      var handles = os.map(function (o) { var actual = project(o.p, t); return { o: o, actual: actual, screen: { x: actual.x, y: actual.y } }; });
+      if (handles.length === 2) {
+        var h0 = handles[0], h1 = handles[1], dx = h1.screen.x - h0.screen.x, dy = h1.screen.y - h0.screen.y, dist = Math.hypot(dx, dy);
+        if (dist < 23) {
+          var ux = dist > 0.01 ? dx / dist : 1, uy = dist > 0.01 ? dy / dist : 0, delta = (23 - dist) / 2;
+          h0.screen.x -= ux * delta; h0.screen.y -= uy * delta; h1.screen.x += ux * delta; h1.screen.y += uy * delta;
+        }
+      }
+      handles.forEach(function (hnd) {
+        var o = hnd.o, color = colors[o.colorIndex];
+        if (Math.hypot(hnd.screen.x - hnd.actual.x, hnd.screen.y - hnd.actual.y) > 1) screenLine(hnd.actual, hnd.screen, color, 1.2);
+        marker(hnd.screen, color, pal.bg, w < 420 ? 6 : 5.5); label(o.name, hnd.screen, color);
+        debugPoints[o.key] = { x: hnd.screen.x, y: hnd.screen.y, actualX: hnd.actual.x, actualY: hnd.actual.y, world: o.p.slice(), name: o.name };
+      });
+      ctx.restore();
+      var rowY = h - footer.height + 6;
+      font(size, 650);
+      footer.rows.forEach(function (row) {
+        row.forEach(function (item) {
+          if (item.dot) { ctx.beginPath(); ctx.arc(15 + item.x, rowY + footer.rowHeight / 2, 3.4, 0, Math.PI * 2); ctx.fillStyle = item.color; ctx.fill(); }
+          ctx.fillStyle = pal.ink; ctx.fillText(item.text, 12 + item.x + (item.dot ? 12 : 0), rowY + footer.rowHeight / 2);
+        });
+        rowY += footer.rowHeight;
+      });
+      font(size, 500); ctx.fillStyle = pal.muted;
+      footer.notes.forEach(function (note) { ctx.fillText(note, 12, rowY + footer.rowHeight / 2); rowY += footer.rowHeight; });
+      last = { hidden: false, state: s, view: { yaw: view.yaw, pitch: view.pitch }, points: debugPoints,
+        viewport: { width: w, height: h, dpr: dpr, scale: t.scale, origin: { x: t.origin.x, y: t.origin.y }, right: t.right.slice(), down: t.down.slice(), top: top, bottom: bottom },
+        clipLimit: LIMIT, objects: os, legend: entryList.map(function (entry) { return entry.text; }), note: footer.notes.join(' ') };
+      if (ans) last.intersection = ans;
+    }
+    function local(event) { var rect = canvas.getBoundingClientRect(); return { x: event.clientX - rect.left, y: event.clientY - rect.top }; }
+    function down(event) {
+      if (destroyed || drag || (event.pointerType === 'mouse' && event.button !== 0)) return;
+      if (!last || !last.viewport) render();
+      if (!last || !last.viewport) return;
+      var p = local(event), nearest = null, best = 1e9;
+      ['a', 'c'].forEach(function (key) {
+        var h = last.points[key]; if (!h) return;
+        var distance = Math.hypot(p.x - h.x, p.y - h.y), radius = event.pointerType === 'touch' ? 26 : 19;
+        if (distance <= radius && distance < best) { nearest = { key: key, point: h }; best = distance; }
+      });
+      if (nearest) {
+        var v = last.viewport;
+        drag = { kind: 'point', pointerId: event.pointerId, key: nearest.key, z: nearest.point.world[2],
+          offsetX: p.x - nearest.point.actualX, offsetY: p.y - nearest.point.actualY, lastXYZ: nearest.point.world.slice(),
+          transform: { scale: v.scale, origin: { x: v.origin.x, y: v.origin.y }, right: v.right.slice(), down: v.down.slice() } };
+      } else drag = { kind: 'view', pointerId: event.pointerId, x: p.x, y: p.y, yaw: view.yaw, pitch: view.pitch };
+      canvas.style.cursor = 'grabbing';
+      if (canvas.setPointerCapture) { try { canvas.setPointerCapture(event.pointerId); } catch (e) { /* window listeners are the fallback */ } }
+      event.preventDefault();
+    }
+    function move(event) {
+      if (!drag || event.pointerId !== drag.pointerId || destroyed) return;
+      var p = local(event);
+      if (drag.kind === 'view') {
+        view.yaw = drag.yaw + (p.x - drag.x) * 0.009;
+        // Keep the XY drag plane invertible while allowing full azimuth rotation.
+        view.pitch = clamp(drag.pitch + (p.y - drag.y) * 0.009, MIN_PITCH, MAX_PITCH);
+        render();
+      } else {
+        var v = inverseXY({ x: p.x - drag.offsetX, y: p.y - drag.offsetY }, drag.z, drag.transform);
+        if (v) {
+          var xyz = [clamp(Math.round(v[0]), -6, 6), clamp(Math.round(v[1]), -6, 6), drag.z];
+          if (xyz[0] !== drag.lastXYZ[0] || xyz[1] !== drag.lastXYZ[1]) { drag.lastXYZ = xyz.slice(); opts.onChange(drag.key, xyz); render(); }
+        }
+      }
+      event.preventDefault();
+    }
+    function end(event) {
+      if (!drag || (event && drag.pointerId !== event.pointerId)) return;
+      var id = drag.pointerId; drag = null; canvas.style.cursor = 'grab';
+      if (canvas.releasePointerCapture) { try { if (!canvas.hasPointerCapture || canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id); } catch (e) { /* already released */ } }
+      if (!destroyed) render();
+    }
+    function lost(event) { if (drag && event.pointerId === drag.pointerId) end(event); }
+    function resetView() { if (destroyed) return; end(); view.yaw = DEFAULT_YAW; view.pitch = DEFAULT_PITCH; render(); }
+    function debug() {
+      if (!last) return { hidden: true, view: { yaw: view.yaw, pitch: view.pitch }, points: {} };
+      var copy = JSON.parse(JSON.stringify(last));
+      // Also protects the caller if state changes to hidden before the next draw.
+      var current = opts.getState();
+      if (current && current.quizHidden) {
+        delete copy.intersection;
+        if (copy.state) copy.state.quizHidden = true;
+        if (copy.legend && copy.objects) copy.legend = copy.legend.slice(0, copy.objects.length);
+      }
+      copy.drag = drag ? { kind: drag.kind, key: drag.key || null, pointerId: drag.pointerId } : null;
+      return copy;
+    }
+    function destroy() {
+      if (destroyed) return;
+      end(); destroyed = true;
+      if (raf) window.cancelAnimationFrame(raf);
+      if (observer) observer.disconnect(); if (themeObserver) themeObserver.disconnect();
+      canvas.removeEventListener('pointerdown', down); canvas.removeEventListener('lostpointercapture', lost);
+      window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', end); window.removeEventListener('pointercancel', end); window.removeEventListener('resize', schedule);
+      canvas.style.touchAction = oldStyle.touchAction; canvas.style.cursor = oldStyle.cursor;
+      if (intrinsicStyleFix) { canvas.width = oldSize.width; canvas.height = oldSize.height; canvas.style.width = oldStyle.width; canvas.style.height = oldStyle.height; }
+    }
+    canvas.addEventListener('pointerdown', down); canvas.addEventListener('lostpointercapture', lost);
+    window.addEventListener('pointermove', move, { passive: false }); window.addEventListener('pointerup', end); window.addEventListener('pointercancel', end); window.addEventListener('resize', schedule);
+    if (typeof window.ResizeObserver === 'function') { observer = new window.ResizeObserver(schedule); observer.observe(canvas); }
+    if (typeof window.MutationObserver === 'function' && document.documentElement) {
+      themeObserver = new window.MutationObserver(schedule); themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+    }
+    render();
+    return { render: render, resetView: resetView, debug: debug, destroy: destroy };
+  }
+  window.SpaceRenderer = { create: create };
+}());
+
 (function(){
 'use strict';
 const VZ=(zh,en)=>({zh,en});
@@ -1198,7 +1854,7 @@ const L={
  footer:VZ('按教育局 M2 單元 15–17 編排 · 所有圖像及運算在瀏覽器中完成 · 離線可用','Based on EDB M2 learning units 15–17 · Diagrams and calculations run locally · Works offline'),
  source:VZ('教育局單元二課程闡釋','EDB Module 2 curriculum notes'),equals:VZ('等於','equals'),score:VZ('向量關係','Vector relation')
 };
-const VG=[VZ('座標與運算','Coordinates & operations'),VZ('點積與投影','Dot product & projection'),VZ('叉積與面積','Cross product & area'),VZ('分點與方向','Division & directions')];
+const VG=[VZ('座標與運算','Coordinates & operations'),VZ('點積與投影','Dot product & projection'),VZ('叉積與面積','Cross product & area'),VZ('分點與方向','Division & directions'),VZ('延伸：直線與平面','Enrichment: lines & planes')];
 const VM=[
  {id:'position',g:0,title:VZ('位置向量、長度與單位向量','Position vector, magnitude & unit vector'),desc:VZ('由三維座標建立向量','Build a vector from 3D coordinates'),note:VZ('設定點 A 的 x、y、z，觀察 OA 的分量、長度與方向。','Set the x, y and z coordinates of A to observe the components, magnitude and direction of OA.'),eq:'|a| = √(a₁² + a₂² + a₃²)',tex:'\\lVert\\mathbf a\\rVert=\\sqrt{a_1^2+a_2^2+a_3^2}',reason:VZ('向量長度可由三維畢氏定理求得；非零向量除以其長度得到單位向量。','The 3D Pythagorean theorem gives the magnitude; a non-zero vector divided by its magnitude gives a unit vector.')},
  {id:'displacement',g:0,title:VZ('兩點間的向量與距離','Vector and distance between two points'),desc:VZ('以終點減起點求位移','Subtract the starting point from the endpoint'),note:VZ('改變點 A、B 的座標，觀察從 A 到 B 的位移及距離。','Change A and B to see the displacement from A to B and the distance.'),eq:'AB⃗ = OB⃗ − OA⃗',tex:'\\overrightarrow{AB}=\\overrightarrow{OB}-\\overrightarrow{OA}',reason:VZ('向量 AB 等於終點的位置向量減去起點的位置向量；其模為兩點距離。','Vector AB is the position vector of the endpoint minus that of the starting point; its magnitude is the distance.')},
@@ -1208,40 +1864,49 @@ const VM=[
  {id:'cross',g:2,title:VZ('叉積、法向量與面積','Cross product, normal & area'),desc:VZ('右手定則與三角形面積','The right-hand rule and triangle area'),note:VZ('改變 a、b，觀察 a × b、平行四邊形及三角形的面積。','Change a and b to observe a × b and the areas of the parallelogram and triangle.'),eq:'平行四邊形面積 = |a × b|；三角形面積 = ½|a × b|',tex:'A_{\\rm parallelogram}=\\lVert\\mathbf a\\times\\mathbf b\\rVert,\\quad A_{\\triangle}=\\tfrac12\\lVert\\mathbf a\\times\\mathbf b\\rVert',reason:VZ('叉積的方向依右手定則，並垂直兩個原向量；其模為平行四邊形面積。叉積為零時沒有法向方向。','The cross product follows the right-hand rule and is perpendicular to both vectors; its magnitude is the parallelogram area. A zero cross product has no normal direction.')},
  {id:'division',g:3,title:VZ('線段的內分點','Internal division of a line segment'),desc:VZ('按指定比例求內分點的位置向量','Find the position vector of an internal division point'),note:VZ('設定 A、B 及正整數 m、n，令 AP : PB = m : n。','Set A, B and positive integers m and n, with AP : PB = m : n.'),eq:'OP⃗ = (n OA⃗ + m OB⃗) / (m + n)',tex:'\\overrightarrow{OP}=\\frac{n\\overrightarrow{OA}+m\\overrightarrow{OB}}{m+n}',reason:VZ('若 AP : PB = m : n，則 AP = m/(m+n) AB；P 的位置可由 A 加上此位移求得。','If AP : PB = m : n, then AP = m/(m+n) AB. Add that displacement to A to obtain P.')},
  {id:'relations',g:3,title:VZ('平行與正交的判別','Testing parallel and orthogonal vectors'),desc:VZ('以點積和叉積判斷方向關係','Use the dot and cross products to test directions'),note:VZ('觀察非零向量的平行、垂直或其他關係。','Observe whether two non-zero vectors are parallel, perpendicular or neither.'),eq:'a ⟂ b ⇔ a · b = 0；a ∥ b ⇔ a × b = 0',tex:'\\mathbf a\\perp\\mathbf b\\iff\\mathbf a\\cdot\\mathbf b=0,\\quad\\mathbf a\\parallel\\mathbf b\\iff\\mathbf a\\times\\mathbf b=\\mathbf0',reason:VZ('兩個非零向量的點積為零當且僅當它們垂直；叉積為零當且僅當它們平行。','For two non-zero vectors, a zero dot product is equivalent to perpendicularity, and a zero cross product to parallelism.')}
+ ,{id:'line',g:4,title:VZ('直線方程','Line equations'),desc:VZ('向量式、參數式與對稱式','Vector, parametric and symmetric forms'),note:VZ('以點 A 和非零方向向量 u 定義無限直線。','Use point A and a non-zero direction u to define an infinite line.'),eq:'r = A + tu,  t ∈ ℝ',tex:'\\mathbf r=\\mathbf A+t\\mathbf u,\\quad t\\in\\mathbb R',reason:VZ('直線上每一點均可由 A 加上 u 的實數倍得到。','Every point on the line is A plus a real multiple of u.')}
+ ,{id:'plane',g:4,title:VZ('平面方程','Plane equations'),desc:VZ('點法式及一般式','Point-normal and general forms'),note:VZ('以點 P 和非零法向量 n 定義無限平面。','Use point P and a non-zero normal n to define an infinite plane.'),eq:'n · (r − P) = 0',tex:'\\mathbf n\\cdot(\\mathbf r-\\mathbf P)=0',reason:VZ('平面上任意點與 P 的位移均垂直法向量。','The displacement from P to any point on the plane is perpendicular to the normal.')}
+ ,{id:'linePlane',g:4,title:VZ('直線與平面','Line and plane'),desc:VZ('相交、平行或直線在平面內','Intersection, parallelism or a contained line'),note:VZ('設定直線 A、u 和平面 P、n，判斷它們的關係。','Set line A, u and plane P, n to determine their relation.'),eq:'n · (A + tu − P) = 0',tex:'\\mathbf n\\cdot(\\mathbf A+t\\mathbf u-\\mathbf P)=0',reason:VZ('把直線代入平面方程，再檢查參數係數。','Substitute the line into the plane equation and inspect the parameter coefficient.')}
+ ,{id:'planePlane',g:4,title:VZ('兩個平面','Two planes'),desc:VZ('相交、平行或重合','Intersecting, parallel or coincident planes'),note:VZ('設定平面 P、n 和 Q、m；相交時求交線。','Set planes P, n and Q, m; find their intersection line when they meet.'),eq:'n · (r − P) = 0;  m · (r − Q) = 0',tex:'\\mathbf n\\cdot(\\mathbf r-\\mathbf P)=0,\\quad\\mathbf m\\cdot(\\mathbf r-\\mathbf Q)=0',reason:VZ('法向量的叉積決定兩平面是否相交及交線方向。','The cross product of the normals determines whether the planes intersect and gives the line direction.')}
+ ,{id:'lineLine',g:4,title:VZ('兩條直線','Two lines'),desc:VZ('相交、平行、重合或異面','Intersecting, parallel, coincident or skew'),note:VZ('設定直線 A、u 和 B、v，判斷其在三維空間中的關係。','Set lines A, u and B, v to determine their spatial relation.'),eq:'A + tu = B + sv',tex:'\\mathbf A+t\\mathbf u=\\mathbf B+s\\mathbf v',reason:VZ('先比較方向，再檢查是否共面，最後求交點。','Compare directions, test coplanarity, then find any intersection.')}
 ];
 const D=id=>document.getElementById(id);
 const T=v=>v.zh===v.en?v.zh:state.lang==='zh'?v.zh:state.lang==='en'?v.en:v.zh+' / '+v.en;
 const TX=(id,v)=>{D(id).textContent=T(typeof v==='string'?L[v]:v)};
-const S={active:false,mode:'position',a:[3,2,2],b:[-1,3,1],k:2,m:1,n:2,quiz:false,revealed:false,quizKey:null,aux:false,renderer:null,metrics:[]};
+const S={active:false,mode:'position',a:[3,2,2],b:[-1,3,1],c:[1,-1,0],d:[0,1,1],k:2,m:1,n:2,quiz:false,revealed:false,quizKey:null,aux:false,renderer:null,spaceRenderer:null,result:null,metrics:[]};
 const def=()=>VM.find(x=>x.id===S.mode),C=window.VectorCore;
 function initMath(plain,latex){const ns='http://www.w3.org/1998/Math/MathML',math=document.createElementNS(ns,'math'),sem=document.createElementNS(ns,'semantics'),mtext=document.createElementNS(ns,'mtext'),ann=document.createElementNS(ns,'annotation');mtext.textContent=plain;ann.setAttribute('encoding','application/x-tex');ann.textContent=latex;sem.append(mtext,ann);math.append(sem);math.setAttribute('aria-label',plain);return math}
 function vTextMath(id,plain,latex){D(id).replaceChildren(initMath(plain,latex))}
 function isPoints(){return S.mode==='displacement'||S.mode==='division'}
-function coordName(key){return T(isPoints()?(key==='a'?L.pointA:L.pointB):(key==='a'?L.inputA:L.inputB))}
+function isSpace(){return def().g===4}
+const SPACE_LABELS={line:{a:['點 A 的座標','Coordinates of point A','A'],b:['方向向量 u 的分量','Components of direction u','u']},plane:{a:['點 P 的座標','Coordinates of point P','P'],b:['法向量 n 的分量','Components of normal n','n']},linePlane:{a:['直線上點 A 的座標','Coordinates of point A on the line','A'],b:['直線方向 u 的分量','Components of line direction u','u'],c:['平面上點 P 的座標','Coordinates of point P on the plane','P'],d:['平面法向量 n 的分量','Components of plane normal n','n']},planePlane:{a:['第一平面上點 P 的座標','Coordinates of point P on the first plane','P'],b:['第一平面法向量 n 的分量','Components of first plane normal n','n'],c:['第二平面上點 Q 的座標','Coordinates of point Q on the second plane','Q'],d:['第二平面法向量 m 的分量','Components of second plane normal m','m']},lineLine:{a:['第一直線上點 A 的座標','Coordinates of point A on the first line','A'],b:['第一直線方向 u 的分量','Components of first line direction u','u'],c:['第二直線上點 B 的座標','Coordinates of point B on the second line','B'],d:['第二直線方向 v 的分量','Components of second line direction v','v']}};
+function coordName(key){if(isSpace()){let x=SPACE_LABELS[S.mode][key];return T(VZ(x[0],x[1]))}return T(isPoints()?(key==='a'?L.pointA:L.pointB):(key==='a'?L.inputA:L.inputB))}
 function updateInputValue(key,idx,val){for(const el of document.querySelectorAll(`[data-vkey="${key}"][data-vidx="${idx}"]`))el.value=val}
-function syncInputs(){for(let key of ['a','b'])for(let i=0;i<3;i++)updateInputValue(key,i,S[key][i]);for(const key of ['k','m','n'])for(let el of document.querySelectorAll(`[data-vextra="${key}"]`))el.value=S[key]}
+function syncInputs(){for(let key of ['a','b','c','d'])for(let i=0;i<3;i++)updateInputValue(key,i,S[key][i]);for(const key of ['k','m','n'])for(let el of document.querySelectorAll(`[data-vextra="${key}"]`))el.value=S[key]}
 function buildVectorBlock(key){
  let block=document.createElement('div');block.className='vector-block';let heading=document.createElement('div');heading.className='vector-block-title';heading.textContent=coordName(key);block.append(heading);
- ['x','y','z'].forEach((axis,i)=>{let row=document.createElement('div');row.className='vector-field';let label=document.createElement('label');let base=(isPoints()?key.toUpperCase():key)+'_'+axis;label.textContent=base;label.htmlFor=`v-${key}-${i}-number`;
+ ['x','y','z'].forEach((axis,i)=>{let row=document.createElement('div');row.className='vector-field';let label=document.createElement('label');let base=(isSpace()?SPACE_LABELS[S.mode][key][2]:(isPoints()?key.toUpperCase():key))+'_'+axis;label.textContent=base;label.htmlFor=`v-${key}-${i}-number`;
  let range=document.createElement('input');range.type='range';range.min='-6';range.max='6';range.step='1';range.value=S[key][i];range.dataset.vkey=key;range.dataset.vidx=i;range.setAttribute('aria-label',coordName(key)+' '+axis);
  let num=document.createElement('input');num.type='number';num.min='-6';num.max='6';num.step='1';num.id=`v-${key}-${i}-number`;num.value=S[key][i];num.dataset.vkey=key;num.dataset.vidx=i;num.setAttribute('aria-label',coordName(key)+' '+axis);
  const apply=(value)=>{let n=Number(value);if(!Number.isFinite(n))n=S[key][i];S[key][i]=Math.max(-6,Math.min(6,Math.round(n)));updateInputValue(key,i,S[key][i]);refreshResults()};
  range.addEventListener('input',()=>apply(range.value));num.addEventListener('change',()=>apply(num.value));row.append(label,range,num);block.append(row)});return block;
 }
 function extraField(key,min,max){let row=document.createElement('div');row.className='vector-field';let label=document.createElement('label');label.textContent=key;label.htmlFor='v-extra-'+key;let range=document.createElement('input');range.type='range';range.min=String(min);range.max=String(max);range.step='1';range.value=S[key];range.dataset.vextra=key;range.setAttribute('aria-label',T(key==='k'?L.k:L.ratio)+' '+key);let num=document.createElement('input');num.type='number';num.min=String(min);num.max=String(max);num.step='1';num.value=S[key];num.id='v-extra-'+key;num.dataset.vextra=key;num.setAttribute('aria-label',T(key==='k'?L.k:L.ratio)+' '+key);const apply=v=>{let n=Number(v);if(!Number.isFinite(n))n=S[key];S[key]=Math.max(min,Math.min(max,Math.round(n)));syncInputs();refreshResults()};range.addEventListener('input',()=>apply(range.value));num.addEventListener('change',()=>apply(num.value));row.append(label,range,num);return row}
-function buildInputs(){let box=D('vInputs');box.replaceChildren(buildVectorBlock('a'));if(S.mode!=='position')box.append(buildVectorBlock('b'));let extra=D('vExtraInputs');extra.replaceChildren();if(S.mode==='addition'||S.mode==='division'){extra.className='vector-extra';let title=document.createElement('div');title.className='vector-extra-title';title.textContent=T(S.mode==='addition'?L.k:L.ratio);extra.append(title);if(S.mode==='addition')extra.append(extraField('k',-4,4));else{extra.append(extraField('m',1,5));extra.append(extraField('n',1,5))}}else extra.className=''}
+function buildInputs(){let box=D('vInputs');box.replaceChildren(buildVectorBlock('a'));if(S.mode!=='position')box.append(buildVectorBlock('b'));if(isSpace()&&SPACE_LABELS[S.mode].c){box.append(buildVectorBlock('c'),buildVectorBlock('d'))}let extra=D('vExtraInputs');extra.replaceChildren();if(S.mode==='addition'||S.mode==='division'){extra.className='vector-extra';let title=document.createElement('div');title.className='vector-extra-title';title.textContent=T(S.mode==='addition'?L.k:L.ratio);extra.append(title);if(S.mode==='addition')extra.append(extraField('k',-4,4));else{extra.append(extraField('m',1,5));extra.append(extraField('n',1,5))}}else extra.className=''}
 function paintSwitcher(){TX('unitCaption','units');TX('unitCircleText','circle');TX('unitVectorText','vectors');D('unitCircle').setAttribute('aria-pressed',String(!S.active));D('unitVectors').setAttribute('aria-pressed',String(S.active))}
-function unitSwitch(on,updateHash=true){S.active=on;D('circleView').hidden=on;D('vectorView').hidden=!on;paintSwitcher();if(on){refreshStatic();refreshResults();requestAnimationFrame(()=>S.renderer.render())}else{renderAll();paintSwitcher();requestAnimationFrame(requestRender)}if(updateHash){try{history.replaceState(null,'',on?'#vectors':location.pathname+location.search)}catch(e){}}}
+function unitSwitch(on,updateHash=true){S.active=on;D('circleView').hidden=on;D('vectorView').hidden=!on;paintSwitcher();if(on){refreshStatic();refreshResults();requestAnimationFrame(renderCurrent)}else{renderAll();paintSwitcher();requestAnimationFrame(requestRender)}if(updateHash){try{history.replaceState(null,'',on?'#vectors':location.pathname+location.search)}catch(e){}}}
 function refreshStatic(){
  paintSwitcher();if(!S.active)return;TX('brand','brand');TX('brandSub','brandSub');document.title=T(VZ('三維向量與幾何','Vectors in 3D Space'));
  let map={vEyebrow:'eyebrow',vHero:'hero',vHeroDesc:'heroDesc',vStamp:'stamp',vCanvasOverline:'canvasOverline',vCanvasTitle:'canvasTitle',vLive:'live',vCameraReset:'cameraReset',vCameraNote:'cameraNote',vDragTitle:'dragTitle',vDragDesc:'dragDesc',vLegendA:'legendA',vLegendB:'legendB',vSelectorHeading:'selector',vModeLabel:'modeLabel',vInputHeading:'inputHeading',vInputNote:'inputNote',vInsightHeading:'insight',vEquationLabel:'exact',vMeasureNote:'measure',vReasonHeading:'reason',vControlsHeading:'controls',vQuizTitle:'quiz',vQuizDesc:'quizDesc',vAuxTitle:'aux',vAuxDesc:'auxDesc',vFooter:'footer',vSource:'source'};for(const [id,key] of Object.entries(map))TX(id,key);D('vSource').href=state.lang==='en'?'https://www.edb.gov.hk/attachment/en/curriculum-development/kla/ma/curr/EN_M2_e.pdf':'https://www.edb.gov.hk/attachment/tc/curriculum-development/kla/ma/curr/EN_M2_tc.pdf';
+ if(isSpace()){const disclaimer=VZ('進階延伸探索；非 HKDSE M2 指定要求','Advanced enrichment; not a specified HKDSE M2 requirement');TX('brandSub',disclaimer);TX('vEyebrow',disclaimer);TX('vStamp',disclaimer);TX('vHero',VZ('探索三維直線與平面','Explore lines and planes in 3D'));TX('vHeroDesc',VZ('調整已知點與方向，從圖像和逐步推導理解方程。','Change known points and directions to explore equations through diagrams and working.'));TX('vFooter',VZ('進階延伸探索；不聲稱屬 HKDSE M2 指定要求。圖像及運算在瀏覽器中完成。','Advanced enrichment; not claimed as a specified HKDSE M2 requirement. Diagrams and calculations run in the browser.'));TX('vSource',VZ('教育局 M2 課程資料（供參考，並非這些延伸模型的課程依據）','EDB M2 curriculum notes (reference only; not a syllabus claim for these models)'));TX('vInputNote',VZ('各座標以 −6 至 6 的整數設定；拖動已知點可更新 x、y。','Set each coordinate to an integer from −6 to 6; dragging a given point updates x and y.'));TX('vQuizDesc',VZ('隱藏本模型的結果及推導；可自行嘗試後揭曉，並不會自動出題。','Hide this model’s results and working; try it before revealing. No automatic question generation.'));TX('vDragDesc',VZ('拖動空白處旋轉；可拖動已知點。圖中只顯示無限直線和平面的局部；箭頭只示方向，長度不代表向量模。','Drag empty space to rotate or drag a given point. Only parts of infinite lines and planes are shown; arrows indicate direction, not vector magnitude.'));TX('vCameraNote',VZ('圖中有限線段和平面片只顯示無限幾何的局部；視角不影響計算。','Finite segments and plane patches show only parts of infinite geometry; the view does not affect calculations.'));TX('vLegendA',S.mode==='plane'||S.mode==='planePlane'?VZ('第一個平面／法向','First plane / normal'):VZ('第一條直線／方向','First line / direction'));TX('vLegendB',S.mode==='linePlane'||S.mode==='planePlane'?VZ('第二個平面／法向','Second plane / normal'):VZ('第二條直線／方向','Second line / direction'))}else TX('brandSub','brandSub');
+ D('vectorCanvas').hidden=isSpace();D('spaceCanvas').hidden=!isSpace();D('spaceCanvas').setAttribute('aria-label',T(VZ('可旋轉的三維直線與平面畫布；有限圖形只表示無限幾何的局部。','Rotatable 3D line and plane canvas; finite graphics show parts of infinite geometry.')));
  D('vectorCanvas').setAttribute('aria-label',T(VZ('可旋轉的三維向量畫布；拖動端點改變橫縱座標。','Rotatable 3D vector canvas; drag an endpoint to change its x and y coordinates.')));
  D('vTabs').replaceChildren();VG.forEach((group,i)=>{let b=document.createElement('button');b.type='button';b.className='tab'+(def().g===i?' active':'');b.textContent=T(group);b.setAttribute('aria-pressed',String(def().g===i));b.addEventListener('click',()=>changeMode(VM.find(x=>x.g===i).id));D('vTabs').append(b)});
  let select=D('vMode');select.replaceChildren();VG.forEach((group,i)=>{let og=document.createElement('optgroup');og.label=T(group);for(const item of VM.filter(x=>x.g===i)){let o=document.createElement('option');o.value=item.id;o.textContent=T(item.title);og.append(o)}select.append(og)});select.value=S.mode;
- TX('vModeNote',def().note);TX('vCanvasTag',VG[def().g]);TX('vInsightTitle',def().title);TX('vInsightDesc',def().desc);D('vLegendB').hidden=S.mode==='position';D('vQuiz').checked=S.quiz;D('vAux').checked=S.aux;D('vReveal').disabled=!S.quiz||S.revealed;TX('vReveal',S.revealed?'revealed':'reveal');buildInputs();
+ TX('vModeNote',def().note);TX('vCanvasTag',VG[def().g]);TX('vInsightTitle',def().title);TX('vInsightDesc',def().desc);D('vLegendB').hidden=['position','line','plane'].includes(S.mode);D('vQuiz').checked=S.quiz;D('vAux').checked=S.aux;D('vReveal').disabled=!S.quiz||S.revealed;TX('vReveal',S.revealed?'revealed':'reveal');buildInputs();
 }
 function changeMode(mode){if(!VM.some(x=>x.id===mode))return;S.mode=mode;S.quizKey=null;S.revealed=false;refreshStatic();refreshResults()}
-function reset(){S.a=[3,2,2];S.b=[-1,3,1];S.k=2;S.m=1;S.n=2;S.quiz=false;S.revealed=false;S.quizKey=null;S.aux=false;S.renderer.resetView();refreshStatic();refreshResults()}
+function reset(){S.a=[3,2,2];S.b=[-1,3,1];S.c=[1,-1,0];S.d=[0,1,1];S.k=2;S.m=1;S.n=2;S.quiz=false;S.revealed=false;S.quizKey=null;S.aux=false;S.renderer.resetView();if(S.spaceRenderer&&typeof S.spaceRenderer.resetView==='function')S.spaceRenderer.resetView();refreshStatic();refreshResults();requestAnimationFrame(renderCurrent)}
 function pretty(x){return String(x).replace(/sqrt\((\d+)\)/g,'√$1').replace(/\*/g,'·')}
 function exact(obj,approx=''){return {plain:pretty(obj.plain),tex:obj.tex,approx,defined:obj.defined!==false}}
 function intVal(n){return exact(C.fraction(n))}
@@ -1301,28 +1966,129 @@ function makeScene(){
  }
  return s;
 }
+// Enrichment models use the independent SpaceCore for validity and classification.
+// All displayed coordinate arithmetic below is integer/rational, not rounded camera geometry.
+const spaceRelations={intersect:VZ('相交','Intersect'),parallel:VZ('平行（不重合）','Parallel (distinct)'),coincident:VZ('重合','Coincident'),contained:VZ('直線在平面內','Line contained in plane'),skew:VZ('異面','Skew')};
+const spaceInvalid={
+ 'zero-direction':VZ('無效：第一條直線的方向向量 u 是零向量，不能定義直線。','Invalid: the first line direction u is the zero vector, so no line is defined.'),
+ 'zero-normal':VZ('無效：平面法向量 n 是零向量，不能定義平面。','Invalid: the plane normal n is the zero vector, so no plane is defined.'),
+ 'zero-direction-2':VZ('無效：第二條直線的方向向量 v 是零向量，不能定義第二條直線。','Invalid: the second line direction v is the zero vector, so no second line is defined.'),
+ 'zero-normal-2':VZ('無效：第二平面的法向量 m 是零向量，不能定義第二個平面。','Invalid: the second plane normal m is the zero vector, so no second plane is defined.')
+};
+function textVal(plain,tex){return {plain,tex:tex||'\\text{'+plain.replace(/[{}]/g,'')+'}',defined:true,approx:''}}
+function texVector(v){return '\\left('+v.join(', ' ).replace(/−/g,'-')+'\\right)'}
+function normalEquationTex(p,n){return n.map((x,i)=>`(${x})(${['x','y','z'][i]}-(${p[i]}))`).join('+')+'=0'}
+function normalEquation(p,n){return n.map((x,i)=>`(${x})(${['x','y','z'][i]} − (${p[i]}))`).join(' + ')+' = 0'}
+function generalEquation(p,n){
+ let lhs=n.map((x,i)=>{if(!x)return '';let v=['x','y','z'][i],abs=Math.abs(x),body=(abs===1?'':abs)+v;return (x<0?' − ':' + ')+body}).join('').replace(/^ \+ /,'').replace(/^ − /,'−');
+ return lhs+' = '+C.dot(n,p);
+}
+function lineEquations(p,u){
+ const axes=['x','y','z'],vector=`r = ${formatVec(p)} + t${formatVec(u)}, t ∈ ℝ`;
+ const param=axes.map((x,i)=>`${x} = ${p[i]} + (${u[i]})t`).join('; ');
+ let fractions=[],fixed=[];for(let i=0;i<3;i++){if(u[i])fractions.push(`(${axes[i]} − (${p[i]}))/${u[i]}`);else fixed.push(`${axes[i]} = ${p[i]}`)}
+ // Adding = t also handles the case with only one nonzero direction component.
+ const texFractions=[],texFixed=[];for(let i=0;i<3;i++){if(u[i])texFractions.push(`\\frac{${axes[i]}-(${p[i]})}{${u[i]}}`);else texFixed.push(`${axes[i]}=${p[i]}`)}
+ return {vector,param,symmetric:fractions.join(' = ')+' = t'+(fixed.length?'; '+fixed.join('; '):''),vectorTex:`\\mathbf r=${texVector(p)}+t${texVector(u)},\\quad t\\in\\mathbb R`,paramTex:axes.map((x,i)=>`${x}=${p[i]}+(${u[i]})t`).join(',\\quad '),symmetricTex:texFractions.join('=')+'=t'+(texFixed.length?',\\quad '+texFixed.join(',\\quad '):'')};
+}
+function makeSpaceScene(result){
+ const mode=S.mode,a=S.a,b=S.b,c=S.c,d=S.d;
+ const scene={metrics:[],steps:[],status:null,warning:false};
+ const metric=(key,label,value,canQuiz=true)=>scene.metrics.push({key,label,value,canQuiz:canQuiz&&value.defined!==false});
+ const step=(zh,en)=>scene.steps.push(VZ(zh,en));
+ if(!result||!result.valid){
+  scene.status=(result&&spaceInvalid[result.reason])||VZ('空間幾何模組未就緒，無法計算。','The space geometry module is unavailable; calculation cannot be performed.');
+  scene.warning=true;metric('invalid',VZ('無效輸入','Invalid input'),undef(),false);return scene;
+ }
+ if(mode==='line'){
+  const f=lineEquations(a,b);
+  metric('vector',VZ('向量式','Vector form'),textVal(f.vector,f.vectorTex));metric('parametric',VZ('參數式','Parametric form'),textVal(f.param,f.paramTex));metric('symmetric',VZ('對稱式及固定座標','Symmetric form and fixed coordinates'),textVal(f.symmetric,f.symmetricTex));
+  step(`令 r = (x, y, z) 表示直線上任意點的位置向量，已知點 A = ${formatVec(a)}，非零方向 u = ${formatVec(b)}；t 是任意實數。`,`Let r = (x, y, z) be the position vector of any point on the line, with given point A = ${formatVec(a)} and non-zero direction u = ${formatVec(b)}; t is any real number.`);
+  step(`沿方向 u 由 A 移動 t 倍，向量式為 ${f.vector}。`,`Moving t multiples of u from A gives the vector form ${f.vector}.`);
+  step(`按 x、y、z 分量展開：${f.param}。`,`Equating x, y and z components gives ${f.param}.`);
+  step(`對非零方向分量除以該分量，得 ${f.symmetric}；方向分量為零時，對應座標固定，不作除法。`,`Divide only by non-zero direction components: ${f.symmetric}. A zero direction component fixes its coordinate and is never used as a denominator.`);
+ }else if(mode==='plane'){
+  const pn=normalEquation(a,b),gen=generalEquation(a,b);
+  metric('pointNormal',VZ('點法式','Point-normal form'),textVal(pn,normalEquationTex(a,b)));metric('general',VZ('一般式','General form'),textVal(gen,gen.replace(/−/g,'-')));
+  step(`令 r = (x, y, z) 為平面上任意點，已知 P = ${formatVec(a)}，非零法向 n = ${formatVec(b)}。`,`Let r = (x, y, z) be any point on the plane, with given P = ${formatVec(a)} and non-zero normal n = ${formatVec(b)}.`);
+  step(`因位移 r − P 與 n 垂直，n · (r − P) = 0。代入得 ${pn}。`,`Because r − P is perpendicular to n, n · (r − P) = 0. Substitution gives ${pn}.`);
+  step(`展開並將常數移到右邊：n · r = n · P = ${terms(b,a)} = ${C.dot(b,a)}；所以一般式為 ${gen}。`,`Expand and collect constants: n · r = n · P = ${terms(b,a)} = ${C.dot(b,a)}, giving the general form ${gen}.`);
+ }else if(mode==='linePlane'){
+  const w=C.sub(c,a),den=C.dot(d,b),num=C.dot(d,w),f=lineEquations(a,b),pn=normalEquation(c,d),relation=spaceRelations[result.relation]||VZ(result.relation||'—',result.relation||'—');
+  metric('relation',VZ('直線與平面的關係','Line–plane relation'),textVal(T(relation)));
+  step(`令 r = (x, y, z)。直線的已知點 A = ${formatVec(a)}、非零方向 u = ${formatVec(b)}；平面的點 P = ${formatVec(c)}、非零法向 n = ${formatVec(d)}。t 為實數參數。`,`Let r = (x, y, z). The line has point A = ${formatVec(a)} and non-zero direction u = ${formatVec(b)}; the plane has point P = ${formatVec(c)} and non-zero normal n = ${formatVec(d)}. The parameter t is real.`);
+  step(`直線：${f.vector}；平面：${pn}。將直線代入 n · (r − P) = 0，得 t(n · u) = n · (P − A)。`,`Line: ${f.vector}; plane: ${pn}. Substitute the line into n · (r − P) = 0 to obtain t(n · u) = n · (P − A).`);
+  step(`P − A = ${formatVec(w)}；n · u = ${terms(d,b)} = ${den}；n · (P − A) = ${terms(d,w)} = ${num}，故 ${den}t = ${num}。`,`P − A = ${formatVec(w)}; n · u = ${terms(d,b)} = ${den}; n · (P − A) = ${terms(d,w)} = ${num}, so ${den}t = ${num}.`);
+  if(den){const t=result.t,hit=result.intersection;metric('t',VZ('交點參數 t','Intersection parameter t'),exact(t));metric('intersection',VZ('交點','Intersection point'),exact(hit));step(`因 ${den} ≠ 0，t = ${num}/(${den}) = ${t.plain}；代回 A + tu = ${formatVec(a)} + (${t.plain})${formatVec(b)} = ${hit.plain}。因此相交於 ${hit.plain}。`,`Since ${den} ≠ 0, t = ${num}/(${den}) = ${t.plain}. Substituting back gives A + tu = ${formatVec(a)} + (${t.plain})${formatVec(b)} = ${hit.plain}. The line intersects the plane there.`)}
+  else if(!num)step('等式變成 0t = 0，所有 t 均成立，所以整條直線在平面內。','The equation is 0t = 0 for every t, so the whole line is contained in the plane.');
+  else step(`等式變成 0t = ${num}，無解，所以直線與平面平行而不相交。`,`The equation is 0t = ${num}, which has no solution; the line is parallel to and distinct from the plane.`);
+ }else if(mode==='planePlane'){
+  const cross=C.cross(b,d),w=C.sub(c,a),offset=C.dot(b,w),relation=spaceRelations[result.relation]||VZ(result.relation||'—',result.relation||'—');
+  metric('relation',VZ('兩平面的關係','Relation of the planes'),textVal(T(relation)));
+  step(`令 r = (x, y, z)。第一平面已知 P = ${formatVec(a)}、非零法向 n = ${formatVec(b)}；第二平面已知 Q = ${formatVec(c)}、非零法向 m = ${formatVec(d)}。`,`Let r = (x, y, z). The first plane has P = ${formatVec(a)} and non-zero normal n = ${formatVec(b)}; the second has Q = ${formatVec(c)} and non-zero normal m = ${formatVec(d)}.`);
+  step(`點法式分別是 ${normalEquation(a,b)} 與 ${normalEquation(c,d)}；一般式為 ${generalEquation(a,b)} 和 ${generalEquation(c,d)}。`,`The point-normal forms are ${normalEquation(a,b)} and ${normalEquation(c,d)}; the general forms are ${generalEquation(a,b)} and ${generalEquation(c,d)}.`);
+  step(`計算 n × m = ${formatVec(b)} × ${formatVec(d)} = ${formatVec(cross)}。`,`Compute n × m = ${formatVec(b)} × ${formatVec(d)} = ${formatVec(cross)}.`);
+  if(C.norm2(cross)){
+   const N=C.dot(b,a),M=C.dot(d,c),den=C.norm2(cross),mxk=C.cross(d,cross),kxn=C.cross(cross,b),pt=result.intersection;
+   metric('direction',VZ('交線方向 n × m','Intersection-line direction n × m'),exact(result.direction));metric('intersection',VZ('交線','Intersection line'),textVal(`r = ${pt.plain} + t${formatVec(cross)}, t ∈ ℝ`,`\\mathbf r=${pt.tex}+t${texVector(cross)},\\quad t\\in\\mathbb R`));
+   step(`叉積非零，兩平面相交，交線方向可取 k = n × m = ${formatVec(cross)}；|k|² = ${squares(cross)} = ${den}。t 是交線的任意實數參數。`,`The non-zero cross product means the planes intersect, with direction k = n × m = ${formatVec(cross)}; |k|² = ${squares(cross)} = ${den}. The parameter t can be any real number.`);
+   step(`設 h₁ = n · P = ${terms(b,a)} = ${N}，h₂ = m · Q = ${terms(d,c)} = ${M}；m × k = ${formatVec(mxk)}，k × n = ${formatVec(kxn)}。`,`Let h₁ = n · P = ${terms(b,a)} = ${N} and h₂ = m · Q = ${terms(d,c)} = ${M}; m × k = ${formatVec(mxk)} and k × n = ${formatVec(kxn)}.`);
+   step(`設 X₀ = [h₁(m × k) + h₂(k × n)]/|k|²。因 n · (m × k) = |k|²、n · (k × n) = 0，而 m · (m × k) = 0、m · (k × n) = |k|²，故 n · X₀ = h₁ 且 m · X₀ = h₂；X₀ 同時位於兩平面。`,`Set X₀ = [h₁(m × k) + h₂(k × n)]/|k|². Since n · (m × k) = |k|² and n · (k × n) = 0, while m · (m × k) = 0 and m · (k × n) = |k|², we get n · X₀ = h₁ and m · X₀ = h₂. Thus X₀ lies in both planes.`);
+   step(`代入得 X₀ = [${N}${formatVec(mxk)} + ${M}${formatVec(kxn)}]/${den} = ${pt.plain}。驗算：n · X₀ = ${b.map((x,i)=>`(${x})(${pt.components[i].plain})`).join(' + ')} = ${N}；m · X₀ = ${d.map((x,i)=>`(${x})(${pt.components[i].plain})`).join(' + ')} = ${M}。因此交線為 r = ${pt.plain} + t${formatVec(cross)}，t ∈ ℝ。`,`Substitution gives X₀ = [${N}${formatVec(mxk)} + ${M}${formatVec(kxn)}]/${den} = ${pt.plain}. Check: n · X₀ = ${b.map((x,i)=>`(${x})(${pt.components[i].plain})`).join(' + ')} = ${N}; m · X₀ = ${d.map((x,i)=>`(${x})(${pt.components[i].plain})`).join(' + ')} = ${M}. Hence the intersection line is r = ${pt.plain} + t${formatVec(cross)}, t ∈ ℝ.`);
+  }else{
+   step(`叉積為零，法向量平行；Q − P = ${formatVec(w)}，n · (Q − P) = ${terms(b,w)} = ${offset}。`,`The cross product is zero, so the normals are parallel; Q − P = ${formatVec(w)} and n · (Q − P) = ${terms(b,w)} = ${offset}.`);
+   step(!offset?'此值為零，Q 在第一平面內，因此兩平面重合。':`此值非零，Q 不在第一平面內，因此兩平面平行但不重合。`,!offset?'This is zero, so Q lies in the first plane and the two planes coincide.':`This is non-zero, so Q is not in the first plane and the planes are parallel and distinct.`);
+  }
+ }else if(mode==='lineLine'){
+  const w=C.sub(c,a),cross=C.cross(b,d),triple=C.dot(w,cross),relation=spaceRelations[result.relation]||VZ(result.relation||'—',result.relation||'—');
+  metric('relation',VZ('兩直線的關係','Relation of the lines'),textVal(T(relation)));
+  step(`令 r = (x, y, z)。第一條直線有點 A = ${formatVec(a)} 和非零方向 u = ${formatVec(b)}；第二條有點 B = ${formatVec(c)} 和非零方向 v = ${formatVec(d)}。t、s 均為實數參數。`,`Let r = (x, y, z). The first line has A = ${formatVec(a)} and non-zero direction u = ${formatVec(b)}; the second has B = ${formatVec(c)} and non-zero direction v = ${formatVec(d)}. The parameters t and s are real.`);
+  step(`兩直線為 r = ${formatVec(a)} + t${formatVec(b)} 和 r = ${formatVec(c)} + s${formatVec(d)}。若有交點，則 tu − sv = B − A = ${formatVec(w)}。`,`The lines are r = ${formatVec(a)} + t${formatVec(b)} and r = ${formatVec(c)} + s${formatVec(d)}. At an intersection, tu − sv = B − A = ${formatVec(w)}.`);
+  step(`先算 u × v = ${formatVec(b)} × ${formatVec(d)} = ${formatVec(cross)}。`,`First compute u × v = ${formatVec(b)} × ${formatVec(d)} = ${formatVec(cross)}.`);
+  if(!C.norm2(cross)){
+   const wu=C.cross(w,b);step(`方向平行；(B − A) × u = ${formatVec(w)} × ${formatVec(b)} = ${formatVec(wu)}。`,`The directions are parallel; (B − A) × u = ${formatVec(w)} × ${formatVec(b)} = ${formatVec(wu)}.`);
+   step(C.norm2(wu)?'此叉積非零，B 不在第一條直線上，兩線平行而不重合。':'此叉積為零，B 在第一條直線上，所以兩線重合。',C.norm2(wu)?'This cross product is non-zero, so B is not on the first line and the lines are parallel and distinct.':'This cross product is zero, so B is on the first line and the lines coincide.');
+  }else{
+   step(`方向不平行；(B − A) · (u × v) = ${terms(w,cross)} = ${triple}。`,`The directions are not parallel; (B − A) · (u × v) = ${terms(w,cross)} = ${triple}.`);
+   if(triple)step('此混合積非零，兩線不共面，因而是異面直線，沒有交點。','This scalar triple product is non-zero, so the lines are not coplanar: they are skew and have no intersection.');
+   else{
+    const wv=C.cross(w,d),wu=C.cross(w,b),den=C.norm2(cross),tn=C.dot(wv,cross),sn=C.dot(wu,cross),t=result.t,s=result.s,pt=result.intersection;
+    metric('t',VZ('第一線參數 t','First-line parameter t'),exact(t));metric('s',VZ('第二線參數 s','Second-line parameter s'),exact(s));metric('intersection',VZ('交點','Intersection point'),exact(pt));
+    step(`混合積為零，兩線共面且方向不平行，故有唯一交點。設 k = u × v = ${formatVec(cross)}，|k|² = ${squares(cross)} = ${den}。`,`The triple product is zero, so the non-parallel lines are coplanar and have a unique intersection. Let k = u × v = ${formatVec(cross)}; |k|² = ${squares(cross)} = ${den}.`);
+    step(`由 tu − sv = B − A，得 (B − A) × v = ${formatVec(wv)}，(B − A) × u = ${formatVec(wu)}。因此 t = [((B − A) × v) · k]/|k|² = [${terms(wv,cross)}]/${den} = ${t.plain}；s = [((B − A) × u) · k]/|k|² = [${terms(wu,cross)}]/${den} = ${s.plain}。`,`From tu − sv = B − A, (B − A) × v = ${formatVec(wv)} and (B − A) × u = ${formatVec(wu)}. Hence t = [((B − A) × v) · k]/|k|² = [${terms(wv,cross)}]/${den} = ${t.plain}; s = [((B − A) × u) · k]/|k|² = [${terms(wu,cross)}]/${den} = ${s.plain}.`);
+    step(`交點 = A + tu = ${formatVec(a)} + (${t.plain})${formatVec(b)} = ${pt.plain}；亦等於 B + sv = ${formatVec(c)} + (${s.plain})${formatVec(d)}。`,`The intersection is A + tu = ${formatVec(a)} + (${t.plain})${formatVec(b)} = ${pt.plain}; equivalently B + sv = ${formatVec(c)} + (${s.plain})${formatVec(d)}.`);
+   }
+  }
+ }
+ return scene;
+}
+
 function formulaPlain(){if(S.mode==='cross')return 'A▱ = |a × b|；A△ = ½|a × b|';if(S.mode==='relations')return T(VZ('a、b ≠ 0：a ⟂ b ⇔ a · b = 0；a ∥ b ⇔ a × b = 0','a, b ≠ 0: a ⟂ b ⇔ a · b = 0; a ∥ b ⇔ a × b = 0'));return def().eq}
 function formulaTex(){if(S.mode==='relations')return '\\mathbf a,\\mathbf b\\ne\\mathbf0:\\quad\\mathbf a\\perp\\mathbf b\\iff\\mathbf a\\cdot\\mathbf b=0,\\quad\\mathbf a\\parallel\\mathbf b\\iff\\mathbf a\\times\\mathbf b=\\mathbf0';return def().tex}
 function metricNode(m,hidden){let box=document.createElement('div');box.className='metric';let lab=document.createElement('div');lab.className='metric-label';lab.textContent=T(m.label);let val=document.createElement('div');val.className='metric-value'+(hidden?' hidden-value':m.value.defined===false?' vector-undefined':'');if(hidden)val.textContent='?';else if(m.value.defined===false)val.textContent=T(L.undefined);else val.append(initMath(m.value.plain,m.value.tex));box.append(lab,val);if(!hidden&&m.value.approx){let approx=document.createElement('div');approx.className='approx';approx.textContent=m.value.approx;box.append(approx)}return box}
 function refreshResults(){
- if(!S.active)return;const sc=makeScene();S.metrics=sc.metrics;let hide=S.quiz&&!S.revealed,available=sc.metrics.filter(m=>m.canQuiz);
- if(hide&&(!S.quizKey||!available.some(m=>m.key===S.quizKey)))S.quizKey=available.length?available[Math.floor(Math.random()*available.length)].key:null;
- vTextMath('vEquation',formulaPlain(),formulaTex());let metrics=D('vMetrics');metrics.replaceChildren();
- if(hide&&S.quizKey){let picked=sc.metrics.find(x=>x.key===S.quizKey);metrics.append(metricNode(picked,true))}else sc.metrics.forEach(m=>metrics.append(metricNode(m,false)));
- let status=D('vStatus');status.hidden=hide||!sc.status;if(sc.status){status.className='status'+(sc.warning?' warning':'');status.textContent=T(sc.status)}
- D('vReasonText').textContent=hide?T(L.locked):T(def().reason);D('vSteps').replaceChildren();if(!hide)sc.steps.forEach((step,i)=>{let row=document.createElement('div');row.className='vector-step';let n=document.createElement('span');n.className='vector-step-number';n.textContent=String(i+1);let txt=document.createElement('span');txt.className='vector-step-text';txt.textContent=T(step);row.append(n,txt);D('vSteps').append(row)});
- D('vReveal').disabled=!S.quiz||S.revealed;TX('vReveal',S.revealed?'revealed':'reveal');S.renderer.render();
+ if(!S.active)return;S.result=isSpace()?(window.SpaceCore&&typeof window.SpaceCore.compute==='function'?window.SpaceCore.compute(S.mode,S.a.slice(),S.b.slice(),S.c.slice(),S.d.slice()):null):null;const sc=isSpace()?makeSpaceScene(S.result):makeScene();S.metrics=sc.metrics;let hide=S.quiz&&!S.revealed,available=sc.metrics.filter(m=>m.canQuiz);
+ if(hide&&isSpace()&&S.result&&S.result.valid)S.quizKey='spaceQuestion';else if(hide&&(!S.quizKey||!available.some(m=>m.key===S.quizKey)))S.quizKey=available.length?available[Math.floor(Math.random()*available.length)].key:null;
+ if(isSpace()&&(!S.result||!S.result.valid))vTextMath('vEquation',T(VZ('輸入無效，不能定義所需的幾何對象','Invalid input: the required geometric object is not defined')),'\\text{undefined}');else vTextMath('vEquation',formulaPlain(),formulaTex());let metrics=D('vMetrics');metrics.replaceChildren();
+ if(hide&&S.quizKey==='spaceQuestion'){let label=S.mode==='line'||S.mode==='plane'?VZ('求方程','Find the equation'):VZ('判斷關係；若相交，求交點或交線','Determine the relation; if they intersect, find the intersection');metrics.append(metricNode({key:'spaceQuestion',label,value:{defined:true}},true))}else if(hide&&S.quizKey){let picked=sc.metrics.find(x=>x.key===S.quizKey);metrics.append(metricNode(picked,true))}else sc.metrics.forEach(m=>metrics.append(metricNode(m,false)));
+ let status=D('vStatus');status.hidden=!sc.status||(hide&&!(isSpace()&&(!S.result||!S.result.valid)));if(sc.status){status.className='status'+(sc.warning?' warning':'');status.textContent=T(sc.status)}
+ D('vReasonText').textContent=(isSpace()&&(!S.result||!S.result.valid))?T(sc.status):hide?T(L.locked):T(def().reason);D('vSteps').replaceChildren();if(!hide)sc.steps.forEach((step,i)=>{let row=document.createElement('div');row.className='vector-step';let n=document.createElement('span');n.className='vector-step-number';n.textContent=String(i+1);let txt=document.createElement('span');txt.className='vector-step-text';txt.textContent=T(step);row.append(n,txt);D('vSteps').append(row)});
+ D('vReveal').disabled=!S.quiz||S.revealed||(isSpace()&&(!S.result||!S.result.valid));TX('vReveal',S.revealed?'revealed':'reveal');renderCurrent();
 }
+const spaceCanvas=document.createElement('canvas');spaceCanvas.id='spaceCanvas';spaceCanvas.width=800;spaceCanvas.height=600;spaceCanvas.tabIndex=0;spaceCanvas.hidden=true;D('vectorCanvas').insertAdjacentElement('afterend',spaceCanvas);
+function ensureSpaceRenderer(){if(!S.spaceRenderer&&window.SpaceRenderer&&typeof window.SpaceRenderer.create==='function')S.spaceRenderer=window.SpaceRenderer.create(spaceCanvas,{getState:()=>({mode:S.mode,a:S.a.slice(),b:S.b.slice(),c:S.c.slice(),d:S.d.slice(),lang:state.lang,aux:S.aux,quizHidden:S.quiz&&!S.revealed,result:S.result}),onChange:(key,v)=>{if(!S.active||!isSpace()||(key!=='a'&&key!=='c')||!Array.isArray(v)||v.length!==3||v.some(n=>!Number.isFinite(n)))return;S[key]=v.map(n=>Math.max(-6,Math.min(6,Math.round(n))));syncInputs();refreshResults()}});return S.spaceRenderer}
+function renderCurrent(){if(!S.active)return;if(isSpace()){let renderer=ensureSpaceRenderer();if(renderer&&typeof renderer.render==='function')renderer.render()}else if(S.renderer)S.renderer.render()}
 S.renderer=window.VectorRenderer.create(D('vectorCanvas'),{getState:()=>({mode:S.mode,a:S.a.slice(),b:S.b.slice(),k:S.k,m:S.m,n:S.n,aux:S.aux,quizHidden:S.quiz&&!S.revealed,lang:state.lang}),onChange:(key,v)=>{if(key!=='a'&&key!=='b')return;S[key]=v.map(n=>Math.max(-6,Math.min(6,Math.round(n))));syncInputs();refreshResults()}});
 D('unitCircle').addEventListener('click',()=>unitSwitch(false));D('unitVectors').addEventListener('click',()=>unitSwitch(true));
-D('vMode').addEventListener('change',e=>changeMode(e.target.value));D('vCameraReset').addEventListener('click',()=>{S.renderer.resetView();S.renderer.render()});
+D('vMode').addEventListener('change',e=>changeMode(e.target.value));D('vCameraReset').addEventListener('click',()=>{let renderer=isSpace()?ensureSpaceRenderer():S.renderer;if(renderer&&typeof renderer.resetView==='function')renderer.resetView();renderCurrent()});
 D('vQuiz').addEventListener('change',e=>{S.quiz=e.target.checked;S.revealed=false;S.quizKey=null;refreshStatic();refreshResults()});
 D('vReveal').addEventListener('click',()=>{S.revealed=true;refreshStatic();refreshResults()});D('vAux').addEventListener('change',e=>{S.aux=e.target.checked;refreshResults()});
 D('language').addEventListener('change',()=>{paintSwitcher();if(S.active){refreshStatic();refreshResults()}});D('theme').addEventListener('click',()=>{if(S.active){refreshStatic();refreshResults()}});
-window.addEventListener('resize',()=>{if(S.active)S.renderer.render()});window.addEventListener('hashchange',()=>unitSwitch(location.hash==='#vectors',false));
+function applyUnitHash(){if(location.hash==='#space'){S.mode='line';S.quizKey=null;S.revealed=false;unitSwitch(true,false)}else unitSwitch(location.hash==='#vectors',false)}
+window.addEventListener('resize',()=>{if(S.active)renderCurrent()});window.addEventListener('hashchange',applyUnitHash);
 window.VectorApp={active:()=>S.active,reset,refresh:()=>{refreshStatic();refreshResults()},switchTo:unitSwitch};
-window.vectorLabTest=()=>({active:S.active,mode:S.mode,a:S.a.slice(),b:S.b.slice(),k:S.k,m:S.m,n:S.n,quiz:S.quiz,revealed:S.revealed,quizKey:S.quizKey,metrics:S.metrics.map(x=>({key:x.key,defined:x.value.defined,plain:S.quiz&&!S.revealed?null:x.value.plain})),renderer:S.renderer.debug()});
-paintSwitcher();if(location.hash==='#vectors')unitSwitch(true,false);
+window.vectorLabTest=()=>({active:S.active,mode:S.mode,a:S.a.slice(),b:S.b.slice(),c:S.c.slice(),d:S.d.slice(),k:S.k,m:S.m,n:S.n,quiz:S.quiz,revealed:S.revealed,quizKey:S.quizKey,metrics:isSpace()&&S.quiz&&!S.revealed&&S.result&&S.result.valid?[{key:'spaceQuestion',defined:true,plain:null}]:S.metrics.map(x=>({key:x.key,defined:x.value.defined,plain:S.quiz&&!S.revealed?null:x.value.plain})),renderer:S.renderer.debug(),spaceRenderer:S.spaceRenderer&&typeof S.spaceRenderer.debug==='function'?S.spaceRenderer.debug():null});
+paintSwitcher();if(location.hash==='#vectors'||location.hash==='#space')applyUnitHash();
 })();
 
 </script>
